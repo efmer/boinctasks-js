@@ -1,0 +1,69 @@
+copy all files except node_modules
+
+// start app for testing
+npm start
+
+Open terminal
+
+cd Users\fred\sb
+npm update --dd
+
+npm run mac
+
+to test run file in ./out/boinctasks Js-darwin-x64
+result in ./out/zip/darwin/x64
+
+
+// check if notarized
+spctl -v -a "Boinctasks Js.app"
+
+
+//share
+
+Use VNC Viewer - VNC Connect by RealVNC
+On MAC Enable Remote management and File Sharing.
+
+https://www.electronjs.org/docs/tutorial/code-signing
+https://kilianvalkhof.com/2019/electron/notarizing-your-electron-application/
+https://github.com/electron/electron-notarize
+https://philo.dev/notarizing-your-electron-application/
+https://stephen-chen.medium.com/notarize-electron-app-for-macos-catalina-10-15-d994e29dfe82
+>>>> https://github.com/electron-userland/electron-builder/issues/4040
+
+npm install electron-notarize --save-dev
+npm install electron-osx-sign --save-dev
+
+// create app specific password and use it in 
+https://support.apple.com/en-gb/HT204397
+
+Create an app-specific password for your developer account, following the instructions at https://support.apple.com/en-us/HT204397.
+!! no spaces
+??export APPLE_ID=email address
+??export APPLE_ID_PASSWORD=app-specific password
+osxNotarize: {
+    appleId: process.env.APPLEID,
+    appleIdPassword: process.env.APPLEID_PASSWORD
+}
+
+
+
+Use a Developer ID Application certificate (To code sign outside the Mac App Store)
+Xcode -> preferences -> Accounts
+
+// Identities
+in terminal: security find-identity
+
+????? need com.apple.security.cs.disable-library-validation
+
+// valid entitlements !! VERY IMPORTANT
+plutil -lint ./build/entitlements.mac.plist
+
+In case of problems, open with codeview and safe 
+
+
+name: “@electron-forge/maker-zip”,
+platforms: [
+“darwin”,
+“darwin-arm64”
+]
+},

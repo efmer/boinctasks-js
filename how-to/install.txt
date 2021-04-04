@@ -1,0 +1,55 @@
+https://www.techomoro.com/how-to-install-and-set-up-electron-on-windows-10/
+
+electron - client <<<<<<<<<<<<<<< We use
+express - server side
+
+        1) Install node.js
+        https://nodejs.org/en/
+        Install current version
+        Do not check Automatically install etc
+
+        Check if installed:
+
+        node -v
+        npm -v 
+
+        2) Install electron
+
+        npm i --save-dev electron 
+        Ubuntu npm i --save-dev electron    We might need to add this --scripts-prepend-node-path
+
+        ??npm i electron -g 
+        ??npm install electron@latest
+
+        3) Install dependencies
+
+        ??npm install --save 1.09
+        npm install xml2js
+
+        //https://www.cssscript.com/color-picker-alpha-selection/
+?? moved to boinctasks/lib      npm install vanilla-picker --save
+
+        https://ourcodeworld.com/articles/read/202/how-to-include-and-use-jquery-in-electron-framework
+        https://www.npmjs.com/package/jquery
+?? moved to boinctasks/lib      npm install jquery --save
+
+        npm install --save highcharts
+        https://www.highcharts.com/docs/getting-started/install-from-npm
+
+        npm install sortablejs --save
+        https://github.com/SortableJS/Sortable
+
+        npm install electron-packager
+
+        npm install @electron-forge/cli -D
+
+        npm install -g electron-icon-maker
+
+// UPDATE
+        npm cache clean -f
+        install version manager once ...  npm install -g n
+        n stable
+
+        npm update --dd
+        If not up to date, green is wanted version....
+

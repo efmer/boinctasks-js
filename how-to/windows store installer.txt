@@ -1,0 +1,69 @@
+// Quick
+
+Run 1 >>
+Next 2 >>
+
+//
+
+https://medium.comngamrajpara/publishing-electron-app-to-windows-store-3cadeed26a32
+https://github.com/felixrieseberg/electron-windows-store
+
+install https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk/
+
+download Visual Asset Generator
+Icon Creator Pro to create icons
+
+
+npm install -g electron-windows-store
+
+in C:\Users\username\AppData\Roaming\npm\node_modules\electron-windows-store\template
+// add auto start !! file is created after first run -> out\winstore\pre-appx
+
+Add this in the header after xmlns:uap
+xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10" 
+
+Add this to AppXManifest.xml after </uap:VisualElements>
+      <Extensions>
+        <desktop:Extension
+          Category="windows.startupTask"
+          Executable="app\BoincTasksJs.exe"
+          EntryPoint="Windows.FullTrustApplication">
+          <desktop:StartupTask TaskId="BoincTasksJsStartup" Enabled="true" DisplayName="BoincTasks Js" />
+        </desktop:Extension>
+      </Extensions>
+// 
+
+1 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+npm run package-win32
+
+Run PowerShell as admin
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
+
+Still in PowerShell as admin
+go to the root folder of the app (package.json) cd D:\Programma\BoincTasks\BoincTasks-Js
+
+// Paste this in PowerShell
+// Update the version first
+// Make sure the build folder is deleted
+
+2 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+electron-windows-store --input-directory D:\Programma\BoincTasks\BoincTasks-Js\out\win32\boinctasksjs-win32-ia32  --output-directory D:\Programma\BoincTasks\BoincTasks-Js\out\winstore --package-version 1.1.1.0 --package-display-name 'BoincTasks Js' --package-name 'BoincTasksJs' --publisher-display-name 'eFMer' --identity-name '64273eFmer.BoincTasksJs' --package-background-color '#0e6ac7' -a D:\Programma\BoincTasks\BoincTasks-Js\appicons\icons\winstore
+
+3 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+run the windows App Certification Kit
+
+// Arm not working
+electron-windows-store --input-directory D:\Programma\BoincTasks\BoincTasks-Js\out\winarm\boinctasksjs-win32-arm64  --output-directory D:\Programma\BoincTasks\BoincTasks-Js\out\winstore_arm --package-version 1.0.4.0 --package-display-name 'BoincTasks Js' --package-name 'BoincTasksJs' --publisher-display-name 'eFMer' --identity-name '64273eFmer.BoincTasksJs' --package-background-color '#0e6ac7' -a D:\Programma\BoincTasks\BoincTasks-Js\appicons\icons\winstore
+
+
+The first time n -> Y -> Identity: CN= your id
+// Settings are stored in C:\Users\user name -> .electron-windows-store
+
+Install BoincTasksJs.appx (double click)
+
+Now search for appcertui and run install
+Select BoincTasks Js from the list
+
+// depending on the version
+Kit folder: C:\Program Files (x86)\Windows Kits\10\bin\10.0.19041.0\x64
+

@@ -1,0 +1,17 @@
+<update>
+	<os>win32</os>
+	<release> 
+		<version>1.11</version>
+		<info>
+			• See website.
+		</info>
+		<url>https://efmer.eu/download/boinc/boinc_tasks_js/windows/btj_1.11.appx</url>
+	</release>
+	<beta>
+		<version>1.10</version>
+		<info>
+			• See website.
+		</info>
+		<url>https://efmer.eu/download/boinc/boinc_tasks_js/windows/btj_1.11.appx</url>
+	</beta>
+</update>

@@ -1,0 +1,9 @@
+Install Inno Setup
+https://jrsoftware.org/isinfo.php
+
+npm run package-win64
+// temp remove --asar to check what's in the package
+
+Double click on boinc_tasks_js.iss
+Change the source folder and version
+

@@ -1,0 +1,5 @@
+https://cloudconvert.com/png-to-icns
+
+npm install -g electron-icon-maker
+
+electron-icon-maker --input=./assets/1024.png --output=./appicons

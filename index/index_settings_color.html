@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->    
+    <link rel="stylesheet" href="../boinctasks/css/bt.css">
+    
+  <title>BoincTasks Colors</title>
+  </head>
+  <body>
+    <table class="table_color_picker">
+      <tr><th>Project</th></tr>
+      <tr>
+        <td><div class="color_picker_field" id="project_running">Running</div></td>
+        <td><div class="color_picker_field" id="project_suspended">Suspended</div></td>
+        <td><div class="color_picker_field" id="project_nonew">No new work</div></td>
+      </tr>
+      <tr>
+        <tr><th>Task</th></tr>        
+      </tr>
+      <tr>
+        <td>CPU</td>        
+        <td><div class="color_picker_field" id="task_download">Up-Download</div></td>
+        <td><div class="color_picker_field" id="task_ready_report">Ready to report</div></td>
+        <td><div class="color_picker_field" id="task_running">Running</div></td>
+        <td><div class="color_picker_field" id="task_running_hp">Running High priority</div></td> 
+      <tr>
+        <tr>
+          <td>GPU</td>
+          <td><div class="color_picker_field" id="gtask_download">Up-Download</div></td>
+          <td><div class="color_picker_field" id="gtask_ready_report">Ready to report</div></td>
+          <td><div class="color_picker_field" id="gtask_running">Running</div></td>
+          <td><div class="color_picker_field" id="gtask_running_hp">Running High priority</div></td> 
+        <tr>        
+      </tr>
+      <tr>
+        <tr><th>&nbsp;</th></tr>        
+      </tr>      
+        <td>CPU</td>      
+        <td><div class="color_picker_field" id="task_abort">Aborted</div></td>
+        <td><div class="color_picker_field" id="task_waiting_run">Waiting to run</div></td>
+        <td><div class="color_picker_field" id="task_ready_start">Ready to start</div></td>
+        <td><div class="color_picker_field" id="task_error">Error</div></td>
+      </tr>
+      </tr>
+        <td>GPU</td>      
+        <td><div class="color_picker_field" id="gtask_abort">Aborted</div></td>
+        <td><div class="color_picker_field" id="gtask_waiting_run">Waiting to run</div></td>
+        <td><div class="color_picker_field" id="gtask_ready_start">Ready to start</div></td>
+        <td><div class="color_picker_field" id="gtask_error">Error</div></td>
+      </tr>      
+      <tr><th>&nbsp;</th></tr>   
+      <tr>
+        <td>CPU</td>        
+        <td><div class="color_picker_field" id="task_suspended">Suspended</div></td>
+        <td><div class="color_picker_field" id="task_suspended_user">Suspended by user</div></td>        
+      </tr>
+      <tr>
+        <td>GPU</td>        
+        <td><div class="color_picker_field" id="gtask_suspended">Suspended</div></td>
+        <td><div class="color_picker_field" id="gtask_suspended_user">Suspended by user</div></td>        
+      </tr>
+      <tr><th>Messages</th></tr>
+      <tr>
+        <td><div class="color_picker_field" id="messages_default">Normal</div></td>        
+        <td><div class="color_picker_field" id="messages_priority">Priority</div></td>
+      </tr>  
+      <tr> 
+        <td><div class="color_picker_field" id="messages_highlight_0">Highlight A</div></td>        
+        <td><div class="color_picker_field" id="messages_highlight_1">Highlight B</div></td>
+        <td><div class="color_picker_field" id="messages_highlight_2">Highlight C</div></td>
+        <td><div class="color_picker_field" id="messages_highlight_3">Highlight D</div></td>
+        <td><div class="color_picker_field" id="messages_highlight_4">Highlight E</div></td>      
+      </tr>  
+      <tr> 
+        <td><div class="color_picker_field" id="messages_highlight_5">Highlight F</div></td>        
+        <td><div class="color_picker_field" id="messages_highlight_6">Highlight G</div></td>
+        <td><div class="color_picker_field" id="messages_highlight_7">Highlight H</div></td>
+        <td><div class="color_picker_field" id="messages_highlight_8">Highlight I</div></td>
+        <td><div class="color_picker_field" id="messages_highlight_9">Highlight J</div></td>      
+      </tr>                       
+      <tr>
+        <tr><th>System</th></tr>
+      </tr>
+      <tr>
+        <td><div class="color_picker_field" id="progress_bar">Progress bar</div></td>     
+      </tr>      
+    </table>
+
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+    <script>window.$ = window.jQuery = require('../boinctasks/lib/jquery.min');</script>  
+    <script type="text/javascript">
+      let Picker = require('../boinctasks/lib/vanilla-picker.min');
+      require('../render/renderer_settings_color');
+    </script>
+  </body>
+</html>

@@ -1,0 +1,5 @@
+Remove npm global
+Windows: %appdata%/npm
+remove all npm and cache.
+
+Local remove: node_modules

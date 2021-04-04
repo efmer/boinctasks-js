@@ -1,0 +1,17 @@
+<update>
+	<os>linux</os>
+	<release> 
+		<version>1.11</version>
+		<info>
+			• See website.
+		</info>
+		<url>https://efmer.com/boinctasks-js/boinctasks-js-download/</url>
+	</release>
+	<beta>
+		<version>1.11</version>
+		<info>
+			• See website.
+		</info>
+		<url>https://efmer.com/boinctasks-js/boinctasks-js-download/</url>
+	</beta>
+</update>

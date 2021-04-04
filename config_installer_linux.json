@@ -1,0 +1,10 @@
+{
+    "dest": "release/linux/",
+    "icon": "appicons/icons/mac/icon.icns",
+    "categories": [
+      "System"
+    ],    
+    "lintianOverrides": [
+      "changelog-file-missing-in-native-package"
+    ]
+}

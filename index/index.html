@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->  
+    <link rel="stylesheet" href="../boinctasks/css/bt.css">
+    
+    <title>BoincTasks Js</title>
+  </head>
+  <body>
+   
+  <table id="bt_tabs" class="bt_tabs">
+    <tr>	        
+      <td id="tab_computers" class="bt_btn_tabs bt_img_tab_computers">&nbsp;Computers</td>
+      <td id="tab_projects" class="bt_btn_tabs bt_img_tab_projects">&nbsp;Projects</td>
+      <td id="tab_task" class="bt_btn_tabs bt_img_tab_tasks">&nbsp;Tasks</td>
+      <td id="tab_transfers" class="bt_btn_tabs bt_img_tab_transfers">&nbsp;Transfers</td>
+      <td id="tab_messages" class="bt_btn_tabs bt_img_tab_messages">&nbsp;Messages</td>
+      <td id="tab_history" class="bt_btn_tabs bt_img_tab_history">&nbsp;History</td>
+      <td id="tab_notices" class="bt_btn_tabs bt_img_tab_notices">&nbsp;Notices</td>
+    </tr>		
+  </table>    
+ 
+  <div id="bt_wrapper" class="sidebar_computers_margin">
+    <div id="sidebar_computers" class="sidebar_computers hidden"></div>    
+    <div id="bt_table_header">
+        <div id="bt_table_header_insert"></div>
+    </div>
+    <div id="bt_table">
+      <div id="bt_table_insert"></div>
+    </div>
+  </div>
+  <br>
+  <br>
+  <table id = "bt_toolbar" class="bt_footer">
+    <tr>
+      <td id="footer_status" class="footer_status">....</td>
+      <td id="footer_number"></td>        
+      <td id="footer_version"></td>           
+      <td id="bt_toolbar_insert"></td>
+      <td></td><td></td>
+    </tr>		
+  </table> 
+
+  <script>window.$ = window.jQuery = require('../boinctasks/lib/jquery.min');</script>
+  <script type="text/javascript">require('../render/renderer')</script>
+  </body>
+</html>

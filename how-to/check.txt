@@ -1,0 +1,39 @@
+[] Click on every tab
+[] View ->sidebar Computer
+
+[] Computers select computer and press delete.
+[] Computers -> Find Press start and add computers.
+[] Computers -> Add -> delete
+
+[] Project -> Add a new  project and set to now more work
+[] Project -> (select 2) Suspend -> Resume
+[] Project -> (select 2) Update (shows updating)
+
+[] Tasks -> (select 2) Suspend -> Resume
+[] Tasks -> abort one
+[] Tasks -> (select 2) Info
+
+[] Messages -> select
+
+[] History -> select
+
+[] Show -> Statistics
+
+[] Extra -> BoincTasks settings
+[] Extra -> BoincTasks color settings
+[] Extra -> Boinc settings
+[] Extra -> Boinc allow (set one computer to Never, snooze 1 min) Apply
+
+Message tab
+[] Extra -> Boinc run Benchmark
+[] Extra -> Boinc read config files
+
+[] Help -> About
+[] Help -> Update
+
+[] Show -> Log 3x
+
+release
+Check version in
+functions/btconstants
+package.json

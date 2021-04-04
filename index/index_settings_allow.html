@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->    
+    <link rel="stylesheet" href="../boinctasks/css/bt.css">
+    
+  <title>BoincTasks Settings</title>
+  </head>
+  <body>
+    <b>CPU Allow to run</b><br>
+    <br>
+    <div id="allow_to_run_cpu"></div>
+    <br>
+    <b>GPU Allow to run</b><br>
+    <br>
+    <div id="allow_to_run_gpu"></div>
+    <br>
+    <b>Allow networkwork communication</b><br>
+    <br>
+    <div id="allow_network"></div>
+
+    <br><br>
+
+    <button id="apply">Apply changes</button>
+
+    <script>window.$ = window.jQuery = require('../boinctasks/lib/jquery.min');</script>
+    <script type="text/javascript">
+      require('../render/renderer_settings_allow');
+    </script>
+  </body>
+</html>

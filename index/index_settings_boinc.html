@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->    
+    <link rel="stylesheet" href="../boinctasks/css/bt.css">
+    
+  <title>BoincTasks Boinc Settings</title>
+  </head>
+  <body>
+    <h2><b>Processor</b></h2>
+    <b>Computing allowed:</b><br>
+    <input type="checkbox" id="processor_onbatteries"> While computer is on batteries<br>
+    <input type="checkbox" id="processor_inuse"> While computer is in use<br>
+    <input type="checkbox" id="processor_usegpu"> Use GPU while computer is in use<br>
+    <br>
+    <table>
+      <tr><td>Only after the computer has been idle</td><td><input type="text" id="processor_idle" size="6"></td><td>Minutes</td></tr>
+      <tr><td>Only while usage is less than</td><td><input type="text" id="processor_usage" size="6"></td><td>%</td></tr>
+    </table>
+    <br><br>    
+    Allowed between. 01:00 - 22:00 (run between 1 AM and 10 PM) disable: empty both<br> 
+    <br>
+    <table id="processor_use">
+      <tr><td>Every day</td><td><input type="text" id="processor_everydayb" size="5"> -</td><td><input type="text" id="processor_everydaye" size="5"></td><td>HH:MM</td></tr>      
+      <tr><td>&nbsp;</td></tr>
+      <tr><td><input type="checkbox" id="processor_use_0c">Sunday</td><td><input type="text" id="processor_use_0b" size="5"> -</td><td><input type="text" id="processor_use_0e" size="6"></td><td>HH:MM</td></tr>        
+      <tr><td><input type="checkbox" id="processor_use_1c">Monday</td><td><input type="text" id="processor_use_1b" size="5"> -</td><td><input type="text" id="processor_use_1e" size="6"></td></tr>
+      <tr><td><input type="checkbox" id="processor_use_2c">Tuesday</td><td><input type="text" id="processor_use_2b" size="5"> -</td><td><input type="text" id="processor_use_2e" size="6"></td></tr>
+      <tr><td><input type="checkbox" id="processor_use_3c">Wednesday</td><td><input type="text" id="processor_use_3b" size="5"> -</td><td><input type="text" id="processor_use_3e" size="6"></td></tr>
+      <tr><td><input type="checkbox" id="processor_use_4c">Thursday</td><td><input type="text" id="processor_use_4b" size="5"> -</td><td><input type="text" id="processor_use_4e" size="6"></td></tr>
+      <tr><td><input type="checkbox" id="processor_use_5c">Friday</td><td><input type="text" id="processor_use_5b" size="5"> -</td><td><input type="text" id="processor_use_5e" size="6"></td></tr>      
+      <tr><td><input type="checkbox" id="processor_use_6c">Saturday</td><td><input type="text" id="processor_use_6b" size="5"> -</td><td><input type="text" id="processor_use_6e" size="6"></td></tr>          
+    </table>
+    <br>
+    <table>
+      <tr><td>Switch between applications every</td><td><input type="text" id="processor_switch" size="6"></td><td>Minutes</td></tr>
+      <tr><td>Use at most</td><td><input type="text" id="processor_usemost" size="6"></td><td>% of processors</td></tr>
+      <tr><td>Use at most</td><td><input type="text" id="processor_usemostcpu" size="6"></td><td>% of CPU time</td></tr>      
+    </table>
+    <br><br><div style="color:red" id="error_msg1"></div><div style="color:rgb(115, 255, 0)" id="ok_msg1"></div><br>
+    <button id="apply1">Apply changes</button>
+    <hr>
+    <h2><b>Network</b></h2>
+    <table id="network_use">
+      <tr><td>Maximum download rate</td><td><input type="text" id="network_dlrate"></td><td>kBytes/sec</td></tr>
+      <tr><td>Maximum upload rate</td><td><input type="text" id="network_uprate"></td><td>kBytes/sec</td></tr>
+      <tr><td>Transfer at most</td><td><input type="text" id="network_transfer"></td><td>Mbytes, every</td><td><input type="text" id="network_transfer_day"></td><td>day(s)</td></tr>
+      <tr><td>Minimum work buffer</td><td><input type="text" id="network_buffermin"></td><td>Days</td><td></td></tr>
+      <tr><td>Additional work buffer</td><td><input type="text" id="network_bufferadd"></td><td>Days</td><td></td></tr>
+    </table>
+    <br><br>
+    Allowed between. 03:00 - 11:00 (run between 3 AM and 11 AM) disable: empty both<br> 
+    <br>
+    <table>
+      <tr><td>Every day</td><td><input type="text" id="network_everydayb" size="6"> -</td><td><input type="text" id="network_everydaye" size="6"></td><td>HH:MM</td></tr>
+      <tr><td>&nbsp;</td></tr>
+      <tr><td><input type="checkbox" id="network_use_0c">Sunday</td><td><input type="text" id="network_use_0b" size="5"> -</td><td><input type="text" id="network_use_0e" size="6"></td><td>HH:MM</td></tr>
+      <tr><td><input type="checkbox" id="network_use_1c">Monday</td><td><input type="text" id="network_use_1b" size="5"> -</td><td><input type="text" id="network_use_1e" size="6"></td></tr>
+      <tr><td><input type="checkbox" id="network_use_2c">Tuesday</td><td><input type="text" id="network_use_2b" size="5"> -</td><td><input type="text" id="network_use_2e" size="6"></td></tr>
+      <tr><td><input type="checkbox" id="network_use_3c">Wednesday</td><td><input type="text" id="network_use_3b" size="5"> -</td><td><input type="text" id="network_use_3e" size="6"></td></tr>
+      <tr><td><input type="checkbox" id="network_use_4c">Thursday</td><td><input type="text" id="network_use_4b" size="5"> -</td><td><input type="text" id="network_use_4e" size="6"></td></tr>
+      <tr><td><input type="checkbox" id="network_use_5c">Friday</td><td><input type="text" id="network_use_5b" size="5"> -</td><td><input type="text" id="network_use_5e" size="6"></td></tr>      
+      <tr><td><input type="checkbox" id="network_use_6c">Saturday</td><td><input type="text" id="network_use_6b" size="5"> -</td><td><input type="text" id="network_use_6e" size="6"></td></tr>         
+    </table>
+    <br><br><div style="color:red" id="error_msg2"></div><div style="color:rgb(115, 255, 0)" id="ok_msg2"></div><br>
+    <button id="apply2">Apply changes</button>
+    <hr>
+    <h2><b>Disk</b></h2>
+    <table>
+      <tr><td>Use at most</td><td><input type="text" id="disk_usemost" size="10"></td><td>Gigabyte disk space</td></tr>
+      <tr><td>Leave at least</td><td><input type="text" id="disk_least" size="10"></td><td>Gigabyte disk space</td></tr>
+      <tr><td>Use at most</td><td><input type="text" id="disk_mostp" size="10"></td><td>% of disk space</td></tr>
+      <tr><td>Write to disk a most every</td><td><input type="text" id="disk_every" size="10"></td><td>Seconds</td></tr>
+      <tr><td>Use at most</td><td><input type="text" id="disk_swap" size="10"></td><td>% of page swap space</td></tr>
+    </table>
+
+    <hr>
+    <h2><b>Memory</b></h2>
+    <table>
+      <tr><td>Use at most</td><td><input type="text" id="memory_usebusy" size="4"></td><td>% When computer is in use</td></tr>
+      <tr><td>Use at most</td><td><input type="text" id="memory_useidle" size="4"></td><td>% When computer is idle</td></tr>      
+      <tr><td><input type="checkbox" id="memory_leave">Leave applications in memory when suspended</td></tr>
+    </table>
+    <br><br><div style="color:red" id="error_msg2"></div><div style="color:rgb(115, 255, 0)" id="ok_msg2"></div><br>
+    <button id="apply3">Apply changes</button>
+    <br><br><br><br>    <br><br><br><br>
+    <button id="default">Reset to Default</button>
+
+    <script>window.$ = window.jQuery = require('../boinctasks/lib/jquery.min');</script>   
+    <script type="text/javascript">
+      require('../render/renderer_settings_boinc');
+    </script>
+  </body>
+</html>

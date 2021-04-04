@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->    
+    <link rel="stylesheet" href="../boinctasks/css/bt.css">
+    
+  <title>BoincTasks Settings</title>
+  </head>
+  <body>
+    <b>At login</b><br>
+    <br>
+    <!-- <input id="start_at_login" name="start_at_login" type="checkbox"> <label for="start_at_login"> Start BoincTasks Js at login</label><br> -->
+    <input id="hide_at_login" name="hide_at_login" type="checkbox"> <label for="hide_at_login"> Hide BoincTasks Js at login</label>
+    <br><br><hr>
+    <b>Styling</b><br>
+    <br>
+    Default = empty, more info <a href="https://efmer.com/boinctasks-js/boinctasks-js-faq/">FAQ</a><br><br>
+    <textarea  id="extra_css" name="extra_css" rows="4"></textarea> <label for="extra_css"><br>
+    <br><br><hr>
+    <b>Timing</b><br>
+    <br>
+    <input id="refresh_rate" name="refresh_rate" type="text"> <label for="refresh_rate"> Refresh rate (Default 2 seconds, minimum 1 second)</label>
+    <br>
+    <br>
+    <input id="history_refresh_rate" name="history_refresh_rate" type="text"><label for="history_refresh_rate"> History refresh rate (default 60 seconds, minimum 20 seconds, 0 to disable)</label>
+
+    <br><br><hr>
+    <b>History</b><br><br>
+    <input id="history_delete" name="history_delete" type="text"> <label for="history_delete"> Days to keep history (default 7)</label>
+
+    <br><br><hr>
+    <b>Messages</b><br><br>
+    Highlighted lines, that match the project and/or part of the message.<br><BR>
+    <label for="highlight_project_0">project </label> <input id="highlight_project_0" name="highlight_project_0" type="text">  <label for="highlight_msg_0"> message </label> <input id="highlight_msg_0" name="highlight_msg_0" type="text"> A<br>
+    <label for="highlight_project_1">project </label> <input id="highlight_project_1" name="highlight_project_1" type="text">  <label for="highlight_msg_1"> message </label> <input id="highlight_msg_1" name="highlight_msg_1" type="text"> B<br>
+    <label for="highlight_project_2">project </label> <input id="highlight_project_2" name="highlight_project_2" type="text">  <label for="highlight_msg_2"> message </label> <input id="highlight_msg_2" name="highlight_msg_2" type="text"> C<br>
+    <label for="highlight_project_3">project </label> <input id="highlight_project_3" name="highlight_project_3" type="text">  <label for="highlight_msg_3"> message </label> <input id="highlight_msg_3" name="highlight_msg_3" type="text"> D<br>
+    <label for="highlight_project_4">project </label> <input id="highlight_project_4" name="highlight_project_4" type="text">  <label for="highlight_msg_4"> message </label> <input id="highlight_msg_4" name="highlight_msg_4" type="text"> E<br>
+    <label for="highlight_project_5">project </label> <input id="highlight_project_5" name="highlight_project_5" type="text">  <label for="highlight_msg_5"> message </label> <input id="highlight_msg_5" name="highlight_msg_5" type="text"> F<br>
+    <label for="highlight_project_6">project </label> <input id="highlight_project_6" name="highlight_project_6" type="text">  <label for="highlight_msg_6"> message </label> <input id="highlight_msg_6" name="highlight_msg_6" type="text"> G<br>
+    <label for="highlight_project_7">project </label> <input id="highlight_project_7" name="highlight_project_7" type="text">  <label for="highlight_msg_7"> message </label> <input id="highlight_msg_7" name="highlight_msg_7" type="text"> H<br>
+    <label for="highlight_project_8">project </label> <input id="highlight_project_8" name="highlight_project_8" type="text">  <label for="highlight_msg_8"> message </label> <input id="highlight_msg_8" name="highlight_msg_8" type="text"> I<br>
+    <label for="highlight_project_9">project </label> <input id="highlight_project_9" name="highlight_project_9" type="text">  <label for="highlight_msg_9"> message </label> <input id="highlight_msg_9" name="highlight_msg_9" type="text"> J<br>
+
+    <br><br><hr>
+    <b>Advanced</b><br><br>
+
+    <input id="socket_timeout" name="socket_timeout" type="text"><label for="socket_timeout"> Socket timeout (default 8 seconds, minimum 4 seconds)</label> 
+
+    <br><br><button id="apply">Apply changes</button>
+
+    <script>window.$ = window.jQuery = require('../boinctasks/lib/jquery.min');</script>  
+    <script type="text/javascript">
+      require('../render/renderer_settings_boinctasks');
+    </script>
+  </body>
+</html>

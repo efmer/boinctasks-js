@@ -1,0 +1,218 @@
+// FORGE
+
+// Installer
+move package from Windows machine to Linux folder DO NOT include the node_modules folder
+remove package-lock.json and node_modules folder from target machine
+cd /home/fred/sb
+npm update --dd
+
+npm run make
+// builds in:
+// intermediate -> out\boinctasks-js-linux-x64
+// deb -> out\make\deb\x64 
+
+install deb:
+cd /home/fred/sb/out/make/deb/x64
+snap remove boinctasks-js
+sudo dpkg -i ./boinctasks-js_1.0.8_amd64.deb
+boinctasks-js
+sudo dpkg --remove boinctasks-js
+
+// start app for testing
+npm start
+
+
+//////////////////////////////////////////////////////////
+
+// snap
+
+sudo snap install snapcraft --classic
+sudo snap install review-tools
+sudo apt install yamllint
+
+//electron-builder
+cd /home/fred/sb
+npm run snap
+
+cd /home/fred/sb/dist/
+// match the version number
+// we need dangerous because the file isn't signed
+// make sure the deb is NOT installed
+sudo dpkg --remove boinctasks-js
+cd /home/fred/sb/dist
+sudo snap install boinctasks-js_1.1.1_amd64.snap --dangerous
+snap run boinctasks-js
+
+// Doesn't work.....
+// yaml missing libraries
+must run npm run make (above) to make the package
+modify version in /snap/snapcraft.yaml
+copy folder snap to target machine
+
+cd /snap
+
+yamllint snapcraft.yaml
+
+>>> make with the following line
+cd /home/fred/sb/snap/
+snapcraft clean && SNAPCRAFT_BUILD_ENVIRONMENT=host snapcraft --target-arch amd64
+
+// match the version number
+// we need dangerous because the file isn't signed
+// make sure the deb is NOT installed sudo dpkg --remove boinctasks-js
+sudo snap install boinctasks-js_1.0.6_amd64.snap --dangerous
+
+snap run boinctasks-js
+
+// match the version number
+Done automatically at upload snap-review boinctasks-js_1.1.1_amd64.snap  << This takes a while without action...
+// should resuld in pass.
+
+snapcraft login
+
+!!!!!!!!!!!!!!!!!!!!!!!  first in the store move the old candidate -> release
+// match the version number
+snapcraft upload --release=candidate boinctasks-js_1.1.1_amd64.snap
+
+// errors
+snapcraft clean
+// installed snaps
+snap list 
+sudo remove boinctasks-js
+
+///////////////// The rest are (failed) old experiments
+
+//////////////////////////////////////////////////////////
+// PACKAGER
+// package on windows machine 
+WINDOWS: npm run package-linux
+
+$ electron-installer-debian --src ./out/linux/boinctasks-js-linux-x64  --arch amd64 --config config_installer_linux.json
+
+// DEBUGGING
+
+Check if installed:
+grep " install " /var/log/dpkg.log
+
+dpkg -L boinctasks-js | grep applications
+
+Installing with details
+sudo dpkg -i release/linux/boinctasks-js_1.0.0_amd64.deb
+
+// Location
+/usr/share/applications .desktop 
+
+// SETUP
+
+Ubuntu installer
+https://github.com/electron-userland/electron-installer-debian
+
+On Windows machine npm run package-linux
+
+create a folder bt
+copy dist folder with the linux package to folder bt
+copy a recent copy of package.json to folder bt.
+create a folder bt/release/linux
+
+cd bt
+
+npm install -g electron-installer-debian
+
+create config_installer_linux.json in /bt
+search text editor
+
+{
+    "dest": "release/linux/",
+    "icon": "appicons/icons/png/512x512.png",
+    "categories": [
+      "System"
+    ],    
+    "lintianOverrides": [
+      "changelog-file-missing-in-native-package"
+    ]
+}
+
+save: config_installer_linux.json
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// SETUP WINDOWS <-> EXCHANGE
+
+Setup windows desktop
+
+Setup Samba
+sudo apt-get install samba
+mkdir /home/<username>/sb/
+/etc/samba/smb.conf
+sudo service smbd restart
+sudo ufw allow samba
+set samba password for user sudo smbpasswd -a username
+
+windows \\ip-address\
+
+https://ubuntu.com/tutorials/install-and-configure-samba#1-overview
+
+// color managed device
+https://c-nergy.be/blog/?p=12073
+
+
+
+https://www.electronjs.org/docs/development/build-instructions-linux
+
+
+// npm update
+
+// latest nodejs
+sudo apt update
+sudo apt-get install -y nodejs
+
+// Git update
+sudo apt update
+sudo apt install git
+git --version
+
+//linux missing 
+npm install @electron-forge/maker-squirrel --save-dev
+npm install @electron-forge/maker-zip --save-dev
+npm install @electron-forge/maker-deb --save-dev
+npm install @electron-forge/maker-rpm --save-dev
+npm install @electron-forge/maker-snap --save-dev
+sudo apt install rpm
+
+// =============================================================================================
+
+read
+https://github.com/electron-userland/electron-installer-debian/issues/19
+https://github.com/electron-userland/electron-installer-debian/issues/107
+
+// Remove
+
+sudo apt-get remove boinctasks-js
+
+// cpu usage
+top i 
+
+//
+        {
+          "name": "@electron-forge/maker-snap",
+          "config": {        
+            "features": {
+              "audio": false,
+              "mpris": "com.boinctasks-js.mpris",
+              "webgl": true
+            }
+          },
+          "confinement": "strict",
+          "grade": "devel",
+          "summary": "BoincTasks Js, best way to view BOINC"          
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+
+
+libc.so.6(GLIBC_2.28)(64bit) 
+
+// system version
+lsb_release -a

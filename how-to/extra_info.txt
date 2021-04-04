@@ -1,0 +1,53 @@
+
+https://nodejs.org/api/net.html#net_net_createconnection
+https://code.visualstudio.com/docs/nodejs/nodejs-tutorial
+https://www.tutorialspoint.com/electron/electron_packaging_apps.htm
+
+Debugging
+
+https://github.com/microsoft/vscode-recipes/tree/master/Electron
+
+
+// ICONS
+
+https://www.flaticon.com/search?word=paper&style_id=681
+https://www.electron.build/icons
+
+
+// adjustable
+// 
+
+// distribute
+// https://www.electronjs.org/docs/tutorial/quick-start#package-and-distribute-the-application
+
+https://github.com/electron/electron-packager
+https://www.christianengvall.se/electron-packager-tutorial/
+https://dev.to/gautham495/build-package-your-electron-app-and-use-it-locally-2dam
+https://www.turtle-techies.com/how-to-package-your-multiplatform-electron-app/
+
+// Linux installer
+
+https://www.christianengvall.se/electron-installer-debian-package/
+npm install -g electron-installer-debian
+
+// Windows installer
+
+https://www.christianengvall.se/electron-windows-installer/
+
+
+// build versions 
+
+npm run package-win64
+npm run package-linux
+
+
+npm install @electron-forge/cli -D
+Ubuntu: npm install @electron-forge/cli -D --scripts-prepend-node-path
+npn
+?npm install electron-packager --save-dev
+//Forge
+npm run make
+
+// troubles
+no repository field
+licence should be a vild SPDX license expressiong
