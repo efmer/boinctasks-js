@@ -49,7 +49,7 @@ class ProjectItems
             {
                 var item = this.project[i];
                 var projectName = "Initializing...";
-                var projectUrl = item.master_url;                
+                var projectUrl = item.master_url[0];                
                 if (state != null)
                 {
                     projectName = conState.getProject(con,projectUrl)
@@ -63,8 +63,9 @@ class ProjectItems
                 projectItem.credits = parseFloat(item.user_total_credit);
                 projectItem.creditsAvg = parseFloat(item.user_expavg_credit);
                 projectItem.creditsHost = parseFloat(item.host_total_credit);
-                projectItem.creditsHostAvg = parseFloat(item.host_expavg_credit);
+                projectItem.creditsHostAvg = parseFloat(item.host_expavg_credit);            
                 projectItem.share = parseFloat(item.resource_share);
+                projectItem.rec = parseFloat(item.rec);              
 
                 getStatus(item, projectItem);
                 this.projectTable.push(projectItem);

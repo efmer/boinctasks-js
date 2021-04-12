@@ -1,17 +1,16 @@
 <update>
 	<os>darwin</os>
 	<release> 
-		<version>1.11</version>
+		<version>1.12</version>
 		<info>
-			• Innitial version.
-			• This is a Beta release only.
+			• Now in a zip package.
 		</info>
 		<url>https://efmer.com/boinctasks-js/boinctasks-js-download/</url>
 	</release>
 	<beta>
-		<version>1.11</version>
+		<version>1.12</version>
 		<info>
-			• Innitial beta version.
+			• Now in a zip package.
 		</info>
 		<url>https://efmer.com/boinctasks-js/boinctasks-js-download/</url>
 	</beta>

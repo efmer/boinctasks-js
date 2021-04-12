@@ -29,8 +29,9 @@ const athenticate = new Authenticate();
 const btConstants = require('../functions/btconstants');
 
 gSendArray = [];
-gLastIp = 0;
 gLastClient = null;
+
+// use connections shadow whenever you can
 
 class SendArray
 {
@@ -63,7 +64,6 @@ class SendArray
 
     flushSendArray()
     {
-        gLastIp = 0;
         sendArrayNext(null);
     }
 }
@@ -105,7 +105,7 @@ function sendArrayNext(event)
 
         if (gSendArray.length == 0)
         {
-            gLastIp = 0;
+
             gLastClient = null;
             return;            
         }

@@ -141,7 +141,11 @@ function compare(a,b)
             case 9: // status
                 if (a.statusS > b.statusS) return 1;
                 if (a.statusS < b.statusS) return -1;
-                return 0;  
+                return 0; 
+            case 10: // REC
+                if (a.rec > b.rec) return 1;
+                if (a.rec < b.rec) return -1;
+                return 0;                  
             default:
                 return 0;                                                           
         }

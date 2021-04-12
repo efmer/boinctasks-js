@@ -1,7 +1,7 @@
 [Setup]
 AppName=BoincTasks Js
-AppVerName=BoincTasks Js by eFMer V 1.01
-AppVersion=1.01
+AppVerName=BoincTasks Js by eFMer V 1.12
+AppVersion=1.12
 AppPublisher=eFMer
 AppPublisherURL=https://efmer.com/
 AppSupportURL=https://forum.efmer.com/
@@ -36,17 +36,17 @@ InternalCompressLevel=ultra
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: out\win64\boinctasks-js-win32-x64\*.*; DestDir: {app};
-Source: out\win64\boinctasks-js-win32-x64\locales\*.*; DestDir: {app}\locales\;
-Source: out\win64\boinctasks-js-win32-x64\resources\*.*; DestDir: {app}\resources\ ;
-Source: out\win64\boinctasks-js-win32-x64\swiftshader\*.*; DestDir: {app}\swiftshader\;
+Source: out\win64\boinctasksjs-win32-x64\*.*; DestDir: {app};
+Source: out\win64\boinctasksjs-win32-x64\locales\*.*; DestDir: {app}\locales\;
+Source: out\win64\boinctasksjs-win32-x64\resources\*.*; DestDir: {app}\resources\ ;
+Source: out\win64\boinctasksjs-win32-x64\swiftshader\*.*; DestDir: {app}\swiftshader\;
 Source: boinctasks_licence.txt; DestDir: {app};
 Source: appicons\icons\win\icon.ico; DestDir: {app};
 
 [Icons]
-Name: {group}\BoincTasks Js; Filename: {app}\boinctasks-js.exe; IconIndex: 1;
-Name: "{commondesktop}\BoincTasks Js"; Filename: "{app}\boinctasks-js.exe"; Tasks: desktopicon;
+Name: {group}\BoincTasks Js; Filename: {app}\boinctasksjs.exe; IconIndex: 1;
+Name: "{commondesktop}\BoincTasks Js"; Filename: "{app}\boinctasksjs.exe"; Tasks: desktopicon;
 
 [Run]
-Filename: {app}\boinctasks-js.exe; Parameters: "/show"; Description: {cm:LaunchProgram,BoincTasks Js}; Flags: nowait postinstall skipifsilent;
+Filename: {app}\boinctasksjs.exe; Parameters: "/show"; Description: {cm:LaunchProgram,BoincTasks Js}; Flags: nowait postinstall skipifsilent;
 Filename: https://efmer.com/download-boinctasks/; Description: WWW BoincTasks; Flags: shellexec nowait postinstall skipifsilent unchecked

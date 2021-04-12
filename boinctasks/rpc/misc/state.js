@@ -35,70 +35,75 @@ class State{
         }  
     }
 
-    getApp(con, name, state)
+    getAppUf(con, name)
     {
-        var bFound = false;
-        var appFriendly = " Initializing .....";
+        var appUf = " Initializing .....";
         try {
-            if (con.state == null)
+            if (con.cacheApp !== null)
             {
-                con.needState = true;
-                 return appFriendly;
-            }
-            for (var w =0; w< con.state.workunit.length; w++)
-            {
-                var wuName = con.state.workunit[w].name[0];
-                if (wuName == name)
+                let pos = con.cacheApp.wu.indexOf(name);
+                if (pos >= 0)
                 {
-                   var appWu = con.state.workunit[w].app_name[0];
-                   var app = con.state.app;
-                    for (var i =0; i< app.length; i++)
-                    {
-                      var aName = app[i].name[0];
-                      if (appWu === aName)
-                      {
-                        appFriendly = app[i].user_friendly_name[0];
-                        return appFriendly;
-                      }
-                    }
+                    return con.cacheApp.appUf[pos];
                 }
-            }          
+            }        
         } catch (error) {  
             logging.logError('State,getApp', error);              
         }
-        if (!bFound)
-        {
-            con.needState = true;
+        con.needState = true;
+        return appUf;
+    }
+
+    getApp(con, name)
+    {
+        var appNf = "";
+        try {
+            if (con.cacheApp !== null)
+            {
+                let pos = con.cacheApp.wu.indexOf(name);
+                if (pos >= 0)
+                {
+                    return con.cacheApp.app[pos];
+                }
+            }        
+        } catch (error) {  
+            logging.logError('State,getAppRule', error);              
         }
-        return appFriendly;
+        con.needState = true;
+        return appNf;
     }
     
     getProject(con, url)
     {
-        var bFound = false;
-
         var project = " Initializing .....";
-        try {
-          if (con.state == null) return project;          
-          var projectState = con.state.project;
-      
-          for (var i =0; i< projectState.length; i++)
-          {
-            if (projectState[i]['master_url'][0] == url)
+        try {         
+            if (con.cacheProject !== null)
             {
-                project = projectState[i]['project_name'][0];
-                bFound = true;
-                break;
+                let pos = con.cacheProject.url.indexOf(url);
+                if (pos >= 0)
+                {
+                    return con.cacheProject.project[pos];
+                }
             }
-          }
         } catch (error) {
             logging.logError('State,getProject', error);              
         }
-        if (!bFound)
-        {
-            con.needState = true;
-        }        
+        con.needState = true;        
         return project;
+    }
+    getProjectUrl(con,project)
+    {
+        let url = "";
+        try {
+            let pos = con.cacheProject.project.indexOf(project);
+            if (pos >=0)
+            {
+                url = con.cacheProject.url[pos];
+            }
+        } catch (error) {
+            logging.logError('State,getProjectUrl', error);    
+        }
+        return url;
     }
     getAppName(con,app)
     {
@@ -133,6 +138,7 @@ function stateData()
         else
         {
             this.state = parseState(this.client_completeData);
+            buildCache(this)
             this.needState = false;
             this.mode = "OK";
             return;
@@ -152,10 +158,10 @@ function parseState(xml)
         parseString(xml, function (err, result) {
         if (functions.isDefined(result))
         {
-            let reply = result['boinc_gui_rpc_reply'];
+            let reply = result.boinc_gui_rpc_reply;
             if (functions.isDefined(reply))
             {
-                let stateArray = result['boinc_gui_rpc_reply']['client_state'];
+                let stateArray = reply.client_state;
                 if (functions.isDefined(stateArray))
                 {
                     stateReturn = stateArray[0];
@@ -163,7 +169,7 @@ function parseState(xml)
                 }
             }
         }
-        return null;
+        return stateReturn;
         });
     } catch (error) {
         logging.logError('State,parseState', error);          
@@ -172,3 +178,77 @@ function parseState(xml)
     return stateReturn
 }
 
+function buildCache(con)
+{
+    try {
+        if (con.state !== null)
+        {
+            let projectState = con.state.project;            
+            
+            if (con.cacheProject === null)
+            {
+                con.cacheProject = new Object
+                con.cacheProject.url = [];
+                con.cacheProject.project = [];
+            }
+
+            for (var i =0; i< projectState.length; i++)
+            {
+                let url = projectState[i].master_url[0];
+                let pos = con.cacheProject.url.indexOf(url);
+                if (pos < 0)
+                {
+                    con.cacheProject.url.push(url);
+                    con.cacheProject.project.push(projectState[i].project_name[0]);
+                }
+            }
+
+            // app 
+
+            if (con.cacheApp === null)
+            {
+                con.cacheApp = new Object
+                con.cacheApp.wu = [];
+                con.cacheApp.app = []; 
+                con.cacheApp.appUf = [];                
+            }
+            else
+            {
+                if (con.cacheApp.wu.length > 10000)
+                {
+                    con.cacheApp.wu = [];
+                    con.cacheApp.app = []; 
+                    con.cacheApp.appUf = [];                    
+                }
+            }
+            for (let w =0; w< con.state.workunit.length; w++)
+            {
+                let wuName = con.state.workunit[w].name[0];
+                let pos = con.cacheApp.wu.indexOf(wuName);
+                if (pos < 0)
+                {
+                    con.cacheApp.wu.push(wuName);
+                    let appWu = con.state.workunit[w].app_name[0];
+                    let app = con.state.app;
+                    let appUf = "";
+                    let appNf = "";
+
+                    for (let i =0; i< app.length; i++)
+                    {
+                        let aName = app[i].name[0];
+                        if (appWu === aName)
+                        {
+                            appUf = app[i].user_friendly_name[0];
+                            appNf = app[i].name[0];
+                            break;
+                        }                        
+                    }
+                    con.cacheApp.app.push(appNf);
+                    con.cacheApp.appUf.push(appUf);
+                } 
+            }
+        }
+    } catch (error) {
+        logging.logError('State,buildCache', error);              
+    }  
+}

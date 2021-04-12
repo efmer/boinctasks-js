@@ -25,7 +25,6 @@ const State = require('../misc/state');
 const conState = new State();
 const ReadWrite  = require('../functions/readwrite');
 const readWrite = new ReadWrite();
-const btConstants = require('../functions/btconstants');
 
 class History{
     getHistory(con, btSetting)

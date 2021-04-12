@@ -26,7 +26,7 @@ gBoincTasksNotice = null;
 class BtNotices{
     init()
     {
-        setTimeout(readNotice, 1000);
+        setTimeout(readNotice, 4000);
     }
 
     read()

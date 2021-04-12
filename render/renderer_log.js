@@ -40,8 +40,22 @@ $(document).ready(function() {
   });
 
   $("#log_clear").click(function( event ) {
-    ipcRenderer.send('log', 'clear');
+    ipcRenderer.send('log', 'button_clear');
   });
+
+  $("#log_log").click(function( event ) {
+    ipcRenderer.send('log', 'button_log');
+  });
+  $("#log_debug").click(function( event ) {
+    ipcRenderer.send('log', 'button_debug');
+  });
+  $("#log_rules").click(function( event ) {
+    ipcRenderer.send('log', 'button_rules');
+  });
+  $("#log_error").click(function( event ) {
+    ipcRenderer.send('log', 'button_error');
+  });
+
 
 });
 

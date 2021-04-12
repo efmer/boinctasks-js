@@ -121,6 +121,12 @@ class Toolbar{
                     const properties = new Properties();
                     properties.task(selected,gb.connections);
                 break;
+                case "toolbar_rules":
+                    selected = gb.rowSelect.results.rowSelected;
+                    const RequireRulesList = require('../rules/rules_list');
+                    let requireRulesList = new RequireRulesList();
+                    requireRulesList.toolbarTasks(selected,gb);
+                break;
                 case "toolbar_completed":
                     reportCompleted(gb);
                 break;
@@ -184,7 +190,8 @@ function getToolbarResultsSel()
                     '<td id="toolbar_resume" class="ef_btn_toolbar bt_img_toolbar_resume">&nbsp;Resume</td>' +
                     '<td id="toolbar_abort" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;Abort</td>' +
                     '<td id="toolbar_update" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;Update</td>' +
-                    '<td id="toolbar_info" class="ef_btn_toolbar bt_img_toolbar_info">&nbsp;Info</td>';                      
+                    '<td id="toolbar_info" class="ef_btn_toolbar bt_img_toolbar_info">&nbsp;Info</td>' +                      
+                    '<td id="toolbar_rules" class="ef_btn_toolbar bt_img_toolbar_list">&nbsp;Add rule</td>';
     return toolbar;
 }
 
@@ -325,7 +332,7 @@ function detachProjectYes(gb,selected,connections)
                 if (computerName === con.computerName)
                 {
                     req = "<project_detach>\n<project_url>" + url + "</project_url>\n</project_detach>"
-                    connectionsShadow.addSendArray(gb,con,req);
+                    connectionsShadow.addSendArray(con,req);
                 }
             }
         }
@@ -358,13 +365,13 @@ function task(gb,selected,request,what)
                     switch(what)
                     {
                         case SEND_TASKS:
-                            sendCommand(gb,con,request, url, wu);
+                            sendCommand(con,request, url, wu);
                         break;
                         case SEND_PROJECTS:
-                            sendCommandProject(gb,con,request, url);
+                            sendCommandProject(con,request, url);
                         break;
                         case SEND_TRANSFERS:
-                            sendCommandTransfer(gb,connections[c],request, url,wu);
+                            sendCommandTransfer(connections[c],request, url,wu);
                         break;
                     }
                 }
@@ -376,22 +383,22 @@ function task(gb,selected,request,what)
     }    
 }
 
-function sendCommand(gb,con,request, url, wu)
+function sendCommand(con,request, url, wu)
 {
     let req = "<" + request + ">\n<project_url>" + url + "</project_url>\n<name>"+ wu + "</name>\n</" + request + ">";
-    connectionsShadow.addSendArray(gb,con,req);
+    connectionsShadow.addSendArray(con,req);
 }
 
-function sendCommandTransfer(gb,con,request, url, wu)
+function sendCommandTransfer(con,request, url, wu)
 {
     let req = "<" + request + ">\n<project_url>" + url + "</project_url>\n<filename>"+ wu + "</filename>\n</" + request + ">";
-    connectionsShadow.addSendArray(gb,con,req);
+    connectionsShadow.addSendArray(con,req);
 }
 
-function sendCommandProject(gb,con,request, url)
+function sendCommandProject(con,request, url)
 {
     let req = "<" + request + ">\n<project_url>" + url + "</project_url>\n</" + request + ">";
-    connectionsShadow.addSendArray(gb,con,req);
+    connectionsShadow.addSendArray(con,req);
 }
 
 function reportCompleted(gb)
@@ -408,7 +415,7 @@ function reportCompleted(gb)
                 for (let tr=0; tr < toReport.url.length;tr++)
                 { 
                     url = toReport.url[tr];                
-                    sendCommandProject(gb,con,"project_update",url)
+                    sendCommandProject(con,"project_update",url)
                 }
             }
         }

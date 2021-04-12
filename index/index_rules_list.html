@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->  
+    <link rel="stylesheet" href="../boinctasks/css/bt.css">
+    <link rel="stylesheet" href="../boinctasks/css/rules.css">
+
+    <title>Rules</title>
+  </head>
+  <body>
+    <div id="select_rule_edit"></div>
+    <div id="select_rule_list"></div>
+    <div id="select_rule_error"></div>     
+    <div id="select_rule_buttons"></div>
+    <div id="select_rule_info_status"></div>    
+    <div id="select_rule_info_type"></div>
+    <div id="select_rule_info_action"></div>
+    <div id="select_rule_info_action2"></div>
+    <div id="select_rule_cancel"></div>    
+    <script>window.$ = window.jQuery = require('../boinctasks/lib/jquery.min');</script>
+    <script type="text/javascript">
+      require('../render/renderer_rules_list')
+    </script>
+  </body>
+</html>

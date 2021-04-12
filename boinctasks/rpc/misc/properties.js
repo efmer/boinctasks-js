@@ -23,6 +23,8 @@ const functions = new Functions();
 
 const WindowsState = require('../functions/window_state');
 const windowsState = new WindowsState();
+const State = require('../misc/state');
+const conState = new State();
 
 const btConstants = require('../functions/btconstants');
 
@@ -88,14 +90,31 @@ function taskInfo(selected,connections)
                         wu = resultF.wu;                        
                         prop += addInfo("Computer",computer);
                         prop += addInfo("Project", url + " | " + resultF.project);
-                        prop += addInfo("Appliation", resultF.app);                        
-                        prop += addInfo("Name",resultF.wu + " | " + resultF.wuName);
-                        prop += addInfo("Elapsed",resultF.elapsedS);
-                        prop += addInfo("Cpu", resultF.cpuS);
-                        prop += addInfo("Progress", resultF.fractionS);
-                        prop += addInfo("Timeleft", resultF.remainingS);
+                        let appUf =  conState.getAppUf(con, wu);
+                        let app = conState.getApp(con, wu);
+                        prop += addInfo("App Version", resultF.version);                        
+                        prop += addInfo("App User", appUf);
+                        prop += addInfo("Application", app);
+                        prop += addInfo("Name",resultF.wu);
+                        prop += addInfo("Name Wu",resultF.wuName);                        
+                        let elapsedS = functions.getFormattedTimeInterval(resultF.elapsed); 
+                        prop += addInfo("Elapsed",elapsedS);
+                        let cpu = parseInt(resultF.cpu);
+                        let cpuS = "";
+                        if (cpu > 0)
+                        {             
+                            cpuS = cpu.toFixed(2) + "%";                     
+                        } 
+                        prop += addInfo("Cpu", cpuS);
+                        let fraction = parseInt(resultF.fraction);
+                        let fractionS = "";
+                        if (fraction > 0)   fractionS = fraction.toFixed(3) + "%";                         
+                        prop += addInfo("Progress", fractionS);
+                        let remainingS = functions.getFormattedTimeInterval(resultF.remaining);                         
+                        prop += addInfo("Timeleft", remainingS);
                         let deadlineT =  functions.getFormattedTime(resultF.deadline);
-                        prop += addInfo("Deadline", resultF.deadlineS + " | " + deadlineT);
+                        let deadlineS = functions.getFormattedTimeDiff(resultF.deadline)                          
+                        prop += addInfo("Deadline", deadlineS + " | " + deadlineT);
                         prop += addInfo("Resources",resultF.resources);
                         prop += addInfo("Status", resultF.statusS)
 

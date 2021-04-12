@@ -109,7 +109,7 @@ function tableResultsArray(gb, resultTable, color)
       var rt = resultTable[i];
       if (rt.filtered)
       {
-        var app = rt.app+rt.statusS;
+        var app = rt.computerName+rt.app+rt.statusS;
         for (var f=0;f<filter.length;f++)
         {
           if (app === filter[f])
@@ -252,15 +252,15 @@ function tableResultItem(selRows, i, order, result, filter, colorObj)
       {
         sclass += " bt_img_arrow_right";
       }
-      item = '<div id="filter' + btConstants.SEPERATOR_ITEM + app+status + '" class="' + sclass + '">'+ wu + '</div>'  
+      item = '<div id="filter' + btConstants.SEPERATOR_ITEM + computer+app+status + '" class="' + sclass + '">'+ wu + '</div>'  
       items[order.order[3]] = addRow(order.check[3],selId,3,item);   
     }
-    else  items[order.order[3]] = addRow(order.check[3],selId, 3, wu);  
+    else  items[order.order[3]] = addRow(order.check[3],selId, 3, wuName);  
 
     let elapsedS = functions.getFormattedTimeInterval(result.elapsed); 
     items[order.order[4]] = addRow(order.check[4],selId, 4, elapsedS); 
 
-    let cpu = parseInt(result.cpu);
+    let cpu = parseFloat(result.cpu);
     let style = 'style="background-color:' + colorObj['#progress_bar'] + '!important;' + 'width:'+ cpu + '%;">';
     let cpuS = "";
     if (cpu > 0)
@@ -271,7 +271,7 @@ function tableResultItem(selRows, i, order, result, filter, colorObj)
     item = '<div ' + style + cpuS + '</div>'
     items[order.order[5]] = addRow(order.check[5],selId, 5, item);
 
-    let fraction = parseInt(result.fraction);
+    let fraction = parseFloat(result.fraction);
     let fractionS = "";
     if (fraction > 0)   fractionS = fraction.toFixed(3) + "%"; 
 

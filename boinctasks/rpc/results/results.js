@@ -34,62 +34,63 @@ class ResultItems
             toReport.url = [] 
             toReport.count = [];
             this.filter = [];
+            this.filterAS = [];
             this.resultTable = [];
             this.resultCount = results.result.length;
-            for (var i=0; i< results.result.length; i++)
+            for (let i=0; i< results.result.length; i++)
             {
-                var item = results.result[i];
-                var version = parseInt(item.version_num) / 100;
-                var wu = item.wu_name[0];
-                var wuName = item.name[0];
-                var app = "Initializing...";
-                var project = "Initializing...";
-                var projectUrl = item.project_url[0];
+                let item = results.result[i];
+                let version = parseInt(item.version_num) / 100;
+                let wu = item.wu_name[0];
+                let wuName = item.name[0];
+                let app = "Initializing...";
+                let project = "Initializing...";
+                let projectUrl = item.project_url[0];
                 if (state != null)
                 {
-                    app = conState.getApp(con, wu);
+                    app = conState.getAppUf(con, wu);
                     project = conState.getProject(con,projectUrl)
                 }
-                var versionApp = version + " " + app;
-
-                var resultItem = new Object();
+                let versionApp = version + " " + app;
+                let computer = con.computerName;
+                let resultItem = new Object();
 
                 resultItem.filtered = false;
-                resultItem.computerName = con.computerName;
+                resultItem.computerName = computer;
                 resultItem.project = project;
                 resultItem.projectUrl = projectUrl;
                 resultItem.version = parseInt(item.version_num) / 100;
                 resultItem.app = versionApp;
                 resultItem.wu = wu;
                 resultItem.wuName = wuName;
-                var resources = item.resources;
-                if (!functions.isDefined(resources)) resources = "";
+                let resources = item.resources;
+                if (resources === void 0) resources = "";
 
                 resultItem.resources = resources;
 
-//                var elapsed = 0;
+//                let elapsed = 0;
 
-                var iState = item.state[0];                
+let iState = item.state[0];                
                 if (iState > 2)
                 {
                      resultItem.fraction = 100;
                 }
                 else resultItem.fraction = 0;
 
-                var active = item.active_task;
-                var bActive = false;
+                let active = item.active_task;
+                let bActive = false;
 
-                var cpuTime = item.final_cpu_time[0];
-                var elapsedTime = parseFloat(item.final_elapsed_time);            
+                let cpuTime = item.final_cpu_time[0];
+                let elapsedTime = parseFloat(item.final_elapsed_time[0]);
 
-                var sState = "0";
-                var aState = "0";
+                let sState = "0";
+                let aState = "0";
 
                 resultItem.swap = 0;
                 resultItem.memory = 0;
                 resultItem.received = parseInt(item.received_time[0]);
                 resultItem.checkpoint = 0;
-                if (functions.isDefined(active))
+                if (active !== void 0)
                 {
                     active = active[0];               
                     resultItem.fraction = parseFloat(active.fraction_done)*100;
@@ -103,7 +104,7 @@ class ResultItems
                 
                     bActive = true;
                 }
-                var cpu = 0;
+                let cpu = 0;
                 if (cpuTime == 0 || elapsedTime == 0)
                 {
                     resultItem.cpu = 0;
@@ -117,17 +118,17 @@ class ResultItems
 
                 resultItem.elapsed = elapsedTime;               
               
-                var remaining = parseInt(item.estimated_cpu_time_remaining);
+                let remaining = parseInt(item.estimated_cpu_time_remaining);
                 resultItem.remaining = remaining;                   
                 resultItem.deadline = parseFloat(item.report_deadline);//.toString();
-                var hpState = item.edf_scheduled;
-                if (functions.isDefined(hpState))
+                let hpState = item.edf_scheduled;
+                if (hpState !== void 0)
                 {
                      hpState = "1";
                 }
                 else hpState = "0";
-                var gState = item.suspended_via_gui;
-                if (!functions.isDefined(gState)) gState = "0";                
+                let gState = item.suspended_via_gui;
+                if (gState === void 0) gState = "0";                
 
                 getStatus(resultItem, item, con.ccstatus, hpState, gState+aState+sState+iState);   
                 if (resultItem.report)  
@@ -143,35 +144,29 @@ class ResultItems
                         toReport.count[found]++;
                     }                    
                 }
+
                 if (!bActive)
-                {
-                    var bFound = false;                  
-                    for (var f=0; f< this.filter.length;f++)
+                {                    
+                    let pos = this.filterAS.indexOf(computer+versionApp+resultItem.statusS)
+                    if (pos >= 0)
                     {
-                        var fItem  = this.filter[f];
-                        if (fItem.app === versionApp)
+                        let fItem  = this.filter[pos];  
+                        fItem.count++;                   
+                        fItem.remaining += remaining;             
+                        fItem.elapsed += elapsedTime;
+                        if (fItem.deadline > resultItem.deadline) 
                         {
-                            if (fItem.statusS === resultItem.statusS)
-                            {
-                                fItem.count++;                   
-                                fItem.remaining += remaining;             
-                                fItem.elapsedTime += elapsedTime;
-                                if (fItem.deadline > resultItem.deadline) 
-                                {
-                                    fItem.deadline = resultItem.deadline;
-                                }
-                                fItem.resultTable.push(resultItem);
-                                bFound = true;
-                            }
+                            fItem.deadline = resultItem.deadline;
                         }
+                        fItem.resultTable.push(resultItem);                        
                     }
-                    if (!bFound)
+                    else
                     {                        
-                        var filterItem = new Object();
+                        let filterItem = new Object();
                         filterItem.count = 1;
                         filterItem.resultTable = [];
                         filterItem.resultTable.push(resultItem);
-                        filterItem.computerName = con.computerName;
+                        filterItem.computerName = computer;
                         filterItem.project = project;
                         filterItem.projectUrl = projectUrl;
                         filterItem.app = versionApp;
@@ -193,6 +188,7 @@ class ResultItems
                         filterItem.statusI = resultItem.statusI;
                         filterItem.statusN = resultItem.statusN;
                         this.filter.push(filterItem);
+                        this.filterAS.push(computer+versionApp+resultItem.statusS)
                         continue;
                     }
                     continue
@@ -200,9 +196,9 @@ class ResultItems
                 this.resultTable.push(resultItem);
             }
             con.toReport = toReport;
-            for (var f=0; f < this.filter.length;f++)
+            for (let f=0; f < this.filter.length;f++)
             {
-                var filterItem = this.filter[f];          
+                let filterItem = this.filter[f];          
                 if (filterItem.count >1) 
                 {
                     filterItem.wu = filterItem.count + " [Tasks]";
@@ -253,14 +249,14 @@ function resultData()
         }                    
         else
         {
-            var results = parseResults(this.client_completeData);
+            let results = parseResults(this.client_completeData);
             if (results == null)
             {
                 this.results = null;
                 this.mode = 'empty';
                 return;
             }
-            var resultItems = new ResultItems();
+            let resultItems = new ResultItems();
             resultItems.add(this, this.state, results)
 
             this.results = resultItems;  
@@ -275,14 +271,14 @@ function resultData()
 
 function parseResults(xml)
 {
-    var resultReturn = null;
+    let resultReturn = null;
     try {
-        var parseString = require('xml2js').parseString;
+        let parseString = require('xml2js').parseString;
         parseString(xml, function (err, result) {
-            if (functions.isDefined(result))
+            if (result !== void 0)
             {
-                var resultArray = result['boinc_gui_rpc_reply']['results'];
-                if (functions.isDefined(resultArray))
+                let resultArray = result['boinc_gui_rpc_reply']['results'];
+                if (resultArray !== void 0)
                 {
                     resultReturn = resultArray[0];
                 }
@@ -313,98 +309,18 @@ function getStatus(resultItem, item, ccStatus, hp, state)
     let status = "";
     let statusN = -1;
     let bReport = false;
+    let bSuspend = false;
     try {
-        switch (state) {
-            case "0122": {
-                status = btConstants.TASK_STATUS_RUNNING;                
-                statusN = btConstants.TASK_STATUS_RUNNING_N;
-            }
-            break;
-            case "0001": {
-                status = btConstants.TASK_STATUS_DOWNLOADING;
-                statusN = btConstants.TASK_STATUS_DOWNLOADING_N;
-            }
-            break;
-            case "0002": {
-                status = btConstants.TASK_STATUS_READY_START;
-                statusN = btConstants.TASK_STATUS_READY_START_N;
-            }
-            break;
-            case "0003": {
-                status = btConstants.TASK_STATUS_COMPUTATION;
-                statusN = btConstants.TASK_STATUS_COMPUTATION_N;
-                bReport = true;
-            }
-            break;
-            case "0004": {
-                status = btConstants.TASK_STATUS_UPLOADING;
-                statusN = btConstants.TASK_STATUS_UPLOADING_N;
-            }
-            break;
-            case "0005": {
-                status = btConstants.TASK_STATUS_READY_REPORT;
-                statusN = btConstants.TASK_STATUS_READY_REPORT_N;
-                bReport = true;
-            }
-            break;
-            case "0012":
-            case "0812": 
-            case "0912": {
-                status = btConstants.TASK_STATUS_WAITING;
-                statusN = btConstants.TASK_STATUS_WAITING_N;
-            }
-            break;
-            case "0922":
-            case "0022": 
-            case "1922": {
-                status = btConstants.TASK_STATUS_SUSPENDED;
-                statusN = btConstants.TASK_STATUS_SUSPENDED_N;
-            }
-            break;
-            case "002":
-            case "922":            
-            case "012":
-            case "812":
-            case "1012": 
-            case "0012": 
-            case "1812": 
-            case "0812": {
-                status = btConstants.TASK_STATUS_SUSPENDED_USER;
-                statusN = btConstants.TASK_STATUS_SUSPENDED_USER_N;
-            }
-            break;  
-            case "0006": {
-                status = btConstants.TASK_STATUS_ABORT;
-                statusN = btConstants.TASK_STATUS_ABORT_N; 
-                bReport = true;
-            }                      
-            break;
-            default: status = "State: " + state;
-        }
-        resultItem.report = bReport;
-        resultItem.statusI = status;                
-        resultItem.statusN = statusN;         
-        if (hp == '1') 
+        let iSuspendReason = false;
+        if(ccStatus !== null)
         {
-            status += btConstants.TASK_STATUS_HP;
-            resultItem.hp = true;
+            iSuspendReason = parseInt(ccStatus.task_suspend_reason);
         }
-        else
-        {
-            resultItem.hp = false;
-        }
-
-        if(ccStatus == null)
-        {
-            status += " ??";
-            resultItem.statusS = status;            
-            return;
-        }
-        var iSuspendReason = parseInt(ccStatus.task_suspend_reason);
-        var sSuspendReason = "";
+        let sSuspendReason = "";
 
         if (iSuspendReason)
         {
+            bSuspend = true;
             if (iSuspendReason & SUSPEND_REASON_BATTERIES)				{ sSuspendReason = "on batteries";}
             if (iSuspendReason & SUSPEND_REASON_USER_ACTIVE)			{ sSuspendReason = "user active";}
             if (iSuspendReason & SUSPEND_REASON_USER_REQ)				{ sSuspendReason = "user request";}
@@ -423,30 +339,116 @@ function getStatus(resultItem, item, ccStatus, hp, state)
             }
         }
 
-        var waitingForMemory = false;
-        if (item.too_large !== undefined)
+        if (item.too_large !== void 0)
         {
-            waitingForMemory = true;
+            bSuspend = true;
+            sSuspendReason += " mem too large";
         }
-        if (item.needs_shmem !== undefined)
+        if (item.needs_shmem !== void 0)
         {
-            waitingForMemory = true;
+            bSuspend = true;
+            sSuspendReason += " mem need shmem";            
         }
-        if (item.gpu_mem_wait !== undefined)
+        if (item.gpu_mem_wait !== void 0)
         {
-            waitingForMemory = true;
-        }    
-        if (waitingForMemory)
-        {
-            sSuspendReason = "waiting for memory" 
+            bSuspend = true;
+            sSuspendReason += " mem gpu mem";              
         }        
         if (item.scheduler_wait)
         {
+            bSuspend = true;            
             sSuspendReason = item.scheduler_wait_reason.toString();
+        }
+
+        switch (state) {
+            case "0122":
+            case "122":
+            case "0922":
+                if (bSuspend)
+                {
+                    status = btConstants.TASK_STATUS_SUSPENDED;
+                    statusN = btConstants.TASK_STATUS_SUSPENDED_N;                 
+                }
+                else
+                {
+                    status = btConstants.TASK_STATUS_RUNNING;
+                    statusN = btConstants.TASK_STATUS_RUNNING_N;
+                }
+            break;
+            case "0001":
+                status = btConstants.TASK_STATUS_DOWNLOADING;
+                statusN = btConstants.TASK_STATUS_DOWNLOADING_N;            
+            break;
+            case "0002":
+                status = btConstants.TASK_STATUS_READY_START;
+                statusN = btConstants.TASK_STATUS_READY_START_N;
+            break;
+            case "0003":
+                status = btConstants.TASK_STATUS_COMPUTATION;
+                statusN = btConstants.TASK_STATUS_COMPUTATION_N;
+                bReport = true;
+            break;
+            case "0004":
+                status = btConstants.TASK_STATUS_UPLOADING;
+                statusN = btConstants.TASK_STATUS_UPLOADING_N;
+            break;
+            case "0005":               
+                status = btConstants.TASK_STATUS_READY_REPORT;
+                statusN = btConstants.TASK_STATUS_READY_REPORT_N;
+                bReport = true;
+            break;
+            case "0012":
+            case "0812": 
+            case "0912":
+                status = btConstants.TASK_STATUS_WAITING;
+                statusN = btConstants.TASK_STATUS_WAITING_N;
+            break;
+            case "0022": 
+            case "1922":
+            case "922":
+                status = btConstants.TASK_STATUS_SUSPENDED;
+                statusN = btConstants.TASK_STATUS_SUSPENDED_N;
+            break;            
+            case "005":
+            case "002":
+            case "922":
+            case "912":
+            case "022":
+            case "012":
+            case "812":
+            case "1012":
+            case "0012":
+            case "1812":
+            case "0812":
+                status = btConstants.TASK_STATUS_SUSPENDED_USER;
+                statusN = btConstants.TASK_STATUS_SUSPENDED_USER_N;
+            break;  
+            case "0006":
+                status = btConstants.TASK_STATUS_ABORT;
+                statusN = btConstants.TASK_STATUS_ABORT_N; 
+                bReport = true;           
+            break;
+            default: status = "State: " + state;
+        }
+        resultItem.report = bReport;
+        resultItem.statusI = status;                
+        resultItem.statusN = statusN;         
+        if (hp == '1') 
+        {
+            status += btConstants.TASK_STATUS_HP;
+            resultItem.hp = true;
+        }
+        else
+        {
+            resultItem.hp = false;
         }
 
         if (sSuspendReason == "" )
         {
+            if (btConstants.DEBUG)
+            {
+                status += " | " + state;
+            }
             resultItem.statusS = status;            
             return;
         }
@@ -454,5 +456,9 @@ function getStatus(resultItem, item, ccStatus, hp, state)
     } catch (error) {
         logging.logError('Results,getStatus', error);    
     }    
-    resultItem.statusS = status; 
+    if (btConstants.DEBUG)
+    {
+        status += " | " + state;
+    }
+    resultItem.statusS = status;
 }

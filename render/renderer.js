@@ -50,10 +50,6 @@ $(document).ready(function() {
       break;
     }
 
-    $( "#bt_table_header_insert" ).contextmenu(function() {
-      alert( "Handler for .contextmenu() called." );
-    });
-
     $('body').removeClass('app-no-scrollbar')
 // 
   });
@@ -79,7 +75,6 @@ $(document).ready(function() {
        }
     })
   });
-
 
   ipcRenderer.on('set_tab', (event, tab) => {
     changeTab(tab,false);

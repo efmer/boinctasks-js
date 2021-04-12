@@ -16,13 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-//require('module-alias/register')  // the first thing
-
-
 // Modules to control application life and create native browser window
 const {ipcMain, app, BrowserWindow, Menu, Tray } = require('electron')
-//const debug = require('electron-debug');
-//debug();
 
 const Logging = require('./boinctasks/rpc/functions/logging');
 const logging = new Logging();
@@ -77,6 +72,7 @@ function initMenu()
   } catch (error) {
     btMenu.set(btConstants.MENU_SIDEBAR_COMPUTERS, true);  // initially enabled
   }
+
   gMenuTemplate = [  
     {
       label: 'File',
@@ -183,12 +179,25 @@ function initMenu()
           }               
         },
         {
+          label:'Rules Log',
+          click() { 
+            showLog(btConstants.LOGGING_RULES);
+          }               
+        },        
+        {
           label:'Error Log',
           click() { 
             showLog(btConstants.LOGGING_ERROR);
-          }               
-        },       
-
+          }
+        },
+        {
+          label:'Debug mode',
+          type: "checkbox",
+          checked: btConstants.DEBUG,          
+          click() {
+            btConstants.DEBUG = !btConstants.DEBUG;
+          }
+        },
       ] 
     },
     {
@@ -232,6 +241,17 @@ function initMenu()
           },                                          
       ] 
     },
+    {
+      label: 'Rules',
+        submenu: [
+          {
+            label:'Edit',
+            click(e) { 
+              connections.rules("menu");
+            }
+          }                   
+      ] 
+    },       
     {
       label: 'Help',
         submenu: [
@@ -358,7 +378,6 @@ function initialize () {
     });
   }
 
-
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -368,9 +387,7 @@ function initialize () {
     rendererRequests(); 
     gTray = createTray();
 
-    // debug xxxxx
-
-  app.on('activate', function () {
+    app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
@@ -523,9 +540,21 @@ function rendererRequests()
   ipcMain.on("log", (renderer, type, data) => {
     switch(type)
     {
-      case "clear":
+      case "button_clear":
         logging.logClear(gLogging.type)
       break;
+      case "button_log":
+        showLog(btConstants.LOGGING_NORMAL);
+      break;
+      case "button_debug":
+        showLog(btConstants.LOGGING_DEBUG);
+      break;
+      case "button_rules":
+        showLog(btConstants.LOGGING_RULES);
+      break;
+      case "button_error":
+        showLog(btConstants.LOGGING_ERROR);
+      break;      
     }
   }) 
 
@@ -551,6 +580,11 @@ function rendererRequests()
     const update = new Update();
     update.button(type);    
   }) 
+
+  ipcMain.on("rules", (renderer,type,data,data2) => {
+    connections.rules(type,data,data2);    
+  })
+
 }
 
 function setCss()
@@ -708,7 +742,7 @@ function btTimerLog()
     }
     else
     {
-      clearTimeout(gTimerLog);
+      clearTimeout(gTimerLog);      
     }
   } catch (error) {
     var ii = 1;

@@ -31,7 +31,7 @@ class Functions{
     isDefined(check)
     {
         if (check === null) return false;
-        if (typeof check != 'undefined')
+        if (check !== void 0)
         {
             return true;
         }

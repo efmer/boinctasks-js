@@ -21,16 +21,18 @@ const btConstants = require('./btconstants');
 const os = require('os');
 const { app } = require('electron')
 
-var g_logMsg = "";
-var g_logDebugMsg = "";
-var g_logErrorMsg = "";
+let g_logMsg = "";
+let g_logDebugMsg = "";
+let g_logRulesMsg = "";
+let g_logErrorMsg = "";
 
 class Logging{
     setVersion(versionIn)
     {
         try {
             this.log(versionIn);
-            this.logDebug(versionIn);        
+            this.logDebug(versionIn); 
+            this.logRules(versionIn);
             g_logErrorMsg = versionIn;
     
             let sys = "System running on platform: " + os.platform() + " ,architecture: " + os.arch();
@@ -42,17 +44,17 @@ class Logging{
             path = "Folder data: " + app.getPath("appData");
             this.logDebug(path);            
         } catch (error) {
-            var ii = 1;
+            let ii = 1;
         }
     }
 
     log(msg)
     {
         try {
-            var time = getTime();            
+            let time = getTime();            
             g_logMsg += time + " " + msg + ".</br>";
         } catch (error) {
-            var ii = 1;
+            let ii = 1;
         }   
     }
 
@@ -64,6 +66,8 @@ class Logging{
                 return g_logMsg;          
             case btConstants.LOGGING_DEBUG:
                 return g_logDebugMsg;   
+            case btConstants.LOGGING_RULES:
+                return g_logRulesMsg;                   
             case btConstants.LOGGING_ERROR:
                 return g_logErrorMsg;     
             break;
@@ -75,11 +79,13 @@ class Logging{
         switch(type)
         {
             case btConstants.LOGGING_NORMAL:
-                return "Logging"          
+                return "Logging";
             case btConstants.LOGGING_DEBUG:
-                return "Debug Logging";   
+                return "Debug Logging";
+            case btConstants.LOGGING_RULES:
+                return "Rules Logging";
             case btConstants.LOGGING_ERROR:
-                return "Error Logging";     
+                return "Error Logging";
         }
         return "??";
     }
@@ -94,6 +100,9 @@ class Logging{
             case btConstants.LOGGING_DEBUG:
                 g_logDebugMsg = "";
             break;
+            case btConstants.LOGGING_RULES:
+                g_logRulesMsg = "";
+            break;            
             case btConstants.LOGGING_ERROR:
                 g_logErrorMsg = "";
             break;            
@@ -103,22 +112,32 @@ class Logging{
     logDebug(msg)
     {
         try {
-            var time = getTime();            
+            let time = getTime();            
             g_logDebugMsg += time + " " + msg + ".</br>";    
         } catch (error) {
-            var  ii =1;
+            let  ii =1;
+        }        
+    }
+
+    logRules(msg)
+    {
+        try {
+            let time = getTime();            
+            g_logRulesMsg += time + " " + msg + ".</br>";    
+        } catch (error) {
+            let  ii =1;
         }        
     }
 
     logError(from,error)
     {
         try {
-            var time = getTime();
+            let time = getTime();
             let msg = error.message;
             msg += "<br>" + error.stack;
             g_logErrorMsg += time + " Error: [" + from + "] " + msg + ".</br>"; 
         } catch (error) {
-            var  ii =1;            
+            let  ii =1;            
         }        
     }   
 
@@ -126,7 +145,7 @@ class Logging{
     {
         msg = msg.replaceAll("<","&#60;")        
         msg = msg.replaceAll(">","&#62;")
-        var time = getTime();
+        let time = getTime();
         g_logErrorMsg += time + " Error: [" + from + "] " + msg + ".</br>";     
     }
 }
@@ -137,10 +156,10 @@ function getTime()
 {
     try {
 
-        var date = new Date();
-        var txt = date.toLocaleTimeString();
+        let date = new Date();
+        let txt = date.toLocaleTimeString();
         return txt;
     } catch (error) {
-        var ii  = 1;
+        let ii  = 1;
     }    
 }

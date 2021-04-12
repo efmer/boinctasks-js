@@ -23,6 +23,8 @@ const windowsState = new WindowsState();
 const ReadWrite  = require('../functions/readwrite');
 const readWrite = new ReadWrite();
 const btConstants = require('../functions/btconstants');
+const Functions = require('../functions/functions');
+const functions = new Functions();
 
 const {BrowserWindow} = require('electron')
 
@@ -308,9 +310,10 @@ function defaultHistory()
 
 function valid(order, count)
 {
+  validLength(order,count)
   let checkA = [];
   validClear(checkA,count);
-
+  let i;
   for (i=0;i<count;i++)
   {
     checkA[order.order[i]]++ ;
@@ -320,6 +323,19 @@ function valid(order, count)
     checkA[order.order[i]]++ ;
   }
   return valid1(checkA)
+}
+
+// in case new columns are added
+function validLength(order, count)
+{
+  for (let i=0;i<count;i++)
+  {
+    if (!functions.isDefined(order.order[i]))
+    {
+      order.order[i] = i;
+      order.check[i] = false;
+    }
+  }
 }
 
 function validClear(checkA,max)
@@ -435,7 +451,7 @@ function setHistory(gb, data)
 function setWindow(gb)
 {
   try {
-    switch(gB.currentTable.name)
+    switch(gb.currentTable.name)
     {
       case btConstants.TAB_COMPUTERS:
         setWindowsComputers(gb, btConstants.TAB_COMPUTERS)
@@ -505,6 +521,7 @@ function setWindowsProjects(gb, type)
   itemsArray[order.order[7]] = addItem(btConstants.PROJECTS_CREDITS_HOST_AVG,7,order);
   itemsArray[order.order[8]] = addItem(btConstants.PROJECTS_SHARE,8,order);
   itemsArray[order.order[9]] = addItem(btConstants.GENERAL_STATUS,9,order);
+  itemsArray[order.order[10]] = addItem(btConstants.PROJECTS_REC,10,order);  
 
   for (let i=0;i<itemsArray.length;i++)
   {

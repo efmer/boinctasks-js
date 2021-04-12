@@ -303,6 +303,12 @@ body
 	background-position: top 1px left 1px;
 }
 
+.bt_img_toolbar_list {
+	background: url(./img/toolbar/list.png) no-repeat;
+	background-size: 24px 24px;	
+	background-position: top 1px left 1px;
+}
+
 .bt_img_toolbar_clipboard {
 	background: url(./img/toolbar/clipboard.png) no-repeat;
 	background-size: 24px 24px;	

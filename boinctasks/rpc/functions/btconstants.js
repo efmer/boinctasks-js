@@ -18,7 +18,8 @@
 
 module.exports = {
 
-    VERSION                     : 1.11,
+    VERSION                     : 1.12,
+    DEBUG                       : false,
 
     CONNECTION_TIMEOUT          : 4,
     
@@ -39,7 +40,7 @@ module.exports = {
     COMPUTERS_BOINC             : "BOINC",
     COMPUTERS_PLATFORM          : "Platform",    
 
-    PROJECTS_COLOMN_COUNT       : 10,
+    PROJECTS_COLOMN_COUNT       : 11,
     PROJECTS_ACCOUNT            : "Account",
     PROJECTS_TEAM               : "Team",
     PROJECTS_CREDITS            : "Credits",
@@ -47,6 +48,7 @@ module.exports = {
     PROJECTS_CREDITS_HOST       : "Credits Host",
     PROJECTS_CREDITS_HOST_AVG   : "Credits Host Avg.",
     PROJECTS_SHARE              : "Share",
+    PROJECTS_REC                : "REC",
 
     TASKS_COLOMN_COUNT          : 15,
     GENERAL_COMPUTER            : "Computer",
@@ -113,7 +115,8 @@ module.exports = {
 
     LOGGING_NORMAL              : 0,
     LOGGING_DEBUG               : 1,
-    LOGGING_ERROR               : 2,
+    LOGGING_RULES               : 2,
+    LOGGING_ERROR               : 3,
 
     EMPTY_TABLE : '<br><br><br><br><b>Empty....',
 }

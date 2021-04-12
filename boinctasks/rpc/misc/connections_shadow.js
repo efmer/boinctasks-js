@@ -32,20 +32,14 @@ class ConnectionsShadow
 
     init()
     {
-        gSendArrayShadow = [];
+//        gSendArrayShadow = [];
     }
 
-    addSendArray(gb,con,req)
+    addSendArray(con,req)
     {
         try {
-            for (let i=0;i<gb.connections.length;i++)
-            {
-                if (con.computerName === gb.connectionsShadow[i].computerName)
-                {
-                    gSendArrayShadow.push(gb.connectionsShadow[i]);
-                    gSendArrayShadow.push(req);
-                }
-            }            
+            gSendArrayShadow.push(con.shadow);
+            gSendArrayShadow.push(req);            
         } catch (error) {
             logging.logError('ConnectionsShadow,addSendArray', error);           
         }
@@ -63,7 +57,6 @@ module.exports = ConnectionsShadow;
 function clone(gb)
 {
     try {
-        gb.connectionsShadow = []
         for(let i=0; i<gb.connections.length;i++)        
         {
             let con = gb.connections[i];
@@ -78,7 +71,7 @@ function clone(gb)
             conS.lostConnection = false;
             conS.error = '';
             conS.isShadow = true;
-            gb.connectionsShadow.push(conS);
+            con.shadow = conS;
         }
     } catch (error) {
         logging.logError('ConnectionsShadow,clone', error);      
@@ -114,6 +107,18 @@ function sendArrayNextShadow(event)
 function sendSingleShadow(con, req)
 {
     try {
+        let time = Date.now();
+
+        if (con.authTimeValid === void 0)
+        {
+            con.authTimeValid = 0; 
+        }
+
+        if (con.authTimeValid < time)
+        {
+            con.auth = false;
+        }
+
         con.sendArraytoSend = req;        
         if(con.clientClass == null)
         {        
@@ -141,6 +146,7 @@ function sendSingleShadow(con, req)
 function connectAuthShadow(con)
 {
     try {
+        con.authTimeValid = Date.now() + 300000; // valid for 5 minutes        
         con.client_callbackI = sendArrayNextShadow;
         con.client_completeData = "";
         functions.sendRequest(con.client_socket, con.sendArraytoSend);            

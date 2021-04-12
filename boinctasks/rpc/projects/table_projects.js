@@ -140,6 +140,7 @@ function tableProjectsHeader(gb, addText)
     items[order.order[7]] = addRowHeader(order.check[7],true, gb, 7, btConstants.PROJECTS_CREDITS_HOST_AVG);
     items[order.order[8]] = addRowHeader(order.check[8],true, gb, 8, btConstants.PROJECTS_SHARE);
     items[order.order[9]] = addRowHeader(order.check[9],true, gb, 9, btConstants.GENERAL_STATUS);     
+    items[order.order[10]] = addRowHeader(order.check[10],true, gb, 10, btConstants.PROJECTS_REC);      
   }
   else
   {
@@ -151,8 +152,9 @@ function tableProjectsHeader(gb, addText)
     items[order.order[5]] = addRowHeader(order.check[5],false, gb, 5, "");
     items[order.order[6]] = addRowHeader(order.check[6],false, gb, 6, "");
     items[order.order[7]] = addRowHeader(order.check[7],false, gb, 7, "");
-    items[order.order[8]] = addRowHeader(order.check[8],false, gb, 8, "");     
-    items[order.order[9]] = addRowHeader(order.check[9],false, gb, 9, "");       
+    items[order.order[8]] = addRowHeader(order.check[8],false, gb, 8, "");
+    items[order.order[9]] = addRowHeader(order.check[9],false, gb, 9, "");
+    items[order.order[10]] = addRowHeader(order.check[10],false, gb, 10, "");
   }
   for (let i=0;i<items.length;i++)
   {
@@ -207,6 +209,7 @@ function tableProjectItem(selRows,i, order, project, color)
     items[order.order[7]] = addRow(order.check[7],selId, 7, project.creditsHostAvg.toLocaleString(undefined,{ minimumFractionDigits: 1 }));
     items[order.order[8]] = addRow(order.check[8],selId, 8, project.share.toLocaleString(undefined,{ minimumFractionDigits: 2 }));
     items[order.order[9]] = addRow(order.check[9],selId, 9, project.status);   
+    items[order.order[10]] = addRow(order.check[10],selId, 10, project.rec);     
   } catch (error) {
     logging.logError('BtTableProjects,tableProjectItem', error);      
     return "";

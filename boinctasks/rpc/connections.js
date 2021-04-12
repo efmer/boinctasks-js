@@ -96,25 +96,31 @@ const connectionsShadow = new ConnectionsShadow();
 
 const btConstants = require('./functions/btconstants');
 
+let gRequireHistory = null;
+let gRequireRulesList = null;
+let gRequireRulesProcess = null;
+
 const MODE_NORMAL = 0;      // normal mode
 const MODE_STATE = 1;       // fetching the state
 const MODE_RESULTS = 2;
 const MODE_HISTORY = 3;     // fetching old results
+const MODE_RULES = 4;
 
 const INTERVAL_STATE_FIRST = 2000; 
 const INTERVAL_STATE = 2000; 
 const INTERVAL_HISTORY_FIRST = 3000; 
 const INTERVAL_REFRESH_FIRST = 1000;
+const INTERVAL_RULES_FIRST = 6000;  // a long time after the state
+const INTERVAL_RULES = 30000;
 
 // must be indentical in renderer.js
 
 
-gB = new Object();
+let gB = new Object();
 gB.selectedTab = btConstants.TAB_TASKS;
 gB.headerAction = btConstants.HEADER_NORMAL;
 gB.currentTable = null;
 gB.connections = [];
-gB.connectionsShadow = [];
 gB.sortComputers = null;
 gB.sortProjects = null;
 gB.sortResults = null;
@@ -124,6 +130,7 @@ gB.sortHistory = null;
 gB.filterExclude = [];
 gB.readyToReport = 0;
 gB.fetchMode = MODE_NORMAL;
+gB.nextRulesFetchTime = new Date().getTime() + INTERVAL_RULES_FIRST;
 gB.nextHistoryFetchTime = new Date().getTime() + INTERVAL_HISTORY_FIRST;
 gB.nextStateFetchTime = new Date().getTime() + INTERVAL_STATE_FIRST;
 gB.nextRefresh = new Date().getTime() + INTERVAL_REFRESH_FIRST;
@@ -131,20 +138,18 @@ gB.nextRefresh = new Date().getTime() + INTERVAL_REFRESH_FIRST;
 gB.editComputers = false;
 gB.editComputersShow = false;
 
-gTimer = null;
-gBusyCnt = 0;
-gBusy = true;
-gPauze = false;
-gIntervalTime = 9; // 0.2 sec
-gIntervalFastCnt = 0;   // fast after startup and after a tab switch
+gB.rules = null;
 
-gSwitchedTabCnt = 2;
+let gTimer = null;
+let gBusyCnt = 0;
+let gBusy = true;
+let gPauze = false;
+//let gIntervalTime = 9; // 0.2 sec
+let gIntervalFastCnt = 0;   // fast after startup and after a tab switch
 
+let gSwitchedTabCnt = 2;
 
-//gMainWindow = null;
-
-
-gSidebar = false;
+let gSidebar = false;
 
 const version = btConstants.VERSION.toFixed(2)
 const versionS = "V: " + version;
@@ -460,6 +465,15 @@ class Connections{
         quickLoad(false);
         gB.mainWindow.webContents.send('table_data_header', gB.currentTable.table.tableHeader(gB, gSidebar),gB.currentTable.name, gB.headerAction);        
     }
+    rules(type,data,data2)
+    {
+        if (gRequireRulesList === null)
+        {
+            const RequireRulesList = require('./rules/rules_list');
+            gRequireRulesList = new RequireRulesList();
+        }
+        gRequireRulesList.rules(gB,type,data,data2);
+    }
 }
 
 module.exports = Connections;
@@ -667,6 +681,7 @@ function startConnections()
 {
     logging.setVersion(versionS);
     getComputers();
+    getRules();    
     getSorting();
     btHeader.getWidth(gB);
     gB.currentTable = new Object();
@@ -878,6 +893,35 @@ function getSorting()
     }
 }
 
+function getRules()
+{
+    try {
+        gB.rules = new Object;
+
+        try {
+            gB.rules.list = JSON.parse(readWrite.read("settings\\rules", "rules.json")); 
+        } catch (error) {
+            gB.rules.list = null;
+        }
+        if (gB.rules.list === null) 
+        {
+            try {
+                gB.rules.list = JSON.parse(readWrite.read("settings\\rules", "rules_backup1.json"));
+            } catch (error) {
+                gB.rules.list = null;
+            }
+        }
+        if (gB.rules.list === null)
+        {
+            gB.rules.list = [];
+        }
+        gB.rules.computerList = [];        
+        gB.rules.compiled = false;
+    } catch (error) {
+        logging.logError('Connections,getSgetRulesorting', error);         
+    }
+}
+
 function connectAll()
 {
     try {
@@ -962,6 +1006,52 @@ function connectAllAll(fetchMode)
         }
     } catch (error) {
         logging.logError('Connections,connectAll', error); 
+    }    
+}
+
+function connectRules(fetchMode)
+{
+    try {
+        if (!functions.isDefined(gB.connections))
+        {
+            return;
+        }
+        if (gRequireRulesProcess === null)
+        {
+            const RulesProcess = require('./rules/rules_process');
+            gRequireRulesProcess = new RulesProcess();
+        }
+        if (!gB.rules.compiled)
+        {
+            for (var i=0;i< gB.connections.length;i++)
+            {
+                let con = gB.connections[i];
+                con.rules = new Object;
+                con.rules.list = [];
+                con.rules.active = new Object;        
+                con.rules.compiled = false;
+            }
+            gRequireRulesProcess.makeComputerList(gB);
+        }
+
+        for (var i=0;i< gB.connections.length;i++)
+        {
+            let con = gB.connections[i];
+            let computerName = con.computerName;
+            let pos = gB.rules.computerList.indexOf(computerName);
+            if (pos < 0) continue; // no rule for this computer
+
+            if (!con.rules.compiled)
+            {
+                gRequireRulesProcess.compileCon(con);
+            }
+
+            con.fetchMode = fetchMode;            
+            if (con.check == '0') continue;
+            connectSingle(con);
+        }
+    } catch (error) {
+        logging.logError('Connections,connectRules', error); 
     }    
 }
 
@@ -1117,6 +1207,7 @@ function newCon()
     con.port = 31416;
     con.passWord = "";
     con.client_socket = null;
+    con.authTimeValid = 0;
     con.auth = false;
     con.authTimeout = 0;
     con.lostConnection = false;
@@ -1128,6 +1219,8 @@ function newCon()
     con.sidebarGrp = true;
     con.mode = '';
     con.state = null;
+    con.cacheProject = null;
+    con.cacheApp = null;    
     con.needState = true;
     con.from = -1;
 
@@ -1135,9 +1228,12 @@ function newCon()
     con.computer = null;
     con.results = null;    
     con.transfers = null;
-    con.history = null;     
-    return con;
+    con.history = null;
 
+    con.rules = null;
+    con.shadow = null;
+
+    return con;
 }
 
 function sortArrayComputers(connections)
@@ -1176,10 +1272,22 @@ function connectAuth(con)
         switch(gB.fetchMode)
         { 
             case MODE_HISTORY:        
-            const History = require('./history/history');
-            const history = new History(); 
-            history.getHistory(con,gB.settings)            
-            return;        
+                if (gRequireHistory === null)
+                {
+                    const History = require('./history/history');
+                    gRequireHistory = new History();
+                }
+                gRequireHistory.getHistory(con,gB.settings)            
+            return;
+
+            case MODE_RULES:
+                if (gRequireRulesProcess === null)
+                {
+                    const RulesProcess = require('./rules/rules_process');
+                    gRequireRulesProcess = new RulesProcess();
+                }                
+                gRequireRulesProcess.getRules(con,gB);
+            return;
 
             case MODE_RESULTS:
                 getResults(con);
@@ -1588,7 +1696,7 @@ function needState()
     return false;
 }
 
-// Only tasks/results hav filters
+// Only tasks/results have filters
 function clickFilter(val)
 {
     for (var i=0;i< gB.filterExclude.length;i++)
@@ -1624,9 +1732,14 @@ function btTimer() {
                 gBusyCnt = 0;              
             }
 
+            if (gB.fetchMode === MODE_RULES)
+            {
+                connectionsShadow.flushSendArray();    
+            }
+
             // gBusy set false in process
             // gBusyCnt = 0; 
-            if (connectionsFetchMode(MODE_NORMAL))  // reject from state and history fetch.
+            if (connectionsFetchMode(MODE_NORMAL))  // reject from state, history, rules fetch.
             {
                 process();
                 updateSideBar();
@@ -1665,12 +1778,34 @@ function btTimer() {
                         gB.mainWindow.webContents.send('set_status', "Get History"); 
                         gBusyCnt = 0;
                         gBusy = true;
-                        gB.fetchMode = MODE_HISTORY;          
-                        connectAllAll(MODE_HISTORY);                     
+                        gB.fetchMode = MODE_HISTORY;
+                        connectAllAll(MODE_HISTORY);
                         return;
                 }                
             }
         }
+
+        // rules
+
+        if (gB.rules.list.length > 0)
+        {
+            diff= gB.nextRulesFetchTime - current;
+            if (diff < 0)
+            {
+//                connectionsShadow.flushSendArray();
+                gB.nextRulesFetchTime = current + INTERVAL_RULES;
+                switch (gB.fetchMode)
+                {
+                    case MODE_NORMAL:
+                        gB.mainWindow.webContents.send('set_status', "Check Rules"); 
+                        gBusyCnt = 0;
+                        gBusy = true;
+                        gB.fetchMode = MODE_RULES;                    
+                        connectRules(MODE_RULES); 
+                        return;
+                }                
+            }
+        }      
 
         if (gPauze)
         {
