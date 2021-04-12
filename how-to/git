@@ -10,3 +10,10 @@ git commit -m "version 1.11"
 git branch -M main
 git remote add origin https://github.com/efmer/boinctasks-js.git
 git push -u origin main
+
+// after that
+
+Pull
+Stage changes
+Commit
+Push
