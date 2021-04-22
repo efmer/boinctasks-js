@@ -39,11 +39,12 @@ express - server side
         npm install sortablejs --save
         https://github.com/SortableJS/Sortable
 
+        npm install --save nodemailer
+
         npm install electron-packager
 
         npm install @electron-forge/cli -D
 
-        npm install -g electron-icon-maker
 
 // UPDATE
         npm cache clean -f
@@ -53,3 +54,5 @@ express - server side
         npm update --dd
         If not up to date, green is wanted version....
 
+// in case of vulnerabilities
+         npm audit fix

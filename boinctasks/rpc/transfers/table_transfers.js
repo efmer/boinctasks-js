@@ -174,8 +174,8 @@ function tableTransferItem(selRows,i,order,transfer,colorObj)
 
     table = "<tr " + sel + ">";
     items[order.order[0]] = addRow(order.check[0],selId, 0, computer);
-    items[order.order[1]] = addRow(order.check[1],selId, 1, wu);    
-    items[order.order[2]] = addRow(order.check[2],selId, 2, transfer.name);
+    items[order.order[1]] = addRow(order.check[1],selId, 1, transfer.project_name);
+    items[order.order[2]] = addRow(order.check[2],selId, 2, wu);
 
     let first_request_time = 0;
     let is_upload = -1;

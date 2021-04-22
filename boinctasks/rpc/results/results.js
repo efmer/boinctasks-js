@@ -70,7 +70,7 @@ class ResultItems
 
 //                let elapsed = 0;
 
-let iState = item.state[0];                
+                let iState = item.state[0];
                 if (iState > 2)
                 {
                      resultItem.fraction = 100;
@@ -170,6 +170,7 @@ let iState = item.state[0];
                         filterItem.project = project;
                         filterItem.projectUrl = projectUrl;
                         filterItem.app = versionApp;
+                        filterItem.version = resultItem.version;
                         filterItem.remaining = resultItem.remaining;
                         filterItem.deadline = resultItem.deadline;
                         filterItem.statusS = resultItem.statusS;

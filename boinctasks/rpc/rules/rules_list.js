@@ -96,7 +96,7 @@ function editRulesWindow(gb,ruleItem = null)
         });
         gChildSettingsRules.loadFile('index/index_rules_list.html')
         gChildSettingsRules.once('ready-to-show', () => {    
-//          gChildSettingsRules.webContents.openDevTools()
+//        gChildSettingsRules.webContents.openDevTools()
         gChildSettingsRules.show();  
           gChildSettingsRules.setTitle(title);
           if (ruleItem === null)
@@ -275,7 +275,7 @@ function editRuleItem(item)
     txt += "<br><br>";
 
     let value = item.value;
-    if ( item.type = constants.RULE_TYPE_TIME)
+    if ( item.type === constants.RULE_TYPE_TIME)
     {
       value = functions.getFormattedTimeInterval(item.value); 
     }
@@ -320,8 +320,8 @@ function getSelectRulesAction(nr, id)
 //  txt += getSelectItem(constants.RULE_ACTION_RUN_EXE_NR,constants.RULE_ACTION_RUN_EXE, nr);
 //  txt += getSelectItem(constants.RULE_ACTION_SNOOZE_NR,constants.RULE_ACTION_SNOOZE, nr);
 //  txt += getSelectItem(constants.RULE_ACTION_SNOOZE_GPU_NR,constants.RULE_ACTION_SNOOZE_GPU, nr);
-//  txt += getSelectItem(constants.RULE_ACTION_EMAIL_NR,constants.RULE_ACTION_EMAIL, nr);    
-//  txt += getSelectItem(constants.RULE_ACTION_ALERT_NR,constants.RULE_ACTION_ALERT, nr);
+  txt += getSelectItem(constants.RULE_ACTION_EMAIL_NR,constants.RULE_ACTION_EMAIL, nr);    
+  txt += getSelectItem(constants.RULE_ACTION_ALERT_NR,constants.RULE_ACTION_ALERT, nr);
   txt += '</select>';
   return txt;
 }
@@ -330,7 +330,6 @@ function getSelectRulesType(nr)
 {
   let txt = '<select id="rules_type">';
   if (nr === 0) sel = true;
-//  txt += getSelectItem(constants.RULE_CONNECTION_NR,constants.RULE_CONNECTION, nr);
 //  txt += getSelectItem(constants.RULE_CPU_PERC_NR,constants.RULE_CPU_PERC, nr);
 //  txt += getSelectItem(constants.RULE_DEADLINE_NR,constants.RULE_DEADLINE, nr);
   txt += getSelectItem(constants.RULE_ELAPSED_TIME_NR,constants.RULE_ELAPSED_TIME, nr);
@@ -339,6 +338,7 @@ function getSelectRulesType(nr)
   txt += getSelectItem(constants.RULE_TIME_LEFT_NR,constants.RULE_TIME_LEFT, nr);
 //  txt += getSelectItem(constants.RULE_TIME_NR,constants.RULE_TIME, nr);
 //  txt += getSelectItem(constants.RULE_USE_NR,constants.RULE_USE, nr);  
+  txt += getSelectItem(constants.RULE_CONNECTION_NR,constants.RULE_CONNECTION, nr);
   txt += '</select>';
   return txt;
 }
@@ -375,10 +375,10 @@ function addRuleItem(gb,data)
     switch(data.ruleType)
     {
       case constants.RULE_CONNECTION_NR:
-        ok = (data.value === 'no' || data.value === 'lost' || data.value === 'yes')
+        ok = (data.value === 'lost' || data.value === 'change')
         if (!ok)
         {
-          error += "<br>Value must be: no yes lost";
+          error += "<br>Value must be: change, lost";
         }
         ok = (data.ruleAction === constants.RULE_ACTION_RUN_EXE_NR || data.ruleAction === constants.RULE_ACTION_EMAIL_NR || data.ruleAction === constants.RULE_ACTION_ALERT_NR)
         if (ok)

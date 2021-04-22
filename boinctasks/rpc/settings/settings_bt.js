@@ -71,7 +71,7 @@ class SettingsBt{
 
 gChildSettings = null;
 
-function settings(gb)
+function settings(settings)
 {
     try {
         let title = "BoincTasks Settings";
@@ -97,7 +97,7 @@ function settings(gb)
   //            gChildSettings.webContents.openDevTools()
               gChildSettings.show();  
               gChildSettings.setTitle(title);
-              gChildSettings.send('settings_boinctasks', gb); 
+              setTimeout(timerSettings,200,settings); // delay to make sure the windows is ready.
           }) 
           gChildSettings.on('close', () => {
             let bounds = gChildSettings.getBounds();
@@ -112,12 +112,17 @@ function settings(gb)
           gChildSettings.setTitle(title); 
           gChildSettings.hide();
           gChildSettings.show();
-          gChildSettings.send('settings_boinctasks', gb.settings);    
+          gChildSettings.send('settings_boinctasks', settings);
         }
               
     } catch (error) {
         logging.logError('SettingsBt,settings', error);        
     }  
+}
+
+function timerSettings(settings)
+{
+  gChildSettings.send('settings_boinctasks', settings);
 }
 
 function getSettings()

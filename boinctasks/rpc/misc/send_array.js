@@ -17,7 +17,7 @@
 */
 
 
-// !!! Eventually remove this in favour of connections_shadow
+// !!! Eventually remove this in favor of connections_shadow
 
 const Functions = require('../functions/functions');
 const functions = new Functions();
@@ -26,7 +26,6 @@ const logging = new Logging();
 const BtSocket  = require('./socket'); 
 const Authenticate = require('./authenticate');
 const athenticate = new Authenticate();
-const btConstants = require('../functions/btconstants');
 
 gSendArray = [];
 gLastClient = null;

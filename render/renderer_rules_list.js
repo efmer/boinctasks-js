@@ -199,7 +199,7 @@ function rulesTypeInfo(nr)
     switch(nr)
     {
         case RULE_CONNECTION_NR:
-            msg += "On connection change, Value (no,yes,lost)";
+            msg += "On connection change, Value (change,lost)";
         break;
         case RULE_CPU_PERC_NR:
             msg += "If CPU percentage drops below Value, e.g. 0.51 (0.51%) or 15.23";
@@ -267,7 +267,7 @@ function rulesActionInfo(nr,id)
         case RULE_ACTION_ALERT_NR:
             msg += "Show message on screen";
         break;
-        RULE_ACTION_SUSPEND_TASK_NR
+        case RULE_ACTION_SUSPEND_TASK_NR:
             msg += "Suspend task";
         break;
         default:

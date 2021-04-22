@@ -18,10 +18,10 @@
 
 module.exports = {
 
-    VERSION                     : 1.12,
+    VERSION                     : 1.14,
     DEBUG                       : false,
 
-    CONNECTION_TIMEOUT          : 4,
+    //CONNECTION_TIMEOUT          : 4,
     
     TAB_COMPUTERS               : "computers",
     TAB_PROJECTS                : "projects",

@@ -63,6 +63,8 @@ let gTimerLog = null;
 let gTray = null;
 let gMenuTemplate;
 
+const isMac = process.platform === 'darwin'
+
 function initMenu()
 {
   var sidebar = true;
@@ -73,26 +75,64 @@ function initMenu()
     btMenu.set(btConstants.MENU_SIDEBAR_COMPUTERS, true);  // initially enabled
   }
 
-  gMenuTemplate = [  
-    {
-      label: 'File',
-          submenu: [
-          {
-            label:'Exit',
-            click(e) { 
-              appExit();
-            }
-          },
-          {
-            label:'Restart',
-            click(e) { 
-              app.relaunch()
-              app.exit()
-            }
-          },          
-      ]
-    }, 
+//https://www.electronjs.org/docs/api/menu
 
+  gMenuTemplate = [ 
+    // { role: 'appMenu' }
+    ...(isMac ? [{
+      label: app.name,
+      submenu: [
+        {
+          label:'About BoincTasks Js',
+          click(e) { 
+            credits.about(versionS);
+          }
+        }, 
+        { type: 'separator' },
+        { role: 'services' },
+        { type: 'separator' },
+        { role: 'hide' },
+        { role: 'hideothers' },
+        { role: 'unhide' },
+        { type: 'separator' },
+        {
+          label:'Close',
+          click(e) { 
+            appExit();
+          }
+        },
+        { type: 'separator' },        
+        {
+          label:'Restart',
+          click(e) { 
+            app.relaunch()
+            app.exit()
+          }
+        },
+      ]
+    }] : []),
+    // { role: 'fileMenu' }    
+      ...(isMac ? [ ] : [
+        {
+        label: 'File',
+            submenu: [            
+            {
+              label:'Exit',
+              click(e) { 
+                appExit();
+              }
+            },
+            { type: 'separator' },
+            {
+              label:'Restart',
+              click(e) { 
+                app.relaunch()
+                app.exit()
+              }
+            },          
+        ]
+        }
+      ]),
     {
       label: 'View',
         submenu: [
@@ -165,39 +205,45 @@ function initMenu()
             click(e) { 
               connections.boincStatistics("menu");
             }
-          },              
-        {
-          label:'Log',
-          click() { 
-            showLog(btConstants.LOGGING_NORMAL) 
-          }
-        },
-        {
-          label:'Debug Log',
-          click() { 
-            showLog(btConstants.LOGGING_DEBUG);
-          }               
-        },
-        {
-          label:'Rules Log',
-          click() { 
-            showLog(btConstants.LOGGING_RULES);
-          }               
-        },        
-        {
-          label:'Error Log',
-          click() { 
-            showLog(btConstants.LOGGING_ERROR);
-          }
-        },
-        {
-          label:'Debug mode',
-          type: "checkbox",
-          checked: btConstants.DEBUG,          
-          click() {
-            btConstants.DEBUG = !btConstants.DEBUG;
-          }
-        },
+          },
+          { type: 'separator' },
+          {
+            label:'Log',
+            click() { 
+              showLog(btConstants.LOGGING_NORMAL) 
+            }
+          },
+          {
+            label:'Debug Log',
+            click() { 
+              showLog(btConstants.LOGGING_DEBUG);
+            }               
+          },
+          {
+            label:'Rules Log',
+            click() {
+              showLog(btConstants.LOGGING_RULES);
+            }
+          },        
+          {
+            label:'Error Log',
+            click() { 
+              showLog(btConstants.LOGGING_ERROR);
+            }
+          },
+          {
+            label: 'Debug',
+              submenu: [
+                {
+                  label:'Debug mode',
+                  type: "checkbox",
+                  checked: btConstants.DEBUG,          
+                  click() {
+                    btConstants.DEBUG = !btConstants.DEBUG;
+                  }
+                }           
+            ] 
+          },
       ] 
     },
     {
@@ -215,6 +261,7 @@ function initMenu()
               connections.color("menu",gMainWindow);
             }
           }, 
+          { type: 'separator' },
           {
             label:'Boinc settings',
             click(e) { 
@@ -249,14 +296,27 @@ function initMenu()
             click(e) { 
               connections.rules("menu");
             }
-          }                   
+          },
+          {
+            label:'Rules Log',
+            click() { 
+              showLog(btConstants.LOGGING_RULES);
+            }
+          },
+          { type: 'separator' },
+          {
+            label:'Email',
+            click(e) { 
+              connections.email("menu");
+            }
+          },
       ] 
     },       
     {
       label: 'Help',
         submenu: [
           {
-            label:'About BoincTasks',
+            label:'About BoincTasks Js',
             click(e) { 
               credits.about(versionS);
             }
@@ -312,7 +372,7 @@ function initialize () {
       icon: path.join(app.getAppPath(), 'assets/app-icon/png/512.png'),
       show: bShow, 
       webPreferences: {
- //       sandbox : false,
+        sandbox : false,
         contextIsolation: false,  
         nodeIntegration: true,
         nodeIntegrationInWorker: true,        
@@ -322,9 +382,9 @@ function initialize () {
 
     initMenu();
 
-    if (process.platform == 'darwin') {
-      gMenuTemplate.unshift({label: ''});
-    }
+//    if (process.platform == 'darwin') {
+//      gMenuTemplate.unshift({label: ''});
+//    }
  
     const g_mainMenu = Menu.buildFromTemplate(gMenuTemplate);
 
@@ -370,11 +430,7 @@ function initialize () {
 
     gMainWindow.once('ready-to-show', () => {   
 //        gMainWindow.webContents.openDevTools()
-
-        insertCss();
-
-
-//      gMainWindowCssKey = gMainWindow.webContents.insertCSS(gSettings.css);
+      insertCss();
     });
   }
 
@@ -478,18 +534,12 @@ function rendererRequests()
     sidebarComputers(set);
   })
 
-  //ipcMain.on("ask_for_data", (renderer, selectedTab) => {
-  //  btConnectTo(renderer, selectedTab);
-  //})
-
   ipcMain.on("table_click_header", (renderer, id, shift, alt,ctrl) => {
     connections.clickHeader(id, shift, alt,ctrl)
- //   connections.refresh(renderer);
   })
 
   ipcMain.on("table_click", (renderer, id, shift,alt,ctrl) => {
     connections.click(id,shift,alt,ctrl)
- //   connections.refresh(renderer);
   })
 
   ipcMain.on("header_width", (renderer, type, id, data,total) => {
@@ -585,6 +635,9 @@ function rendererRequests()
     connections.rules(type,data,data2);    
   })
 
+  ipcMain.on("email", (renderer,type,item) => {
+    connections.email(type,item);    
+  })
 }
 
 function setCss()
@@ -635,7 +688,7 @@ function addProject()
       'width': state.width,
       'height': state.height,
       webPreferences: {
-//      sandbox : false,
+        sandbox : false,
         contextIsolation: false,  
         nodeIntegration: true,
         nodeIntegrationInWorker: true
@@ -692,7 +745,7 @@ function showLog(logType)
         'width': state.width,
         'height': state.height,      
         webPreferences: {
-//        sandbox : false,
+          sandbox : false,
           contextIsolation: false,  
           nodeIntegration: true,
           nodeIntegrationInWorker: true,

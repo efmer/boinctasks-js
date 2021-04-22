@@ -44,10 +44,14 @@ const R_STAT_TRIGGER = 2;
 const R_SEND_TASKS = 1;
 const R_SEND_PROJECTS = 2;
 
+let gRulesMainwindow = null;
+
+
 class RulesProcess{
   makeComputerList(gb)
   {
     makeComputerList(gb);
+    gRulesMainwindow = gb.mainWindow;
   }
   compileCon(con)
   {
@@ -61,12 +65,79 @@ class RulesProcess{
       con.client_completeData = "";
       functions.sendRequest(con.client_socket, "<get_results><active_only></active_only></get_results>"); // many machine don't support <active_only></active_only>
     } catch (error) {
-      logging.logError('RulesProcess,getRules', error);               
+      logging.logError('RulesProcess,getRules', error);
       this.mode = 'errorc';
       this.error = error;
     }  
   }
+
+  connectionsCheck(gb)
+  {
+    try {
+      let connections = gb.connections;
+      let emailReason = "";
+      let bShowAlert = false;
+      for (let c=0; c < connections.length;c++)
+      {
+        let con = connections[c];        
+        let ruleLen = con.rules.list.length;
+        if (ruleLen === null) continue;
+
+        if (con.rules.auth === con.auth)  continue;
+        con.rules.auth = con.auth;
+        for (let r=0;r<ruleLen;r++)
+        {
+          let rule = con.rules.list[r];
+          if (rule.ruleType !== constants.RULE_CONNECTION_NR) continue;
+          let bAlert = rule.ruleAction === constants.RULE_ACTION_ALERT_NR || rule.ruleAction2 === constants.RULE_ACTION_ALERT_NR;
+          let bEmail = rule.ruleAction === constants.RULE_ACTION_EMAIL_NR || rule.ruleAction2 === constants.RULE_ACTION_EMAIL_NR
+          if (bEmail || bAlert)
+          {
+            if(con.auth)
+            {
+              if (rule.value === "lost")
+              {
+                if (!con.rules.seenLost)
+                {
+                  continue;
+                }
+              }
+              if (bEmail) emailReason += "Connected to: " + con.computerName + " , rule: " + rule.name +  ". \r\n";
+              if (bAlert) bShowAlert = true;
+
+            }
+            else
+            {
+              if (bAlert) bShowAlert = true;
+              if (con.lostConnection)
+              {
+                con.rules.seenLost = true;
+                if (bEmail) emailReason += "Lost connection to: " + con.computerName + " , rule: " + rule.name +  ". \r\n";
+              }
+              else
+              {
+                if (bEmail) emailReason += "No connection with: " + con.computerName  + " , rule: " + rule.name +  ". \r\n";
+              }
+            }            
+          }         
+        }
+      }
+      if (emailReason.length > 0)
+      {
+        setTimeout(triggerEmail,50,gb.rules,emailReason,"Connection rule");
+      }      
+      if (bShowAlert)
+      {
+        gb.mainWindow.hide();        
+        gb.mainWindow.show();
+        logging.logRules("Trigger: Connection rule, Action: alert");
+      }      
+    } catch (error) {
+      logging.logError('RulesProcess,connectionsCheck', error);      
+    }
+  }
 }
+
 module.exports = RulesProcess;
 
 function makeComputerList(gb)
@@ -86,7 +157,7 @@ function makeComputerList(gb)
       {
         let con = connections[c];         
         if (con.check === "0") continue;
-        if (con.computerName === computerName || computerName.length === 0)
+        if ((con.computerName.indexOf(computerName) >=0) || computerName.length === 0)
         {        
           computerFound = con.computerName;
           con.rules.list.push(rule);
@@ -115,18 +186,13 @@ function compileCon(con)
   try {
     for (let i=0; i<con.rules.list.length;i++)
     {
+      let rule = con.rules.list[i];
+      if (!rule.enabled) continue;
+      let name = rule.name;
       if (con.auth)
       {
-        let rule = con.rules.list[i];
-        if (!rule.enabled) continue;
-        let project = rule.project;
-        let url = conState.getProjectUrl(con,project);
-        if (url.lenght === 0) con.rules.compiled = false; 
-        else con.rules.compiled = true;           
-        rule.url = url;
         rule.versionS = rule.version.replace('.','');
         
-        let name = rule.name;
         let act = con.rules.active;
         act[name] = new Object;
         act[name].wu = [];
@@ -138,7 +204,7 @@ function compileCon(con)
       else
       {
         con.rules.compiled = false; 
-        rules.url = "";
+        rule.url = "";
       }
     }
   } catch (error) {
@@ -156,7 +222,7 @@ function rulesData()
             this.mode = "empty"; 
             return;
         }
-        checkRules(this,results);
+        checkRules(gRulesMainwindow,this,results);
         this.mode = "OK";             
     } catch (error) {
         logging.logError('RulesProcess,rulesData', error);           
@@ -190,27 +256,28 @@ function parseResults(xml)
     return rulesReturn;
 }
 
-function checkRules(con,results)
+// All rules, except connection.
+function checkRules(window,con,results)
 {
-  // computer already matches
+
   try {
     let time = Date.now()/1000;
     let rules = con.rules.list;
     for (let i=0; i<rules.length; i++)
     {
-      let item = rules[i]
+      let item = rules[i];      
       for (let r=0; r<results.length; r++)
       {
         let result = results[r];
         if (item.project.length !== 0 && item.url !== result.project_url[0]) continue;
-        if (item.version.length !== 0 && item.versionS !== result.version_num[0]) continue;
+        if (item.versionS.length !== 0 && item.versionS !== result.version_num[0]) continue;
         if (item.app.length !== 0)
         {
           let wuName = result.wu_name[0];
           let app = conState.getApp(con,wuName);
           if (item.app !== app) continue;
         }
-        matchApp(con,item,result,time);
+        matchApp(window,con,item,result,time);
       }  
     }
     cleanup(con,rules,time);
@@ -246,44 +313,48 @@ function cleanup(con,rules,time)
 }
 
 // matches computer, project and app
-function matchApp(con,rule,item,time)
+function matchApp(window,con,rule,item,time)
 {
   try {
     let wu = item.name[0];
     let arr = con.rules.active[rule.name];
+    if (arr ===  void 0)
+    {
+      con.rules.compiled = false; //todo why end up here
+      return;
+    }
+
     let pos = arr.wu.indexOf(wu);
- 
     switch(rule.ruleType)
     {
       case constants.RULE_ELAPSED_TIME_NR:
-        handleElapsed(con,rule,item,arr,wu,pos,time)       
+        handleElapsed(window,con,rule,item,arr,wu,pos,time)       
       break;
       case constants.RULE_ELAPSED_TIME_DELTA_NR:
-        handleElapsedDelta(con,rule,item,arr,wu,pos,time)    
+        handleElapsedDelta(window,con,rule,item,arr,wu,pos,time)    
       break;
       case constants.RULE_CPU_PERC_NR:
       break;
       case constants.RULE_PROGRESS_PERC_NR:
       break;
       case constants.RULE_TIME_LEFT_NR:
-        handleTimeLeft(con,rule,item,arr,wu,pos,time) 
+        handleTimeLeft(window,con,rule,item,arr,wu,pos,time) 
       break;
       case constants.RULE_USE_NR:
       break;
       case constants.RULE_TIME_NR:
       break;
-      case constants.RULE_CONNECTION_NR:
-      break;
       case constants.RULE_DEADLINE_NR:
       break;
       case constants.RULE_ACTION_NO_NR:
+      break;
     }    
   } catch (error) {
     logging.logError('RulesProcess,matchApp', error);   
   }
 }
 
-function handleElapsed(con,rule,item,arr,wu,pos,time)
+function handleElapsed(window,con,rule,item,arr,wu,pos,time)
 {
   try {
     let elapsed = item.final_elapsed_time[0];
@@ -302,7 +373,7 @@ function handleElapsed(con,rule,item,arr,wu,pos,time)
         arr.timeOut.push(time);
         arr.data.push("");         
         let reason = "Elapsed time: " + functions.getFormattedTimeInterval(elapsed) + ",wu: " + wu;
-        trigger(con,rule,reason,item);        
+        trigger(window,con,rule,reason,item);        
       }
       else
       {
@@ -314,7 +385,7 @@ function handleElapsed(con,rule,item,arr,wu,pos,time)
   }
 }
 
-function handleElapsedDelta(con,rule,item,arr,wu,pos,time)
+function handleElapsedDelta(window,con,rule,item,arr,wu,pos,time)
 {
   try {
     let elapsed = item.final_elapsed_time[0]
@@ -350,7 +421,7 @@ function handleElapsedDelta(con,rule,item,arr,wu,pos,time)
           {
             arr.state[pos] = R_STAT_TRIGGER;          
             let reason = "Δ Elapsed time: " + functions.getFormattedTimeInterval(elapsedD) + ",wu: " + wu + ",tick: " + tick;
-            trigger(con,rule,reason,item);
+            trigger(window,con,rule,reason,item);
           }
         }
       }
@@ -365,7 +436,7 @@ function handleElapsedDelta(con,rule,item,arr,wu,pos,time)
   }
 }
 
-function handleTimeLeft(con,rule,item,arr,wu,pos,time)
+function handleTimeLeft(window,con,rule,item,arr,wu,pos,time)
 {
   try {
     let remaining = item.estimated_cpu_time_remaining[0];
@@ -379,7 +450,7 @@ function handleTimeLeft(con,rule,item,arr,wu,pos,time)
         arr.timeOut.push(time);
         arr.data.push(""); 
         let reason = "Time left: " + functions.getFormattedTimeInterval(remaining) + ",wu: " + wu;
-        trigger(con,rule,reason,item);        
+        trigger(window,con,rule,reason,item);        
       }
       else
       {
@@ -391,26 +462,47 @@ function handleTimeLeft(con,rule,item,arr,wu,pos,time)
   } 
 }
 
-function trigger(con,rule, reason, item)
+function trigger(window,con,rule, reason, item)
 {
-  setTimeout(trigger2,50,con, rule, reason, item);  // start async.
+  setTimeout(trigger2,50,window,con,rule,reason,item);  // start async.
 }
 
-function trigger2(con,rule,reason,item)
+function trigger2(window,con,rule,reason,item)
 {
   try {
-    logTrigger(con,rule,reason)
-    switch (rule.ruleAction)
+    logTrigger(con,rule,reason);    
+    action(window,con,rule,rule.ruleAction,item);
+    action(window,con,rule,rule.ruleAction2,item);
+  } catch (error) {
+    logging.logError('RulesProcess,trigger2', error);   
+  }
+}
+
+function action(window,con,rule,action,item)
+{
+  try {
+    switch (action)
     {
+      case constants.RULE_ACTION_NO_NR:
+      break;
       case constants.RULE_ACTION_SUSPEND_TASK_NR:
         ruleTask(con,item,"suspend_result",R_SEND_TASKS);
         logAction(con,rule,"Action: suspend task");        
       break;
+      case constants.RULE_ACTION_ALERT_NR:
+        window.hide();        
+        window.show();
+        logAction(con,rule,"Action: alert");
+      break;
+      case constants.RULE_ACTION_EMAIL_NR:
+        setTimeout(triggerEmail,50,con.rules,reason,item.name);
+        logAction(con,rule,"Action: email");
+      break;      
       default:
-        logProblem(con,rule,"Rule action not supported :" + rule.ruleAction);
-    }
+        logProblem(con,rule,"Rule action not supported :" + action);
+    }    
   } catch (error) {
-    logging.logError('RulesProcess,trigger', error);   
+    logging.logError('RulesProcess,action', error);  
   }
 }
 
@@ -444,6 +536,23 @@ function ruleSendCommandProject(con,request, url)
     let req = "<" + request + ">\n<project_url>" + url + "</project_url>\n</" + request + ">";
     connectionsShadow.addSendArray(con,req);
 }
+
+function triggerEmail(rules, reason, name)
+{
+  try {
+    const Email = require('./email');
+    const email = new Email();
+
+    let eSubject = "BoincTasks Js: " + name;
+    let eBody = "Rule triggered: " + name + "\r\n";
+    eBody += reason;
+    logging.logRules("Trigger: " + name + " , " +  reason);
+    email.send(rules, eSubject, eBody)    
+  } catch (error) {
+    logging.logError('RulesProcess,triggerEmail', error); 
+  }
+}
+
 
 function logProblem(con,rule,reason)
 {

@@ -21,22 +21,24 @@ const Functions = require('../functions/functions');
 const functions = new Functions();
 const Logging = require('../functions/logging');
 const logging = new Logging();
+const Authenticate = require('../misc/authenticate');
+const athenticate = new Authenticate();
 const WindowsState = require('../functions/window_state');
 const windowsState = new WindowsState();
 
-const SendArray = require('../misc/send_array');
-const sendArray = new SendArray();
-
-//const find = require('local-devices');
 const {BrowserWindow } = require('electron');
 const { networkInterfaces } = require('os');
+
+let SCAN_TIMEOUT = 15;
+let NO_PASSWORD = "Unable to connect";
 
 let gChildWindowScan = null;
 let lScanLocalIp = null;
 let lScanCount = 0;
-let lScanFoundAll = [];
+let lScanFoundAllIp = [];
+let lScanFoundAllInfo = [];
 let lScanTimeout = false;
-let lScanTimeoutCount = 15;
+let lScanTimeoutCount = SCAN_TIMEOUT;
 let lScanFinished  =false;
 let lScanTimer = null;
 let lScanBusy = false;
@@ -46,6 +48,7 @@ let lScanPort = "";
 
 let lScanCon = [];
 
+let lbScanPhase2 = false;
 
 class ScanComputers{
 
@@ -70,11 +73,9 @@ class ScanComputers{
             {
                 if (lScanCount > 0) return;
             }
-            lScanBusy = true;
-            clearTimeout(lScanTimer);
-            lScanTimeout = false;
-            lScanFoundAll = [];
-            lScanCount = 0;
+            lbScanPhase2 = false;
+            lScanFoundAllIp = [];
+            lScanFoundAllInfo = [];
             logging.logDebug("");      
             logging.logDebug("Scan computers: Begin");
 
@@ -90,12 +91,70 @@ class ScanComputers{
     {
         clearTimeout(lScanTimer);
         gChildWindowScan.close();
-        logging.logDebug("Scan computers: End");
-        logging.logDebug("");
         lScanBusy = false;
     }
 }
 module.exports = ScanComputers;
+
+class BtSocketScan{
+    socket(con)
+    {
+    try {
+        this.connected = false;
+        var ip = con.ip;
+        var port = con.port;
+
+        con.auth = false;
+        con.client_completeData = "";
+        con.client_socket = new net.Socket();
+        con.client_socket.connect(port, ip);
+        con.client_socket.on('connect',function(){
+            let scanObj = Object();
+            let ip = con.ip;
+            scanObj.ip = ip;
+            scanObj.computerName = ip;
+            scanObj.cpid = NO_PASSWORD;
+            scanObj.password = "";
+            scanObj.con = con;
+            scanFound(scanObj);
+        });
+
+        con.client_socket.on('data', function(data) {
+            let dataStr = data.toString(); 
+            con.client_completeData += dataStr; 
+            if (dataStr.indexOf('\u0003') >= 0 )
+            {
+                if (con.client_completeData.indexOf('<unauthorized') >=0)
+                {
+                    con.auth = false;
+                }
+                else {
+                    let cb = con.client_callbackI;
+                    if (cb !== null) con.client_callbackI('data');                    
+                }             
+
+            }
+        })
+        con.client_socket.on('close', function() {
+            var ii = 1;                 
+        });        
+        con.client_socket.on('error', (err) => {
+//            con.client_compleData = "";         
+//            con.mode = 'error';
+//            con.client_socket.end();                 
+//            con.client_socket.destroy();  
+        });        
+    } catch (error) {
+            logging.logError('BtSocket,client', error);
+            con.socket_compleData = "";
+            con.auth = false;
+            con.mode = 'error';
+            con.client_socket.end();                 
+            con.client_socket.destroy();  
+            lostConnection(con,"error2")
+        }  
+    }
+}
 
 function localIp()
 {
@@ -117,20 +176,28 @@ function localIp()
 function scanAll()
 {
     try {
-        if (lScanLocalIp === null)
+        lScanBusy = true;
+        lScanCount = 0;
+        lScanTimeoutCount = SCAN_TIMEOUT;
+        clearTimeout(lScanTimer);
+        lScanTimeout = false;
+
+        if (!lbScanPhase2)
         {
-            lScanLocalIp = localIp();
-            if (lScanLocalIp.length <= 0)
-            {          
-                logging.logDebug("No local IP address found");  
-                return;
+            if (lScanLocalIp === null)
+            {
+                lScanLocalIp = localIp();
+                if (lScanLocalIp.length <= 0)
+                {          
+                    logging.logDebug("No local IP address found");  
+                    return;
+                }
             }
+            logging.logDebug("Local Ip: " + lScanLocalIp[0]); 
         }
-        logging.logDebug("Local Ip: " + lScanLocalIp[0]); 
         let ix = lScanLocalIp[0].lastIndexOf(".");
         let ip = lScanLocalIp[0].substring(0,ix+1);
 
-        lScanTimeoutCount = 15;
         lScanTimer = setTimeout(function(){ scanTimeout() }, 1000);
 
         let port = lScanPort;
@@ -146,23 +213,23 @@ function scan(ip,port,password)
 {
     lScanCon = [];
     for(let i=1; i <=255; i++){
-        lScanCount++;
-        checkComputer(ip+i, port, password, scanReady)
+        lScanCount++; 
+        checkComputer(ip+i, port, lbScanPhase2, password, scanReady)
     }  
 }
 
-function scanReady(event)
+function scanReady(type)
 {
     try {
         if (lScanTimeout) return;
-
         if (functions.isDefined(this.client_completeData))
         {         
             let data = this.client_completeData;
             let dataStr = data.toString();
             if (dataStr.indexOf('boinc_gui_rpc_reply') >=0)
             {
-                // BOINC found             
+                // BOINC found     
+                this.auth = true;        
                 let hostInfo = getHostInfo(dataStr)
                 let computerName = this.ip;
                 let cpid = "";
@@ -172,26 +239,17 @@ function scanReady(event)
                     cpid = hostInfo.host_cpid;
                 }
                 let ip = this.ip;
-                for (let i=0;i<lScanLocalIp.length;i++)
-                {
-                    if (lScanLocalIp[i] == ip)
-                    {
-                        ip = "localhost";
-                    }
-                }
-                logging.logDebug("Found: " + ip + " Name: " + computerName, " Cpid: " + cpid);
-                let scanFound = Object();
-                scanFound.ip = ip;
-                scanFound.computerName = computerName;
-                scanFound.cpid = cpid;
-                scanFound.password = this.passWord;
-                lScanFoundAll.push(scanFound);
-                sendList();                
+                let scanObj = Object();
+                scanObj.ip = ip;
+                scanObj.computerName = computerName;
+                scanObj.cpid = cpid;
+                scanObj.password = this.passWord;
+                scanFound(scanObj);              
             }
         }
 
         try {
-            this.destroy();        
+            con.destroy();        
         } catch (error) {
             
         }
@@ -224,6 +282,16 @@ function scanTimeout()
 function scanFinished()
 {
     try {
+        if (!lbScanPhase2)
+        {
+            if (lScanPassword.length > 0)
+            {
+                lbScanPhase2 = true;
+                scanAll()
+                return;
+            }
+        }
+
         for (let i=0; i< lScanCon.length; i++)
         {
             try {
@@ -254,23 +322,45 @@ function foundList()
         let txt = "Computers with BOINC:";
         txt += "<br><br>"
         txt += "<table>";
-        let len = lScanFoundAll.length;
+        let len = lScanFoundAllInfo.length;
         for (let i=0; i<len; i++)
         {
+            let sf =  lScanFoundAllInfo[i];            
+            let ip = sf.ip;
+            let cpid = sf.cpid;
+            let computerName = sf.computerName;
+            for (let i=0;i<lScanLocalIp.length;i++)
+            {
+                if (lScanLocalIp[i] == ip) ip = "localhost";
+                if (lScanLocalIp[i] == computerName) computerName = "localhost";
+            }
+            if (cpid === NO_PASSWORD)
+            {
+                logging.logDebug("Found: " + ip + " Name: " + computerName + " , NOT athenticated");
+            }
+            else
+            {
+                logging.logDebug("Found: " + ip + " Name: " + computerName + " Cpid: " + cpid  + " , OK");
+            }
+
             txt += "<tr>";
-            let sf =  lScanFoundAll[i];
             txt+=  '<td><input type="checkbox" id="scan-check-' + i + '"><td>';
             txt+= "<td><b>Ip</b>: ";
-            txt+= '<span id="scan-ip-' + i + '">' + sf.ip + '</span></td>';
+            txt+= '<span id="scan-ip-' + i + '">' + ip + '</span></td>';
             txt+= "<td><b>Name</b>: ";
-            txt+= '<span id="scan-name-' + i + '">' + sf.computerName + '</span></td>';            
+            txt+= '<span id="scan-name-' + i + '">' + computerName + '</span></td>';            
             txt+= "<td><b>Cpid</b>: ";
-            txt+= '<span id="scan-cpid-' + i + '">' + sf.cpid + '</span></td>';
+            txt+= '<span id="scan-cpid-' + i + '">' + cpid + '</span></td>';
             txt+= "</tr>";
         }
         txt += "</table>";
         txt += '<br><button id="addSelectedButton">Add selected computers</button>';
-        gChildWindowScan.webContents.send('computer_scan_text', txt);    
+        txt += "<br><br>";
+        txt += "If you see: " + NO_PASSWORD + " , you found a BOINC client, with a wrong password or a allow to connect problem.";
+        gChildWindowScan.webContents.send('computer_scan_text', txt); 
+
+        logging.logDebug("Scan computers: End");
+        logging.logDebug("");
     } catch (error) {
         logging.logError('ScanComputers,foundList', error);         
     }     
@@ -280,18 +370,29 @@ function sendList()
 {
     try {
         let txt = "Computers with BOINC:<br><br>";
-        txt += "To scan: " + lScanCount + " , ready in: " + lScanTimeoutCount + " seconds";
-        txt += "<br><br>";
-        for (let i=0; i<lScanFoundAll.length; i++)
+
+        let readyTime = lScanTimeoutCount;        
+        let phase = "";
+        if (lbScanPhase2) phase = "now scanning using the password";
+        if (!lbScanPhase2 && lScanPassword.length !== 0)
         {
-            let sf =  lScanFoundAll[i];            
-            txt+= "Ip: ";
+            readyTime += SCAN_TIMEOUT;
+        }
+
+        txt += "To scan: " + lScanCount + " , ready in: " + readyTime + " seconds , " + phase;
+        txt += "<br><br>";
+        txt += "<table>";
+        for (let i=0; i<lScanFoundAllInfo.length; i++)
+        {
+            txt += "<tr>";            
+            let sf =  lScanFoundAllInfo[i];
+            txt+= "<td>Ip: ";
             txt+= sf.ip;
-            txt+= " Name: ";
+            txt+= "</td><td>Name: ";
             txt+= sf.computerName;
-            txt+= " Cpid: ";
+            txt+= "</td><td>Cpid: ";
             txt+= sf.cpid;
-            txt+= "<br>";
+            txt += "</td></tr>";
         }
         gChildWindowScan.webContents.send('computer_scan_text', txt);    
     } catch (error) {
@@ -299,7 +400,7 @@ function sendList()
     }    
 }
 
-function checkComputer(ip,port, password,callback)
+function checkComputer(ip,port, bAuth, password,callback)
 {
     try {
         let con = new Object();
@@ -307,10 +408,75 @@ function checkComputer(ip,port, password,callback)
         con.computerName = "";        
         con.port =  port;
         con.passWord = password;
-        let sendCon = sendArray.send(con,"<get_host_info/>\n", callback);
-        lScanCon.push(sendCon);
+
+        if (bAuth)
+        { 
+            let pos = lScanFoundAllIp.indexOf(ip);
+            if (pos >= 0)
+            {
+                let scanObj = lScanFoundAllInfo[pos];
+                if (scanObj.cpid === NO_PASSWORD)
+                {
+                    let con = scanObj.con;
+                    con.client_callback = scanReadyAuthorized;
+                    athenticate.authorize(con); 
+                }
+            }
+        }
+        else
+        {
+            send(con,"<get_host_info/>\n", callback);
+        }
     } catch (error) {
         logging.logError('ScanComputers,checkComputer', error);        
+    }
+}
+
+function scanReadyAuthorized(event)
+{
+    try {
+        if (lScanTimeout) return;
+        this.client_completeData = "";        
+        this.client_callbackI = scanReady;
+        functions.sendRequest(this.client_socket, "<get_host_info/>\n");          
+    } catch (error) {
+        logging.logError('ScanComputers,scanReadyAuthorized', error);       
+    }
+}
+
+function send(con,send,callback) 
+{
+    try {       
+        con.sendArraytoSend = send;
+        con.client_completeData = "";
+        con.client_socket = new BtSocketScan();  
+        con.client_socket.socket(con);
+        con.client_callbackI = callback;
+        functions.sendRequest(con.client_socket, con.sendArraytoSend);          
+    } catch (error) {
+        logging.logError('ScanComputers,send', error);  
+    }
+}   
+
+function scanFound(scanObj)
+{
+    try {
+        let pos = lScanFoundAllIp.indexOf(scanObj.ip);
+        if (pos < 0)
+        {
+            lScanFoundAllIp.push(scanObj.ip);
+            lScanFoundAllInfo.push(scanObj);
+        }
+        else
+        {
+            item = lScanFoundAllInfo[pos];
+            item.computerName = scanObj.computerName;
+            item.cpid = scanObj.cpid;
+            item.password = scanObj.passWord;
+        }
+        sendList();        
+    } catch (error) {
+      logging.logError('ScanComputers,scanFound', error); 
     }
 }
 
@@ -369,9 +535,9 @@ function windowReady(title)
 
     let explain = "The password can be found in the BOINC data folder in a file called gui_rpc_auth.cfg.<br>";
     explain += "If you did't already, make sure BOINC connections are allowed by editing remote_host.cfg on the remote computer.<br><br>";
-    explain += '<a href="https://efmer.com/boinctasks-js-find-computers/">I know manuals are boring, but click here read the BoincTasks manual before you proceed</a>.<br><br><br>';
+    explain += '<a href="https://efmer.com/boinctasks-js-find-computers/">Click here read the BoincTasks manual before proceeding</a>.<br><br><br>';
     explain += "Fill in the password or leave it empty (you don't get a computer name if you leave it empty)<br>";
-    explain += "You may leave the port empty for the default 31416.<br>";
+    explain += "You may leave the port empty for the default 31416.<br><br>";
 
     gChildWindowScan.webContents.send('computer_scan_explain', explain);     
     gChildWindowScan.setTitle(title);
@@ -394,7 +560,7 @@ function getHostInfo(xml)
             }
         });
     } catch (error) {
-        logging.logError('ScanComputers,parseProjects', getCpid);         
+        logging.logError('ScanComputers,parseProjects', getHostInfo);         
     }
     return hostReturn
 }

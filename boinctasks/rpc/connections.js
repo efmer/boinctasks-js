@@ -99,6 +99,7 @@ const btConstants = require('./functions/btconstants');
 let gRequireHistory = null;
 let gRequireRulesList = null;
 let gRequireRulesProcess = null;
+let gRequireEmail = null;
 
 const MODE_NORMAL = 0;      // normal mode
 const MODE_STATE = 1;       // fetching the state
@@ -110,7 +111,7 @@ const INTERVAL_STATE_FIRST = 2000;
 const INTERVAL_STATE = 2000; 
 const INTERVAL_HISTORY_FIRST = 3000; 
 const INTERVAL_REFRESH_FIRST = 1000;
-const INTERVAL_RULES_FIRST = 6000;  // a long time after the state
+const INTERVAL_RULES_FIRST = 10000;  // a long time after the state
 const INTERVAL_RULES = 30000;
 
 // must be indentical in renderer.js
@@ -473,6 +474,15 @@ class Connections{
             gRequireRulesList = new RequireRulesList();
         }
         gRequireRulesList.rules(gB,type,data,data2);
+    }
+    email(type,item)
+    {
+        if (gRequireEmail === null)
+        {
+          const Email = require('./rules/email');
+          gRequireEmail = new Email();
+        }
+        gRequireEmail.email(gB,type,item);
     }
 }
 
@@ -917,6 +927,20 @@ function getRules()
         }
         gB.rules.computerList = [];        
         gB.rules.compiled = false;
+
+        try {
+            gB.rules.email = JSON.parse(readWrite.read("settings\\email", "email.json"));             
+        } catch (error) {
+            gB.rules.email = null;  
+        }
+
+        if (gRequireEmail === null)
+        {
+            const Email = require('./rules/email');
+            gRequireEmail = new Email();
+        }             
+        gRequireEmail.readXml(gB);
+    
     } catch (error) {
         logging.logError('Connections,getSgetRulesorting', error);         
     }
@@ -1030,6 +1054,8 @@ function connectRules(fetchMode)
                 con.rules.list = [];
                 con.rules.active = new Object;        
                 con.rules.compiled = false;
+                con.rules.auth = false;
+                con.rules.seenLost = false;
             }
             gRequireRulesProcess.makeComputerList(gB);
         }
@@ -1734,7 +1760,8 @@ function btTimer() {
 
             if (gB.fetchMode === MODE_RULES)
             {
-                connectionsShadow.flushSendArray();    
+                connectionsShadow.flushSendArray();
+                gRequireRulesProcess.connectionsCheck(gB)
             }
 
             // gBusy set false in process
@@ -1785,14 +1812,12 @@ function btTimer() {
             }
         }
 
-        // rules
-
+        // Rules
         if (gB.rules.list.length > 0)
         {
             diff= gB.nextRulesFetchTime - current;
             if (diff < 0)
             {
-//                connectionsShadow.flushSendArray();
                 gB.nextRulesFetchTime = current + INTERVAL_RULES;
                 switch (gB.fetchMode)
                 {

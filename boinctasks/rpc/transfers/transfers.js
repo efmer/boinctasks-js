@@ -52,7 +52,7 @@ function transferData()
         if (functions.isDefined(transfers.file_transfer))
         {
             add(this.computerName,transfers.file_transfer);
-            this.transfers = transfers;  
+            this.transfers = transfers;
         }
         else 
         {

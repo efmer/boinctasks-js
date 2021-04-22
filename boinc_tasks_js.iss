@@ -1,7 +1,7 @@
 [Setup]
 AppName=BoincTasks Js
-AppVerName=BoincTasks Js by eFMer V 1.12
-AppVersion=1.12
+AppVerName=BoincTasks Js by eFMer V 1.14
+AppVersion=1.14
 AppPublisher=eFMer
 AppPublisherURL=https://efmer.com/
 AppSupportURL=https://forum.efmer.com/
@@ -9,12 +9,13 @@ AppUpdatesURL=https://efmer.com/download-boinctasks/
 AppComments=BoincTasks the visual BOINC interface - the best way to view your BOINC tasks
 DefaultDirName={commonpf}\eFMer\BoincTasks-Js
 DefaultGroupName=EFMER BoincTasks Js
-UninstallDisplayIcon= {app}\boinctasks-js.exe
+UninstallDisplayIcon= {app}\boinctasksjs.exe
 LicenseFile=boinctasks_licence.txt
 AppCopyright=Copyright 2021 eFMer
 DisableDirPage=false
 ShowLanguageDialog=yes
 Encryption=false
+PrivilegesRequired=admin
 
 EnableDirDoesntExistWarning=false
 OutputDir=out\wininstaller
@@ -44,9 +45,10 @@ Source: boinctasks_licence.txt; DestDir: {app};
 Source: appicons\icons\win\icon.ico; DestDir: {app};
 
 [Icons]
-Name: {group}\BoincTasks Js; Filename: {app}\boinctasksjs.exe; IconIndex: 1;
+Name: "{group}\BoincTasks Js"; Filename: {app}\boinctasksjs.exe;
 Name: "{commondesktop}\BoincTasks Js"; Filename: "{app}\boinctasksjs.exe"; Tasks: desktopicon;
+Name: "{autostartup}\BoincTasks Js"; Filename: {app}\boinctasksjs.exe;
 
 [Run]
 Filename: {app}\boinctasksjs.exe; Parameters: "/show"; Description: {cm:LaunchProgram,BoincTasks Js}; Flags: nowait postinstall skipifsilent;
-Filename: https://efmer.com/download-boinctasks/; Description: WWW BoincTasks; Flags: shellexec nowait postinstall skipifsilent unchecked
+Filename: https://efmer.com/boinctasks-js/boinctasks-js-download/; Description: WWW BoincTasks; Flags: shellexec nowait postinstall skipifsilent unchecked

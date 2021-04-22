@@ -16,6 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+const TESTING_UPDATE_DARWIN = false;
 const TESTING_UPDATE = false;
 
 const Functions = require('../functions/functions');
@@ -42,7 +43,7 @@ class Update{
     button(type)
     {
       let osPlatform = os.platform();
-      if (TESTING_UPDATE) osPlatform = "darwin";
+      if (TESTING_UPDATE_DARWIN) osPlatform = "darwin";
       switch(osPlatform)
       {
         case "win32":
@@ -63,7 +64,7 @@ function updateOs()
 {
     try {
         let osPlatform = os.platform();
-        if (TESTING_UPDATE) osPlatform = "darwin";     
+        if (TESTING_UPDATE_DARWIN) osPlatform = "darwin";     
         let osArch = os.arch();
         let version = btConstants.VERSION.toFixed(2)
         let msg = "Platform: " + osPlatform + ", architecture: " + osArch + "<br><br>"; 
@@ -241,7 +242,7 @@ function downloadExe(type)
           gChildUpdate.webContents.send('update_download', "Download completed."); 
           const ReadWrite  = require('../functions/readwrite');
           const readWrite = new ReadWrite();
-          let dir = readWrite.write("temp","btj.appx",buffer);            
+          let dir = readWrite.write("temp","btj_setup.exe",buffer);            
           Install(dir);
         } catch (error) {
           logging.logError('Update,downloadExe,end', error);
@@ -265,7 +266,24 @@ function Install(path)
   let msg = "";
   logging.logDebug("Install,Path used: " + path + "<br>");
   try {
+    msg += '<b><h3 style="color:green;"> New version ready to install.</h3><b><br>Closing down....... soon';
+    gChildUpdate.webContents.send('update_download', msg);
+    setTimeout(exitApp, 3000)
+    var child = require('child_process').execFile;
+    var executablePath = path + "\\btj_setup.exe";
+    var parameters = ["--show"];
+    child(executablePath, parameters, function(err, data) {
+    if(err){
+      msg += "Installation failed: " + err.message;
+      logging.logDebug("Failed to run downloaded installer", msg);
+      gChildUpdate.webContents.send('update_download', msg);         
+      return;
+    }
+    });
+/*
+
     const Shell = require('node-powershell');
+
 
     const ps = new Shell({
       executionPolicy: 'Bypass',
@@ -273,7 +291,7 @@ function Install(path)
     });
     
     ps.addCommand('cd "' + path + '"');    //"C:\\Users\\fred\\AppData\\Roaming\\Boinctasks Js\\temp"');
-    ps.addCommand("Add-AppxPackage btj.appx");
+    ps.addCommand("btj_setup.exe");
     ps.invoke()
     .then(output => {
       if (output.length === 0)
@@ -289,20 +307,15 @@ function Install(path)
         gChildUpdate.webContents.send('update_download', msg);          
       }
     })
-    .catch(err => {
-      msg += "Installation failed: (err) "  + err + "<br>";
-      logging.logDebug("Install", msg);
-      gChildUpdate.webContents.send('update_download', msg);        
-    });
+*/
 
-  } catch (error) {
+} catch (error) {
     logging.logError('Update,Install', error);
   } 
 }
 
-function restart()
+function exitApp()
 {
-  app.relaunch()
   app.exit()
 }
 

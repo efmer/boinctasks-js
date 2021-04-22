@@ -10,18 +10,19 @@ npm update --dd
 
 npm run make
 
+local testing ./out/BoincTasks Js-darwin-x64
 result in ./out/make/zip/darwin
 
 -----------------------------------------------
 Missing icon
 npm run macm 
 
-to test run file in ./dist/mac/Boinctasks Js.app/boinctasks Js-darwin-x64
+to test run file in ./dist/mac/BoincTasks Js.app/boinctasks Js-darwin-x64
 result in ./dist
 
 
 // check if notarized
-spctl -v -a "Boinctasks Js.app"
+spctl -v -a "BoincTasks Js.app"
 
 npm install @electron-forge/maker-dmg
 

@@ -20,6 +20,7 @@
 module.exports = {
     RULE_TYPE_TEXT                   : 0,
     RULE_TYPE_TIME                   : 1,
+    RULE_TYPE_CONNECTION             : 2,
 
     RULE_ELAPSED_TIME                : "Elapsed Time",
     RULE_ELAPSED_TIME_NR             : 0,

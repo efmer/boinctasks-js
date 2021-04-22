@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->  
+    <link rel="stylesheet" href="../boinctasks/css/bt.css">    
+
+    <title>Email</title>
+  </head>
+  <body>
+    <br>Warning the password is stored in plain text.<br>
+    <br>
+    <table>
+      <tr>
+        <td><label for="email">Email from:</label></td><td><input class="project_add_input" id="email_email"type="text" id="email" name="email"></td>
+      </tr>
+      <tr>
+        <td><label for="password">Password:</label></td><td><input class="project_add_input" type="password" id="email_password" name="password"><span class = "ef_img_input bt_img_input_eye_not"></span></td>
+      </tr>
+      <tr><td>&nbsp;</td></tr>
+      <tr>
+        <td><label for="email_send">Email send to:</label></td><td><input class="project_add_input" id="email_send"type="text" id="email_send" name="email_send"></td>
+      </tr>      
+    </table>
+    <br>
+    <button id="email_apply">Apply</button>
+    <br><br>
+    <button id="email_test">Test</button>
+    <br>
+    <div id = "email_status"></div>
+    <script>window.$ = window.jQuery = require('../boinctasks/lib/jquery.min');</script>
+    <script type="text/javascript">
+      require('../render/renderer_email')
+    </script>
+  </body>
+</html>

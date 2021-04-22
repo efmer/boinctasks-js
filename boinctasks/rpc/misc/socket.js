@@ -68,14 +68,16 @@ class BtSocket{
         con.client_socket.on('close', function() {
             var ii = 1;
         }); 
+/*        
         con.client_socket.on('timeout', function() { 
             con.client_compleData = "";          
             con.auth = false;
             con.mode = 'timeout'; 
             con.client_socket.end();                 
             con.client_socket.destroy();
-            // not used, the busy timer handles a timeout.
-        });         
+            // not used, the busy timer handles a timeout.       
+        });
+*/
         con.client_socket.on('error', (err) => {
             con.client_compleData = "";
             checkAuth(con,"error");

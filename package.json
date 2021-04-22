@@ -1,0 +1,148 @@
+{
+  "name": "boinctasks-js",
+  "productName": "BoincTasks Js",
+  "appId": "com.efmer.boinctasksjs",
+  "author": "eFMer",
+  "url": "https://efmer.com/",
+  "license": "GPL-3.0-or-later",
+  "version": "1.1.4",
+  "description": "BoincTasks Js the best way to view BOINC",
+  "copyright": "Copyright © 2021 ${author}",
+  "main": "main.js",
+  "scripts": {
+    "package-winarm": "electron-packager . boinctasksjs  --executableName=boinctasksjs  --ignore=^/private --ignore=^/out --ignore=^/dist --ignore=^/download --ignore=how-to --ignore=^/snap --ignore=^/.vscode --icon=appicons/icons/win/icon.ico    --overwrite --asar --platform=win32 --arch=arm64  --prune=true --out=out/winarm --appCopyright=\"(c) 2021 eFMer\" --version-string.CompanyName=eFMer --version-string.ProductName=BoincTasks Js",
+    "package-win32": "electron-packager  . boinctasksjs  --executableName=boinctasksjs  --ignore=^/private --ignore=^/out --ignore=^/dist --ignore=^/download --ignore=how-to --ignore=^/snap --ignore=^/.vscode --icon=./appicons/icons/win/icon.ico  --overwrite --asar --platform=win32 --arch=ia32   --prune=true --out=out/win32  --appCopyright=\"(c) 2021 eFMer\" --version-string.CompanyName=eFMer --version-string.ProductName=BoincTasks Js",
+    "package-win64": "electron-packager  . boinctasksjs  --executableName=boinctasksjs  --ignore=^/private --ignore=^/out --ignore=^/dist --ignore=^/download --ignore=how-to --ignore=^/snap --ignore=^/.vscode --icon=./appicons/icons/win/icon.ico  --overwrite --asar --platform=win32 --arch=x64           --prune=true --out=out/win64  --appCopyright=\"(c) 2021 eFMer\" --version-string.CompanyName=eFMer --version-string.ProductName=BoincTasks Js",
+    "package-linux": "electron-packager  . boinctasks-js --executableName=boinctasks-js --ignore=^/private --ignore=^/out --ignore=^/dist --ignore=^/download --ignore=how-to --ignore=^/snap --ignore=^/.vscode --icon=appicons/icons/png/512x512.png --overwrite --asar --platform=linux --arch=x64    --prune=true --out=out/linux  --appCopyright=\"(c) 2021 eFMer\" --version-string.CompanyName=eFMer --version-string.ProductName=BoincTasks Js",
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "linux": "electron-builder --linux deb",
+    "snap": "electron-builder --linux snap",
+    "mac": "electron-builder --mac"
+  },
+  "build": {
+    "asar": true,
+    "appId": "com.efmer.boinctasksjs",
+    "compression": "maximum",
+    "afterSign": "build/notarize.js",
+    "win": {
+      "target": "nsis",
+      "icon": "appicons/icons/png/512x512.png"
+    },
+    "linux": {
+      "executableName": "boinctasks-js",
+      "icon": "appicons/icons/mac/icon.icns",
+      "target": [
+        "deb"
+      ]
+    },
+    "deb": {},
+    "mac": {
+      "appId": "com.efmer.boinctasksjs",
+      "executableName": "Boinctasks Js",
+      "icon": "appicons/icons/mac/icon.icns",
+      "target": [
+        "dmg"
+      ],
+      "category": "public.app-category.utilities",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist"
+    },
+    "files": [
+      "./appicons/icons/mac/icon.icns",
+      "./boinctasks/**",
+      "./index/**",
+      "./render/**",
+      "./preload",
+      "main.js",
+      "!.git",
+      "!.github",
+      "!.gitignore",
+      "!.vscode",
+      "!package.json",
+      "!out",
+      "!download",
+      "!how-to",
+      "!snap",
+      "!private"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/efmer/boinctasks-js"
+  },
+  "keywords": [
+    "boinc",
+    "boinctasks"
+  ],
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.54",
+    "@electron-forge/maker-deb": "^6.0.0-beta.54",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.54",
+    "@electron-forge/maker-zip": "^6.0.0-beta.54",
+    "electron": "^12.0.5",
+    "electron-builder": "^22.10.5",
+    "electron-notarize": "^1.0.0",
+    "electron-osx-sign": "^0.5.0",
+    "electron-packager": "^15.2.0"
+  },
+  "dependencies": {
+    "highcharts": "^9.0.1",
+    "nodemailer": "^6.5.0",
+    "sortablejs": "^1.13.0",
+    "xml2js": "^0.4.23"
+  },
+  "config": {
+    "icon": "appicons/icons/mac/icon.icns",
+    "forge": {
+      "packagerConfig": {
+        "asar": false,
+        "icon": "appicons/icons/mac/icon.icns",
+        "executableName": "boinctasks-js",
+        "name": "Boinctasks Js",
+        "osxSign": {
+          "hardened-runtime": true,
+          "entitlements": "build/entitlements.mac.plist",
+          "entitlements-inherit": "build/entitlements.mac.plist",
+          "signature-flags": "library"
+        },
+        "osxNotarize": {},
+        "ignore": [
+          ".git",
+          ".github",
+          ".gitignore",
+          ".vscode",
+          "out",
+          "download",
+          "how-to",
+          "snap",
+          "private",
+          "dist"
+        ]
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-zip",
+          "config": {
+            "icon": "appicons/icons/mac/icon.icns"
+          },
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {
+            "icon": "./appicons/icons/png/512x512.png"
+          },
+          "platforms": [
+            "linux"
+          ]
+        }
+      ]
+    }
+  }
+}
