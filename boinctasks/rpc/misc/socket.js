@@ -19,7 +19,6 @@
 var net = require("net");
 const Logging = require('../functions/logging');
 const logging = new Logging();
-const btConstants = require('../functions/btconstants');
 
 const AUTH_TIMEOUT = 3; // 3 min
 

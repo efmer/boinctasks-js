@@ -32,7 +32,7 @@ class ReadWrite{
             dir = path.join(gUserDataPath, folder);
             if (!fs.existsSync(dir))
             {
-                fs.mkdirSync(dir);
+                fs.mkdirSync(dir, {recursive: true});
             }
             dirF = path.join(dir, fileName);
             fs.writeFileSync(dirF, data);

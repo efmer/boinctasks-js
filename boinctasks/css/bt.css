@@ -45,7 +45,7 @@ body
     /*fxont-family: arial, sans-serif;*/
     border-collapse: collapse;
 	width: calc(100% - 14px);
-  }
+}
 
 .bt_table_header th {
 	border: 1px solid #374a9c;
@@ -57,7 +57,7 @@ body
 	text-overflow: ellipsis; 
 	padding-left: 12px;
 	height: 18px;	
-  }
+}
 
 /* The table below the header, with a hidden header on top */
 /* must be indentical but with a hidden header */
@@ -72,7 +72,7 @@ body
     /*font-famxily: arial, sans-serif;*/
     border-collapse: collapse;
 	width: calc(100% - 0px);
-  }
+}
 
 .bt_table th {
 /*	border: 1px solid #374a9c;*/
@@ -84,7 +84,7 @@ body
 	text-overflow: ellipsis; 
 	padding-left: 12px;
 	height: 0px;	
-  }
+}
 
 .bt_table td {
     border: 1px solid #dddddd;
@@ -94,11 +94,11 @@ body
     overflow: hidden;
     white-space: nowrap;    
     text-overflow: ellipsis;  
-  }
-  
+}
+
 .bt_table tr:nth-child(even) {
     background-color: #d1cfcf;
-  }
+}
 
 .bt_table input{
 	max-width: 100%; 
@@ -108,7 +108,7 @@ body
 .bt_table_selected {
     background-color: #000000b4 !important;
     color: white
-  }
+}
 
 .bt_table_progress {
   background-color: rgba(224, 12, 12, 0.507);
@@ -116,7 +116,7 @@ body
 
 .bt_table_filtered {
 	padding-left: 14px;	/*arrow*/
-  }
+}
 
 /* images */
 
@@ -266,6 +266,12 @@ body
 	background-position: top 1px left 1px;		
 }
 
+.bt_img_toolbar_back {
+	background: url(./img/toolbar/back.png) no-repeat;
+	background-size: 24px 24px;
+	background-position: top 1px left 1px;		
+}
+
 .bt_img_toolbar_retry {
 	background: url(./img/toolbar/retry.png) no-repeat;
 	background-size: 24px 24px;
@@ -278,7 +284,6 @@ body
 	background-position: top 1px left 1px;
 }
 
-	
 .bt_img_toolbar_ok {
 	background: url(./img/toolbar/check.png) no-repeat;
 	background-size: 24px 24px;	
@@ -357,22 +362,22 @@ body
 	margin-top: 26px;
 	padding-top: 10px;
 	background-color: #dfdfdf;
-  }
+}
 
   .sidebar_computers_sel {
 	  background-color:rgb(5, 182, 252) !important;
-  }
+}
 
-  .hidden{
+.hidden{
 	visibility: hidden;
-  }
+}
 
   /* select box*/
 
-  .project_add_select_box {
+.project_add_select_box {
 	  min-width: 250px;
 	  min-height: 200px;
-  }
+}
 
   .project_add_select_box_single {
 	min-width: 250px;

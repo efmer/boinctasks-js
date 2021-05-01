@@ -36,6 +36,12 @@ class ResultItems
             this.filter = [];
             this.filterAS = [];
             this.resultTable = [];
+            if (results.result === void 0)
+            {
+                con.toReport = toReport;
+                this.resultCount = 0;
+                return null;
+            }
             this.resultCount = results.result.length;
             for (let i=0; i< results.result.length; i++)
             {
@@ -101,7 +107,11 @@ class ResultItems
                     resultItem.swap = parseFloat(active.swap_size[0]);
                     resultItem.memory = parseFloat(active.working_set_size_smoothed[0]);
                     resultItem.checkpoint = parseFloat(cpuTime-active.checkpoint_cpu_time[0]);
-                
+                    resultItem.cpuTemp = con.temp.cpu;
+                    resultItem.gpuTemp = con.temp.gpu;
+                    resultItem.gpuPerc = con.temp.gpuP;
+                    resultItem.cpuT = con.temp.cpuT;
+                    resultItem.gpuT = con.temp.gpuT;
                     bActive = true;
                 }
                 let cpu = 0;

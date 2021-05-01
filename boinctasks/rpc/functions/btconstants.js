@@ -17,8 +17,6 @@
 */
 
 module.exports = {
-
-    VERSION                     : 1.14,
     DEBUG                       : false,
 
     //CONNECTION_TIMEOUT          : 4,
@@ -50,7 +48,7 @@ module.exports = {
     PROJECTS_SHARE              : "Share",
     PROJECTS_REC                : "REC",
 
-    TASKS_COLOMN_COUNT          : 15,
+    TASKS_COLOMN_COUNT          : 17,
     GENERAL_COMPUTER            : "Computer",
     GENERAL_PROJECT             : "Project",
     GENERAL_APPLICATION         : "Application",
@@ -66,6 +64,8 @@ module.exports = {
     TASK_RECEIVED               : "Received",
     TASK_MEMORYV                : "V Memory",
     TASK_MEMORY                 : "Memory",
+    TASK_TEMP                   : "Temperature",
+    TASK_TTHROTTLE              : "Run %",
 
     TRANSFERS_COLOMN_COUNT      : 8,
     TRANSFERS_FILE              : "File",
@@ -109,6 +109,7 @@ module.exports = {
 
     SEPERATOR_ITEM  	        : "¼",
     SEPERATOR_SELECT            : "½",
+    SEPERATOR_FILTER            : "⅛",
 
     HEADER_NORMAL               : 0,
     HEADER_RESIZE               : 1,

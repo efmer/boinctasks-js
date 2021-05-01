@@ -153,8 +153,12 @@ class Toolbar{
                 break;
                 case "toolbar_detach_p":
                     selected = gb.rowSelect.projects.rowSelected;                       
-                    detachProject(gb,gb.mainWindow,selected,gb.connections);
-                break;                
+                    detachProject(gb.mainWindow,selected,gb.connections);
+                break;
+                case "toolbar_reset_p":
+                    selected = gb.rowSelect.projects.rowSelected;                       
+                    resetProject(gb.mainWindow,selected,gb.connections);
+                break;
                 // transfers
                 case "toolbar_update_t":
                     selected = gb.rowSelect.transfers.rowSelected;                       
@@ -186,9 +190,9 @@ class Toolbar{
 
 function getToolbarResultsSel()
 {
-    var toolbar =   '<td id="toolbar_suspend" class="ef_btn_toolbar bt_img_toolbar_pause">&nbsp;Suspend</td>' +
+    var toolbar =   '<td id="toolbar_abort" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;Abort</td>' +
+                    '<td id="toolbar_suspend" class="ef_btn_toolbar bt_img_toolbar_pause">&nbsp;Suspend</td>' +
                     '<td id="toolbar_resume" class="ef_btn_toolbar bt_img_toolbar_resume">&nbsp;Resume</td>' +
-                    '<td id="toolbar_abort" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;Abort</td>' +
                     '<td id="toolbar_update" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;Update</td>' +
                     '<td id="toolbar_info" class="ef_btn_toolbar bt_img_toolbar_info">&nbsp;Info</td>' +                      
                     '<td id="toolbar_rules" class="ef_btn_toolbar bt_img_toolbar_list">&nbsp;Add rule</td>';
@@ -216,6 +220,7 @@ function getToolbarTransfers()
 function getToolbarProjects()
 {
     var toolbar =   '<td id="toolbar_detach_p" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;Detach</td>' +
+                    '<td id="toolbar_reset_p" class="ef_btn_toolbar bt_img_toolbar_back">&nbsp;Reset</td>' +
                     '<td id="toolbar_suspend_p" class="ef_btn_toolbar bt_img_toolbar_pause">&nbsp;Suspend</td>' +
                     '<td id="toolbar_resume_p" class="ef_btn_toolbar bt_img_toolbar_resume">&nbsp;Resume</td>' +
                     '<td id="toolbar_nomore_p" class="ef_btn_toolbar bt_img_toolbar_download_not">&nbsp;No more work</td>' +
@@ -267,6 +272,16 @@ function abort(gb,mainWindow, selected, what)
         break;
     }
 
+    if (findFilter(selected))
+    {
+        dialog.showMessageBox(mainWindow,
+            {
+              title: 'Unable to delete a Filter',
+              message: 'You cannot delete a filter this way' ,
+              detail: 'Open the filter, click on a task.\nNext press Shift and select another one.\nNow you can delete the selected filtered tasks.'
+            })
+            return;
+    }
 
     dialog.showMessageBox(mainWindow,
     {
@@ -288,7 +303,7 @@ function abort(gb,mainWindow, selected, what)
     });
 }
 
-function detachProject(gb,window,selected,connections)
+function detachProject(window,selected,connections)
 {
     dialog.showMessageBox(window,
         {
@@ -304,19 +319,40 @@ function detachProject(gb,window,selected,connections)
             // cancel
           } else if (result.response === 1) {
             // yes
-            detachProjectYes(gb,selected,connections);
+            resetDetachProjectYes(selected,connections,true);
           }
         }
         );
 }
 
-function detachProjectYes(gb,selected,connections)
+function resetProject(window,selected,connections)
+{
+    dialog.showMessageBox(window,
+        {
+          title: 'Reset projects?',
+          message: 'You are about to reset projects' ,
+          detail: 'Do you want to reset the selected projects?',
+          buttons: ['Cancel', 'Yes delete'],
+          defaultId: 0, // bound to buttons array
+          cancelId: 1 // bound to buttons array
+        })
+        .then(result => {
+          if (result.response === 0) {
+            // cancel
+          } else if (result.response === 1) {
+            // yes
+            resetDetachProjectYes(selected,connections,false);
+          }
+        }
+        );
+}
+
+function resetDetachProjectYes(selected,connections,detach)
 {
     try {
         connectionsShadow.init();        
         for (let s=0;s<selected.length;s++)  
         {
-            let sel = selected[s];
             let res = selected[s].split(btConstants.SEPERATOR_SELECT);
             let computerName = "";
             let url = "";
@@ -331,7 +367,8 @@ function detachProjectYes(gb,selected,connections)
                 let con = connections[i]
                 if (computerName === con.computerName)
                 {
-                    req = "<project_detach>\n<project_url>" + url + "</project_url>\n</project_detach>"
+                    if (detach) req = "<project_detach>\n<project_url>" + url + "</project_url>\n</project_detach>"
+                    else req = "<project_reset>\n<project_url>" + url + "</project_url>\n</project_reset>"
                     connectionsShadow.addSendArray(con,req);
                 }
             }
@@ -340,10 +377,7 @@ function detachProjectYes(gb,selected,connections)
     } catch (error) {
         logging.logError('Toolbar,detachProjectYes', error);        
     }
-    
 }
-
-//         task(gb,selected,"suspend_result",SEND_TASKS);
 
 function task(gb,selected,request,what)
 {
@@ -353,7 +387,7 @@ function task(gb,selected,request,what)
         for (var i=0; i<selected.length;i++)
         {
             var res = selected[i].split(btConstants.SEPERATOR_SELECT);
-            if (res.length !== 3) return;
+            if (res.length !== 3) continue; // skip filter
             var wu = res[0];
             var computer = res[1];
             var url = res[2];
@@ -381,6 +415,23 @@ function task(gb,selected,request,what)
     } catch (error) {
         logging.logError('Toolbar,Task', error);       
     }    
+}
+
+function findFilter(selected)
+{
+    try {
+        for (var i=0; i<selected.length;i++)
+        {
+            var res = selected[i].split(btConstants.SEPERATOR_SELECT);
+            if (res.length === 3) 
+            {
+                if (res[2].indexOf(btConstants.SEPERATOR_FILTER) >= 0) return true;
+            }
+        }      
+    } catch (error) {
+        logging.logError('Toolbar,findFilter', error);          
+    }
+    return false;
 }
 
 function sendCommand(con,request, url, wu)

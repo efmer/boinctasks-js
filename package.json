@@ -2,10 +2,10 @@
   "name": "boinctasks-js",
   "productName": "BoincTasks Js",
   "appId": "com.efmer.boinctasksjs",
-  "author": "eFMer",
+  "author": "eFMer <boinc@efmer.com>",
   "url": "https://efmer.com/",
   "license": "GPL-3.0-or-later",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "BoincTasks Js the best way to view BOINC",
   "copyright": "Copyright © 2021 ${author}",
   "main": "main.js",
@@ -18,7 +18,8 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "linux": "electron-builder --linux deb",
-    "snap": "electron-builder --linux snap",
+    "snapI64": "electron-builder --linux snap --x64",
+    "snapA32": "electron-builder --linux snap --armv7l",         
     "mac": "electron-builder --mac"
   },
   "build": {

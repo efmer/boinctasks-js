@@ -181,7 +181,7 @@ function parseState(xml)
 function buildCache(con)
 {
     try {
-        if (con.state !== null)
+        if (con.state !== null && con.state.workunit !== void 0)
         {
             let projectState = con.state.project;            
             

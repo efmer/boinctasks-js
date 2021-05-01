@@ -52,17 +52,21 @@ class SettingsColor{
     get()
     {
       try {
+        let defaultColor = JSON.parse('{"#project_running":"rgb(200,255,191)","#project_suspended":"rgb(255,145,0)","#project_nonew":"rgb(151,159,157)","#task_error":"rgb(235,147,14)","#task_ready_start":"rgb(202,255,175)","#task_ready_abort":"rgb(248,244,92)","#task_suspended":"rgb(204,204,204)","#task_running_hp":"rgb(255,88,88)","#gtask_ready_start":"rgb(232,255,220)","#gtask_error":"rgb(253,172,49)","#task_running":"rgb(92,224,104)","#gtask_running":"rgb(134,239,143)","#task_ready_report":"rgb(253,241,117)","#task_download":"rgb(255,255,255)","#gtask_download":"rgb(255,255,255)","#gtask_ready_report":"rgb(253,246,166)","#gtask_running_hp":"rgb(255,122,122)","#progress_bar":"rgb(119,236,254)","#messages_priority":"rgb(253,143,143)","#messages_default":"rgb(239,255,255)","#messages_highlight_0":"rgb(107,241,122)","#messages_highlight_1":"rgb(167,238,254)","#messages_highlight_2":"rgb(251,247,128)","#messages_highlight_3":"rgb(252,166,127)"}');
         if (gSettingsColor === null)
         {
           gSettingsColor = JSON.parse(readWrite.read("settings\\color", "settings_color.json"));
           if (gSettingsColor === null)
           {
-            gSettingsColor = JSON.parse('{"#project_running":"rgb(200,255,191)","#project_suspended":"rgb(255,145,0)","#project_nonew":"rgb(151,159,157)","#task_error":"rgb(235,147,14)","#task_ready_start":"rgb(202,255,175)","#task_ready_abort":"rgb(248,244,92)","#task_suspended":"rgb(204,204,204)","#task_running_hp":"rgb(255,88,88)","#gtask_ready_start":"rgb(232,255,220)","#gtask_error":"rgb(253,172,49)","#task_running":"rgb(92,224,104)","#gtask_running":"rgb(134,239,143)","#task_ready_report":"rgb(253,241,117)","#task_download":"rgb(255,255,255)","#gtask_download":"rgb(255,255,255)","#gtask_ready_report":"rgb(253,246,166)","#gtask_running_hp":"rgb(255,122,122)","#progress_bar":"rgb(119,236,254)","#messages_priority":"rgb(253,143,143)","#messages_default":"rgb(239,255,255)","#messages_highlight_0":"rgb(107,241,122)","#messages_highlight_1":"rgb(167,238,254)","#messages_highlight_2":"rgb(251,247,128)","#messages_highlight_3":"rgb(252,166,127)"}');
+            gSettingsColor = defaultColor;
           }      
         }
       } catch (error) {
-        gSettingsColor = new Object();
-      }      
+        gSettingsColor = defaultColor;
+      }
+      if (gSettingsColor['#history_ok'] === void 0) gSettingsColor['#history_ok'] = "rgb(92,224,104)";
+      if (gSettingsColor['#history_error'] === void 0) gSettingsColor['#history_error'] = "rgb(253,172,49)";
+
       return gSettingsColor;
     }
   }

@@ -305,11 +305,8 @@ function getColor(i, color, history)
 {
   var style = "";
   try{
-    if (history.exit === 0)
-    {
-      color = color['#task_running'];
-    }
-
+    if (history.exit === 0) color = color['#history_ok'];    
+    else color = color['#history_error']; 
     let even = "";
     if (i % 2 == 0)
     {

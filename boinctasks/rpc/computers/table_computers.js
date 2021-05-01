@@ -212,8 +212,10 @@ function tableComputerItem(selRows, row, order, con, edit)
       table += addRow(true,1,row, 1, '<input type="text" id="group-'+ row + '" value="' + con.group + '">');
       table += addRow(true,2,row, 2, '<input type="text" id="computer-'+ row + '" value="' + con.computerName + '">');      
       table += addRow(true,3,row, 3, '<input type="text" id="ip-'+ row+ '" value="' + con.ip + '">');        
-      table += addRow(true,4,row, 4, '<input type="text" id="cpid-'+ row + '" value="' + con.cpid + '">');   
-      table += addRow(true,5,row, 5, '<input type="text" id="port-'+ row + '" value="' + con.port + '">');       
+      table += addRow(true,4,row, 4, '<input type="text" id="cpid-'+ row + '" value="' + con.cpid + '">');
+      let ports = con.port;
+      if (con.temp.port > 0) ports += ";" + con.temp.port;
+      table += addRow(true,5,row, 5, '<input type="text" id="port-'+ row + '" value="' + ports + '">');       
       table += addRow(true,6,row, 6, '<input type="text" id="pass-'+ row + '" value="' + con.passWord + '">');  
       table += "</tr>";
       return table;                         
@@ -237,7 +239,12 @@ function tableComputerItem(selRows, row, order, con, edit)
       items[order.order[2]] = addRow(order.check[2],selId,row, 2, con.computerName);
       items[order.order[3]] = addRow(order.check[3],selId,row, 3, con.ip);
       items[order.order[4]] = addRow(order.check[4],selId,row, 4, con.cpid);
-      items[order.order[5]] = addRow(order.check[5],selId,row, 5, con.port);  
+      let port = con.port;
+      if (con.temp.port > 0)
+      {
+        port += ";" + con.temp.port;
+      }
+      items[order.order[5]] = addRow(order.check[5],selId,row, 5, port);
       items[order.order[6]] = addRow(order.check[6],selId,row, 6, '**');  
       items[order.order[7]] = addRow(order.check[7],selId,row, 7, con.boinc);     
       items[order.order[8]] = addRow(order.check[8],selId,row, 8, con.platform);

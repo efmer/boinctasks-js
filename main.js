@@ -44,8 +44,7 @@ const path = require('path')
 
 const gotTheLock = app.requestSingleInstanceLock()
 
-const version = btConstants.VERSION.toFixed(2)
-const versionS = "BoincTasks Js, " + version;
+let gVersion = getVersion();
 
 let gMainWindow = null;
 let gMainWindowCssKey = null;
@@ -85,7 +84,7 @@ function initMenu()
         {
           label:'About BoincTasks Js',
           click(e) { 
-            credits.about(versionS);
+            credits.about(gVersion);
           }
         }, 
         { type: 'separator' },
@@ -318,7 +317,7 @@ function initMenu()
           {
             label:'About BoincTasks Js',
             click(e) { 
-              credits.about(versionS);
+              credits.about(gVersion);
             }
           },      
           {
@@ -326,7 +325,7 @@ function initMenu()
             click(e) { 
               const Update = require('./boinctasks/rpc/misc/update');
               const update = new Update();
-              update.update("menu");
+              update.update("menu",gVersion);
             }
           },                   
       ] 
@@ -341,13 +340,16 @@ function initialize () {
   } else {
     app.on('second-instance', (event, commandLine, workingDirectory) => {
       // A a second instance started
-      if (gMainWindow.isMinimized())
+      if (gMainWindow !== null)
       {
-         MainWindow.restore(); 
-      }
-      else
-      {
-        gMainWindow.show();
+        if (gMainWindow.isMinimized())
+        {
+          MainWindow.restore(); 
+        }
+        else
+        {
+          gMainWindow.show();
+        }
       }
     })
   }
@@ -438,7 +440,7 @@ function initialize () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
   app.whenReady().then(() => {
-    gSettings = connections.init();
+    gSettings = connections.init(gVersion);
     createWindow();
     rendererRequests(); 
     gTray = createTray();
@@ -496,7 +498,7 @@ function createTray() {
         },
         {
           label: 'About', click: function () {
-            credits.about(versionS);
+            credits.about(gVersion);
           }
         },  
         {
@@ -523,6 +525,14 @@ function createTray() {
     var ii = 1;
   }
   return appIcon;
+}
+
+function getVersion()
+{
+  let version = app.getVersion();
+  let split = version.split('.');
+  let versionS = split[0] + '.' + split[1] + split[2];
+  return versionS;
 }
 
 function rendererRequests()
@@ -777,7 +787,6 @@ function showLog(logType)
   } catch (error) {
     
   }
-  
 }
   
 function btTimerLog()

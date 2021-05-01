@@ -21,8 +21,6 @@ const functions = new Functions();
 const Logging = require('./functions/logging');
 const logging = new Logging();
 
-//const { get, data } = require('jquery');
-
 const State = require('./misc/state');
 
 const SidebarComputers = require('./misc/sidebar_computers');
@@ -151,13 +149,12 @@ let gIntervalFastCnt = 0;   // fast after startup and after a tab switch
 let gSwitchedTabCnt = 2;
 
 let gSidebar = false;
-
-const version = btConstants.VERSION.toFixed(2)
-const versionS = "V: " + version;
+let gVersionS = "?";
 
 class Connections{
-    init()
+    init(version)
     {
+        gVersionS = "V " + version;
         gB.settings = settingsBt.get();
         return gB.settings;
     }
@@ -689,7 +686,7 @@ function stopTimers()
 
 function startConnections()
 {
-    logging.setVersion(versionS);
+    logging.setVersion(gVersionS);
     getComputers();
     getRules();    
     getSorting();
@@ -871,6 +868,13 @@ function writeComputers(con)
             xml += writeXmlItem("cpid",con[i].cpid);
             xml += writeXmlItem("checked",con[i].check);
             xml += writeXmlItem("port",con[i].port);
+            if (con[i].temp !== void 0)
+            {
+                if (con[i].temp.port !== void 0)
+                {                
+                    xml += writeXmlItem("port_temperature",con[i].temp.port);
+                }
+            }
             xml += writeXmlItem("password",con[i].passWord);
             xml += "  </computer>\n"
         }
@@ -963,6 +967,24 @@ function connectAll()
         for (var i=0;i< gB.connections.length;i++)
         {
             let con = gB.connections[i];
+            if (con.check == '0') continue; // disabled
+            if (gB.selectedTab == btConstants.TAB_TASKS)
+            {            
+                if (con.sidebar || con.sidebarGrp)
+                {   
+                    if (con.temp.port > 0)
+                    {
+                        const ConTemp  = require('./misc/connections_temperature');
+                        const conTemp = new ConTemp();
+                        conTemp.send(con);
+                    }
+                }
+            }
+        }        
+
+        for (var i=0;i< gB.connections.length;i++)
+        {
+            let con = gB.connections[i];
             con.mode = "inactive";
             if (con.check == '0') continue; // disabled
 
@@ -978,7 +1000,7 @@ function connectAll()
             {                
                 connectSingle(con);
             }
-        }
+        }      
     } catch (error) {
         logging.logError('Connections,connectAll', error); 
     }    
@@ -1081,15 +1103,6 @@ function connectRules(fetchMode)
     }    
 }
 
-/*
-function testResults(con)
-{
-    const Messages = require('./messages/messages');
-    const messages = new Messages();
-    messages.getMessages(con)
-}
-*/
-
 function connectSingle(con)
 {
     if ((gB.selectedTab != btConstants.TAB_COMPUTERS) && (con.check == '0'))
@@ -1176,11 +1189,19 @@ function getConnections(computers)
 
             let port = 0;           
             if (functions.isDefined(computer.port))
-            {            
-                port = parseInt(computer.port);             
-            }           
+            {
+                port = parseInt(computer.port);
+            }
             if (port <= 0) port = 31416;
             con.port = port;
+
+            let tempPort = -1;
+            if (functions.isDefined(computer.port_temperature))
+            {
+                tempPort = parseInt(computer.port_temperature);
+            }
+            con.temp.port = tempPort;            
+
             con.cpid = "";
             if (functions.isDefined(computer.cpid))
             {
@@ -1225,7 +1246,7 @@ function getConnections(computers)
 // make changes in connections_shadow as well.
 function newCon()
 {
-    var con = new Object();
+    let con = new Object();
     con.computerName = "";
     con.group = "";
     con.check = "0";
@@ -1258,6 +1279,10 @@ function newCon()
 
     con.rules = null;
     con.shadow = null;
+
+    con.temp = new Object;
+    con.temp.port = -1;
+    con.temp.clientClass = null;    
 
     return con;
 }
@@ -1427,7 +1452,7 @@ function processComputers(sort)
         }
         gB.currentTable.table = btTableComputers;
         gB.currentTable.computerTable = cTable;
-        tableReady("", versionS, btTableComputers.table(gB,cTable));   
+        tableReady("", gVersionS, btTableComputers.table(gB,cTable));   
         gB.editComputersShow = true;
     } catch (error) {
         logging.logError('Connections,processComputers', error);        
@@ -1449,7 +1474,7 @@ function processProjects(sort)
         }
         gB.currentTable.table = btTableProjects;    
         gB.currentTable.projectTable = cTable;
-        tableReady("", versionS, btTableProjects.table(gB, cTable))
+        tableReady("", gVersionS, btTableProjects.table(gB, cTable))
     } catch (error) {
         logging.logError('Connections,processProjects', error);        
     }     
@@ -1473,7 +1498,7 @@ function processResults(sort)
 
         gB.currentTable.table = btTableResults;    
         gB.currentTable.resultTable = ret.cTable;
-        tableReady(status, versionS, btTableResults.table(gB,ret.cTable))
+        tableReady(status, gVersionS, btTableResults.table(gB,ret.cTable))
     } catch (error) {
         logging.logError('Connections,processResults', error);      
     }     
@@ -1494,7 +1519,7 @@ function processTransfers(sort)
         }
         gB.currentTable.table = btTableTransfers;    
         gB.currentTable.transfersTable = cTable;
-        tableReady("", versionS,btTableTransfers.table(gB,cTable))
+        tableReady("", gVersionS,btTableTransfers.table(gB,cTable))
     } catch (error) {
         logging.logError('Connections,processTransfers', error);      
     }     
@@ -1523,7 +1548,7 @@ function processMessages(sort)
                 const pm = new ProcessMessages(); 
                 var cTable =  pm.process(con,sort);           
                 gB.currentTable.messageTable = cTable;
-                tableReady("", versionS, btTableMessages.table(gB, cTable))
+                tableReady("", gVersionS, btTableMessages.table(gB, cTable))
                 break;
             }
         }
@@ -1551,11 +1576,11 @@ function processHistory(sort)
 
             gB.currentTable.table = btTableHistory;    
             gB.currentTable.historyTable = ret.cTable;
-            tableReady(status, versionS, btTableHistory.table(gB,ret.cTable))
+            tableReady(status, gVersionS, btTableHistory.table(gB,ret.cTable))
         }
         else
         {
-            tableReady("", versionS, '<br><br><br><div style="color:red;"><b>Disabled</b></div> Extra->BoincTasks settings to enable');
+            tableReady("", gVersionS, '<br><br><br><div style="color:red;"><b>Disabled</b></div> Extra->BoincTasks settings to enable');
         }
     } catch (error) {
         logging.logError('Connections,processHistory', error);      
@@ -1580,9 +1605,9 @@ function processNotices(sort)
     }     
 }
 
-function tableReady(status, versionS,table)
+function tableReady(status, gVersionS,table)
 {
-    gB.mainWindow.webContents.send('table_data', table, status, versionS) 
+    gB.mainWindow.webContents.send('table_data', table, status, gVersionS) 
     toolbar.show(gB, gB.editComputers);
     gBusy = false;  
 }

@@ -34,7 +34,6 @@ class RowSelect{
         gb.rowSelect.projects.present = [];
         gb.rowSelect.projects.lastSel = "";
 
-
         gb.rowSelect.results = new Object;
         gb.rowSelect.results.rowSelected = [];
         gb.rowSelect.results.present = [];
@@ -217,7 +216,7 @@ function clickShiftResults(gb,id)
             // Handle filter table
             for (var f=0;f<filter.length;f++)
             {
-                let app = result.app+result.statusS;
+                let app = result.computerName+result.app+result.statusS;
                 if (app === filter[f])
                 {
                     bFound = true;
@@ -254,7 +253,7 @@ function clickShiftResults(gb,id)
                     }
                 }
             }            
-            selId += result.app + "," + result.computerName;
+            selId += result.app + btConstants.SEPERATOR_FILTER + result.computerName;
         }
         if (selId === sel.lastSel)
         {

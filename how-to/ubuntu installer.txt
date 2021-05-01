@@ -3,18 +3,14 @@
 // Installer
 move package from Windows machine to Linux folder DO NOT include the node_modules folder
 remove package-lock.json and node_modules folder from target machine
-cd /home/fred/sb
+cd /home/fred/sb/boinctasks-js/
 npm update --dd
 
 // electron builder
 // to remove sandbox eror
 // but does not work... Once sudo sysctl kernel.unprivileged_userns_clone=1 
 
-// This works with a sandbox error for now.
-npm run linux deb
-cd /home/fred/sb/dist
-sudo dpkg --remove boinctasks-js
-sudo dpkg -i ./boinctasks-js_1.1.4_amd64.deb
+
 
 // as of 1.12?? suddely fails to start to installed deb.
 // forge
@@ -23,20 +19,25 @@ npm run make
 // intermediate -> out\boinctasks-js-linux-x64
 // deb -> out\make\deb\x64 
 
-install deb:
-cd /home/fred/sb/out/make/deb/x64
+//////////////////////////////////////////////////////////
+// deb
+// This works with a sandbox error for now.
+npm run linux deb
+cd /home/fred/sb/boinctasks-js/dist
+sudo dpkg --remove boinctasks-js
+sudo dpkg -i ./boinctasks-js_1.1.5_amd64.deb
+
+cd /home/fred/sb/boinctasks-js/out/make/deb/x64
 snap remove boinctasks-js
 sudo dpkg --remove boinctasks-js
-sudo dpkg -i ./boinctasks-js_1.1.4_amd64.deb
+sudo dpkg -i ./boinctasks-js_1.1.5_amd64.deb
 boinctasks-js
 sudo dpkg --remove boinctasks-js
 
 // start app for testing
 npm start
 
-
 //////////////////////////////////////////////////////////
-
 // snap
 
 sudo snap install snapcraft --classic
@@ -44,18 +45,28 @@ sudo snap install review-tools
 sudo apt install yamllint
 
 //electron-builder
-cd /home/fred/sb
-npm run snap
+cd /home/fred/sb/boinctasks-js/
+npm run snapI64
+npm run snapA32
 
-cd /home/fred/sb/dist/
+cd /home/fred/sb/boinctasks-js/dist
+snapcraft login
+snapcraft upload --release=candidate boinctasks-js_1.1.5_amd64.snap
+snapcraft upload --release=candidate boinctasks-js_1.1.5_armhf.snap
+
+// testing
+cd /home/fred/sb/boinctasks-js/dist/
 // match the version number
 // we need dangerous because the file isn't signed
 // make sure the deb is NOT installed
 sudo dpkg --remove boinctasks-js
-cd /home/fred/sb/dist
+cd /home/fred/sb/boinctasks-js/dist
 sudo snap install boinctasks-js_1.1.2_amd64.snap --dangerous
 snap run boinctasks-js
 
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+DO NOT USE DO NOT USE DO NOT USE DO NOT USE DO NOT USE DO NOT USE DO NOT USE DO NOT USE DO NOT USE DO NOT USE 
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 // Doesn't work.....
 // yaml missing libraries
 must run npm run make (above) to make the package
@@ -67,13 +78,14 @@ cd /snap
 yamllint snapcraft.yaml
 
 >>> make with the following line
-cd /home/fred/sb/snap/
+cd /home/fred/sb/boinctasks-js/snap/
 snapcraft clean && SNAPCRAFT_BUILD_ENVIRONMENT=host snapcraft --target-arch amd64
 
 // match the version number
 // we need dangerous because the file isn't signed
 // make sure the deb is NOT installed sudo dpkg --remove boinctasks-js
-sudo snap install boinctasks-js_1.1.4_amd64.snap --dangerous
+UBUNTU: sudo snap install boinctasks-js_1.1.4_amd64.snap --dangerous
+PI: sudo snap install boinctasks-js_1.1.5_armhf.snap --dangerous
 
 snap run boinctasks-js
 

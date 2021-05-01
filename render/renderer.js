@@ -264,7 +264,15 @@ function getComputers(connections)
       id = "#port-"+ idName;
       val = $(id).val();
       if (val == "") val = -1;
-      connections[i].port = parseInt(val);
+      let ports = val.split(";");
+      if (ports.length > 1)
+      {
+        connections[i].port = parseInt(ports[0]);
+        let temp = new Object;
+        temp.port =  parseInt(ports[1]);
+        connections[i].temp = temp;
+      }
+      else connections[i].port = parseInt(val);
 
       id = "#pass-"+ idName;
       val = $(id).val();

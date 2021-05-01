@@ -30,10 +30,11 @@ class Logging{
     setVersion(versionIn)
     {
         try {
-            this.log(versionIn);
-            this.logDebug(versionIn); 
-            this.logRules(versionIn);
-            g_logErrorMsg = versionIn;
+            let version = "BoincTasks Js, " + versionIn;
+            this.log(version);
+            this.logDebug(version); 
+            this.logRules(version);
+            g_logErrorMsg = version;
     
             let sys = "System running on platform: " + os.platform() + " ,architecture: " + os.arch();
             this.log(sys);

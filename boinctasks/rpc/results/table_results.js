@@ -171,6 +171,8 @@ function tableResultsHeader(gb, addText)
     items[order.order[12]] = addRowHeader(order.check[12],true, gb, 12, btConstants.TASK_RECEIVED);
     items[order.order[13]] = addRowHeader(order.check[13],true, gb, 13, btConstants.TASK_MEMORYV);
     items[order.order[14]] = addRowHeader(order.check[14],true, gb, 14, btConstants.TASK_MEMORY);
+    items[order.order[15]] = addRowHeader(order.check[15],true, gb, 15, btConstants.TASK_TEMP);
+    items[order.order[16]] = addRowHeader(order.check[16],true, gb, 16, btConstants.TASK_TTHROTTLE);        
   }
   else
   {
@@ -182,13 +184,15 @@ function tableResultsHeader(gb, addText)
     items[order.order[5]] = addRowHeader(order.check[5],false, gb, 5, "");
     items[order.order[6]] = addRowHeader(order.check[6],false, gb, 6, "");
     items[order.order[7]] = addRowHeader(order.check[7],false, gb, 7, "");
-    items[order.order[8]] = addRowHeader(order.check[8],false, gb, 8, "");  
-    items[order.order[9]] = addRowHeader(order.check[9],false, gb, 9, ""); 
-    items[order.order[10]] = addRowHeader(order.check[10],false, gb, 10, "");   
-    items[order.order[11]] = addRowHeader(order.check[11],false, gb, 11, "");  
-    items[order.order[12]] = addRowHeader(order.check[12],false, gb, 12, "");  
-    items[order.order[13]] = addRowHeader(order.check[13],false, gb, 13, "");  
-    items[order.order[14]] = addRowHeader(order.check[14],false, gb, 14, "");                  
+    items[order.order[8]] = addRowHeader(order.check[8],false, gb, 8, "");
+    items[order.order[9]] = addRowHeader(order.check[9],false, gb, 9, "");
+    items[order.order[10]] = addRowHeader(order.check[10],false, gb, 10, "");
+    items[order.order[11]] = addRowHeader(order.check[11],false, gb, 11, "");
+    items[order.order[12]] = addRowHeader(order.check[12],false, gb, 12, "");
+    items[order.order[13]] = addRowHeader(order.check[13],false, gb, 13, "");
+    items[order.order[14]] = addRowHeader(order.check[14],false, gb, 14, "");
+    items[order.order[15]] = addRowHeader(order.check[15],false, gb, 15, "");
+    items[order.order[16]] = addRowHeader(order.check[16],false, gb, 16, "");
   }
   for (let i=0;i<items.length;i++)
   {
@@ -214,7 +218,7 @@ function tableResultItem(selRows, i, order, result, filter, colorObj)
     let selId = wuName + btConstants.SEPERATOR_SELECT + computer + btConstants.SEPERATOR_SELECT + projectUrl;
     if (result.filtered)
     {
-      selId += app + "," + computer;
+      selId += app + btConstants.SEPERATOR_FILTER + computer;
     }
     let iSel = selRows.rowSelected.indexOf(selId)
     if (iSel >= 0)
@@ -275,7 +279,7 @@ function tableResultItem(selRows, i, order, result, filter, colorObj)
     let fractionS = "";
     if (fraction > 0)   fractionS = fraction.toFixed(3) + "%"; 
 
-    style = 'style="background-color:' + colorObj['#progress_bar'] + '!important;' + 'width:'+ fraction + '%;">';
+    style = 'style="background-color:' + colorObj['#progress_bar'] + '!important;' + 'width:'+ fraction + '%;" >';
     item = '<div ' + style + fractionS + '</div>'    
     items[order.order[6]] = addRow(order.check[6],selId, 6, item);
 
@@ -310,6 +314,85 @@ function tableResultItem(selRows, i, order, result, filter, colorObj)
     if (memory > 0) memoryS = memory.toFixed(2) + " MB";
     items[order.order[14]] = addRow(order.check[14], selId, 14, memoryS);
 
+    let bGpu = false;
+    if (order.check[15] || order.check[16]) 
+    {
+      let pos = use.indexOf("NV");
+      if (pos < 0) pos = use.indexOf("ATI");
+      else bGpu  = true;
+      if (pos >= 0) bGpu = true;
+    }
+
+    let percG = -1;
+    if (order.check[15]) // Temperature
+    {
+      let temp = "";
+      if (result.cpuTemp !== void 0 || result.gpuTemp !== void 0)
+      {
+        if (bGpu)
+        {
+          if (result.gpuTemp.length > 0)
+          {
+            temp = result.gpuTemp[0]
+            pos = use.indexOf("(d");
+            if (pos >=0)
+            {
+              let nr = parseInt(use.substring(pos+2));
+              let pt = result.gpuTemp[nr];
+              if (pt !== void 0) temp = pt;
+              let pp = result.gpuPerc[nr];
+              if (pp !== void 0)
+              {
+                if (pp < 0) percG = 0;
+                else
+                {
+                   percG = pp;
+                }
+              }
+            }
+            temp += " ℃";
+          }    
+        }
+        else
+        {
+          temp = result.cpuTemp
+        }
+      }
+      items[order.order[15]] = addRow(order.check[15], selId, 15, temp);      
+    }
+    if (order.check[16]) // TThrottle
+    {
+      let item = "";
+      let tthrottle = -1;
+      if (bGpu)
+      {
+        if (percG >= 0) tthrottle = percG; // take run % instead of TThrottle if present
+        else
+        {
+          if (result.gpuT !== void 0)
+          {
+            if (result.gpuT > 0) tthrottle = result.gpuT;
+          }
+        }
+      }
+      else
+      {
+        if (result.cpuT !== void 0)
+        {
+          if (result.cpuT > 0) tthrottle = result.cpuT;
+        }
+      }
+      if (tthrottle > 0)      
+      {
+        style = 'style="background-color:' + colorObj['#progress_bar'] + '!important;' + 'width:'+ tthrottle + '%;">';
+        item = '<div ' + style + tthrottle  + " %" + '</div>'          
+      }
+      else
+      {
+        item = '<div></div>'
+      }
+      items[order.order[16]] = addRow(order.check[16], selId, 16, item);
+    }
   } catch (error) {
     logging.logError('BtTableResults,tableResultItem', error);    
   }
@@ -330,8 +413,7 @@ function addRow(check, rowId, cell, item)
 {
   if (!check) return "";
   let id = ' id="r'+ btConstants.SEPERATOR_ITEM + rowId + btConstants.SEPERATOR_ITEM + cell +'"';
-  let td = "<td " + id + ">" + item + "</td>";
-  return td;
+  return '<td' + id + ">" + item + "</td>";
 }
 
 function addRowHeader(check, showSort ,gb , cell, item)

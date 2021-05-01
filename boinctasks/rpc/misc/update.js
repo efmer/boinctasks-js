@@ -36,9 +36,9 @@ let gReleaseVersion = "";
 let gBetaVersion = "";
 
 class Update{
-    update(type)
+    update(type,version)
     {
-      updateWindow();
+      updateWindow(version);
     } 
     button(type)
     {
@@ -60,13 +60,12 @@ module.exports = Update;
 
 gChildUpdate = null;
 
-function updateOs()
+function updateOs(version)
 {
     try {
         let osPlatform = os.platform();
         if (TESTING_UPDATE_DARWIN) osPlatform = "darwin";     
         let osArch = os.arch();
-        let version = btConstants.VERSION.toFixed(2)
         let msg = "Platform: " + osPlatform + ", architecture: " + osArch + "<br><br>"; 
         msg += "<b>Current version: " + version + "</b><br><br>";
 
@@ -280,35 +279,6 @@ function Install(path)
       return;
     }
     });
-/*
-
-    const Shell = require('node-powershell');
-
-
-    const ps = new Shell({
-      executionPolicy: 'Bypass',
-      noProfile: true
-    });
-    
-    ps.addCommand('cd "' + path + '"');    //"C:\\Users\\fred\\AppData\\Roaming\\Boinctasks Js\\temp"');
-    ps.addCommand("btj_setup.exe");
-    ps.invoke()
-    .then(output => {
-      if (output.length === 0)
-      {
-        msg += '<b><h3 style="color:green;"> New version installed.</h3><b><br>Restarting.......';
-        gChildUpdate.webContents.send('update_download', msg);
-        setTimeout(restart, 5000)
-      }
-      else 
-      {
-        msg += "Installation failed: (output) "  + output + "<br>";
-        logging.logDebug("Install", msg);
-        gChildUpdate.webContents.send('update_download', msg);          
-      }
-    })
-*/
-
 } catch (error) {
     logging.logError('Update,Install', error);
   } 
@@ -319,7 +289,7 @@ function exitApp()
   app.exit()
 }
 
-function updateWindow()
+function updateWindow(version)
 {
     try {
        
@@ -346,7 +316,7 @@ function updateWindow()
 //            gChildUpdate.webContents.openDevTools()
             gChildUpdate.show();  
             gChildUpdate.setTitle(title);
-            updateOs();
+            updateOs(version);
           }) 
           gChildUpdate.on('close', () => {
             let bounds = gChildUpdate.getBounds();
@@ -361,7 +331,7 @@ function updateWindow()
           gChildUpdate.setTitle(title); 
             gChildUpdate.hide();
             gChildUpdate.show();  
-            updateOs();         
+            updateOs(version);         
         }
               
     } catch (error) {

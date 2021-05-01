@@ -71,6 +71,9 @@ function setColor(color)
     picker('#messages_highlight_8');
     picker('#messages_highlight_9');
 
+    picker('#history_ok');
+    picker('#history_error');
+
     picker('#progress_bar');  
 }
 

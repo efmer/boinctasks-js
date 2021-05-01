@@ -554,6 +554,8 @@ function setWindowsTasks(gb, type)
   itemsArray[order.order[12]] = addItem(btConstants.TASK_RECEIVED,12,order);
   itemsArray[order.order[13]] = addItem(btConstants.TASK_MEMORYV,13,order);
   itemsArray[order.order[14]] = addItem(btConstants.TASK_MEMORY,14,order);
+  itemsArray[order.order[15]] = addItem(btConstants.TASK_TEMP,15,order);
+  itemsArray[order.order[16]] = addItem(btConstants.TASK_TTHROTTLE,16,order);
 
   for (let i=0;i<itemsArray.length;i++)
   {

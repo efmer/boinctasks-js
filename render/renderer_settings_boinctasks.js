@@ -40,7 +40,7 @@ $(document).ready(function() {
     $( "#apply" ).on( "click", function(event) {
         let item = new Object();
         get();
-    });    
+    });
 });
 
 // items must be identical in settings_bt

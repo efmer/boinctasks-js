@@ -48,7 +48,7 @@ class MessageItems
     
             if (seqnoHigh != seqnoPrev)
             {
-                return null;    // rebuild..
+                conMsg.seqno = 0;    // rebuild..
             }
 
             var seqno = seqnoPrev;
