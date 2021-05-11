@@ -33,6 +33,8 @@ let SCAN_TIMEOUT = 15;
 let NO_PASSWORD = "Unable to connect";
 
 let gChildWindowScan = null;
+let gCssDark = null;
+
 let lScanLocalIp = null;
 let lScanCount = 0;
 let lScanFoundAllIp = [];
@@ -52,10 +54,10 @@ let lbScanPhase2 = false;
 
 class ScanComputers{
 
-    showScan()
+    showScan(theme)
     {
         try {
-            showComputerScan(); 
+            showComputerScan(theme); 
         } catch (error) {
             logging.logError('ScanComputers,showScan', error);            
         }
@@ -92,6 +94,11 @@ class ScanComputers{
         clearTimeout(lScanTimer);
         gChildWindowScan.close();
         lScanBusy = false;
+    }
+
+    setTheme(theme)
+    {
+        insertCssDark(theme);
     }
 }
 module.exports = ScanComputers;
@@ -480,7 +487,7 @@ function scanFound(scanObj)
     }
 }
 
-function showComputerScan()
+function showComputerScan(theme)
 {
   var log = "";
   var title = "Computer Scan";
@@ -509,7 +516,9 @@ function showComputerScan()
  //     childWindowScan.webContents.openDevTools() // debug only
 
     }) 
-
+    gChildWindowScan.webContents.on('did-finish-load', () => {
+        insertCssDark(theme);
+      })  
     gChildWindowScan.on('close', () => {
         let bounds = gChildWindowScan.getBounds();
         windowsState.set("scan_computers",bounds.x,bounds.y, bounds.width, bounds.height)
@@ -523,6 +532,19 @@ function showComputerScan()
     windowReady(title);  
     gChildWindowScan.hide();    
     gChildWindowScan.show();
+  }
+}
+
+async function insertCssDark(darkCss)
+{
+  try {
+    if (gCssDark !== null)
+    {
+        gChildWindowScan.webContents.removeInsertedCSS(gCssDark) 
+    }    
+    gCssDark = await gChildWindowScan.webContents.insertCSS(darkCss);  
+  } catch (error) {
+    gCssDark = null;
   }
 }
 

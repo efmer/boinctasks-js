@@ -16,15 +16,26 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+const WindowsState = require('./window_state');
+const windowsState = new WindowsState();
+
 const btConstants = require('./btconstants');
 
 const os = require('os');
-const { app } = require('electron')
+const { app, BrowserWindow } = require('electron')
 
 let g_logMsg = "";
 let g_logDebugMsg = "";
 let g_logRulesMsg = "";
 let g_logErrorMsg = "";
+
+let gLogging = new Object();
+gLogging.type = 0;
+gLogging.len = 0;
+
+let gTimerLog = null;
+let gChildWindowLog = null;
+let gCssDarkLog = null;
 
 class Logging{
     setVersion(versionIn)
@@ -49,6 +60,11 @@ class Logging{
         }
     }
 
+    showLog(type,theme)
+    {
+        showLog(type,theme);
+    }
+
     log(msg)
     {
         try {
@@ -59,41 +75,9 @@ class Logging{
         }   
     }
 
-    logGet(type)
+    logClear()
     {
-        switch(type)
-        {
-            case btConstants.LOGGING_NORMAL:
-                return g_logMsg;          
-            case btConstants.LOGGING_DEBUG:
-                return g_logDebugMsg;   
-            case btConstants.LOGGING_RULES:
-                return g_logRulesMsg;                   
-            case btConstants.LOGGING_ERROR:
-                return g_logErrorMsg;     
-            break;
-        }
-    }
-
-    logTitle(type)
-    {
-        switch(type)
-        {
-            case btConstants.LOGGING_NORMAL:
-                return "Logging";
-            case btConstants.LOGGING_DEBUG:
-                return "Debug Logging";
-            case btConstants.LOGGING_RULES:
-                return "Rules Logging";
-            case btConstants.LOGGING_ERROR:
-                return "Error Logging";
-        }
-        return "??";
-    }
-
-    logClear(type)
-    {
-        switch(type)
+        switch(gLogging.type)
         {
             case btConstants.LOGGING_NORMAL:
                 g_logMsg = "";
@@ -149,6 +133,11 @@ class Logging{
         let time = getTime();
         g_logErrorMsg += time + " Error: [" + from + "] " + msg + ".</br>";     
     }
+
+    setTheme(css)
+    {
+        insertCssDark(css);
+    }
 }
 
 module.exports = Logging;
@@ -162,5 +151,134 @@ function getTime()
         return txt;
     } catch (error) {
         let ii  = 1;
+    }
+}
+
+function showLog(logType,theme)
+{
+  try {
+    clearTimeout(gTimerLog);
+    gTimerLog =  setInterval(btTimerLog, 2000);
+
+    let title = logTitle(logType)
+
+    let log = logGet(logType)
+    
+    if (gLogging.type !== logType)
+    {
+      gLogging.len = -1;
+    }
+    gLogging.type = logType;
+
+    if (gChildWindowLog === null)
+    {
+      let state = windowsState.get("log",500,800)
+      gChildWindowLog = new BrowserWindow({
+        'x': state.x,
+        'y': state.y,
+        'width': state.width,
+        'height': state.height,      
+        webPreferences: {
+          sandbox : false,
+          contextIsolation: false,  
+          nodeIntegration: true,
+          nodeIntegrationInWorker: true,
+//          preload: path.join(__dirname, './preload/preload_log.js')
+        }
+      });
+      gChildWindowLog.loadFile('index/index_log.html')
+      gChildWindowLog.once('ready-to-show', () => {    
+        gChildWindowLog.show();  
+        gChildWindowLog.webContents.send('log_text', log); 
+        gChildWindowLog.setTitle(title);
+//        gChildWindowLog.webContents.openDevTools()    
+      })
+      gChildWindowLog.webContents.on('did-finish-load', () => {
+        insertCssDark(theme);
+      })  
+      gChildWindowLog.on('close', () => {
+        let bounds = gChildWindowLog.getBounds();
+        windowsState.set("log",bounds.x,bounds.y, bounds.width, bounds.height)
+      })
+      gChildWindowLog.on('closed', () => {
+        gChildWindowLog = null
+      }) 
+    }
+    else
+    {
+      gChildWindowLog.setTitle(title); 
+      gChildWindowLog.webContents.send('log_text', log); 
+      gChildWindowLog.hide()
+      gChildWindowLog.show()    
+    }
+  } catch (error) {
+      var ii = 1;
+  }
+}
+
+async function insertCssDark(darkCss)
+{
+  try {
+    if (gCssDarkLog !== null)
+    {
+        gChildWindowLog.webContents.removeInsertedCSS(gCssDarkLog) 
     }    
+    gCssDarkLog = await gChildWindowLog.webContents.insertCSS(darkCss);  
+  } catch (error) {
+    gCssDarkLog = null;
+  }
+}
+
+function logTitle(type)
+{
+    switch(type)
+    {
+        case btConstants.LOGGING_NORMAL:
+            return "Logging";
+        case btConstants.LOGGING_DEBUG:
+            return "Debug Logging";
+        case btConstants.LOGGING_RULES:
+            return "Rules Logging";
+        case btConstants.LOGGING_ERROR:
+            return "Error Logging";
+    }
+    return "??";
+}
+
+function logGet(type)
+{
+    switch(type)
+    {
+        case btConstants.LOGGING_NORMAL:
+            return g_logMsg;
+        case btConstants.LOGGING_DEBUG:
+            return g_logDebugMsg;
+        case btConstants.LOGGING_RULES:
+            return g_logRulesMsg;
+        case btConstants.LOGGING_ERROR:
+            return g_logErrorMsg;
+        break;
+    }
+}
+  
+function btTimerLog()
+{
+  try {
+    if (gChildWindowLog != null) 
+    {
+      let log = logGet(gLogging.type)
+      
+      if (log.length !== gLogging.len)
+      {
+        gLogging.len = log.length;
+        gChildWindowLog.webContents.send('log_text', log);
+      }
+    }
+    else
+    {
+      clearTimeout(gTimerLog);      
+    }
+  } catch (error) {
+    var ii = 1;
+  }
 }

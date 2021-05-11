@@ -37,7 +37,7 @@ class State{
 
     getAppUf(con, name)
     {
-        var appUf = " Initializing .....";
+        var appUf = btConstants.INITIALIZING;
         try {
             if (con.cacheApp !== null)
             {
@@ -75,7 +75,7 @@ class State{
     
     getProject(con, url)
     {
-        var project = " Initializing .....";
+        var project = btConstants.INITIALIZING;
         try {         
             if (con.cacheProject !== null)
             {
@@ -91,6 +91,7 @@ class State{
         con.needState = true;        
         return project;
     }
+
     getProjectUrl(con,project)
     {
         let url = "";
@@ -105,6 +106,7 @@ class State{
         }
         return url;
     }
+    
     getAppName(con,app)
     {
         try {

@@ -47,9 +47,14 @@ class Functions{
     
     getFormattedTimeInterval(seconds)
     {
-        var time = ""
+        let time = ""
+        let bNeg = false;
         try {
-            if (seconds < 0) return "";
+            if (seconds < 0)
+            {
+                bNeg = true;
+                seconds = Math.abs(seconds);
+            } 
             var dd = "";            
             if (seconds >= 86400) {
                 var days = parseInt(seconds / 86400);
@@ -65,7 +70,7 @@ class Functions{
             if (ss < 10) {ss = "0"+ss;}
     
             time += dd + hh+":"+mm+":"+ss;
-    
+            if (bNeg) time ="-" + time;
             return time
         } catch (error) {
             this.logError('Functions,getFormattedTimeInterval', error);            

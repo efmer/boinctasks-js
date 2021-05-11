@@ -22,7 +22,6 @@ body
   	bottom: 0;
   	left: 0;	
 	overflow: hidden;
-	background-color:  #cfcfcf;
 	z-index: 102; /* alway main footer */
 	width:100%;
 	padding-left: 110px;
@@ -42,18 +41,17 @@ body
 	margin-top: 25px;  	/* position absolute below the tabs */	
 	z-index: 101;	
 	table-layout: fixed;
-    /*fxont-family: arial, sans-serif;*/
     border-collapse: collapse;
 	width: calc(100% - 14px);
 }
 
 .bt_table_header th {
-	border: 1px solid #374a9c;
+/*	border: 1px solid #374a9c;*/
 	font-size: 0.8em;
     text-align: center;
 	overflow: hidden;
     white-space: nowrap;  	
-	background-color: #cfcfcf;
+/*	background-color: #cfcfcf;*/
 	text-overflow: ellipsis; 
 	padding-left: 12px;
 	height: 18px;	
@@ -80,7 +78,7 @@ body
     text-align: center;
 	overflow: hidden;
     white-space: nowrap;  	
-	background-color: #cfcfcf;
+/*	background-color: #cfcfcf;*/
 	text-overflow: ellipsis; 
 	padding-left: 12px;
 	height: 0px;	
@@ -96,18 +94,9 @@ body
     text-overflow: ellipsis;  
 }
 
-.bt_table tr:nth-child(even) {
-    background-color: #d1cfcf;
-}
-
 .bt_table input{
 	max-width: 100%; 
     width: 100%;
-}
-
-.bt_table_selected {
-    background-color: #000000b4 !important;
-    color: white
 }
 
 .bt_table_progress {
@@ -115,7 +104,7 @@ body
 }
 
 .bt_table_filtered {
-	padding-left: 14px;	/*arrow*/
+	padding-left: 10px;
 }
 
 /* images */
@@ -160,7 +149,7 @@ body
 	top: 0;
 	right: 0;	
 	position: fixed;
-	background-color: #dfdfdf;
+/*	background-color: #dfdfdf;*/
 	z-index: 100;
 	width:100%;
 }
@@ -177,16 +166,15 @@ body
 	overflow: hidden;
 }
 
-.bt_btn_tabs_select
-{
-	  background-color: #505050!important;
-	  color: white;
-}
-
 .bt_btn_tabs:hover
 {
 	  background-color: #8f8f8f;
 	  color: white;
+}
+
+.bt_btn_tabs_select
+{
+	background-color: #05b6fc!important;color: white;
 }
 
 .bt_img_tab_computers {
@@ -320,6 +308,18 @@ body
 	background-position: top 1px left 1px;
 }
 
+.bt_img_dark_dark {
+	background: url(./img/toolbar/dark.png) no-repeat;
+	background-size: 24px 24px;	
+	background-position: top 1px left 1px;
+}
+
+.bt_img_dark_light {
+	background: url(./img/toolbar/light.png) no-repeat;
+	background-size: 24px 24px;	
+	background-position: top 1px left 1px;
+}
+
 /* input */
 
 .ef_img_input {	
@@ -361,11 +361,11 @@ body
 	padding-left: 2px;
 	margin-top: 26px;
 	padding-top: 10px;
-	background-color: #dfdfdf;
+/*	background-color: #dfdfdf;*/
 }
 
-  .sidebar_computers_sel {
-	  background-color:rgb(5, 182, 252) !important;
+.sidebar_computers_sel {
+	  background-color:#05b6fc !important;
 }
 
 .hidden{
@@ -375,11 +375,11 @@ body
   /* select box*/
 
 .project_add_select_box {
-	  min-width: 250px;
-	  min-height: 200px;
+	min-width: 250px;
+  	min-height: 200px;
 }
 
-  .project_add_select_box_single {
+.project_add_select_box_single {
 	min-width: 250px;
 }
 
@@ -435,3 +435,27 @@ textarea {
 	width: 100%;
 }
 
+.error_text {
+    color: red;
+    font-size: 1.2em
+}
+
+#table_line {
+	border-collapse: collapse;
+}
+
+#table_line th {
+	padding-top: 12px;
+	padding-bottom: 12px;
+	text-align: left;
+	background-color: #b9b9b9;
+}
+
+#table_line td, #table_line th {
+	border: 1px solid #ddd;
+	padding: 8px;
+}
+
+#table_line tr:nth-child(odd){
+	background-color: #b8b8b8;
+}

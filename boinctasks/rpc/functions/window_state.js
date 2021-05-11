@@ -16,8 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const Logging = require('./logging');
-const logging = new Logging();
+//const Logging = require('./logging');
+//const logging = new Logging();
 
 const ReadWrite  = require('./readwrite');
 const readWrite = new ReadWrite();
@@ -38,7 +38,7 @@ class WindowState{
 
             readWrite.write("settings\\position", file,JSON.stringify(item));
         } catch (error) {
-            logging.logError('WindowState,set', error);
+//            logging.logError('WindowState,set', error);
         }  
     }      
     get(id,width,height) 
@@ -49,7 +49,7 @@ class WindowState{
             let file = id + ".json";
             item = JSON.parse(readWrite.read("settings\\position", file));
         } catch (error) {
-            logging.logError('WindowState,set', error);
+ //           logging.logError('WindowState,set', error);
         }  
         if (item === null)
         {

@@ -31,47 +31,51 @@ const functions = new Functions();
 const btConstants = require('../functions/btconstants');
 
 let gSettingsBt = null;
+let gChildSettings = null;
+let gCssDarkSettings = null;
 
 class SettingsBt{
-    start(gb)
-    {
-      settings(gb)
-    }
-
-    get()
-    {
-      try {
-        getSettings();          
-      } catch (error) {
-        logging.logError('SettingsBt,get', error);         
-      }
-        return gSettingsBt; 
-    }
-
-    set(settings)
-    {
-      let json = null;
-      try {
-        gSettingsBt = settings;
-        isValid();
-        json = JSON.stringify(settings);
-        readWrite.write("settings", "settings_boinctasks.json",json);
-      } catch (error) {
-        logging.logError('SettingsBt,set', error);         
-      }
-    }
-
-    send()
-    {
-      gChildSettings.send('settings_boinctasks', gSettingsBt);    
-    }
-
+  start(set,theme)
+  {
+    settings(set,theme)
   }
-  module.exports = SettingsBt;
 
-gChildSettings = null;
+  get()
+  {
+    try {
+      getSettings();          
+    } catch (error) {
+      logging.logError('SettingsBt,get', error);         
+    }
+      return gSettingsBt; 
+  }
 
-function settings(settings)
+  set(settings)
+  {
+    let json = null;
+    try {
+      gSettingsBt = settings;
+      isValid();
+      json = JSON.stringify(settings);
+      readWrite.write("settings", "settings_boinctasks.json",json);
+    } catch (error) {
+      logging.logError('SettingsBt,set', error);         
+    }
+  }
+
+  send()
+  {
+    gChildSettings.send('settings_boinctasks', gSettingsBt);    
+  }
+
+  setTheme(css)
+  {
+      insertCssDark(css);
+  }
+}
+module.exports = SettingsBt;
+
+function settings(settings,theme)
 {
     try {
         let title = "BoincTasks Settings";
@@ -98,7 +102,10 @@ function settings(settings)
               gChildSettings.show();  
               gChildSettings.setTitle(title);
               setTimeout(timerSettings,200,settings); // delay to make sure the windows is ready.
-          }) 
+          })
+          gChildSettings.webContents.on('did-finish-load', () => {
+            insertCssDark(theme);
+          })            
           gChildSettings.on('close', () => {
             let bounds = gChildSettings.getBounds();
             windowsState.set("settings_boinctasks",bounds.x,bounds.y, bounds.width, bounds.height)
@@ -119,6 +126,20 @@ function settings(settings)
         logging.logError('SettingsBt,settings', error);        
     }  
 }
+
+async function insertCssDark(darkCss)
+{
+  try {
+    if (gCssDarkSettings !== null)
+    {
+      gChildSettings.webContents.removeInsertedCSS(gCssDarkSettings) 
+    }    
+    gCssDarkSettings = await gChildSettings.webContents.insertCSS(darkCss);  
+  } catch (error) {
+    gCssDarkSettings = null;
+  }
+}
+
 
 function timerSettings(settings)
 {

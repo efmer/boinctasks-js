@@ -69,12 +69,12 @@ $(document).ready(function() {
                 const cols = table.querySelectorAll('tr');
             
                 [].forEach.call(cols, function(col) {
-                  $(col).removeClass("selected");
+                  $(col).removeClass("bt_table_selected");
                 });  
                 let id = this.id;
                 if(id.length > 0)
                 { 
-                    $("#"+id).addClass("selected")
+                    $("#"+id).addClass("bt_table_selected")
                     gSelectedRow = id*1;
                     $("#delete_rule").show();
                     $("#edit_rule").show();

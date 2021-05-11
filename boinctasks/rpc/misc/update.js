@@ -34,31 +34,37 @@ const shell = require('electron').shell
 
 let gReleaseVersion = "";
 let gBetaVersion = "";
+let gCurrentVersion = "";
+
+let gChildUpdate = null;
+let gCssDarkUpdate = null;
 
 class Update{
-    update(type,version)
+  update(type,version,theme)
+  {
+    gCurrentVersion = version;
+    updateWindow(version,theme);
+  } 
+  button(type)
+  {
+    let osPlatform = os.platform();
+    if (TESTING_UPDATE_DARWIN) osPlatform = "darwin";
+    switch(osPlatform)
     {
-      updateWindow(version);
-    } 
-    button(type)
-    {
-      let osPlatform = os.platform();
-      if (TESTING_UPDATE_DARWIN) osPlatform = "darwin";
-      switch(osPlatform)
-      {
-        case "win32":
-          downloadExe(type);
-        break;
-        case "darwin":
-          linkExe(type);
-        break;          
-      }        
-
+      case "win32":
+        downloadExe(type);
+      break;
+      case "darwin":
+        linkExe(type);
+      break;          
     }
+  }
+  setTheme(css)
+  {
+    insertCssDark(css);
+  }
 }
 module.exports = Update;
-
-gChildUpdate = null;
 
 function updateOs(version)
 {
@@ -125,9 +131,8 @@ function xmlFound(xml,msg)
 
               let br = "";
 
-              let version = btConstants.VERSION;
-              if (TESTING_UPDATE) version = 0.5 // force new version to show
-              if (releaseVersion > version)
+              if (TESTING_UPDATE) gCurrentVersion = 0.5 // force new version to show
+              if (releaseVersion > gCurrentVersion)
               {
                 br += "Found new release version: " + releaseVersion + "<br>"
                 br += releaseInfo;
@@ -135,7 +140,7 @@ function xmlFound(xml,msg)
                 br += "<br><br>"
               }
 
-              if (betaVersion > version)
+              if (betaVersion > gCurrentVersion)
               {
                 br += "Found new beta version: " + betaVersion + "<br>"
                 br += betaInfo;
@@ -144,7 +149,7 @@ function xmlFound(xml,msg)
               }
               if (br === "")
               {
-                br += "BoincTasks Js is up-to-date.";
+                br += "BoincTasks Js is up-to-date. (Beta: " + betaVersion + " , Release: " + releaseVersion + ")";
               }
               msg += br;
               bFound = true;
@@ -289,7 +294,7 @@ function exitApp()
   app.exit()
 }
 
-function updateWindow(version)
+function updateWindow(version,theme)
 {
     try {
        
@@ -317,7 +322,10 @@ function updateWindow(version)
             gChildUpdate.show();  
             gChildUpdate.setTitle(title);
             updateOs(version);
-          }) 
+          })
+          gChildUpdate.webContents.on('did-finish-load', () => {
+            insertCssDark(theme);
+          })
           gChildUpdate.on('close', () => {
             let bounds = gChildUpdate.getBounds();
             windowsState.set("update",bounds.x,bounds.y, bounds.width, bounds.height)
@@ -337,4 +345,17 @@ function updateWindow(version)
     } catch (error) {
         logging.logError('Update,updateWindow', error);        
     }  
+}
+
+async function insertCssDark(darkCss)
+{
+  try {
+    if (gCssDarkUpdate !== null)
+    {
+      gChildUpdate.webContents.removeInsertedCSS(gCssDarkUpdate) 
+    }    
+    gCssDarkUpdate = await gChildUpdate.webContents.insertCSS(darkCss);  
+  } catch (error) {
+    gCssDarkUpdate = null;
+  }
 }

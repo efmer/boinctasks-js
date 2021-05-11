@@ -74,7 +74,9 @@ function setColor(color)
     picker('#history_ok');
     picker('#history_error');
 
+    picker('#select_background');  
     picker('#progress_bar');  
+    picker('#select_text');  
 }
 
 function picker(element)

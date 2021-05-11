@@ -29,8 +29,9 @@ const conState = new State();
 
 const {BrowserWindow} = require('electron');
 
-gChildSettingsRules = null;
-gEditItem = -1;
+let gChildSettingsRules = null;
+let gCssDarkRules = null;
+let gEditItem = -1;
 
 class RulesList{
   rules(gb,type,data,data2)
@@ -65,10 +66,17 @@ class RulesList{
       logging.logError('RulesList,send', error);     
     }
   }
+  
   toolbarTasks(selected,gb)
   {
     toolbarTasks(selected,gb);
   }
+
+  setTheme(css)
+  {
+      insertCssDark(css);
+  }  
+
 }
 module.exports = RulesList;
 
@@ -107,7 +115,10 @@ function editRulesWindow(gb,ruleItem = null)
           {
             addRule(ruleItem);
           }
-        }) 
+        })
+        gChildSettingsRules.webContents.on('did-finish-load', () => {
+          insertCssDark(gb.theme);
+        })        
         gChildSettingsRules.on('close', () => {
           let bounds = gChildSettingsRules.getBounds();
           windowsState.set("settings_rules",bounds.x,bounds.y, bounds.width, bounds.height)
@@ -133,6 +144,19 @@ function editRulesWindow(gb,ruleItem = null)
   } catch (error) {
       logging.logError('Rules,editRulesWindow', error);        
   }  
+}
+
+async function insertCssDark(darkCss)
+{
+  try {
+    if (gCssDarkRules !== null)
+    {
+      gChildSettingsRules.webContents.removeInsertedCSS(gCssDarkRules) 
+    }    
+    gCssDarkRules = await gChildSettingsRules.webContents.insertCSS(darkCss);  
+  } catch (error) {
+    gCssDarkRules = null;
+  }
 }
 
 function checkRule(gb,id,check)
@@ -164,7 +188,7 @@ function getTable(gb)
 {
   let table = "";
   try {
-    let table = '<table id="rules_table" class="rules_table">';
+    let table = '<table id="rules_table" class="bt_table">';
     table += header();
 
     for (let i=0;i<gb.rules.list.length;i++)
@@ -451,7 +475,7 @@ function addRuleItem(gb,data)
 
     if (error.length)
     {
-      let msg = '<div class="rules_error"><br>Error: ' + error + '</div>'
+      let msg = '<div class="error_text"><br>Error: ' + error + '</div>'
       gChildSettingsRules.webContents.send('settings_rules_error', msg);
       return;
     }

@@ -24,6 +24,7 @@ const logging = new Logging();
 const State = require('../misc/state');
 const conState = new State();
 const ReadWrite  = require('../functions/readwrite');
+const btConstants = require('../functions/btconstants');
 const readWrite = new ReadWrite();
 
 class History{
@@ -44,7 +45,7 @@ class History{
 
     read(con)
     {
-        readHistory(con)
+        readHistory(con);
     }
 }
 module.exports = History;
@@ -104,9 +105,14 @@ function historyAdd(con, state, historyArray)
         if (con.history === null)
         {
             con.history = new Object();
+            con.history.count = 0;
             con.history.hash = []
             con.history.table = [];
         }
+        con.history.count++;
+        if (con.history.count === 2) validate(con);
+        if (con.history.count > 60) con.history.count = 0;
+        
         con.history.resultCount = 0;
         con.history.changed = false;
         for (let i=0; i< historyArray.length; i++)
@@ -137,7 +143,6 @@ function historyAdd(con, state, historyArray)
             {
                 projectName = conState.getProject(con,projectUrl)
                 appNameUF = conState.getAppName(con, appName);
-                project = conState.getProject(con,projectUrl)
             }  
             newItem.appName = appName;
             newItem.appNameUF = appNameUF;
@@ -264,6 +269,7 @@ function readHistory(con)
             if (data.length > 0)
             {
                 con.history = new Object();
+                con.history.count = 0;
                 con.history.table = data;
                 con.history.hash = [];
                 // rebuild the hash table that wasn't stored.
@@ -308,4 +314,24 @@ function deleteOld(con)
         logging.logError('History,deleteOld', error);         
     }
     var ii =1;
+}
+
+function validate(con)
+{
+    try {
+        let history = con.history;
+        for (let i=0;i<history.table.length;i++)
+        {
+            let item = history.table[i];
+            if (item.projectName === btConstants.INITIALIZING)
+            {
+                history.changed = true;
+                let projectName = conState.getProject(con,item.projectUrl)
+                item.projectName = projectName;
+    
+            }
+        }        
+    } catch (error) {
+        logging.logError('History,validate', error);          
+    }
 }

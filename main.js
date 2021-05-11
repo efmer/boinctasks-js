@@ -17,30 +17,28 @@
 */
 
 // Modules to control application life and create native browser window
-const {ipcMain, app, BrowserWindow, Menu, Tray } = require('electron')
+const {ipcMain, app, BrowserWindow, Menu, Tray, nativeTheme } = require('electron')
 
 const Logging = require('./boinctasks/rpc/functions/logging');
 const logging = new Logging();
 
+const ReadWrite  = require('./boinctasks/rpc/functions/readwrite');
+const readWrite = new ReadWrite();
+
 const Connections = require('./boinctasks/rpc/connections');
 const connections = new Connections();
-
-const BtMenu = require('./boinctasks/rpc/functions/bt_menu');
-const btMenu = new BtMenu();
-var g_menuSettings = null;
 
 const WindowsState = require('./boinctasks/rpc/functions/window_state');
 const windowsState = new WindowsState();
 
-const Credits = require('./boinctasks/rpc/misc/credits');
-const credits = new Credits();
-
-const ScanComputers = require('./boinctasks/rpc/computers/scan');
-const scanComputers = new ScanComputers();  
-
 const btConstants = require('./boinctasks/rpc/functions/btconstants');
 
-const path = require('path')
+const path = require('path');
+
+var gMenuSettings = null;
+let gClassUpdate = null;
+let gClassCredits = null;
+let gClassScanComputers = null;
 
 const gotTheLock = app.requestSingleInstanceLock()
 
@@ -48,19 +46,17 @@ let gVersion = getVersion();
 
 let gMainWindow = null;
 let gMainWindowCssKey = null;
+let gMainWindowCssDark = null;
 let g_mainMenu = null;
-let gChildWindowLog = null;
-let gChildAddProject = null;
-let gLogging = new Object();
-gLogging.type = 0;
-gLogging.len = 0;
 
 let gSettings = null;
-
-let gTimerLog = null;
+let gDarkMode = false;
+let gTheme = "";
 
 let gTray = null;
 let gMenuTemplate;
+
+let gClassBtMenu = null;
 
 const isMac = process.platform === 'darwin'
 
@@ -68,10 +64,12 @@ function initMenu()
 {
   var sidebar = true;
   try {
-    g_menuSettings = btMenu.read();
-    sidebar =  g_menuSettings[btConstants.MENU_SIDEBAR_COMPUTERS];
+    const BtMenu = require('./boinctasks/rpc/functions/bt_menu');
+    gClassBtMenu = new BtMenu();
+    gMenuSettings = gClassBtMenu.read();
+    sidebar =  gMenuSettings[btConstants.MENU_SIDEBAR_COMPUTERS];
   } catch (error) {
-    btMenu.set(btConstants.MENU_SIDEBAR_COMPUTERS, true);  // initially enabled
+    gClassBtMenu.set(btConstants.MENU_SIDEBAR_COMPUTERS, true);  // initially enabled
   }
 
 //https://www.electronjs.org/docs/api/menu
@@ -84,7 +82,12 @@ function initMenu()
         {
           label:'About BoincTasks Js',
           click(e) { 
-            credits.about(gVersion);
+            if (gClassCredits === null)
+            {
+              const Credits = require('./boinctasks/rpc/misc/credits');              
+              gClassCredits = new Credits();
+            }
+            gClassCredits.about(gVersion,gTheme);
           }
         }, 
         { type: 'separator' },
@@ -140,7 +143,7 @@ function initMenu()
             type: "checkbox",
             checked: sidebar,
             click(e) { 
-              sidebarComputers(e.checked) 
+              sidebarComputers(e.checked,true) 
             }
           },
           {
@@ -190,10 +193,19 @@ function initMenu()
           label:'Add a new project',
           id: 'project_add',
           enabled: true,
-          click(e) { 
-            addProject();
+          click(e) {
+            connections.addProject(gTheme);
           }
-        },      
+        },
+        { type: 'separator' },
+        {
+          label:'Account manager',
+          id: 'project_account',
+          enabled: true,
+          click(e) {
+            connections.accountManagerAdd("add",gTheme);
+          }
+        }
       ] 
     },    
     {
@@ -209,25 +221,25 @@ function initMenu()
           {
             label:'Log',
             click() { 
-              showLog(btConstants.LOGGING_NORMAL) 
+              logging.showLog(btConstants.LOGGING_NORMAL,gTheme) 
             }
           },
           {
             label:'Debug Log',
             click() { 
-              showLog(btConstants.LOGGING_DEBUG);
+              logging.showLog(btConstants.LOGGING_DEBUG,gTheme);
             }               
           },
           {
             label:'Rules Log',
             click() {
-              showLog(btConstants.LOGGING_RULES);
+              logging.showLog(btConstants.LOGGING_RULES,gTheme);
             }
           },        
           {
             label:'Error Log',
             click() { 
-              showLog(btConstants.LOGGING_ERROR);
+              logging.showLog(btConstants.LOGGING_ERROR,gTheme);
             }
           },
           {
@@ -299,7 +311,7 @@ function initMenu()
           {
             label:'Rules Log',
             click() { 
-              showLog(btConstants.LOGGING_RULES);
+              logging.showLog(btConstants.LOGGING_RULES,gTheme);
             }
           },
           { type: 'separator' },
@@ -317,15 +329,23 @@ function initMenu()
           {
             label:'About BoincTasks Js',
             click(e) { 
-              credits.about(gVersion);
+              if (gClassCredits === null)
+              {
+                const Credits = require('./boinctasks/rpc/misc/credits');                
+                gClassCredits = new Credits();
+              }
+              gClassCredits.about(gVersion,gTheme);
             }
           },      
           {
             label:'Check for updates',
             click(e) { 
-              const Update = require('./boinctasks/rpc/misc/update');
-              const update = new Update();
-              update.update("menu",gVersion);
+              if (gClassUpdate === null)
+              {
+                const Update = require('./boinctasks/rpc/misc/update');
+                gClassUpdate = new Update();
+              }
+              gClassUpdate.update("menu",gVersion,gTheme);
             }
           },                   
       ] 
@@ -344,7 +364,7 @@ function initialize () {
       {
         if (gMainWindow.isMinimized())
         {
-          MainWindow.restore(); 
+          gMainWindow.restore(); 
         }
         else
         {
@@ -372,7 +392,7 @@ function initialize () {
       'width': state.width,
       'height': state.height,
       icon: path.join(app.getAppPath(), 'assets/app-icon/png/512.png'),
-      show: bShow, 
+      show: bShow,
       webPreferences: {
         sandbox : false,
         contextIsolation: false,  
@@ -418,7 +438,6 @@ function initialize () {
       gMainWindow = null
     })
 
-
     gMainWindow.on('minimize', function (event) {
       event.preventDefault();
 //      gMainWindow.hide(); // do not hide here.
@@ -430,8 +449,10 @@ function initialize () {
       gMainWindow.show();
     });
 
-    gMainWindow.once('ready-to-show', () => {   
-//        gMainWindow.webContents.openDevTools()
+    gMainWindow.once('ready-to-show', () => {
+      let title = "BoincTasks Js " + gVersion;
+      gMainWindow.setTitle(title);
+//       gMainWindow.webContents.openDevTools()
       insertCss();
     });
   }
@@ -460,9 +481,7 @@ function initialize () {
   })
 
   app.on('will-quit', function () {
-    btMenu.write();
   })
-
 }
 
 async function insertCss()
@@ -479,6 +498,81 @@ function appExit()
 {
   app.isQuiting = true;
   app.quit();
+}
+
+// https://www.electronjs.org/docs/tutorial/dark-mode
+function setDarkMode(bWrite,bSingle)
+{
+  try {
+    if (bWrite)
+    {
+      let mode = new Object
+      if (gDarkMode) mode.dark = 1;
+      else mode.dark = 0;
+      readWrite.write("settings","dark_mode.json",JSON.stringify(mode));
+    }
+
+    let darkCss;
+
+    let color = connections.getColor(gDarkMode);
+    let selBack = color['#select_background'];
+    let selTxt = color['#select_text'];
+    if (!gDarkMode)
+    {
+      // light
+      darkCss = "body{background:white;color:black;}";
+      darkCss+= ".bt_table_header th {border:1px solid #374a9c;background-color: #cfcfcf;}";
+      darkCss+= ".bt_table th {background-color: #cfcfcf;}"
+      darkCss+= ".bt_table tr:nth-child(even) {background-color: #d1cfcf;}";
+      darkCss+= ".bt_table tr:nth-child(odd) {background-color: white}";      
+      darkCss+= ".bt_footer{background-color:#cfcfcf;}";
+      darkCss+= ".bt_tabs{background-color:#dfdfdf;}";
+      darkCss+= ".bt_table_selected {background-color:" + selBack + " !important;color:" + selTxt + "}";      
+      darkCss+= ".sidebar_computers{background-color:#dfdfdf;}";
+      darkCss+= ":root {color-scheme: light;}";
+      nativeTheme.themeSource = 'light';           
+    }
+    else
+    {
+      // dark
+      darkCss = "body{background:#333;color:white;}";
+      darkCss+= ".bt_table_header th {border:1px solid #374a9c;background-color: #999}";
+      darkCss+= ".bt_table th {background-color: #555;}";
+      darkCss+= ".bt_table tr:nth-child(even) {background-color:#666;}";
+      darkCss+= ".bt_table tr:nth-child(odd) {background-color:#333}";        
+      darkCss+= ".bt_footer{background-color:#666666;}";
+      darkCss+= ".bt_tabs{background-color:#868686;}";
+      darkCss+= ".bt_table_selected {background-color:" + selBack + " !important;color:" + selTxt + "}";  
+      darkCss+= ".sidebar_computers{background-color:#666666;}";
+      darkCss+= "a {color: lightblue;}";
+      darkCss+= ".project_add_select_box{background-color:#333;}"
+      darkCss+= ":root {color-scheme: dark;}";      
+      nativeTheme.themeSource = 'dark';  
+    }
+    connections.setTheme(darkCss,gDarkMode,bSingle);
+    if (gClassScanComputers !== null) gClassScanComputers.setTheme(darkCss);
+    if (gClassCredits !== null) gClassCredits.setTheme(darkCss);
+    if (gClassUpdate !== null) gClassUpdate.setTheme(darkCss);    
+    insertCssDark(darkCss);
+    gTheme = darkCss;
+
+    gMainWindow.webContents.send("set_dark_mode",gDarkMode);    
+  } catch (error) { 
+    var ii = 1;
+  }
+}
+
+async function insertCssDark(darkCss)
+{
+  try {
+    if (gMainWindowCssDark !== null)
+    {
+      gMainWindow.webContents.removeInsertedCSS(gMainWindowCssDark) 
+    }    
+    gMainWindowCssDark = await gMainWindow.webContents.insertCSS(darkCss);  
+  } catch (error) {
+    gMainWindowCssDark = null;
+  }
 }
 
 // In this file you can include the rest of your app's specific main process
@@ -498,7 +592,12 @@ function createTray() {
         },
         {
           label: 'About', click: function () {
-            credits.about(gVersion);
+            if (gClassCredits === null)
+            {
+              const Credits = require('./boinctasks/rpc/misc/credits');              
+              gClassCredits = new Credits();
+            }
+            gClassCredits.about(gVersion,gTheme);
           }
         },  
         {
@@ -538,10 +637,18 @@ function getVersion()
 function rendererRequests()
 {
   gMainWindow.webContents.on('did-finish-load', () => {
+    try {
+      let mode = JSON.parse(readWrite.read("settings","dark_mode.json")); 
+      if (mode.dark) gDarkMode = true;
+      else gDarkMode = false;
+    } catch (error) {        
+    }
+    setDarkMode(false,false);
+
     connections.start(gMainWindow, g_mainMenu);
 
-    var set = btMenu.check(btConstants.MENU_SIDEBAR_COMPUTERS);
-    sidebarComputers(set);
+    var set = gClassBtMenu.check(btConstants.MENU_SIDEBAR_COMPUTERS);
+    sidebarComputers(set,false);
   })
 
   ipcMain.on("table_click_header", (renderer, id, shift, alt,ctrl) => {
@@ -577,19 +684,36 @@ function rendererRequests()
   })
 
   ipcMain.on("scan_computers_found", (renderer, items, port, password) => {
-    connections.scanComputersAdd(items, port, password);
+    connections.scanComputersAdd(gClassScanComputers,items, port, password);
   })
 
   ipcMain.on("scan_computers_start", (renderer, password, port) => {
-    scanComputers.startScan(password, port);
+    if (gClassScanComputers === null)
+    {
+      const ScanComputers = require('./boinctasks/rpc/computers/scan');      
+      gClassScanComputers = new ScanComputers();
+    }
+    gClassScanComputers.startScan(password, port);
   })
   
   ipcMain.on("add_project", (renderer, type, sel) => {
-    connections.addProject(gChildAddProject,type,sel);
-  }) 
+    connections.processProject(type,sel);
+  })
+  
+  ipcMain.on("add_manager", (renderer, type, sel) => {
+    connections.processManager(type,sel);
+  })  
 
+  ipcMain.on("info_manager_button", (renderer, type, sel) => {
+    connections.accountManagerInfo(gTheme);
+  }) 
+  
   ipcMain.on("settings_color", (renderer, type, data1,data2) => {
     connections.color(type,data1, data2);
+    if (data1 === "#select_background" || data1 == "#select_text")
+    {
+      setDarkMode(false,true);
+    }
   }) 
 
 
@@ -601,19 +725,19 @@ function rendererRequests()
     switch(type)
     {
       case "button_clear":
-        logging.logClear(gLogging.type)
+        logging.logClear()
       break;
       case "button_log":
-        showLog(btConstants.LOGGING_NORMAL);
+        logging.showLog(btConstants.LOGGING_NORMAL,gTheme);
       break;
       case "button_debug":
-        showLog(btConstants.LOGGING_DEBUG);
+        logging.showLog(btConstants.LOGGING_DEBUG,gTheme);
       break;
       case "button_rules":
-        showLog(btConstants.LOGGING_RULES);
+        logging.showLog(btConstants.LOGGING_RULES,gTheme);
       break;
       case "button_error":
-        showLog(btConstants.LOGGING_ERROR);
+        logging.showLog(btConstants.LOGGING_ERROR,gTheme);
       break;      
     }
   }) 
@@ -636,9 +760,7 @@ function rendererRequests()
   })  
 
   ipcMain.on("update", (renderer, type) => {
-    const Update = require('./boinctasks/rpc/misc/update');
-    const update = new Update();
-    update.button(type);    
+    gClassUpdate.button(type);    
   }) 
 
   ipcMain.on("rules", (renderer,type,data,data2) => {
@@ -647,6 +769,11 @@ function rendererRequests()
 
   ipcMain.on("email", (renderer,type,item) => {
     connections.email(type,item);    
+  })
+
+  ipcMain.on("dark_mode_select", (renderer) => {
+    gDarkMode = !gDarkMode;
+    setDarkMode(true,false);
   })
 }
 
@@ -675,138 +802,18 @@ function setColumnOrder()
 
 function startScanComputers()
 {
-  scanComputers.showScan();
+  if (gClassScanComputers === null)
+  {
+  const ScanComputers = require('./boinctasks/rpc/computers/scan');    
+    gClassScanComputers = new ScanComputers();    
+  }  
+  gClassScanComputers.showScan(gTheme);
 }
 
-function sidebarComputers(set)
+function sidebarComputers(set,write)
 {
-  btMenu.set(btConstants.MENU_SIDEBAR_COMPUTERS,set);
+  gClassBtMenu.set(btConstants.MENU_SIDEBAR_COMPUTERS,set);
   gMainWindow.send('sidebar_computers_active', set); 
   connections.sidebarChanged(set);
+  if (write) gClassBtMenu.write();
 }
-
-function addProject()
-{
-  let title = "Add a new project";
-  if (gChildAddProject == null)
-  {
-    let state = windowsState.get("add_project",700,800)
-
-    gChildAddProject = new BrowserWindow({
-      'x' : state.x,
-      'y' : state.y,
-      'width': state.width,
-      'height': state.height,
-      webPreferences: {
-        sandbox : false,
-        contextIsolation: false,  
-        nodeIntegration: true,
-        nodeIntegrationInWorker: true
- //       preload: './preload/preload.js'
-      }
-    });
-    gChildAddProject.loadFile('index/index_add_project.html')
-    gChildAddProject.once('ready-to-show', () => {    
-      gChildAddProject.show();  
-      gChildAddProject.setTitle(title);
-    }) 
-    gChildAddProject.on('close', () => {
-      let bounds = gChildAddProject.getBounds();
-      windowsState.set("add_project",bounds.x,bounds.y, bounds.width, bounds.height)
-    })     
-    gChildAddProject.on('closed', () => {
-      gChildAddProject = null
-    })    
-  }
-  else
-  {
-    gChildAddProject.setTitle(title); 
-    gChildAddProject.hide();
-    gChildAddProject.show();
-    connections.addProject(gChildAddProject,'ready');    
-  }
-//gChildAddProject.webContents.openDevTools()
-
-
-}
-
-function showLog(logType)
-{
-  try {
-    clearTimeout(gTimerLog);
-    gTimerLog =  setInterval(btTimerLog, 2000);
-
-    let title = logging.logTitle(logType)
-
-    let log = logging.logGet(logType)
-    
-    if (gLogging.type !== logType)
-    {
-      gLogging.len = -1;
-    }
-    gLogging.type = logType;
-
-    if (gChildWindowLog == null)
-    {
-      let state = windowsState.get("log",500,800)
-      gChildWindowLog = new BrowserWindow({
-        'x': state.x,
-        'y': state.y,
-        'width': state.width,
-        'height': state.height,      
-        webPreferences: {
-          sandbox : false,
-          contextIsolation: false,  
-          nodeIntegration: true,
-          nodeIntegrationInWorker: true,
-          preload: path.join(__dirname, './preload/preload_log.js')
-        }
-      });
-      gChildWindowLog.loadFile('index/index_log.html')
-      gChildWindowLog.once('ready-to-show', () => {    
-        gChildWindowLog.show();  
-        gChildWindowLog.webContents.send('log_text', log); 
-        gChildWindowLog.setTitle(title);
-//        gChildWindowLog.webContents.openDevTools()    
-      })  
-      gChildWindowLog.on('close', () => {
-        let bounds = gChildWindowLog.getBounds();
-        windowsState.set("log",bounds.x,bounds.y, bounds.width, bounds.height)
-      })
-      gChildWindowLog.on('closed', () => {
-        gChildWindowLog = null
-      }) 
-    }
-    else
-    {
-      gChildWindowLog.setTitle(title); 
-      gChildWindowLog.webContents.send('log_text', log); 
-      gChildWindowLog.hide()
-      gChildWindowLog.show()    
-    }
-  } catch (error) {
-    
-  }
-}
-  
-function btTimerLog()
-{
-  try {
-    if (gChildWindowLog != null) 
-    {
-      let log = logging.logGet(gLogging.type)
-      
-      if (log.length !== gLogging.len)
-      {
-        gLogging.len = log.length;
-        gChildWindowLog.webContents.send('log_text', log);
-      }
-    }
-    else
-    {
-      clearTimeout(gTimerLog);      
-    }
-  } catch (error) {
-    var ii = 1;
-  }
-} 

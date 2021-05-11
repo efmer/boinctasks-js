@@ -54,10 +54,9 @@ $(document).ready(function() {
 // 
   });
 
-  ipcRenderer.on('table_data', (event, tableData, nr, version) => {
+  ipcRenderer.on('table_data', (event, tableData, nr) => {
     $("#bt_table_insert").html(tableData);
-    $("#footer_number").html(nr);    
-    $("#footer_version").html(version);
+    $("#footer_number").html(nr);
   });
 
   ipcRenderer.on('notices', (event, msg) => {
@@ -82,6 +81,23 @@ $(document).ready(function() {
 
   ipcRenderer.on('set_status', (event, status) => {
     $("#footer_status").html(status);
+  });
+
+  ipcRenderer.on('set_dark_mode', (event, darkmode) => {
+    let mode;
+    if (darkmode)
+    {
+      mode = ' <span id="dark_mode_select" class="ef_btn_toolbar bt_img_dark_dark">Dark</span>';
+    }
+    else
+    {
+      mode = ' <span id="dark_mode_select" class="ef_btn_toolbar bt_img_dark_light">Light</span>';
+    }
+    $("#footer_dark_mode").html(mode);
+
+    $("#dark_mode_select").click(function( event ) {
+      ipcRenderer.send('dark_mode_select');
+    });
   });
 
   ipcRenderer.on('toolbar', (event, toolbar) => {

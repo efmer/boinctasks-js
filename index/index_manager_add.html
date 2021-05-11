@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->    
+    <link rel="stylesheet" href="../boinctasks/css/bt.css">
+    
+  <title>Account Manager</title>
+  </head>
+  <body>
+    <div id="info_manager_status"></div>
+    <div>
+      <b>Selected computers</b><br>
+      <select id="computer_list" name="computer" multiple class="project_add_select_box">
+      </select> 
+    </div>
+    <br>
+    <b>Add this manager</b><br>
+    <select id="manager_list" name="manager" class="project_add_select_box_single">
+    </select> 
+    <div id="add_manager_description"></div>
+    <br>
+    <table>
+      <tr>
+        <td><label for="url">Manager url:</label></td><td><input id="add_manager_url" class="project_add_input" type="text" id="url" name="url"></td>
+      </tr>
+      <tr></tr>
+      <tr>
+      <td><label for="login_name">Login name:</label></td><td><input class="project_add_input" type="text" id="add_manager_login_name" name="login_name"></td><td><button id="add_manager_button">Add to Manager</button></td>
+    </tr>
+    <tr>
+      <td><label for="password">Password:</label></td><td><input class="project_add_input" type="password" id="add_manager_password" name="password"><span class = "ef_img_input bt_img_input_eye_not"></span></td>
+    </tr>
+    </table>
+    <br>
+    <button id="sync_manager_button">Synchronize with Manager</button></td>
+    <br><br><br>
+    <button id="add_manager_website">Website</button>
+    <br><br>
+    <div id = "add_manager_status"></div>
+    <br><br><br><br><br><br><br><br><br>
+    <button id="add_manager_detach">Detach Manager</button>
+
+    <script>window.$ = window.jQuery = require('../boinctasks/lib/jquery.min');</script>
+    <script type="text/javascript">
+      require('../render/renderer_manager_add')
+    </script>
+  </body>
+</html>

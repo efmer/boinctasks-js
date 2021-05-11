@@ -29,13 +29,12 @@ class BtMenu{
             g_menu = Object();
         }
         g_menu[item] = value;
-        this.write();
     }
     check(item)
     {
         let ret = false;
         try {
-            if (g_menu == null) return false;
+            if (g_menu === null) return false;
             if (g_menu[item] === true) return true;
         } catch (error) {            
         }

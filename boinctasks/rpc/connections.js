@@ -59,26 +59,8 @@ const toolbar = new Toolbar();
 const Boinc = require('./functions/boinc');
 const boinc = new Boinc();
 
-const ScanComputers = require('./computers/scan');
-const scanComputers = new ScanComputers();
-
-const AddProject = require('./misc/add_project');
-let addProject = new AddProject;
-
 const SettingsColor = require('./settings/colors');
-const settingsColor = new SettingsColor();
-
-const SettingsBt = require('./settings/settings_bt');
-const settingsBt = new SettingsBt();
-
-const SettingsAllow = require('./settings/settings_allow');
-const settingsAllow = new SettingsAllow();
-
-const SettingsBoinc = require('./settings/settings_boinc');
-const settingsBoinc = new SettingsBoinc();
-
-const StatisticsBoinc = require('./settings/statistics_boinc');
-const statisticsBoinc = new StatisticsBoinc();
+const gClassSettingsColor = new SettingsColor();
 
 const RowSelect = require('./misc/row_select');
 const rowSelect = new RowSelect();
@@ -94,10 +76,16 @@ const connectionsShadow = new ConnectionsShadow();
 
 const btConstants = require('./functions/btconstants');
 
-let gRequireHistory = null;
-let gRequireRulesList = null;
-let gRequireRulesProcess = null;
-let gRequireEmail = null;
+let gClassAcountManager = null;
+let gClassAddProject = null;
+let gClassSettingsBoinc = null;
+let gClassSettingsAllow = null;
+let gClassStatisticsBoinc = null;
+let gRequireSettingsBt = null;
+let gClassHistory = null;
+let gClassRulesList = null;
+let gClassRulesProcess = null;
+let gClassEmail = null;
 
 const MODE_NORMAL = 0;      // normal mode
 const MODE_STATE = 1;       // fetching the state
@@ -107,7 +95,7 @@ const MODE_RULES = 4;
 
 const INTERVAL_STATE_FIRST = 2000; 
 const INTERVAL_STATE = 2000; 
-const INTERVAL_HISTORY_FIRST = 3000; 
+const INTERVAL_HISTORY_FIRST = 5000;
 const INTERVAL_REFRESH_FIRST = 1000;
 const INTERVAL_RULES_FIRST = 10000;  // a long time after the state
 const INTERVAL_RULES = 30000;
@@ -139,6 +127,10 @@ gB.editComputersShow = false;
 
 gB.rules = null;
 
+gB.theme = "";
+
+let gSettingsBt = null;
+
 let gTimer = null;
 let gBusyCnt = 0;
 let gBusy = true;
@@ -155,12 +147,19 @@ class Connections{
     init(version)
     {
         gVersionS = "V " + version;
-        gB.settings = settingsBt.get();
+        if (gRequireSettingsBt === null)
+        {
+            gRequireSettingsBt = require('./settings/settings_bt');            
+            gSettingsBt = new gRequireSettingsBt();
+        }
+        gB.settings = gSettingsBt.get();
         return gB.settings;
     }
 
     start(mainWindow, menu)
     {
+ //       setTimeout(test, 1000); // testing test debug
+
         gB.mainWindow = mainWindow;
         gB.menu = menu;
         rowSelect.init(gB);
@@ -328,7 +327,7 @@ class Connections{
         gSwitchedTabCnt = 2; // update header
     }
 
-    scanComputersAdd(toAdd, port, password)
+    scanComputersAdd(scanComputer,toAdd, port, password)
     {
         try {
             let iAdd = 0;
@@ -391,15 +390,17 @@ class Connections{
             {
                 logging.logDebug("0 added, nothing new found");                
             }
-            scanComputers.stopScan();         
+            scanComputer.stopScan();         
         } catch (error) {
             logging.logError('Connections,scanComputersAdd', error);             
         }       
     }
+
     pause()
     {
         gPauze = true;
     }
+
     resume()
     {
         gIntervalFastCnt = 0;      
@@ -407,34 +408,72 @@ class Connections{
 
     }
     
-    addProject(window, type, data)
+    addProject(theme)
     {
-        addProject.process(window,gB.connections, type, data);
+        if (gClassAddProject === null)
+        {
+            const AddProject = require('./misc/add_project');            
+            gClassAddProject = new AddProject;
+        }
+        gClassAddProject.addProject(theme);
     }
+
+    processProject(type, data)
+    {
+        if (gClassAddProject === null)
+        {
+            const AddProject = require('./misc/add_project');            
+            gClassAddProject = new AddProject;
+        }        
+        gClassAddProject.process(gB, type, data);
+    }
+
+    accountManagerAdd(type,theme)
+    {
+        if (gClassAcountManager === null)
+        {
+            const AddManager = require('./misc/manager_add');            
+            gClassAcountManager = new AddManager;
+        }
+        gClassAcountManager.addManager(gB);
+    }
+
+    processManager(type, data)
+    {    
+        gClassAcountManager.process(gB, type, data);
+    }     
 
     color(type,data1, data2)
     {
-        settingsColor.set(gotColorsCallback,type,data1, data2);
+        gClassSettingsColor.set(gotColorsCallback,type,data1, data2,gB.theme, gB.darkMode);
+    }
+
+    getColor(darkmode)
+    {
+        gB.color = gClassSettingsColor.get(darkmode);
+        return  gB.color;
     }
 
     settingsStart()
     {
-        settingsBt.start(gB.settings);
+        gSettingsBt.start(gB.settings,gB.theme);
     }
 
     settingsSet(settings)
     {
-        settingsBt.set(settings);       // write
-        gB.settings = settingsBt.get(); // get and check if valid.
-        settingsBt.send();   
-        
+        gSettingsBt.set(settings);       // write
+        gB.settings = gSettingsBt.get();           // get and check if valid.
+        gSettingsBt.send();   
         return gB.settings;
-        setCss(settingsBt.get())
-
     }
     boincAllow(type,combined)
     {
-        settingsAllow.allow(type,gB,combined,boincAllowCallback);
+        if (gClassSettingsAllow === null)
+        {
+            const SettingsAllow = require('./settings/settings_allow');            
+            gClassSettingsAllow = new SettingsAllow();
+        }
+        gClassSettingsAllow.allow(type,gB,combined,boincAllowCallback);
     }
     boincBenchmark(type)
     {
@@ -450,11 +489,21 @@ class Connections{
     }        
     boincSettings(type,settings)
     {
-        settingsBoinc.settingsBoinc(type,gB,settings);
+        if (gClassSettingsBoinc === null)
+        {
+            const SettingsBoinc = require('./settings/settings_boinc');            
+            gClassSettingsBoinc = new SettingsBoinc();
+        }
+        gClassSettingsBoinc.settingsBoinc(type,gB,settings);
     }
     boincStatistics(type,data)
     {
-        statisticsBoinc.start(type,gB,data);
+        if (gClassStatisticsBoinc === null)
+        {
+            const StatisticsBoinc = require('./settings/statistics_boinc');            
+            gClassStatisticsBoinc = new StatisticsBoinc();
+        }
+        gClassStatisticsBoinc.start(type,gB);
     }
 
     colomnOrder(type,data)
@@ -465,25 +514,65 @@ class Connections{
     }
     rules(type,data,data2)
     {
-        if (gRequireRulesList === null)
+        if (gClassRulesList === null)
         {
             const RequireRulesList = require('./rules/rules_list');
-            gRequireRulesList = new RequireRulesList();
+            gClassRulesList = new RequireRulesList();
         }
-        gRequireRulesList.rules(gB,type,data,data2);
+        gClassRulesList.rules(gB,type,data,data2);
     }
     email(type,item)
     {
-        if (gRequireEmail === null)
+        if (gClassEmail === null)
         {
           const Email = require('./rules/email');
-          gRequireEmail = new Email();
+          gClassEmail = new Email();
         }
-        gRequireEmail.email(gB,type,item);
+        gClassEmail.email(gB,type,item);
+    }
+    setTheme(css,darkmode,bSingle)
+    {
+        gB.theme = css;
+        gB.darkMode = darkmode;
+        logging.setTheme(css);        
+        if (gClassAddProject !== null) gClassAddProject.setTheme(css);
+        if (gClassStatisticsBoinc !== null) gClassStatisticsBoinc.setTheme(css);
+        if (gSettingsBt !== null) gSettingsBt.setTheme(css);
+        if (gClassSettingsBoinc !== null) gClassSettingsBoinc.setTheme(css);
+        if (gClassSettingsAllow !== null) gClassSettingsAllow.setTheme(css);
+        if (gClassRulesList !== null) gClassRulesList.setTheme(css);
+        if (gClassEmail !== null) gClassEmail.setTheme(css);
+        if (gClassAcountManager !== null) gClassAcountManager.setTheme(css);    
+        if (!bSingle)
+        {
+            gClassSettingsColor.setTheme(darkmode,css);
+            gB.color = gClassSettingsColor.get(darkmode);                 
+        }
+        gIntervalFastCnt = 0;
     }
 }
 
 module.exports = Connections;
+
+function test()
+{
+/*    
+    if (gClassAcountManager === null)
+    {
+        const AddManager = require('./misc/manager_add');            
+        gClassAcountManager = new AddManager;
+    }
+    gClassAcountManager.addManager(gB);    
+*/
+/*
+    if (gClassAddProject === null)
+    {
+        const AddProject = require('./misc/add_project');            
+        gClassAddProject = new AddProject;
+    }
+    gClassAddProject.addProject(gB);
+*/
+}
 
 function clickHeaderProcess(id, shift, alt,ctrl)
 {
@@ -628,7 +717,7 @@ function toolbarCallback(command)
 
 function boincAllowCallback()
 {
-    settingsAllow.allow("menu",gB);
+    gClassSettingsAllow.allow("menu",gB);
 }
 
 function menuEnableAll()
@@ -699,7 +788,6 @@ function startConnections()
     gB.editComputers = false;
     gB.editComputersShow = false;
 
-    gB.color = settingsColor.get();
     gB.order = settingsColumnOrder.get();
 
     startTimers();
@@ -938,12 +1026,12 @@ function getRules()
             gB.rules.email = null;  
         }
 
-        if (gRequireEmail === null)
+        if (gClassEmail === null)
         {
             const Email = require('./rules/email');
-            gRequireEmail = new Email();
+            gClassEmail = new Email();
         }             
-        gRequireEmail.readXml(gB);
+        gClassEmail.readXml(gB);
     
     } catch (error) {
         logging.logError('Connections,getSgetRulesorting', error);         
@@ -1062,10 +1150,10 @@ function connectRules(fetchMode)
         {
             return;
         }
-        if (gRequireRulesProcess === null)
+        if (gClassRulesProcess === null)
         {
             const RulesProcess = require('./rules/rules_process');
-            gRequireRulesProcess = new RulesProcess();
+            gClassRulesProcess = new RulesProcess();
         }
         if (!gB.rules.compiled)
         {
@@ -1079,7 +1167,7 @@ function connectRules(fetchMode)
                 con.rules.auth = false;
                 con.rules.seenLost = false;
             }
-            gRequireRulesProcess.makeComputerList(gB);
+            gClassRulesProcess.makeComputerList(gB);
         }
 
         for (var i=0;i< gB.connections.length;i++)
@@ -1091,7 +1179,7 @@ function connectRules(fetchMode)
 
             if (!con.rules.compiled)
             {
-                gRequireRulesProcess.compileCon(con);
+                gClassRulesProcess.compileCon(con);
             }
 
             con.fetchMode = fetchMode;            
@@ -1323,21 +1411,21 @@ function connectAuth(con)
         switch(gB.fetchMode)
         { 
             case MODE_HISTORY:        
-                if (gRequireHistory === null)
+                if (gClassHistory === null)
                 {
                     const History = require('./history/history');
-                    gRequireHistory = new History();
+                    gClassHistory = new History();
                 }
-                gRequireHistory.getHistory(con,gB.settings)            
+                gClassHistory.getHistory(con,gB.settings)            
             return;
 
             case MODE_RULES:
-                if (gRequireRulesProcess === null)
+                if (gClassRulesProcess === null)
                 {
                     const RulesProcess = require('./rules/rules_process');
-                    gRequireRulesProcess = new RulesProcess();
+                    gClassRulesProcess = new RulesProcess();
                 }                
-                gRequireRulesProcess.getRules(con,gB);
+                gClassRulesProcess.getRules(con,gB);
             return;
 
             case MODE_RESULTS:
@@ -1607,7 +1695,7 @@ function processNotices(sort)
 
 function tableReady(status, gVersionS,table)
 {
-    gB.mainWindow.webContents.send('table_data', table, status, gVersionS) 
+    gB.mainWindow.webContents.send('table_data', table, status) 
     toolbar.show(gB, gB.editComputers);
     gBusy = false;  
 }
@@ -1786,7 +1874,7 @@ function btTimer() {
             if (gB.fetchMode === MODE_RULES)
             {
                 connectionsShadow.flushSendArray();
-                gRequireRulesProcess.connectionsCheck(gB)
+                gClassRulesProcess.connectionsCheck(gB)
             }
 
             // gBusy set false in process
@@ -1898,18 +1986,11 @@ function btTimer() {
             connectAll();
         }
 
-
-        let dots = "...............................".substr(0,diff/200);    // 30*0.2
-        if (diff > 6000)
-        {
-            let interval = parseInt(diff/1000);
-            if (interval < 0) interval = 0;
-            status = interval + dots;                
-        }
-        else
-        {
-            status = dots;
-        }
+        diff /= 400;    // 200 = 0.2 second
+        let dots = "▁▁▁▁▁▁▁▁▁▁▁▁▁▁".substr(0,diff);    // .2 second
+        let interval = parseInt(diff/2.5);
+        if (interval < 0) interval = 0;
+        status =  (interval+1) + " " + dots;
         gB.mainWindow.webContents.send('set_status', status); 
         
     } catch (error) {

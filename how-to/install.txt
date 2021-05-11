@@ -8,6 +8,8 @@ express - server side
         Install current version
         Do not check Automatically install etc
 
+        // Linux: nvm install 14.16.1
+
         Check if installed:
 
         node -v
@@ -42,8 +44,9 @@ express - server side
         npm install --save nodemailer
 
         npm install electron-packager
+        npm install --save-dev electron-builder
 
-        npm install @electron-forge/cli -D
+        ??npm install @electron-forge/cli -D
 
 
 // UPDATE
@@ -56,3 +59,9 @@ express - server side
 
 // in case of vulnerabilities
          npm audit fix
+
+// update node js Linux NOT THE LATEST BUT LTS
+// https://www.whitesourcesoftware.com/free-developer-tools/blog/update-node-js/
+
+// Install LTS
+// nvm install 14.16.1 

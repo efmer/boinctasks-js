@@ -250,11 +250,11 @@ function tableResultItem(selRows, i, order, result, filter, colorObj)
       let sclass = "bt_table_filtered";
       if (filter)
       {
-        sclass += " bt_img_arrow_down_left";
+        wu = "▼ " + wu;
       }
       else 
       {
-        sclass += " bt_img_arrow_right";
+        wu = "▶ " + wu;        
       }
       item = '<div id="filter' + btConstants.SEPERATOR_ITEM + computer+app+status + '" class="' + sclass + '">'+ wu + '</div>'  
       items[order.order[3]] = addRow(order.check[3],selId,3,item);   

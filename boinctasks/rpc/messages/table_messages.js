@@ -37,6 +37,7 @@ class BtTableMessages{
 
   table(gb,cTable)
   {
+    if(cTable.length === 0) return btConstants.EMPTY_MESSAGES;
     var table = tableMessages(gb,cTable, gb.color, gb.settings);
     return table;    
   }

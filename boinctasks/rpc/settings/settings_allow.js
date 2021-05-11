@@ -20,8 +20,6 @@ const Functions = require('../functions/functions');
 const functions = new Functions();
 const Logging = require('../functions/logging');
 const logging = new Logging();
-const ReadWrite  = require('../functions/readwrite');
-const readWrite = new ReadWrite();
 const WindowsState = require('../functions/window_state');
 const windowsState = new WindowsState();
 const SendArray = require('../misc/send_array');
@@ -34,24 +32,8 @@ const RUN_MODE_AUTO = 2;
 const RUN_MODE_NEVER = 3;
 const RUN_MODE_RESTORE = 4;
 
-class SettingsAllow{
-    allow(type,gb,combined,callback)
-    {
-      switch (type)
-      {
-        case "menu":
-          settings(gb)          
-        break;
-        case "set":
-          gAllowCallback = callback;
-          set(gb,combined)
-        break;
-      }
-    }
-  }
-  module.exports = SettingsAllow;
-
-gChildSettingsAllow = null;
+let gChildSettingsAllow = null;
+let gCssDarkAllow = null;
 
 let gAllowResults = [];
 let gAllowCpu = [];
@@ -60,6 +42,28 @@ let gAllowNetwork = [];
 let gAllowSend = 0;
 let gBcopy = null;
 let gAllowCallback = null;
+
+class SettingsAllow{
+  allow(type,gb,combined,callback)
+  {
+    switch (type)
+    {
+      case "menu":
+        settings(gb)          
+      break;
+      case "set":
+        gAllowCallback = callback;
+        set(gb,combined)
+      break;
+    }
+  }
+
+  setTheme(css)
+  {
+      insertCssDark(css);
+  }    
+}
+module.exports = SettingsAllow;
 
 function settings(gb)
 {
@@ -88,7 +92,10 @@ function settings(gb)
             gChildSettingsAllow.show();  
             gChildSettingsAllow.setTitle(title);
             getData(gb);
-          }) 
+          })
+          gChildSettingsAllow.webContents.on('did-finish-load', () => {
+            insertCssDark(gb.theme);
+          })            
           gChildSettingsAllow.on('close', () => {
             let bounds = gChildSettingsAllow.getBounds();
             windowsState.set("settings_allow",bounds.x,bounds.y, bounds.width, bounds.height)
@@ -108,6 +115,19 @@ function settings(gb)
     } catch (error) {
         logging.logError('SettingsAllow,settings', error);        
     }  
+}
+
+async function insertCssDark(darkCss)
+{
+  try {
+    if (gCssDarkAllow !== null)
+    {
+      gChildSettingsAllow.webContents.removeInsertedCSS(gCssDarkAllow) 
+    }    
+    gCssDarkAllow = await gChildSettingsAllow.webContents.insertCSS(darkCss);  
+  } catch (error) {
+    gCssDarkAllow = null;
+  }
 }
 
 function getData(gb)

@@ -25,18 +25,24 @@ const {app,BrowserWindow} = require('electron')
 
 // !!!!!!!!!!!!!!!!!!!!!!! DO NOT USE ABOUT as it it's removed by the packager
 
+let gChildAbout = null;
+let gCssDarkAbout = null;
+
 class Credits{
-    about(version)
-    {
-        addAboutWindow(version);
-            
-    } catch (error) {    
-    }        
+  about(version,theme)
+  {
+    addAboutWindow(version,theme);
+          
+  } catch (error) {    
+  } 
+  setTheme(css)
+  {
+    insertCssDark(css);
+  }           
 }
 module.exports = Credits;
 
-gChildAbout = null;
-function addAboutWindow(version)
+function addAboutWindow(version,theme)
 {
     try {
         let info = infoMsg(version);
@@ -64,7 +70,10 @@ function addAboutWindow(version)
             gChildAbout.show();  
             gChildAbout.setTitle(title);
             gChildAbout.webContents.send('about', info); 
-          }) 
+          })
+          gChildAbout.webContents.on('did-finish-load', () => {
+            insertCssDark(theme);
+          })
           gChildAbout.on('close', () => {
             let bounds = gChildAbout.getBounds();
             windowsState.set("about",bounds.x,bounds.y, bounds.width, bounds.height)
@@ -84,6 +93,19 @@ function addAboutWindow(version)
     } catch (error) {
         logging.logError('About,addAboutWindow', error);        
     }  
+}
+
+async function insertCssDark(darkCss)
+{
+  try {
+    if (gCssDarkAbout !== null)
+    {
+      gChildAbout.webContents.removeInsertedCSS(gCssDarkAbout) 
+    }    
+    gCssDarkAbout = await gChildAbout.webContents.insertCSS(darkCss);  
+  } catch (error) {
+    gCssDarkAbout = null;
+  }
 }
 
 function infoMsg(version)

@@ -24,9 +24,11 @@ const WindowsState = require('../functions/window_state');
 const windowsState = new WindowsState();
 const SendArray = require('../misc/send_array');
 
-const {BrowserWindow} = require('electron');
+const {BrowserWindow, dialog} = require('electron');
 
 let gSettingsBoincCon = null;
+let gChildSettingsBoinc = null;
+let gCssDarkBoinc = null;
 
 class SettingsBoinc{
     settingsBoinc(type,gb,settings)
@@ -34,18 +36,74 @@ class SettingsBoinc{
       switch (type)
       {
         case "menu":
-          settingsStart(gb)          
+          settingsOk(gb)          
         break;
         case "settings":
           sendSettings(settings);
       }
     }
+
+    setTheme(css)
+    {
+        insertCssDark(css);
+    }    
   }
   module.exports = SettingsBoinc;
 
-gChildSettingsBoinc = null;
+function settingsOk(gb)
+{
+  let authCount = 0;
+  let selCount = 0;  
+  let selected = null;
+  let len = gb.connections.length;
+  for (let i=0; i<len;i++ )
+  {
+    let con = gb.connections[i];
+    if (con.auth)
+    {
+      authCount++;      
+      if (con.sidebar)
+      {
+        selCount++;
+        selected = con;
+      }
+      if (con.ip.toLowerCase() === 'localhost')
+      {
+        localhost = con;
+      }
+    }
+  }
+  let one = "Please select ONE connected computer";
+  if (selected === null)
+  {
+    if (authCount === 1) selected = localhost;
+    else
+    {
+      showDialog(gb.mainWindow,one);
+      return;
+    }
+  }
+  if (selCount > 1)
+  {
+    showDialog(gb.mainWindow,"You selected more than one computer\n\n" + one);
+    return;   
+  }
+  gSettingsBoincCon = selected;
+  settingsStart(gb,selected);
+}
 
-function settingsStart(gb)
+function showDialog(mainWindow,msg)
+{
+  dialog.showMessageBox(mainWindow,
+    {
+      title: 'Unable to show',
+      message: 'Invalid selection' ,
+      detail: msg
+    })
+    return;
+}
+
+function settingsStart(gb,selected)
 {
     try {
         let title = "Boinc Settings";
@@ -72,8 +130,11 @@ function settingsStart(gb)
 //            gChildSettingsBoinc.webContents.openDevTools()
             gChildSettingsBoinc.hide();  
             gChildSettingsBoinc.setTitle(title);
-            getData(gb);
-          }) 
+            getData(selected);
+          })
+          gChildSettingsBoinc.webContents.on('did-finish-load', () => {
+            insertCssDark(gb.theme);
+          })
           gChildSettingsBoinc.on('close', () => {
             let bounds = gChildSettingsBoinc.getBounds();
             windowsState.set("settings_boinc",bounds.x,bounds.y, bounds.width, bounds.height)
@@ -87,7 +148,7 @@ function settingsStart(gb)
           gChildSettingsBoinc.setTitle(title); 
           gChildSettingsBoinc.hide();
 //          gChildSettingsBoinc.show();
-          getData(gb)
+          getData(selected)
         }
               
     } catch (error) {
@@ -95,44 +156,30 @@ function settingsStart(gb)
     }  
 }
 
-function getData(gb)
+async function insertCssDark(darkCss)
 {
   try {
-    let localhost = null;
-    let selected = null;
-    let send = "<get_global_prefs_override/>";
-    for (let i=0; i<gb.connections.length;i++ )
+    if (gCssDarkBoinc !== null)
     {
-      let con = gb.connections[i];
-      if (con.auth)
-      {
-        if (con.sidebar)
-        {
-          selected = con;
-        }
-        if (con.ip.toLowerCase() === 'localhost')
-        {
-          localhost = con;
-        }
-      }
-      if (selected === null)
-      {
-        selected = localhost;
-      }
-    }
-    if (selected === null) return null
-    gSettingsBoincCon = selected;
+      gChildSettingsBoinc.webContents.removeInsertedCSS(gCssDarkBoinc) 
+    }    
+    gCssDarkBoinc = await gChildSettingsBoinc.webContents.insertCSS(darkCss);  
+  } catch (error) {
+    gCssDarkBoinc = null;
+  }
+}
 
-//    const sendArray = new SendArray();      
-//    sendArray.send(con,send, dataReady);
-    setTimeout(sendDelay, 500,selected,send)
-   
+function getData(selected)
+{
+  try {
+    let send = "<get_global_prefs_override/>";
+    setTimeout(sendDelay, 200,selected,send)
   } catch (error) {
     logging.logError('SettingsBoinc,getData', error);  
   }
 }
 
-function sendDelay(con,send)  // delay to attach debugger
+function sendDelay(con,send)
 {
   const sendArray = new SendArray();      
   sendArray.send(con,send, dataReady);  

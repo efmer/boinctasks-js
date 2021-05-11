@@ -204,8 +204,33 @@ function tableHistoryItem(selRows, i, order, history, colorObj)
         status = "OK";
       break;
       case -221:
+      case 202:
         status = "Aborted by project";
       break;
+      case 194:
+        status = "Aborted by client";
+      break;
+      case 195:
+        status = "Failed to run";
+      break;      
+      case 196:
+        status = "Disk limit exeeded";
+      break;
+      case 197:
+        status = "Time limit exeeded";
+      break;
+      case 198:
+        status = "Memory limit exeeded";
+      break;
+      case 199:
+        status = "Client exited";
+      break;
+      case 200:
+        status = "Aborted past deadline";
+      break;
+      case 203:
+        status = "Aborted by user";
+      break;      
       default:
         status = "Exit code: " + history.exit;
     }

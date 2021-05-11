@@ -1,11 +1,12 @@
 <notices>
 	<notice>
 		<title>
-			Welcome to the new BoincTasks Js!
+			Version 1.15.
 		</title>
 		<description>
-			We are proud to presenting the multi platform BoincTasks Js			
-			Build from scratch, BoincTasks Js runs native on Linux, Windows and more to follow.
+			BoincTasks Js now supports Arm
+			A companion App Send Sensors is now available for Linux, to remotely monitor CPU/GPU Temperature and GPU Runtime %.
+			Send Sensors supports BoincTasks Js and BoincTasks.
 		</description>
 		<link>https://efmer.com/home/boinctasks-js/</link>
 	</notice>

@@ -1,9 +1,12 @@
 Install Inno Setup
 https://jrsoftware.org/isinfo.php
 
+npm run package-win32
 npm run package-win64
+npm run package-winarm
 // temp remove --asar to check what's in the package
 
 Double click on boinc_tasks_js.iss
 Change the source folder and version
 
+result: out\wininstaller

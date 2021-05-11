@@ -19,7 +19,7 @@
 module.exports = {
     DEBUG                       : false,
 
-    //CONNECTION_TIMEOUT          : 4,
+    INITIALIZING                : " Initializing .....",
     
     TAB_COMPUTERS               : "computers",
     TAB_PROJECTS                : "projects",
@@ -119,5 +119,6 @@ module.exports = {
     LOGGING_RULES               : 2,
     LOGGING_ERROR               : 3,
 
-    EMPTY_TABLE : '<br><br><br><br><b>Empty....',
+    EMPTY_TABLE : '<br><br><br><br><b>Empty, select connected computer(s).',
+    EMPTY_MESSAGES: '<br><br><br><br><b>Empty, select a connected computer.'
 }

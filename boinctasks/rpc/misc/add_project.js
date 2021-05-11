@@ -20,10 +20,13 @@ const Functions = require('../functions/functions');
 const functions = new Functions();
 const Logging = require('../functions/logging');
 const logging = new Logging();
+const WindowsState = require('../functions/window_state');
+const windowsState = new WindowsState();
 const BtSocket  = require('./socket'); 
 const Authenticate = require('./authenticate');
 const athenticate = new Authenticate();
-const btConstants = require('../functions/btconstants');
+
+const { BrowserWindow } = require('electron')
 
 let gTimer = null;
 
@@ -31,22 +34,29 @@ let gAddProject = new Object();
 gAddProject.clientClass = null;
 gAddProject.addproject = null;
 
+let gChildAddProject = null;
+let gCssDarkProject = null;
+
 class AddProject
 {
-    process(window,connections,event,data)
+    addProject(theme)
+    {
+        addProject(theme);
+    }
+    process(gb,event,data)
     {
         try {
 
             switch(event)
             {
                 case 'ready':
-                    start(window,connections)
+                    start(gb.connections)
                 break;
                 case 'project_changed':
                     addProjectListChanged(data);
                 break;
                 case 'ok':  
-                    addProjectOk(connections,data);
+                    addProjectOk(gb.connections,data);
                 break;
             }
 
@@ -55,13 +65,17 @@ class AddProject
             logging.logError('AddProject,process', error);             
         }        
     }
-
+    
+    setTheme(theme)
+    {
+        insertCssDark(theme);
+    }
 }
 
 module.exports = AddProject;
 
 
-function start(window,connections)
+function start(connections)
 {
     try {
         let computerList = "";
@@ -91,7 +105,7 @@ function start(window,connections)
             conLocalHost = conFound;
         }
 
-        getProjectList(window,conLocalHost, computerList);        
+        getProjectList(conLocalHost, computerList);        
     } catch (error) {
         logging.logError('AddProject,start', error);   
     }
@@ -102,7 +116,7 @@ function addProjectOk(connections,item)
     if (item.sel.length == 0)
     {
         sendError("Select a computer");
-        gAddProject.window.webContents.send('add_project_enable');        
+        gChildAddProject.webContents.send('add_project_enable');        
         return;
     }
     startTimer();
@@ -119,7 +133,7 @@ function addProjects()
         stopTimer();
         if (gAddProject.sel.length == 0)
         {
-            gAddProject.window.webContents.send('add_project_enable');
+            gChildAddProject.webContents.send('add_project_enable');
             return; // add projects for all computers.
         }
         startTimer();
@@ -194,7 +208,7 @@ function addProjectListChanged(sel)
                 gAddProject.addproject.url = url;
                 gAddProject.addproject.web_url = project.web_url[0]; 
                 gAddProject.addproject.name = project.name[0];
-                gAddProject.window.webContents.send('add_project_description', gAddProject.addproject);
+                gChildAddProject.webContents.send('add_project_description', gAddProject.addproject);
             }
         }        
     } catch (error) {
@@ -202,7 +216,7 @@ function addProjectListChanged(sel)
     }
 } 
 
-function getProjectList(window,conIn,computerList)
+function getProjectList(conIn,computerList)
 {
     try 
     {
@@ -212,7 +226,6 @@ function getProjectList(window,conIn,computerList)
         gAddProject.ip = conIn.ip;
         gAddProject.port = conIn.port;
         gAddProject.passWord = conIn.passWord;
-        gAddProject.window = window;
         gAddProject.add = false;
         const btSocket = new BtSocket();  
         btSocket.socket(gAddProject);
@@ -269,7 +282,7 @@ function gotProjectList(event)
                     gAddProject.addproject.name = gAddProject.projects[0].name[0];
 
                     getSelectedProjectDescription(gAddProject.projects[0])
-                    gAddProject.window.webContents.send('add_project_init', gAddProject.list, list, gAddProject.addproject);
+                    gChildAddProject.webContents.send('add_project_init', gAddProject.list, list, gAddProject.addproject);
                 }
             break;        
         }
@@ -336,7 +349,7 @@ function lookUpAccountReady(event)
                 {                       
                     logging.logDebug("lookup_account: error " + reply.error); 
                     sendError(reply.error); 
-                    gAddProject.window.webContents.send('add_project_enable');
+                    gChildAddProject.webContents.send('add_project_enable');
                     return;
                 }
                 if (functions.isDefined(reply.success))
@@ -562,7 +575,7 @@ function sendError(msg)
 function sendMsg(msg)
 {
     gAddProject.msgTotal += msg + "<br>";
-    gAddProject.window.webContents.send('add_project_status', gAddProject.msgTotal); 
+    gChildAddProject.webContents.send('add_project_status', gAddProject.msgTotal); 
 }
 
 
@@ -578,6 +591,66 @@ function stopTimer()
 
 function btTimer()
 {
-    gAddProject.window.webContents.send('add_project_enable'); 
+    if (gChildAddProject !== null) gChildAddProject.webContents.send('add_project_enable'); 
     clearTimeout(gTimer);
+}
+
+function addProject(theme)
+{
+  let title = "Add a new project";
+  if (gChildAddProject == null)
+  {
+    let state = windowsState.get("add_project",700,800)
+
+    gChildAddProject = new BrowserWindow({
+      'x' : state.x,
+      'y' : state.y,
+      'width': state.width,
+      'height': state.height,
+      webPreferences: {
+        sandbox : false,
+        contextIsolation: false,  
+        nodeIntegration: true,
+        nodeIntegrationInWorker: true
+ //       preload: './preload/preload.js'
+      }
+    });
+    gChildAddProject.loadFile('index/index_add_project.html')
+    gChildAddProject.once('ready-to-show', () => {    
+      gChildAddProject.show();  
+      gChildAddProject.setTitle(title);
+    }) 
+    gChildAddProject.on('close', () => {
+      let bounds = gChildAddProject.getBounds();
+      windowsState.set("add_project",bounds.x,bounds.y, bounds.width, bounds.height)
+    })
+    gChildAddProject.webContents.on('did-finish-load', () => {
+        insertCssDark(theme);
+    })
+    gChildAddProject.on('closed', () => {
+      gChildAddProject = null
+    })    
+  }
+  else
+  {
+    gChildAddProject.setTitle(title); 
+    gChildAddProject.hide();
+    gChildAddProject.show();
+//    connections.addProject(gChildAddProject,'ready');    
+  }
+//gChildAddProject.webContents.openDevTools()
+}
+
+async function insertCssDark(darkCss)
+{
+  try {
+    if (gChildAddProject === null) return;
+    if (gCssDarkProject !== null)
+    {
+        gChildAddProject.webContents.removeInsertedCSS(gCssDarkProject) 
+    }    
+    gCssDarkProject = await gChildAddProject.webContents.insertCSS(darkCss);  
+  } catch (error) {
+    gCssDarkProject = null;
+  }
 }

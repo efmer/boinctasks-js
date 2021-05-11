@@ -27,7 +27,8 @@ const readWrite = new ReadWrite();
 
 const {BrowserWindow} = require('electron');
 
-gChildSettingsEmail = null;
+let gChildSettingsEmail = null;
+let gCssDarkEmail = null;
 
 // https://nodemailer.com/smtp/
 
@@ -53,13 +54,20 @@ class SendEmail
       logging.logError('SendEmail,edit', error);     
     }
   }
+
   readXml(gb)
   {
     readxml(gb);
   }
+
   send(rules, eSubject, eBody)
   {
     sendEmail(rules, eSubject, eBody) 
+  }
+
+  setTheme(css)
+  {
+      insertCssDark(css);
   }
 }
 module.exports = SendEmail;
@@ -106,7 +114,10 @@ function editEmail(gb)
             gChildSettingsEmail.show();  
             gChildSettingsEmail.setTitle(title);
             set(gb);
-        }) 
+        })
+        gChildSettingsEmail.webContents.on('did-finish-load', () => {
+            insertCssDark(gb.theme);
+          })         
         gChildSettingsEmail.on('close', () => {
           let bounds = gChildSettingsEmail.getBounds();
           windowsState.set("settings_email",bounds.x,bounds.y, bounds.width, bounds.height)
@@ -126,6 +137,19 @@ function editEmail(gb)
   } catch (error) {
       logging.logError('SendEmail,editEmail', error);        
   }  
+}
+
+async function insertCssDark(darkCss)
+{
+  try {
+    if (gCssDarkEmail !== null)
+    {
+        gChildSettingsEmail.webContents.removeInsertedCSS(gCssDarkEmail) 
+    }    
+    gCssDarkEmail = await gChildSettingsEmail.webContents.insertCSS(darkCss);  
+  } catch (error) {
+    gCssDarkEmail = null;
+  }
 }
 
 function set(gb)

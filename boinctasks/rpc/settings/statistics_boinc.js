@@ -36,24 +36,29 @@ let gStatisticsProjectName = [];
 let gStatisticsProjectUrl = [];
 let gStatisticsProjects = null;
 
+let gChildStatistics = null;
+let gCssDarkStatistics = null;
+
 class StatisticsBoinc{
-    start(type,gb,data)
+    start(type,gb)
     {
       switch(type)
       {
         case "menu":
-          statisticsStart(gb)          
+          statisticsStart(gb);
         break;
     //    case "projects":
     //      getProjects(gb)
     //    break;
       }
-
     }
+
+    setTheme(css)
+    {
+        insertCssDark(css);
+    }    
   }
   module.exports = StatisticsBoinc;
-
-let gChildStatistics = null;
 
 function statisticsStart(gb)
 {
@@ -82,7 +87,10 @@ function statisticsStart(gb)
           gChildStatistics.show();  
           gChildStatistics.setTitle(title);
           getStatistics(gb);
-        }) 
+        })
+        gChildStatistics.webContents.on('did-finish-load', () => {
+          insertCssDark(gb.theme);
+        })          
         gChildStatistics.on('close', () => {
           let bounds = gChildStatistics.getBounds();
           windowsState.set("boinc_statistics",bounds.x,bounds.y, bounds.width, bounds.height)
@@ -101,6 +109,19 @@ function statisticsStart(gb)
     } catch (error) {
         logging.logError('StatisticsBoinc,statisticsStart', error);        
     }  
+}
+
+async function insertCssDark(darkCss)
+{
+  try {
+    if (gCssDarkStatistics !== null)
+    {
+      gChildStatistics.webContents.removeInsertedCSS(gCssDarkStatistics) 
+    }    
+    gCssDarkStatistics = await gChildStatistics.webContents.insertCSS(darkCss);  
+  } catch (error) {
+    gCssDarkStatistics = null;
+  }
 }
 
 function getStatistics(gb)

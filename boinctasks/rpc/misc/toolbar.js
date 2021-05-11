@@ -61,7 +61,7 @@ class Toolbar{
                 break;                                                  
                 case "tasks":
                     sel = gb.rowSelect.results.rowSelected.length                    
-                    if (sel > 0) toolbar = getToolbarResultsSel();
+                    if (sel > 0) toolbar = getToolbarResultsSel(gb);
                     else toolbar = toolbar = getToolbarResults(gb);
                 break;
                 case "transfers":
@@ -119,7 +119,7 @@ class Toolbar{
                     selected = gb.rowSelect.results.rowSelected;                    
                     const Properties = require('./properties');
                     const properties = new Properties();
-                    properties.task(selected,gb.connections);
+                    properties.task(selected,gb);
                 break;
                 case "toolbar_rules":
                     selected = gb.rowSelect.results.rowSelected;
@@ -188,7 +188,7 @@ class Toolbar{
   
   module.exports = Toolbar;
 
-function getToolbarResultsSel()
+function getToolbarResultsSel(gb)
 {
     var toolbar =   '<td id="toolbar_abort" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;Abort</td>' +
                     '<td id="toolbar_suspend" class="ef_btn_toolbar bt_img_toolbar_pause">&nbsp;Suspend</td>' +
@@ -196,6 +196,11 @@ function getToolbarResultsSel()
                     '<td id="toolbar_update" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;Update</td>' +
                     '<td id="toolbar_info" class="ef_btn_toolbar bt_img_toolbar_info">&nbsp;Info</td>' +                      
                     '<td id="toolbar_rules" class="ef_btn_toolbar bt_img_toolbar_list">&nbsp;Add rule</td>';
+    let iReady = gb.readyToReport;
+    if (iReady > 0)
+    {
+        toolbar +=   '<td id="toolbar_completed" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;Ready to report: ' + iReady + '</td>';
+    }                    
     return toolbar;
 }
 
