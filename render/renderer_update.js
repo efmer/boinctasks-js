@@ -16,7 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const { ipcRenderer } = require('electron');
+const { ipcRenderer } = require('electron')
+const shell = require('electron').shell
 
 'use strict';
 
@@ -30,6 +31,18 @@ $(document).ready(function() {
     $("#button_beta").click(function( event ) {
       ipcRenderer.send("update","beta");
     });
+
+    const links = document.querySelectorAll('a[href]')
+    Array.prototype.forEach.call(links, function (link) {
+       const url = link.getAttribute('href')
+       if (url.indexOf('http') === 0) {
+          link.addEventListener('click', function (e) {
+              e.preventDefault()
+              shell.openExternal(url)
+          })
+       }
+    })
+
   });
 
   ipcRenderer.on('update_download', (event, msg) => {

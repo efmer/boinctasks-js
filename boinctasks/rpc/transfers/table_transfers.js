@@ -20,7 +20,7 @@ const Functions = require('../functions/functions');
 const functions = new Functions();
 const Logging = require('../functions/logging');
 const logging = new Logging();
-const btConstants = require('../functions/btconstants');
+const btC = require('../functions/btconstants');
 
 g_tableTransferSelected = [];
 g_tableTransferSelectedP = [];
@@ -94,8 +94,18 @@ function tableTransfersArray(gb,transferTable,color)
       selRows.present[s] = false;
     }
 
+    let bProject = gb.projectSelected !== btC.TL.SIDEBAR_COMPUTERS.SBC_PROJECTS;
+
     for (var i =0; i<transferTable.length; i++)
     {
+      if (bProject)
+      {
+        if (gb.projectSelected !== transferTable[i].project_name[0])
+        {
+          continue;
+        }
+      }
+
       tableArray.push(tableTransferItem(selRows,i,order,transferTable[i],color));
     }    
 
@@ -125,14 +135,14 @@ function tableTransfersHeader(gb, addText)
   let order = gb.order.transfers;
   if (addText)
   {
-    items[order.order[0]] = addRowHeader(order.check[0],true, gb, 0, btConstants.GENERAL_COMPUTER);
-    items[order.order[1]] = addRowHeader(order.check[1],true, gb, 1, btConstants.GENERAL_PROJECT);    
-    items[order.order[2]] = addRowHeader(order.check[2],true, gb, 2, btConstants.TRANSFERS_FILE);
-    items[order.order[3]] = addRowHeader(order.check[3],true, gb, 3, btConstants.GENERAL_PROGRESS);
-    items[order.order[4]] = addRowHeader(order.check[4],true, gb, 4, btConstants.TRANSFERS_SIZE);
-    items[order.order[5]] = addRowHeader(order.check[5],true, gb, 5, btConstants.GENERAL_ELAPSED);
-    items[order.order[6]] = addRowHeader(order.check[6],true, gb, 6, btConstants.TRANSFERS_SPEED);
-    items[order.order[7]] = addRowHeader(order.check[7],true, gb, 7, btConstants.GENERAL_STATUS);   
+    items[order.order[0]] = addRowHeader(order.check[0],true, gb, 0, btC.TL.TAB.T_GENERAL_COMPUTER);
+    items[order.order[1]] = addRowHeader(order.check[1],true, gb, 1, btC.TL.TAB.T_GENERAL_PROJECT);    
+    items[order.order[2]] = addRowHeader(order.check[2],true, gb, 2, btC.TL.TAB.T_TRANSFERS_FILE);
+    items[order.order[3]] = addRowHeader(order.check[3],true, gb, 3, btC.TL.TAB.T_GENERAL_PROGRESS);
+    items[order.order[4]] = addRowHeader(order.check[4],true, gb, 4, btC.TL.TAB.T_TRANSFERS_SIZE);
+    items[order.order[5]] = addRowHeader(order.check[5],true, gb, 5, btC.TL.TAB.T_GENERAL_ELAPSED);
+    items[order.order[6]] = addRowHeader(order.check[6],true, gb, 6, btC.TL.TAB.T_TRANSFERS_SPEED);
+    items[order.order[7]] = addRowHeader(order.check[7],true, gb, 7, btC.TL.TAB.T_GENERAL_STATUS);   
   }
   else
   {
@@ -164,7 +174,7 @@ function tableTransferItem(selRows,i,order,transfer,colorObj)
     let projectUrl = transfer.project_url;
     let wu = transfer.name;
 
-    let selId = wu + btConstants.SEPERATOR_SELECT + computer + btConstants.SEPERATOR_SELECT + projectUrl;
+    let selId = wu + btC.SEPERATOR_SELECT + computer + btC.SEPERATOR_SELECT + projectUrl;
     let iSel = selRows.rowSelected.indexOf(selId)
     if (iSel >= 0)
     {
@@ -227,7 +237,7 @@ function tableTransferItem(selRows,i,order,transfer,colorObj)
 
     let elapsedS = "";
     elapsed = next_request_time - first_request_time;
-    elapsedS = functions.getFormattedTimeInterval(elapsed); 
+    if (elapsed > 0) elapsedS = functions.getFormattedTimeInterval(elapsed); 
     items[order.order[5]] = addRow(order.check[5],selId, 5, soFarS + " - " + elapsedS);    
 
     let speedS = ""
@@ -298,7 +308,7 @@ function tableTransferItem(selRows,i,order,transfer,colorObj)
 function addRow(check,rowId, cell, item)
 {
   if (!check) return "";    
-  var id = ' id="r' + btConstants.SEPERATOR_ITEM + rowId + btConstants.SEPERATOR_ITEM + cell +'"';
+  var id = ' id="r' + btC.SEPERATOR_ITEM + rowId + btC.SEPERATOR_ITEM + cell +'"';
   return "<td " + id + ">" + item + "</td>";
 }
 
@@ -336,7 +346,7 @@ function addRowHeader(check,showSort,gb, cell, item)
   let width = gb.widthTransfers[cell];
   widthS = ' style="width:' + width + '%" ';
 
-  if (gb.headerAction === btConstants.HEADER_RESIZE)
+  if (gb.headerAction === btC.HEADER_RESIZE)
   {
     hclass = 'class="resizer"';
 

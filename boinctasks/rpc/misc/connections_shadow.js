@@ -90,6 +90,11 @@ function sendArrayNextShadow(event)
             {
                 this.client_callbackS('data');
             }
+            if (this.client_completeData.indexOf("success") < 0)
+            {
+                let msg = "No success: " + this.client_completeData;
+                logging.logErrorMsg('ConnectionsShadow,sendArrayNextShadow,data', msg);
+            }
         }
 
         if (gSendArrayShadow.length == 0)

@@ -20,7 +20,7 @@ const Functions = require('../functions/functions');
 const functions = new Functions();
 const Logging = require('../functions/logging');
 const logging = new Logging();
-const btConstants = require('../functions/btconstants');
+const btC = require('../functions/btconstants');
 
 class State{
     getState(con)
@@ -37,7 +37,7 @@ class State{
 
     getAppUf(con, name)
     {
-        var appUf = btConstants.INITIALIZING;
+        var appUf = btC.INITIALIZING;
         try {
             if (con.cacheApp !== null)
             {
@@ -75,7 +75,7 @@ class State{
     
     getProject(con, url)
     {
-        var project = btConstants.INITIALIZING;
+        var project = btC.INITIALIZING;
         try {         
             if (con.cacheProject !== null)
             {
@@ -88,7 +88,7 @@ class State{
         } catch (error) {
             logging.logError('State,getProject', error);              
         }
-        con.needState = true;        
+        con.needState = true;      
         return project;
     }
 
@@ -183,7 +183,7 @@ function parseState(xml)
 function buildCache(con)
 {
     try {
-        if (con.state !== null && con.state.workunit !== void 0)
+        if (con.state !== null)
         {
             let projectState = con.state.project;            
             
@@ -223,6 +223,9 @@ function buildCache(con)
                     con.cacheApp.appUf = [];                    
                 }
             }
+
+            if (con.state.workunit === void 0) return;
+
             for (let w =0; w< con.state.workunit.length; w++)
             {
                 let wuName = con.state.workunit[w].name[0];

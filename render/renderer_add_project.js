@@ -85,8 +85,18 @@ $(document).ready(function() {
   });
 
   ipcRenderer.send('add_project','ready');
-});
 
+  ipcRenderer.on('translations', (event, dlg) => {
+    $("#add_project_website").html( dlg.DAP_WEBSITE);
+    $("#trans_password").html( dlg.DAP_PASSWORD);
+    $("#trans_login").html( dlg.DAP_LOGIN);
+    $("#trans_project_url").html( dlg.DAP_PROJECT_URL);
+    $("#trans_add_project").html( dlg.DAP_ADD_PROJECT);
+    $("#trans_add_project_computers").html( dlg.DAP_ADD_TO_COMPUTERS);
+    $("#add_project_button").html( dlg.DAP_ADD_PROJECT_BUTTON);    
+  });
+
+});
 
 function projectButton()
 {

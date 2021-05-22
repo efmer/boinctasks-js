@@ -71,7 +71,6 @@ class ProcessResults{
 }
 module.exports = ProcessResults;
 
-
 function combine(connections, obj)
 {
     gReadyToReport = 0;

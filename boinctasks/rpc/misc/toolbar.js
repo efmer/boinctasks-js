@@ -24,7 +24,7 @@ const logging = new Logging();
 const ConnectionsShadow = require('./connections_shadow');
 const connectionsShadow = new ConnectionsShadow();
 
-const btConstants = require('../functions/btconstants');
+const btC = require('../functions/btconstants');
 
 const { dialog,clipboard  } = require('electron');
 
@@ -66,7 +66,16 @@ class Toolbar{
                 break;
                 case "transfers":
                     sel = gb.rowSelect.transfers.rowSelected.length
-                    if (sel > 0) toolbar = getToolbarTransfers();
+                    if (sel > 0) toolbar = getToolbarTransfersSelect();
+                    else
+                    {
+                        try {
+                            let table = gb.currentTable.transfersTable;
+                            let len = table.length;
+                            if (len > 0) toolbar = getToolbarTransfers(len);
+                        } catch (error) {                        
+                        }
+                    }
                 break; 
                 case "messages":
                     sel = gb.rowSelect.messages.rowSelected.length                      
@@ -163,7 +172,10 @@ class Toolbar{
                 case "toolbar_update_t":
                     selected = gb.rowSelect.transfers.rowSelected;                       
                     task(gb,selected,"retry_file_transfer",SEND_TRANSFERS);
-                break;                 
+                break;
+                case "toolbar_update_t_all":                    
+                    transferAll(gb);
+                break;
                 case "toolbar_abort_t":
                     selected = gb.rowSelect.transfers.rowSelected;                      
                     taskAbort(gb,gb.mainWindow,selected,SEND_TRANSFERS);
@@ -190,16 +202,16 @@ class Toolbar{
 
 function getToolbarResultsSel(gb)
 {
-    var toolbar =   '<td id="toolbar_abort" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;Abort</td>' +
-                    '<td id="toolbar_suspend" class="ef_btn_toolbar bt_img_toolbar_pause">&nbsp;Suspend</td>' +
-                    '<td id="toolbar_resume" class="ef_btn_toolbar bt_img_toolbar_resume">&nbsp;Resume</td>' +
-                    '<td id="toolbar_update" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;Update</td>' +
-                    '<td id="toolbar_info" class="ef_btn_toolbar bt_img_toolbar_info">&nbsp;Info</td>' +                      
-                    '<td id="toolbar_rules" class="ef_btn_toolbar bt_img_toolbar_list">&nbsp;Add rule</td>';
+    var toolbar =   '<td id="toolbar_abort" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;' + btC.TL.FOOTER.FTR_ABORT  + '</td>' +
+                    '<td id="toolbar_suspend" class="ef_btn_toolbar bt_img_toolbar_pause">&nbsp;' + btC.TL.FOOTER.FTR_SUSPEND + '</td>' +
+                    '<td id="toolbar_resume" class="ef_btn_toolbar bt_img_toolbar_resume">&nbsp;' + btC.TL.FOOTER.FTR_RESUME + '</td>' +
+                    '<td id="toolbar_update" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_UPDATE + '</td>' +
+                    '<td id="toolbar_info" class="ef_btn_toolbar bt_img_toolbar_info">&nbsp;'+ btC.TL.FOOTER.FTR_INFO + '</td>' +                      
+                    '<td id="toolbar_rules" class="ef_btn_toolbar bt_img_toolbar_list">&nbsp;'+ btC.TL.FOOTER.FTR_RULE + '</td>';
     let iReady = gb.readyToReport;
     if (iReady > 0)
     {
-        toolbar +=   '<td id="toolbar_completed" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;Ready to report: ' + iReady + '</td>';
+        toolbar +=   '<td id="toolbar_completed" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_READY_TO_REPORT  +  iReady + '</td>';
     }                    
     return toolbar;
 }
@@ -210,52 +222,58 @@ function getToolbarResults(gb)
     let iReady = gb.readyToReport;
     if (iReady > 0)
     {
-        toolbar +=   '<td id="toolbar_completed" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;Ready to report: ' + iReady + '</td>'                     
+        toolbar +=   '<td id="toolbar_completed" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_READY_TO_REPORT + iReady + '</td>'                     
     }
     return toolbar;
 }
 
-function getToolbarTransfers()
+function getToolbarTransfers(cnt)
 {
-    var toolbar =   '<td id="toolbar_update_t" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;Retry</td>' +
-                    '<td id="toolbar_abort_t" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;Abort</td>';      
+    var toolbar =   '<td id="toolbar_update_t_all" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_RETRY_ALL + cnt + '</td>';
+    return toolbar;
+}
+
+function getToolbarTransfersSelect()
+{
+    var toolbar =   '<td id="toolbar_update_t" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_RETRY + '</td>' +
+                    '<td id="toolbar_abort_t" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;' + btC.TL.FOOTER.FTR_ABORT + '</td>';      
     return toolbar;
 }
 
 function getToolbarProjects()
 {
-    var toolbar =   '<td id="toolbar_detach_p" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;Detach</td>' +
-                    '<td id="toolbar_reset_p" class="ef_btn_toolbar bt_img_toolbar_back">&nbsp;Reset</td>' +
-                    '<td id="toolbar_suspend_p" class="ef_btn_toolbar bt_img_toolbar_pause">&nbsp;Suspend</td>' +
-                    '<td id="toolbar_resume_p" class="ef_btn_toolbar bt_img_toolbar_resume">&nbsp;Resume</td>' +
-                    '<td id="toolbar_nomore_p" class="ef_btn_toolbar bt_img_toolbar_download_not">&nbsp;No more work</td>' +
-                    '<td id="toolbar_allow_p" class="ef_btn_toolbar bt_img_toolbar_download">&nbsp;Allow work</td>' +                      
-                    '<td id="toolbar_update_p" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;Update</td>';
+    var toolbar =   '<td id="toolbar_detach_p" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;' + btC.TL.FOOTER.FTR__DETACH + '</td>' +
+                    '<td id="toolbar_reset_p" class="ef_btn_toolbar bt_img_toolbar_back">&nbsp;' + btC.TL.FOOTER.FTR_RESET + '</td>' +
+                    '<td id="toolbar_suspend_p" class="ef_btn_toolbar bt_img_toolbar_pause">&nbsp;' + btC.TL.FOOTER.FTR_SUSPEND + '</td>' +
+                    '<td id="toolbar_resume_p" class="ef_btn_toolbar bt_img_toolbar_resume">&nbsp;' + btC.TL.FOOTER.FTR_RESUME + '</td>' +
+                    '<td id="toolbar_nomore_p" class="ef_btn_toolbar bt_img_toolbar_download_not">&nbsp;' + btC.TL.FOOTER.FTR_NO_MORE_WORK  + '</td>' +
+                    '<td id="toolbar_allow_p" class="ef_btn_toolbar bt_img_toolbar_download">&nbsp;' + btC.TL.FOOTER.FTR_ALLOW_WORK + '</td>' +                      
+                    '<td id="toolbar_update_p" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_UPDATE + '</td>';
     return toolbar;
 }
 
 
 function getToolbarMessages()
 {
-    var toolbar =   '<td id="toolbar_clipboard_m" class="ef_btn_toolbar bt_img_toolbar_clipboard">&nbsp;Clipboard</td>';  
+    var toolbar =   '<td id="toolbar_clipboard_m" class="ef_btn_toolbar bt_img_toolbar_clipboard">&nbsp;' + btC.TL.FOOTER.FTR_CLIPBOARD + '</td>';  
     return toolbar;
 }
 
 function getToolbarHistory()
 {
-    var toolbar =   '<td id="toolbar_clipboard_h" class="ef_btn_toolbar bt_img_toolbar_clipboard">&nbsp;Clipboard</td>';  
+    var toolbar =   '<td id="toolbar_clipboard_h" class="ef_btn_toolbar bt_img_toolbar_clipboard">&nbsp;' + btC.TL.FOOTER.FTR_CLIPBOARD + '</td>';  
     return toolbar;
 }
 
 function getToolbarComputers()
 {
-    var toolbar =   '<td id="toolbar_abort_c" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;Delete</td>';  
+    var toolbar =   '<td id="toolbar_abort_c" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;' + btC.TL.FOOTER.FTR_DELETE + '</td>';
     return toolbar;
 }
 
 function getToolbarEditComputers()
 {
-    var toolbar =  '<td id="toolbar_ok_c" class="ef_btn_toolbar bt_img_toolbar_ok">&nbsp;Update changes</td>'
+    var toolbar =  '<td id="toolbar_ok_c" class="ef_btn_toolbar bt_img_toolbar_ok">&nbsp;' + btC.TL.FOOTER.FTR_UPDATE_CHANGES + '</td>'
     return toolbar;
 }
 
@@ -281,19 +299,19 @@ function abort(gb,mainWindow, selected, what)
     {
         dialog.showMessageBox(mainWindow,
             {
-              title: 'Unable to delete a Filter',
-              message: 'You cannot delete a filter this way' ,
-              detail: 'Open the filter, click on a task.\nNext press Shift and select another one.\nNow you can delete the selected filtered tasks.'
+              title: btC.TL.BOX_DELETE_FILTER.BX_FILTER_TITLE,
+              message: btC.TL.BOX_DELETE_FILTER.BX_FILTER_MESSAGE,
+              detail: btC.TL.BOX_DELETE_FILTER.BX_FILTER_DETAIL
             })
             return;
     }
 
     dialog.showMessageBox(mainWindow,
     {
-      title: 'Abort?',
-      message: 'You are about to abort/delete tasks' ,
-      detail: 'Do you want to delete the selected tasks?',
-      buttons: ['Cancel', 'Yes delete'],
+      title: btC.TL.BOX_ABORT_TASK.BX_ABORT_TITLE,
+      message: btC.TL.BOX_ABORT_TASK.BX_ABORT_MESSAGE,
+      detail: btC.TL.BOX_ABORT_TASK.BX_ABORT_DETAIL,
+      buttons: [btC.TL.BOX_GENERAL.BX_CANCEL, btC.TL.BOX_GENERAL.BX_YES],
       defaultId: 0, // bound to buttons array
       cancelId: 1 // bound to buttons array
     })
@@ -312,10 +330,10 @@ function detachProject(window,selected,connections)
 {
     dialog.showMessageBox(window,
         {
-          title: 'Detach/remove projects?',
-          message: 'You are about to detach/remove projects' ,
-          detail: 'Do you want to delete the selected projects?',
-          buttons: ['Cancel', 'Yes delete'],
+          title: btC.TL.BOX_DETACH_PROJECT.BX_DETACH_TITLE, 
+          message: btC.TL.BOX_DETACH_PROJECT.BX_DETACH_MESSAGE,
+          detail: btC.TL.BOX_DETACH_PROJECT.BX_DETACH_DETAIL,
+          buttons: [btC.TL.BOX_GENERAL.BX_CANCEL, btC.TL.BOX_GENERAL.BX_YES],   
           defaultId: 0, // bound to buttons array
           cancelId: 1 // bound to buttons array
         })
@@ -334,10 +352,10 @@ function resetProject(window,selected,connections)
 {
     dialog.showMessageBox(window,
         {
-          title: 'Reset projects?',
-          message: 'You are about to reset projects' ,
-          detail: 'Do you want to reset the selected projects?',
-          buttons: ['Cancel', 'Yes delete'],
+          title: btC.TL.BOX_RESET_PROJECT.BX_RESET_TITLE,
+          message: btC.TL.BOX_RESET_PROJECT.BX_RESET_MESSAGE,
+          detail: btC.TL.BOX_RESET_PROJECT.BX_RESET_DETAIL,
+          buttons: [btC.TL.BOX_GENERAL.BX_CANCEL, btC.TL.BOX_GENERAL.BX_YES],  
           defaultId: 0, // bound to buttons array
           cancelId: 1 // bound to buttons array
         })
@@ -358,7 +376,7 @@ function resetDetachProjectYes(selected,connections,detach)
         connectionsShadow.init();        
         for (let s=0;s<selected.length;s++)  
         {
-            let res = selected[s].split(btConstants.SEPERATOR_SELECT);
+            let res = selected[s].split(btC.SEPERATOR_SELECT);
             let computerName = "";
             let url = "";
             if (res.length > 2)
@@ -391,7 +409,7 @@ function task(gb,selected,request,what)
         let connections = gb.connections;
         for (var i=0; i<selected.length;i++)
         {
-            var res = selected[i].split(btConstants.SEPERATOR_SELECT);
+            var res = selected[i].split(btC.SEPERATOR_SELECT);
             if (res.length !== 3) continue; // skip filter
             var wu = res[0];
             var computer = res[1];
@@ -427,10 +445,10 @@ function findFilter(selected)
     try {
         for (var i=0; i<selected.length;i++)
         {
-            var res = selected[i].split(btConstants.SEPERATOR_SELECT);
+            var res = selected[i].split(btC.SEPERATOR_SELECT);
             if (res.length === 3) 
             {
-                if (res[2].indexOf(btConstants.SEPERATOR_FILTER) >= 0) return true;
+                if (res[2].indexOf(btC.SEPERATOR_FILTER) >= 0) return true;
             }
         }      
     } catch (error) {
@@ -478,9 +496,37 @@ function reportCompleted(gb)
         connectionsShadow.flushSendArray();    
     } catch (error) {
         logging.logError('Toolbar,reportCompleted', error);    
-    }
-   
+    }   
 }
+
+function transferAll(gb)
+{
+    try {
+        connectionsShadow.init();
+        for (var i=0;i<gb.connections.length;i++)          
+        {
+            let con = connections[i];
+            if (con.auth)
+            {
+                let transfer = con.transfers;
+                if (transfer !== null)
+                {
+                    let ft = transfer.file_transfer;
+                    for (let t=0;t<ft.length;t++)
+                    {
+                        url = ft[t].project_url;
+                        wu = ft[t].name;
+                        sendCommandTransfer(con,"retry_file_transfer", url[0], wu[0]);
+                    }
+                }
+            }
+        }
+        connectionsShadow.flushSendArray();         
+    } catch (error) {
+        logging.logError('Toolbar,transferAll', error);           
+    }
+}
+
 
 function clipboardMessages(selected,connections)
 {
@@ -489,7 +535,7 @@ function clipboardMessages(selected,connections)
         let len = selected.lenght;
         if (len === 0) return;
 
-        let res = selected[0].split(btConstants.SEPERATOR_SELECT);
+        let res = selected[0].split(btC.SEPERATOR_SELECT);
         if (res.length !== 3) return;
         let computer = res[1];
         for (let c=0; c<connections.length;c++)
@@ -503,7 +549,7 @@ function clipboardMessages(selected,connections)
                     var table = messages.msgTable; 
                     for (let i=0;i<selected.length;i++ )
                     {
-                        res = selected[i].split(btConstants.SEPERATOR_SELECT);
+                        res = selected[i].split(btC.SEPERATOR_SELECT);
                         if (res.length !== 3) break;
                         let seq = res[0];                    
                                    
@@ -542,7 +588,7 @@ function clipboardHistory(selected, gb)
         {
             let item = table[t];
             { 
-                let selId = item.result + btConstants.SEPERATOR_SELECT + item.computerName + btConstants.SEPERATOR_SELECT + item.projectUrl;
+                let selId = item.result + btC.SEPERATOR_SELECT + item.computerName + btC.SEPERATOR_SELECT + item.projectUrl;
                 for (let s=0;s<selected.length;s++ )                            
                 {
                     if (selected[s] == selId)

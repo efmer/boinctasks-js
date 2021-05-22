@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const btConstants = require('../functions/btconstants');
+const btC = require('../functions/btconstants');
 
 const Logging = require('../functions/logging');
 const Functions = require('../functions/functions');
@@ -37,7 +37,8 @@ class BtTableMessages{
 
   table(gb,cTable)
   {
-    if(cTable.length === 0) return btConstants.EMPTY_MESSAGES;
+    if (cTable === void 0) return btC.TL.TAB_MSG.TM_EMPTY_MESSAGES;
+    if(cTable.length === 0) return btC.TL.TAB_MSG.TM_EMPTY_MESSAGES;
     var table = tableMessages(gb,cTable, gb.color, gb.settings);
     return table;    
   }
@@ -70,12 +71,25 @@ function tableMessages(gb,cTable, color, settings)
     var table = '<table class="bt_table">';   
     table += tableMessagesHeader(gb,false);
 
+    let bProject = gb.projectSelected !== btC.TL.SIDEBAR_COMPUTERS.SBC_PROJECTS;
+
     var sel = false;
     for (var i =0; i<cTable.length; i++)
     {
       var found = selRows.rowSelected.indexOf(i.toString());
       if (found >= 0) sel = true;
       else sel = false;
+
+      if (bProject)
+      {
+        if (cTable[i].project.length > 0)
+        {
+          if (gb.projectSelected !== cTable[i].project)
+          {
+            continue;
+          }
+        }
+      }
 
       table += tableMessagesItem(selRows, i, order, cTable[i], color, settings);
     }    
@@ -105,11 +119,11 @@ function tableMessagesHeader(gb, addText)
   let order = gb.order.messages;
   if (addText)
   {
-    items[order.order[0]]  = addRowHeader(true, gb, 0, btConstants.GENERAL_COMPUTER);
-    items[order.order[1]]  = addRowHeader(true, gb, 1, btConstants.MESSAGES_NR);
-    items[order.order[2]]  = addRowHeader(true, gb, 2, btConstants.GENERAL_PROJECT);  
-    items[order.order[3]]  = addRowHeader(true, gb, 3, btConstants.MESSAGES_TIME);  
-    items[order.order[4]]  = addRowHeader(true, gb, 4, btConstants.MESSAGES_MESSAGE);  
+    items[order.order[0]]  = addRowHeader(true, gb, 0, btC.TL.TAB.T_GENERAL_COMPUTER);
+    items[order.order[1]]  = addRowHeader(true, gb, 1, btC.TL.TAB.T_MESSAGES_NR);
+    items[order.order[2]]  = addRowHeader(true, gb, 2, btC.TL.TAB.T_GENERAL_PROJECT);  
+    items[order.order[3]]  = addRowHeader(true, gb, 3, btC.TL.TAB.T_MESSAGES_TIME);  
+    items[order.order[4]]  = addRowHeader(true, gb, 4, btC.TL.TAB.T_MESSAGES_MESSAGE);  
   }
   else
   {
@@ -134,7 +148,7 @@ function tableMessagesItem(selRows, row, order, message, colorObj, settingsObj)
   var sel = "";
   let seqno = message.seqno;
   let computer = message.computer;
-  let selId = seqno + btConstants.SEPERATOR_SELECT + computer + btConstants.SEPERATOR_SELECT + "";
+  let selId = seqno + btC.SEPERATOR_SELECT + computer + btC.SEPERATOR_SELECT + "";
   let iSel = selRows.rowSelected.indexOf(selId)
   if (iSel >= 0)
   {
@@ -171,7 +185,7 @@ function tableMessagesItem(selRows, row, order, message, colorObj, settingsObj)
 
 function addRow(rowId, cell, item)
 {
-  let id = ' id="r'+ btConstants.SEPERATOR_ITEM + rowId + btConstants.SEPERATOR_ITEM + cell +'"';
+  let id = ' id="r'+ btC.SEPERATOR_ITEM + rowId + btC.SEPERATOR_ITEM + cell +'"';
   let td = "<td " + id + ">" + item + "</td>";
   return td;
 }
@@ -217,7 +231,7 @@ let widthS = "";
 let width = gb.widthMessages[cell];
 widthS = ' style="width:' + width + '%" ';
 
-if (gb.headerAction === btConstants.HEADER_RESIZE)
+if (gb.headerAction === btC.HEADER_RESIZE)
 {
   hclass = 'class="resizer"';
 

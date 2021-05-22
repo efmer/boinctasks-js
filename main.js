@@ -17,7 +17,7 @@
 */
 
 // Modules to control application life and create native browser window
-const {ipcMain, app, BrowserWindow, Menu, Tray, nativeTheme } = require('electron')
+const {ipcMain, app, BrowserWindow, dialog, Menu, Tray, nativeTheme } = require('electron')
 
 const Logging = require('./boinctasks/rpc/functions/logging');
 const logging = new Logging();
@@ -31,9 +31,13 @@ const connections = new Connections();
 const WindowsState = require('./boinctasks/rpc/functions/window_state');
 const windowsState = new WindowsState();
 
-const btConstants = require('./boinctasks/rpc/functions/btconstants');
+const BtMenu = require('./boinctasks/rpc/functions/bt_menu');
+let gClassBtMenu = new BtMenu();
+
+const btC = require('./boinctasks/rpc/functions/btconstants');
 
 const path = require('path');
+const { LOGGING_DEBUG } = require('./boinctasks/rpc/functions/btconstants');
 
 var gMenuSettings = null;
 let gClassUpdate = null;
@@ -50,13 +54,12 @@ let gMainWindowCssDark = null;
 let g_mainMenu = null;
 
 let gSettings = null;
+//let gTranslation = null;
 let gDarkMode = false;
 let gTheme = "";
 
 let gTray = null;
 let gMenuTemplate;
-
-let gClassBtMenu = null;
 
 const isMac = process.platform === 'darwin'
 
@@ -64,12 +67,9 @@ function initMenu()
 {
   var sidebar = true;
   try {
-    const BtMenu = require('./boinctasks/rpc/functions/bt_menu');
-    gClassBtMenu = new BtMenu();
-    gMenuSettings = gClassBtMenu.read();
-    sidebar =  gMenuSettings[btConstants.MENU_SIDEBAR_COMPUTERS];
+    sidebar =  gMenuSettings[btC.MENU_SIDEBAR_COMPUTERS];
   } catch (error) {
-    gClassBtMenu.set(btConstants.MENU_SIDEBAR_COMPUTERS, true);  // initially enabled
+    gClassBtMenu.set(btC.MENU_SIDEBAR_COMPUTERS, true);  // initially enabled
   }
 
 //https://www.electronjs.org/docs/api/menu
@@ -80,7 +80,7 @@ function initMenu()
       label: app.name,
       submenu: [
         {
-          label:'About BoincTasks Js',
+          label: btC.TL.MENU.MN_ABOUT,
           click(e) { 
             if (gClassCredits === null)
             {
@@ -98,14 +98,14 @@ function initMenu()
         { role: 'unhide' },
         { type: 'separator' },
         {
-          label:'Close',
+          label: btC.TL.MENU.MN_MAC_CLOSE,
           click(e) { 
             appExit();
           }
         },
         { type: 'separator' },        
         {
-          label:'Restart',
+          label: btC.TL.MENU.MN_RESTART,
           click(e) { 
             app.relaunch()
             app.exit()
@@ -116,17 +116,17 @@ function initMenu()
     // { role: 'fileMenu' }    
       ...(isMac ? [ ] : [
         {
-        label: 'File',
+        label: btC.TL.MENU.MN_FILE,
             submenu: [            
             {
-              label:'Exit',
+              label: btC.TL.MENU.MN_EXIT,
               click(e) { 
                 appExit();
               }
             },
             { type: 'separator' },
             {
-              label:'Restart',
+              label: btC.TL.MENU.MN_RESTART,
               click(e) { 
                 app.relaunch()
                 app.exit()
@@ -136,10 +136,10 @@ function initMenu()
         }
       ]),
     {
-      label: 'View',
+      label: btC.TL.MENU.MN_VIEW,
         submenu: [
           {
-            label:'Sidebar Computers',
+            label: btC.TL.MENU.MN_SIDEBAR_COMPUTER,
             type: "checkbox",
             checked: sidebar,
             click(e) { 
@@ -147,7 +147,7 @@ function initMenu()
             }
           },
           {
-            label:'Adjust column width',
+            label:btC.TL.MENU.MN_COLUMN_WIDTH,
             type: "checkbox",
             checked: false,
             click(e) { 
@@ -155,7 +155,7 @@ function initMenu()
             }
           },  
           {
-            label:'Change column order, or hide column',
+            label: btC.TL.MENU.MN_COLUMN_ORDER,
             click(e) { 
               setColumnOrder() 
             }
@@ -164,22 +164,22 @@ function initMenu()
     },
 
     {
-      label: 'Computers',
+      label: btC.TL.MENU.MN_COMPUTERS,
         submenu: [
         {
-          label:'Find',
+          label: btC.TL.MENU.MN_FIND,
           click(e) { 
             startScanComputers();
           }
         },            
         {
-          label:'Edit',
+          label: btC.TL.MENU.MN_EDIT,
           click(e) { 
             connections.computerEdit();
           }
         },      
         {
-          label:'Add',
+          label: btC.TL.MENU.MN_ADD_COMPUTER,
           click(e) { 
             connections.computerAdd();
           }
@@ -187,10 +187,10 @@ function initMenu()
       ] 
     },    
     {
-      label: 'Projects',
+      label: btC.TL.MENU.MN_PROJECTS,
         submenu: [
         {
-          label:'Add a new project',
+          label: btC.TL.MENU.MN_ADD_PROJECT,
           id: 'project_add',
           enabled: true,
           click(e) {
@@ -199,7 +199,7 @@ function initMenu()
         },
         { type: 'separator' },
         {
-          label:'Account manager',
+          label:btC.TL.MENU.MN_ACCOUNT,
           id: 'project_account',
           enabled: true,
           click(e) {
@@ -209,37 +209,37 @@ function initMenu()
       ] 
     },    
     {
-      label: 'Show',
+      label: btC.TL.MENU.MN_SHOW,
         submenu: [
           {
-            label:'Statistics graph',
+            label: btC.TL.MENU.MN_STATISTICS,
             click(e) { 
               connections.boincStatistics("menu");
             }
           },
           { type: 'separator' },
           {
-            label:'Log',
+            label: btC.TL.MENU.MN_LOG,
             click() { 
-              logging.showLog(btConstants.LOGGING_NORMAL,gTheme) 
+              logging.showLog(btC.LOGGING_NORMAL,gTheme) 
             }
           },
           {
-            label:'Debug Log',
+            label: btC.TL.MENU.MN_LOG_DEBUG,
             click() { 
-              logging.showLog(btConstants.LOGGING_DEBUG,gTheme);
+              logging.showLog(btC.LOGGING_DEBUG,gTheme);
             }               
           },
           {
-            label:'Rules Log',
+            label: btC.TL.MENU.MN_LOG_RULES,
             click() {
-              logging.showLog(btConstants.LOGGING_RULES,gTheme);
+              logging.showLog(btC.LOGGING_RULES,gTheme);
             }
           },        
           {
-            label:'Error Log',
+            label: btC.TL.MENU.MN_LOG_ERROR,
             click() { 
-              logging.showLog(btConstants.LOGGING_ERROR,gTheme);
+              logging.showLog(btC.LOGGING_ERROR,gTheme);
             }
           },
           {
@@ -248,51 +248,62 @@ function initMenu()
                 {
                   label:'Debug mode',
                   type: "checkbox",
-                  checked: btConstants.DEBUG,          
+                  checked: btC.DEBUG,          
                   click() {
-                    btConstants.DEBUG = !btConstants.DEBUG;
+                    btC.DEBUG = !btC.DEBUG;
                   }
-                }           
+                },
+                {
+                  label:'Test translation',
+                  type: "checkbox",
+                  checked: gClassBtMenu.check(btC.MENU_MN_DEBUG_TRANSLATIONS),
+                  click() {
+                    let set = gClassBtMenu.check(btC.MENU_MN_DEBUG_TRANSLATIONS);
+                    set = !set;
+                    gClassBtMenu.set(btC.MENU_MN_DEBUG_TRANSLATIONS,set);
+                    gClassBtMenu.write();
+                  }
+                }
             ] 
           },
       ] 
     },
     {
-      label: 'Extra',
+      label: btC.TL.MENU.MN_EXTRA,
         submenu: [
           {
-            label:'BoincTasks settings',
+            label: btC.TL.MENU.MN_BT_SET,
             click(e) { 
               connections.settingsStart("menu",gMainWindow);
             }
           },           
           {
-            label:'BoincTasks color settings',
+            label: btC.TL.MENU.MN_BT_COLOR,
             click(e) { 
               connections.color("menu",gMainWindow);
             }
           }, 
           { type: 'separator' },
           {
-            label:'Boinc settings',
+            label:btC.TL.MENU.MN_BOINC_SET,
             click(e) { 
               connections.boincSettings("menu");
             }
           },            
           {
-            label:'Boinc allow',
+            label: btC.TL.MENU.MN_BOINC_ALLOW,
             click(e) { 
               connections.boincAllow("menu");
             }
           },  
           {
-            label:'Boinc run benchmark',
+            label: btC.TL.MENU.MN_BOINC_BENCH,
             click(e) { 
               connections.boincBenchmark("menu");
             }
           },
           {
-            label:'Boinc read config files',
+            label: btC.TL.MENU.MN_BOINC_READ_CF,
             click(e) { 
               connections.boincReadConfig("menu");
             }
@@ -300,23 +311,23 @@ function initMenu()
       ] 
     },
     {
-      label: 'Rules',
+      label: btC.TL.MENU.MN_RULES,
         submenu: [
           {
-            label:'Edit',
+            label: btC.TL.MENU.MN_RULES_EDIT,
             click(e) { 
               connections.rules("menu");
             }
           },
           {
-            label:'Rules Log',
+            label: btC.TL.MENU.MN_LOG_RULES,
             click() { 
-              logging.showLog(btConstants.LOGGING_RULES,gTheme);
+              logging.showLog(btC.LOGGING_RULES,gTheme);
             }
           },
           { type: 'separator' },
           {
-            label:'Email',
+            label: btC.TL.MENU.MN_RULES_EMAIL,
             click(e) { 
               connections.email("menu");
             }
@@ -324,10 +335,10 @@ function initMenu()
       ] 
     },       
     {
-      label: 'Help',
+      label: btC.TL.MENU.MN_HELP,
         submenu: [
           {
-            label:'About BoincTasks Js',
+            label: btC.TL.MENU.MN_ABOUT,
             click(e) { 
               if (gClassCredits === null)
               {
@@ -338,7 +349,7 @@ function initMenu()
             }
           },      
           {
-            label:'Check for updates',
+            label: btC.TL.MENU.MN_UPDATES,
             click(e) { 
               if (gClassUpdate === null)
               {
@@ -354,7 +365,6 @@ function initMenu()
 }
 
 function initialize () {
-
   if (!gotTheLock) {
     app.quit()
   } else {
@@ -377,6 +387,7 @@ function initialize () {
   function createWindow () {
     // Create the browser window.
 
+    let bMax = false;
     let bShow = app.commandLine.getSwitchValue("show") != "no";
 
     if (gSettings.hideLogin === '1') 
@@ -385,7 +396,6 @@ function initialize () {
     }
 
     let state = windowsState.get("main",1200,600)
-
     gMainWindow = new BrowserWindow({
       'x' : state.x,
       'y' : state.y,
@@ -401,9 +411,17 @@ function initialize () {
         preload: path.join(__dirname, './preload/preload.js')
       },
     });
-
-    initMenu();
-
+    if (state.max)
+    {
+      gMainWindow.maximize();
+    }
+    try {
+      initMenu(); 
+    } catch (error) {
+      let msg = error.message;
+      msg += "<br>" + error.stack
+      debugDialog("initMenu ERROR " + msg);
+    }
 //    if (process.platform == 'darwin') {
 //      gMenuTemplate.unshift({label: ''});
 //    }
@@ -424,7 +442,7 @@ function initialize () {
 
     gMainWindow.on('close', (e) => {
       let bounds = gMainWindow.getBounds();
-      windowsState.set("main",bounds.x,bounds.y, bounds.width, bounds.height)
+      windowsState.set("main",bounds.x,bounds.y, bounds.width, bounds.height,bMax)
 
       if (!app.isQuiting)
       {
@@ -438,13 +456,17 @@ function initialize () {
       gMainWindow = null
     })
 
+    gMainWindow.on('maximize', function (event) {
+      bMax = true;
+    });
+
     gMainWindow.on('minimize', function (event) {
       event.preventDefault();
 //      gMainWindow.hide(); // do not hide here.
       connections.pause();
-   });
+    });
 
-   gMainWindow.on('restore', function (event) {
+    gMainWindow.on('restore', function (event) {
       connections.resume();
       gMainWindow.show();
     });
@@ -452,7 +474,8 @@ function initialize () {
     gMainWindow.once('ready-to-show', () => {
       let title = "BoincTasks Js " + gVersion;
       gMainWindow.setTitle(title);
-//       gMainWindow.webContents.openDevTools()
+      gMainWindow.webContents.send("translations",btC.TL.SEL);   
+//      gMainWindow.webContents.openDevTools()
       insertCss();
     });
   }
@@ -461,7 +484,10 @@ function initialize () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
   app.whenReady().then(() => {
-    gSettings = connections.init(gVersion);
+    gMenuSettings = gClassBtMenu.read();
+    connections.init(gVersion);
+//    gTranslation = connections.translation(gClassBtMenu.check(btC.MENU_DEBUG_TRANSLATIONS));
+    logging.setVersion("V " + gVersion);
     createWindow();
     rendererRequests(); 
     gTray = createTray();
@@ -482,6 +508,61 @@ function initialize () {
 
   app.on('will-quit', function () {
   })
+}
+
+function getTranslation()
+{
+  try {
+    let requireSettingsBt = require('./boinctasks/rpc/settings/settings_bt'); 
+    let settingsBt = new requireSettingsBt();
+    gSettings = settingsBt.get();
+    let debug = gClassBtMenu.check(btC.MENU_DEBUG_TRANSLATIONS);
+    debug = false;
+    let translation;
+    if (debug)
+    {
+        try {
+            translation = readWrite.read("settings", "translation.json");
+            if (translation === null)
+            {
+                translation = readWrite.readResource(__dirname,"translations/BoincTasks_JS_English.json");
+                btC.TL = JSON.parse(translation);
+                logging.logDebug('Main,getTranslation, translation.json not found');                                   
+            }
+            btC.TL = JSON.parse(translation);
+        } catch (error) {
+            translation = readWrite.readResource(__dirname,"translations/BoincTasks_JS_English.json");
+            btC.TL = JSON.parse(translation);
+            logging.logError('Main,getTranslation Debug', error);  
+        }
+    }
+    else
+    {
+        try {
+            if (gSettings.language === void 0) gSettings.language = btC.LANG_ENGLISH;
+            switch (gSettings.language)
+            {
+                case btC.LANG_DUTCH:
+                    translation = readWrite.readResource(__dirname,"translations/BoincTasks_JS_Dutch.json");
+                break;
+                default:
+                    translation = readWrite.readResource(__dirname,"translations/BoincTasks_JS_English.json");            
+            }
+            btC.TL = JSON.parse(translation);            
+        } catch (error) {
+          logging.logError('Main,getTranslation', error);
+          let msg = error.message;
+          msg += "<br>" + error.stack
+          debugDialog("getTranslation ERROR " + msg);
+        }
+    }    
+  } catch (error) {
+    logging.logError('Main,getTranslation', error); 
+  } 
+  if (btC.TL === null)
+  {
+    debugDialog("getTranslation btC.TL === null");
+  }  
 }
 
 async function insertCss()
@@ -549,6 +630,7 @@ function setDarkMode(bWrite,bSingle)
       darkCss+= ":root {color-scheme: dark;}";      
       nativeTheme.themeSource = 'dark';  
     }
+    
     connections.setTheme(darkCss,gDarkMode,bSingle);
     if (gClassScanComputers !== null) gClassScanComputers.setTheme(darkCss);
     if (gClassCredits !== null) gClassCredits.setTheme(darkCss);
@@ -556,9 +638,13 @@ function setDarkMode(bWrite,bSingle)
     insertCssDark(darkCss);
     gTheme = darkCss;
 
-    gMainWindow.webContents.send("set_dark_mode",gDarkMode);    
+    let mode;
+    if (gDarkMode) mode = ' <span id="dark_mode_select" class="ef_btn_toolbar bt_img_dark_dark">' + btC.TL.FOOTER.FTR_DARK + '</span>';
+    else mode = ' <span id="dark_mode_select" class="ef_btn_toolbar bt_img_dark_light">' + btC.TL.FOOTER.FTR_LIGHT + '</span>';
+
+    gMainWindow.webContents.send("set_dark_mode",mode);    
   } catch (error) { 
-    var ii = 1;
+    logging.logError('Main,setDarkMode', error);   
   }
 }
 
@@ -572,12 +658,14 @@ async function insertCssDark(darkCss)
     gMainWindowCssDark = await gMainWindow.webContents.insertCSS(darkCss);  
   } catch (error) {
     gMainWindowCssDark = null;
+    logging.logError('Main,insertCssDark', error);       
   }
 }
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
+getTranslation();
 initialize()
 
 function createTray() {
@@ -586,12 +674,12 @@ function createTray() {
     appIcon = new Tray(path.join(__dirname, "appicons/icons/png/16x16.png"));
     const contextMenu = Menu.buildFromTemplate([
         {
-            label: 'Open', click: function () {
+            label: btC.TL.MENU.MN_OPEN, click: function () {
               gMainWindow.show();
             }
         },
         {
-          label: 'About', click: function () {
+          label: btC.TL.MENU.MN_ABOUT, click: function () {
             if (gClassCredits === null)
             {
               const Credits = require('./boinctasks/rpc/misc/credits');              
@@ -601,12 +689,12 @@ function createTray() {
           }
         },  
         {
-          label: 'Snooze', click: function () {
+          label: btC.TL.MENU.MN_SNOOZE, click: function () {
             connections.boincAllow("menu");
           }
         },       
         {
-            label: 'Exit', click: function () {                
+            label: btC.TL.MENU.MN_EXIT, click: function () {                
                 app.isQuiting = true;
                 app.quit();
             }
@@ -621,7 +709,7 @@ function createTray() {
     return appIcon;
       
   } catch (error) {  
-    var ii = 1;
+    logging.logError('Main,createTray', error);   
   }
   return appIcon;
 }
@@ -647,7 +735,7 @@ function rendererRequests()
 
     connections.start(gMainWindow, g_mainMenu);
 
-    var set = gClassBtMenu.check(btConstants.MENU_SIDEBAR_COMPUTERS);
+    var set = gClassBtMenu.check(btC.MENU_SIDEBAR_COMPUTERS);
     sidebarComputers(set,false);
   })
 
@@ -728,23 +816,29 @@ function rendererRequests()
         logging.logClear()
       break;
       case "button_log":
-        logging.showLog(btConstants.LOGGING_NORMAL,gTheme);
+        logging.showLog(btC.LOGGING_NORMAL,gTheme);
       break;
       case "button_debug":
-        logging.showLog(btConstants.LOGGING_DEBUG,gTheme);
+        logging.showLog(btC.LOGGING_DEBUG,gTheme);
       break;
       case "button_rules":
-        logging.showLog(btConstants.LOGGING_RULES,gTheme);
+        logging.showLog(btC.LOGGING_RULES,gTheme);
       break;
       case "button_error":
-        logging.showLog(btConstants.LOGGING_ERROR,gTheme);
+        logging.showLog(btC.LOGGING_ERROR,gTheme);
       break;      
     }
   }) 
 
   ipcMain.on("settings_boinctasks", (renderer, settings) => {
+    let lang = gSettings.language;
     gSettings = connections.settingsSet(settings);
-    setCss(); 
+    if (lang != gSettings.language && !gClassBtMenu.check(btC.MENU_DEBUG_TRANSLATIONS))
+    {
+      app.relaunch()
+      app.exit()
+    }
+    else setCss();
   })
 
   ipcMain.on("settings_allow", (renderer, combined) => {
@@ -812,8 +906,13 @@ function startScanComputers()
 
 function sidebarComputers(set,write)
 {
-  gClassBtMenu.set(btConstants.MENU_SIDEBAR_COMPUTERS,set);
+  gClassBtMenu.set(btC.MENU_SIDEBAR_COMPUTERS,set);
   gMainWindow.send('sidebar_computers_active', set); 
   connections.sidebarChanged(set);
   if (write) gClassBtMenu.write();
+}
+
+function debugDialog(msg)
+{
+  dialog.showErrorBox('BoincTasks Js Debug', msg)
 }

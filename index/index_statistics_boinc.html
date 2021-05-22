@@ -11,10 +11,10 @@
   </head>
   <body>
     <span id="radio_credit" style="margin-left: 300px">
-      <input type="radio" id="host_expavg_credit" name="radio_credit" value="host_expavg_credit"checked><label for="host_expavg_credit">Host average</label>
-      <input type="radio" id="host_total_credit" name="radio_credit" value="host_total_credit"><label for="host_total_credit">Host total</label>
-      <input type="radio" id="user_expavg_credit" name="radio_credit" value="user_expavg_credit"><label for="user_expavg_credit">User average</label>
-      <input type="radio" id="user_total_credit" name="radio_credit" value="user_total_credit"><label for="user_total_credit">User total</label>
+      <input type="radio" id="host_expavg_credit" name="radio_credit" value="host_expavg_credit"checked><label id="trans_host_average" for="host_expavg_credit">Host average</label>
+      <input type="radio" id="host_total_credit" name="radio_credit" value="host_total_credit"><label id="trans_host_total" for="host_total_credit">Host total</label>
+      <input type="radio" id="user_expavg_credit" name="radio_credit" value="user_expavg_credit"><label id="trans_user_average" for="user_expavg_credit">User average</label>
+      <input type="radio" id="user_total_credit" name="radio_credit" value="user_total_credit"><label id="trans_user_total" for="user_total_credit">User total</label>
     </span>
 
     <table>
@@ -22,12 +22,12 @@
         <td>
           <table>
             <tr><td id="project_list_all"> 
-              <b>Show these projects</b><br>
+              <b><span id="trans_projects">Show these projects</span></b><br>
               <select id="project_list" name="project" multiple class="project_add_select_box">
               </select> 
             </td></tr>
             <tr><td id="computer_list_all" width="0px">
-              <b>Show these computers</b><br>
+              <b><span id="trans_computers">Show these computers</span></b><br>
               <select id="computer_list" name="computer" multiple class="project_add_select_box">
               </select> 
               </td>

@@ -22,7 +22,7 @@ const Logging = require('../functions/logging');
 const logging = new Logging();
 const State = require('../misc/state');
 const conState = new State();
-const btConstants = require('../functions/btconstants');
+const btC = require('../functions/btconstants');
 
 class ResultItems
 {
@@ -212,7 +212,7 @@ class ResultItems
                 let filterItem = this.filter[f];          
                 if (filterItem.count >1) 
                 {
-                    filterItem.wu = filterItem.count + " [Tasks]";
+                    filterItem.wu = filterItem.count + " " + btC.TL.STATUS.S_FILTER_TASKS;
                 }
                 else
                 {
@@ -332,38 +332,38 @@ function getStatus(resultItem, item, ccStatus, hp, state)
         if (iSuspendReason)
         {
             bSuspend = true;
-            if (iSuspendReason & SUSPEND_REASON_BATTERIES)				{ sSuspendReason = "on batteries";}
-            if (iSuspendReason & SUSPEND_REASON_USER_ACTIVE)			{ sSuspendReason = "user active";}
-            if (iSuspendReason & SUSPEND_REASON_USER_REQ)				{ sSuspendReason = "user request";}
-            if (iSuspendReason & SUSPEND_REASON_TIME_OF_DAY)			{ sSuspendReason = "time of day";}
-            if (iSuspendReason & SUSPEND_REASON_BENCHMARKS)				{ sSuspendReason = "benchmarks";}
-            if (iSuspendReason & SUSPEND_REASON_DISK_SIZE)				{ sSuspendReason = "disk size";}
+            if (iSuspendReason & SUSPEND_REASON_BATTERIES)				{ sSuspendReason = btC.TL.SUSPEND_REASON.SR_BATTERIES;}
+            if (iSuspendReason & SUSPEND_REASON_USER_ACTIVE)			{ sSuspendReason = btC.TL.SUSPEND_REASON.SR_USER_ACTIVE;}
+            if (iSuspendReason & SUSPEND_REASON_USER_REQ)				{ sSuspendReason = btC.TL.SUSPEND_REASON.SR_USER_REQ;}
+            if (iSuspendReason & SUSPEND_REASON_TIME_OF_DAY)			{ sSuspendReason = btC.TL.SUSPEND_REASON.SR_TIME_OF_DAY;}
+            if (iSuspendReason & SUSPEND_REASON_BENCHMARKS)				{ sSuspendReason = btC.TL.SUSPEND_REASON.SR_BENCHMARKS;}
+            if (iSuspendReason & SUSPEND_REASON_DISK_SIZE)				{ sSuspendReason = btC.TL.SUSPEND_REASON.SR_DISK_SIZE;}
             if (iSuspendReason & SUSPEND_REASON_CPU_THROTTLE)			{ sSuspendReason = "-";}
-            if (iSuspendReason & SUSPEND_REASON_NO_RECENT_INPUT)		{ sSuspendReason = "no recent input";}
-            if (iSuspendReason & SUSPEND_REASON_INITIAL_DELAY)			{ sSuspendReason = "initial";}
-            if (iSuspendReason & SUSPEND_REASON_EXCLUSIVE_APP_RUNNING)	{ sSuspendReason = "exclusive app running";}
-            if (iSuspendReason & SUSPEND_REASON_CPU_USAGE)				{ sSuspendReason = "cpu usage";}     
+            if (iSuspendReason & SUSPEND_REASON_NO_RECENT_INPUT)		{ sSuspendReason = btC.TL.SUSPEND_REASON.SR_NO_RECENT_INPUT;}
+            if (iSuspendReason & SUSPEND_REASON_INITIAL_DELAY)			{ sSuspendReason = btC.TL.SUSPEND_REASON.SR_INITIAL_DELAY;}
+            if (iSuspendReason & SUSPEND_REASON_EXCLUSIVE_APP_RUNNING)	{ sSuspendReason = btC.TL.SUSPEND_REASON.SR_EXCLUSIVE_APP_RUNNING;}
+            if (iSuspendReason & SUSPEND_REASON_CPU_USAGE)				{ sSuspendReason = btC.TL.SUSPEND_REASON.SR_CPU_USAGE;}     
             
             if (sSuspendReason === "")
             {
-                sSuspendReason = "Unknown suspend reason" + iSuspendReason;
+                sSuspendReason = btC.TL.SUSPEND_REASON.SR_UNKNOWN + iSuspendReason;
             }
         }
 
         if (item.too_large !== void 0)
         {
             bSuspend = true;
-            sSuspendReason += " mem too large";
+            sSuspendReason += " " + btC.TL.SUSPEND_REASON.SR_MEM_TOO_LARGE;
         }
         if (item.needs_shmem !== void 0)
         {
             bSuspend = true;
-            sSuspendReason += " mem need shmem";            
+            sSuspendReason += " " + btC.TL.SUSPEND_REASON.SR_MEM_NEED_SHMEM;
         }
         if (item.gpu_mem_wait !== void 0)
         {
             bSuspend = true;
-            sSuspendReason += " mem gpu mem";              
+            sSuspendReason += " " + btC.TL.SUSPEND_REASON.SR_MEM_GPU;
         }        
         if (item.scheduler_wait)
         {
@@ -377,48 +377,48 @@ function getStatus(resultItem, item, ccStatus, hp, state)
             case "0922":
                 if (bSuspend)
                 {
-                    status = btConstants.TASK_STATUS_SUSPENDED;
-                    statusN = btConstants.TASK_STATUS_SUSPENDED_N;                 
+                    status = btC.TL.STATUS.S_TASK_SUSPENDED;
+                    statusN = btC.TASK_STATUS_SUSPENDED_N;                 
                 }
                 else
                 {
-                    status = btConstants.TASK_STATUS_RUNNING;
-                    statusN = btConstants.TASK_STATUS_RUNNING_N;
+                    status = btC.TL.STATUS.S_TASK_RUNNING;
+                    statusN = btC.TASK_STATUS_RUNNING_N;
                 }
             break;
             case "0001":
-                status = btConstants.TASK_STATUS_DOWNLOADING;
-                statusN = btConstants.TASK_STATUS_DOWNLOADING_N;            
+                status = btC.TL.STATUS.S_TASK_DOWNLOADING;
+                statusN = btC.TASK_STATUS_DOWNLOADING_N;            
             break;
             case "0002":
-                status = btConstants.TASK_STATUS_READY_START;
-                statusN = btConstants.TASK_STATUS_READY_START_N;
+                status = btC.TL.STATUS.S_TASK_READY_START;
+                statusN = btC.TASK_STATUS_READY_START_N;
             break;
             case "0003":
-                status = btConstants.TASK_STATUS_COMPUTATION;
-                statusN = btConstants.TASK_STATUS_COMPUTATION_N;
+                status = btC.TL.STATUS.S_TASK_COMPUTATION;
+                statusN = btC.TASK_STATUS_COMPUTATION_N;
                 bReport = true;
             break;
             case "0004":
-                status = btConstants.TASK_STATUS_UPLOADING;
-                statusN = btConstants.TASK_STATUS_UPLOADING_N;
+                status = btC.TL.STATUS.S_TASK_UPLOADING;
+                statusN = btC.TASK_STATUS_UPLOADING_N;
             break;
             case "0005":               
-                status = btConstants.TASK_STATUS_READY_REPORT;
-                statusN = btConstants.TASK_STATUS_READY_REPORT_N;
+                status = btC.TL.STATUS.S_TASK_READY_REPORT;
+                statusN = btC.TASK_STATUS_READY_REPORT_N;
                 bReport = true;
             break;
             case "0012":
             case "0812": 
             case "0912":
-                status = btConstants.TASK_STATUS_WAITING;
-                statusN = btConstants.TASK_STATUS_WAITING_N;
+                status = btC.TL.STATUS.S_TASK_WAITING;
+                statusN = btC.TASK_STATUS_WAITING_N;
             break;
             case "0022": 
             case "1922":
             case "922":
-                status = btConstants.TASK_STATUS_SUSPENDED;
-                statusN = btConstants.TASK_STATUS_SUSPENDED_N;
+                status = btC.TL.STATUS.S_TASK_SUSPENDED;
+                statusN = btC.TASK_STATUS_SUSPENDED_N;
             break;            
             case "005":
             case "002":
@@ -431,12 +431,12 @@ function getStatus(resultItem, item, ccStatus, hp, state)
             case "0012":
             case "1812":
             case "0812":
-                status = btConstants.TASK_STATUS_SUSPENDED_USER;
-                statusN = btConstants.TASK_STATUS_SUSPENDED_USER_N;
+                status = btC.TL.STATUS.S_TASK_SUSPENDED_USER;
+                statusN = btC.TASK_STATUS_SUSPENDED_USER_N;
             break;  
             case "0006":
-                status = btConstants.TASK_STATUS_ABORT;
-                statusN = btConstants.TASK_STATUS_ABORT_N; 
+                status = btC.TL.STATUS.S_TASK_ABORT;
+                statusN = btC.TASK_STATUS_ABORT_N; 
                 bReport = true;           
             break;
             default: status = "State: " + state;
@@ -446,7 +446,7 @@ function getStatus(resultItem, item, ccStatus, hp, state)
         resultItem.statusN = statusN;         
         if (hp == '1') 
         {
-            status += btConstants.TASK_STATUS_HP;
+            status += btC.TL.STATUS.S_TASK_HP;
             resultItem.hp = true;
         }
         else
@@ -456,7 +456,7 @@ function getStatus(resultItem, item, ccStatus, hp, state)
 
         if (sSuspendReason == "" )
         {
-            if (btConstants.DEBUG)
+            if (btC.DEBUG)
             {
                 status += " | " + state;
             }
@@ -467,7 +467,7 @@ function getStatus(resultItem, item, ccStatus, hp, state)
     } catch (error) {
         logging.logError('Results,getStatus', error);    
     }    
-    if (btConstants.DEBUG)
+    if (btC.DEBUG)
     {
         status += " | " + state;
     }

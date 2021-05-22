@@ -28,6 +28,8 @@ let g_showProject = true;
 let g_selProject = null;
 let g_selComputer = null;
 
+let g_trans = null;
+
 $(document).ready(function() {
     ipcRenderer.send('statistics_boinc',"projects");
     graphSize();
@@ -73,7 +75,7 @@ $(document).ready(function() {
         }
         else
         {
-            $("#select_hide").html("Hide");             
+            $("#select_hide").html(g_trans.DBS_BUTTON_HIDE);             
             $("#project_list_all").show();
             $("#computer_list_all").show();             
             g_showProject = true;
@@ -82,6 +84,18 @@ $(document).ready(function() {
         let selected = $("input[name='radio_credit']:checked").val()  
         initGraph();
         addData(selected);
+    });
+
+    ipcRenderer.on('translations', (event, dlg) => {
+        g_trans = dlg;
+        $("#trans_host_average").html( dlg.DBS_HOST_AVERAGE);
+        $("#trans_host_total").html( dlg.DBS_HOST_TOTAL);
+        $("#trans_user_average").html( dlg.DBS_USER_AVERAGE);
+        $("#trans_user_total").html( dlg.DBS_USER_TOTAL);
+        $("#trans_projects").html( dlg.DBS_PROJECTS);
+        $("#trans_computers").html( dlg.DBS_COMPUTERS);
+        $("#select_hide").html( dlg.DBS_BUTTON_HIDE);
+
     });
 });
 
@@ -129,7 +143,7 @@ function addDataSingleProject(selected)
         if (g_selComputer.length >= 1)
         {
             let project = g_selProject[0];
-            g_chartTitle = "Project: " + project;
+            g_chartTitle = g_trans.DBS_STAT_PROJECT + ": " + project;
             gStatisticsChart.setTitle({ text: g_chartTitle });   
             for (let i=0;i<g_data.length;i++)
             {
@@ -162,7 +176,7 @@ function addDataSingleComputer(selected)
         if (g_selComputer.length >= 1)
         {        
             let computerName = g_selComputer[0];
-            g_chartTitle = "Computer: " + computerName;
+            g_chartTitle = g_trans.DBS_STAT_COMPUTER + ": " + computerName;
             gStatisticsChart.setTitle({ text: g_chartTitle });                        
             for (let i=0;i<g_data.length;i++)
             {
@@ -193,12 +207,18 @@ function addDataSingleComputer(selected)
 
 let gStatisticsChart = null;
 
-var highchartsOptions = new Highcharts.setOptions({
-    colors: [   '#000000',  '#ff0000',  '#00ff00',  '#0000ff',  '#996600', '#cccc00',   '#ff9900',  '#9900cc', '#c42525', '#a6c96a', '#ffff88']
-});
-
 function initGraph(graphTitel)
 {
+    try {
+        Highcharts.setOptions({
+            lang: {
+                shortMonths: g_trans.DBS_MONTH_T
+            }
+        });   
+    } catch (error) {
+        var ii = 1;
+    }
+
     gStatisticsChart = new Highcharts.chart({	
         chart: {
             events: {
@@ -215,75 +235,74 @@ function initGraph(graphTitel)
                 gridLineDashStyle: 'longdash'
             },
             renderTo: 'stats_chart',        
-	},  
-    title: {
-        text: g_chartTitle,
-    },
-    subtitle: {
-        text: g_chartTitleSub,
-    },
-    xAxis: {
-        type: 'datetime',
-        dateTimeLabelFormats: { // don't display the dummy year                
-            month: '%e. %b %Y' ,              
-            year: '%e. %b %Y',
-            all:  '%y',
-        },
+        },  
         title: {
-            text: "",
-        }
-    },
-    yAxis: {
-        title: {
-            text: 'Credits'
+            text: g_chartTitle,
         },
-        min: 0,
-        plotLines: [{
-            value: 0,
-            width: 1,
-            color: '#808080'
-        }]
-    },               
-	navigator: {
-		enabled: false
-	},       	
-	plotOptions: {
-		series: {
-			showInNavigator: false,
-            lineWidth: 1,
-			events: {
-				legendItemClick: function (x) {
-	//				if (g_single_multiple_selection == 1)
-	//				{
-	//					HideSeries();
-	//				}
-	//				LegendSelectionChanged();
-				}
-			}  
-		}
-	},
-                
-	legend: {
-		enabled: true,           
-		layout: 'horizontal',
-            // square
-            symbolHeight: 12,
-            symbolWidth: 12,
-            symbolRadius: 6,
-            align: 'right',
-            verticalAlign: 'top',
-            borderWidth: 0
+        subtitle: {
+            text: g_chartTitleSub,
         },
-	credits: {
+        xAxis: {
+            type: 'datetime',
+            dateTimeLabelFormats: { // don't display the dummy year                
+                month: '%e. %b %Y' ,              
+                year: '%e. %b %Y',
+                all:  '%y',
+            },
+            title: {
+                text: "",
+            }
+        },
+        yAxis: {
+            title: {
+                text: g_trans.DBS_STAT_CREDITS
+            },
+            min: 0,
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        },               
+        navigator: {
             enabled: false
-	},  
-    tooltip: {
-    headerFormat: '<b></b><br>',
-    pointFormat: '{series.name}, {point.x:%b %e}, Credits: {point.y:.2f} '
-    } 
+        },       	
+        plotOptions: {
+            series: {
+                showInNavigator: false,
+                lineWidth: 1,
+                events: {
+                    legendItemClick: function (x) {
+        //				if (g_single_multiple_selection == 1)
+        //				{
+        //					HideSeries();
+        //				}
+        //				LegendSelectionChanged();
+                    }
+                }  
+            }
+        },
+                    
+        legend: {
+            enabled: true,           
+            layout: 'horizontal',
+                // square
+                symbolHeight: 12,
+                symbolWidth: 12,
+                symbolRadius: 6,
+                align: 'right',
+                verticalAlign: 'top',
+                borderWidth: 0
+            },
+        credits: {
+                enabled: false
+        },  
+        tooltip: {
+        headerFormat: '<b></b><br>',
+        pointFormat: '{series.name}, {point.x:%b %e}, ' + g_trans.DBS_STAT_CREDITS + ': {point.y:.2f} '
+        } 
 	});	
-  
- //   SetTitlePosition();
+
 }
 
 function graphSize()

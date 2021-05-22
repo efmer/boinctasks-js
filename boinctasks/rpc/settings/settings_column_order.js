@@ -22,7 +22,7 @@ const WindowsState = require('../functions/window_state');
 const windowsState = new WindowsState();
 const ReadWrite  = require('../functions/readwrite');
 const readWrite = new ReadWrite();
-const btConstants = require('../functions/btconstants');
+const btC = require('../functions/btconstants');
 const Functions = require('../functions/functions');
 const functions = new Functions();
 
@@ -32,6 +32,7 @@ class SettingsColumnOrder
 {
     start(gb)
     {
+      if (gb.selectedTab === btC.TAB_NOTICES) return;
         openWindow(gb);
     }
 
@@ -49,22 +50,22 @@ class SettingsColumnOrder
       try {
         switch(type)
         {
-          case btConstants.TAB_COMPUTERS:
+          case btC.TAB_COMPUTERS:
             setComputers(gb, data)
           break;
-          case btConstants.TAB_PROJECTS:
+          case btC.TAB_PROJECTS:
             setProjects(gb, data)
           break;                 
-          case btConstants.TAB_TASKS:
+          case btC.TAB_TASKS:
             setTasks(gb, data)
           break;
-          case btConstants.TAB_TRANSFERS:
+          case btC.TAB_TRANSFERS:
             setTransfers(gb, data)
           break;
-          case btConstants.TAB_MESSAGES:
+          case btC.TAB_MESSAGES:
             setMessages(gb, data)
           break;          
-          case btConstants.TAB_HISTORY:
+          case btC.TAB_HISTORY:
             setHistory(gb, data)
           break;          
         }  
@@ -90,7 +91,7 @@ function getOrder()
     {
       orderComputers = defaultComputers();
     }
-    if (!valid(orderComputers,btConstants.COMPUTERS_COLOMN_COUNT))
+    if (!valid(orderComputers,btC.COMPUTERS_COLOMN_COUNT))
     {
       orderComputers = defaultComputers(); 
     }
@@ -106,7 +107,7 @@ function getOrder()
     {
       orderProjects = defaultProjects();
     }
-    if (!valid(orderProjects,btConstants.PROJECTS_COLOMN_COUNT))
+    if (!valid(orderProjects,btC.PROJECTS_COLOMN_COUNT))
     {
       orderProjects = defaultProjects(); 
     }
@@ -122,7 +123,7 @@ function getOrder()
     {
       orderTasks = defaultTasks();
     }
-    if (!valid(orderTasks,btConstants.TASKS_COLOMN_COUNT))
+    if (!valid(orderTasks,btC.TASKS_COLOMN_COUNT))
     {
       orderTasks = defaultTasks(); 
     }
@@ -138,7 +139,7 @@ function getOrder()
     {
       orderTransfers = defaultTransfers();
     }
-    if (!valid(orderTransfers,btConstants.TRANSFERS_COLOMN_COUNT))
+    if (!valid(orderTransfers,btC.TRANSFERS_COLOMN_COUNT))
     {
       orderTransfers = defaultTransfers(); 
     }
@@ -154,7 +155,7 @@ function getOrder()
     {
       orderMessages = defaultMessages();
     }
-    if (!valid(orderMessages,btConstants.MESSAGES_COLOMN_COUNT))
+    if (!valid(orderMessages,btC.MESSAGES_COLOMN_COUNT))
     {
       orderMessages = defaultMessages(); 
     }
@@ -170,7 +171,7 @@ function getOrder()
     {
       orderHistory = defaultHistory();
     }
-    if (!valid(orderHistory,btConstants.HISTORY_COLOMN_COUNT))
+    if (!valid(orderHistory,btC.HISTORY_COLOMN_COUNT))
     {
       orderHistory = defaultHistory(); 
     }
@@ -188,7 +189,7 @@ function defaultComputers()
   computers.order = [];
   computers.check = [];
   let i;
-  for (i=0;i<btConstants.COMPUTERS_COLOMN_COUNT;i++)
+  for (i=0;i<btC.COMPUTERS_COLOMN_COUNT;i++)
   {
     computers.order[i] = i;
   }
@@ -196,7 +197,7 @@ function defaultComputers()
   {
     computers.check[i] = true;
   }
-  for (i;i<btConstants.COMPUTERS_COLOMN_COUNT;i++)
+  for (i;i<btC.COMPUTERS_COLOMN_COUNT;i++)
   {
     computers.check[i] = false;
   }
@@ -209,7 +210,7 @@ function defaultProjects()
   projects.order = [];
   projects.check = [];
   let i;
-  for (i=0;i<btConstants.PROJECTS_COLOMN_COUNT;i++)
+  for (i=0;i<btC.PROJECTS_COLOMN_COUNT;i++)
   {
     projects.order[i] = i;
   }
@@ -217,7 +218,7 @@ function defaultProjects()
   {
     projects.check[i] = true;
   }
-  for (i;i<btConstants.PROJECTS_COLOMN_COUNT;i++)
+  for (i;i<btC.PROJECTS_COLOMN_COUNT;i++)
   {
     projects.check[i] = false;
   }
@@ -230,7 +231,7 @@ function defaultTasks()
   tasks.order = [];
   tasks.check = [];
   let i;
-  for (i=0;i<btConstants.TASKS_COLOMN_COUNT;i++)
+  for (i=0;i<btC.TASKS_COLOMN_COUNT;i++)
   {
     tasks.order[i] = i;
   }
@@ -238,7 +239,7 @@ function defaultTasks()
   {
     tasks.check[i] = true;
   }
-  for (i;i<btConstants.TASKS_COLOMN_COUNT;i++)
+  for (i;i<btC.TASKS_COLOMN_COUNT;i++)
   {
     tasks.check[i] = false;
   }
@@ -251,7 +252,7 @@ function defaultTransfers()
   transfers.order = [];
   transfers.check = [];
   let i;
-  for (i=0;i<btConstants.TRANSFERS_COLOMN_COUNT;i++)
+  for (i=0;i<btC.TRANSFERS_COLOMN_COUNT;i++)
   {
     transfers.order[i] = i;
   }
@@ -259,7 +260,7 @@ function defaultTransfers()
   {
     transfers.check[i] = true;
   }
-  for (i;i<btConstants.TRANSFERS_COLOMN_COUNT;i++)
+  for (i;i<btC.TRANSFERS_COLOMN_COUNT;i++)
   {
     transfers.check[i] = false;
   }
@@ -272,7 +273,7 @@ function defaultMessages()
   messages.order = [];
   messages.check = [];
   let i;
-  for (i=0;i<btConstants.MESSAGES_COLUMN_COUNT;i++)
+  for (i=0;i<btC.MESSAGES_COLUMN_COUNT;i++)
   {
     messages.order[i] = i;
   }
@@ -280,7 +281,7 @@ function defaultMessages()
   {
     messages.check[i] = true;
   }
-  for (i;i<btConstants.MESSAGES_COLUMN_COUNT;i++)
+  for (i;i<btC.MESSAGES_COLUMN_COUNT;i++)
   {
     messages.check[i] = false;
   }
@@ -293,7 +294,7 @@ function defaultHistory()
   history.order = [];
   history.check = [];
   let i;
-  for (i=0;i<btConstants.HISTORY_COLUMN_COUNT;i++)
+  for (i=0;i<btC.HISTORY_COLUMN_COUNT;i++)
   {
     history.order[i] = i;
   }
@@ -301,7 +302,7 @@ function defaultHistory()
   {
     history.check[i] = true;
   }
-  for (i;i<btConstants.HISTORY_COLUMN_COUNT;i++)
+  for (i;i<btC.HISTORY_COLUMN_COUNT;i++)
   {
     history.check[i] = false;
   }
@@ -360,9 +361,9 @@ function valid1(checkA)
 
 function setComputers(gb, data)
 {
-  if (data.length != btConstants.COMPUTERS_COLOMN_COUNT*2) return;
+  if (data.length != btC.COMPUTERS_COLOMN_COUNT*2) return;
   let fetch = 0;
-  for (let i=0;i<btConstants.COMPUTERS_COLOMN_COUNT;i++)
+  for (let i=0;i<btC.COMPUTERS_COLOMN_COUNT;i++)
   {
     let pos =  data[fetch++];
     let check =  data[fetch++];
@@ -375,9 +376,9 @@ function setComputers(gb, data)
 
 function setProjects(gb, data)
 {
-  if (data.length != btConstants.PROJECTS_COLOMN_COUNT*2) return;
+  if (data.length != btC.PROJECTS_COLOMN_COUNT*2) return;
   let fetch = 0;
-  for (let i=0;i<btConstants.PROJECTS_COLOMN_COUNT;i++)
+  for (let i=0;i<btC.PROJECTS_COLOMN_COUNT;i++)
   {
     let pos =  data[fetch++];
     let check =  data[fetch++];
@@ -390,9 +391,9 @@ function setProjects(gb, data)
 
 function setTasks(gb, data)
 {
-  if (data.length != btConstants.TASKS_COLOMN_COUNT*2) return;
+  if (data.length != btC.TASKS_COLOMN_COUNT*2) return;
   let fetch = 0;
-  for (let i=0;i<btConstants.TASKS_COLOMN_COUNT;i++)
+  for (let i=0;i<btC.TASKS_COLOMN_COUNT;i++)
   {
     let pos =  data[fetch++];
     let check =  data[fetch++];
@@ -405,9 +406,9 @@ function setTasks(gb, data)
 
 function setTransfers(gb, data)
 {
-  if (data.length != btConstants.TRANSFERS_COLOMN_COUNT*2) return;
+  if (data.length != btC.TRANSFERS_COLOMN_COUNT*2) return;
   let fetch = 0;
-  for (let i=0;i<btConstants.TRANSFERS_COLOMN_COUNT;i++)
+  for (let i=0;i<btC.TRANSFERS_COLOMN_COUNT;i++)
   {
     let pos =  data[fetch++];
     let check =  data[fetch++];
@@ -420,9 +421,9 @@ function setTransfers(gb, data)
 
 function setMessages(gb, data)
 {
-  if (data.length != btConstants.MESSAGES_COLUMN_COUNT*2) return;
+  if (data.length != btC.MESSAGES_COLUMN_COUNT*2) return;
   let fetch = 0;
-  for (let i=0;i<btConstants.MESSAGES_COLUMN_COUNT;i++)
+  for (let i=0;i<btC.MESSAGES_COLUMN_COUNT;i++)
   {
     let pos =  data[fetch++];
     let check =  data[fetch++];
@@ -435,9 +436,9 @@ function setMessages(gb, data)
 
 function setHistory(gb, data)
 {
-  if (data.length != btConstants.HISTORY_COLUMN_COUNT*2) return;
+  if (data.length != btC.HISTORY_COLUMN_COUNT*2) return;
   let fetch = 0;
-  for (let i=0;i<btConstants.HISTORY_COLUMN_COUNT;i++)
+  for (let i=0;i<btC.HISTORY_COLUMN_COUNT;i++)
   {
     let pos =  data[fetch++];
     let check =  data[fetch++];
@@ -453,23 +454,23 @@ function setWindow(gb)
   try {
     switch(gb.currentTable.name)
     {
-      case btConstants.TAB_COMPUTERS:
-        setWindowsComputers(gb, btConstants.TAB_COMPUTERS)
+      case btC.TAB_COMPUTERS:
+        setWindowsComputers(gb, btC.TAB_COMPUTERS)
       break;      
-      case btConstants.TAB_PROJECTS:
-        setWindowsProjects(gb, btConstants.TAB_PROJECTS)
+      case btC.TAB_PROJECTS:
+        setWindowsProjects(gb, btC.TAB_PROJECTS)
       break;      
-      case btConstants.TAB_TASKS:
-        setWindowsTasks(gb, btConstants.TAB_TASKS)
+      case btC.TAB_TASKS:
+        setWindowsTasks(gb, btC.TAB_TASKS)
       break;
-      case btConstants.TAB_TRANSFERS:
-        setWindowsTransfers(gb, btConstants.TAB_TRANSFERS)
+      case btC.TAB_TRANSFERS:
+        setWindowsTransfers(gb, btC.TAB_TRANSFERS)
       break; 
-      case btConstants.TAB_MESSAGES:
-        setWindowsMessages(gb, btConstants.TAB_MESSAGES)
+      case btC.TAB_MESSAGES:
+        setWindowsMessages(gb, btC.TAB_MESSAGES)
       break;         
-      case btConstants.TAB_HISTORY:
-        setWindowsHistory(gb, btConstants.TAB_HISTORY)
+      case btC.TAB_HISTORY:
+        setWindowsHistory(gb, btC.TAB_HISTORY)
       break;          
     }
   } catch (error) {
@@ -479,21 +480,21 @@ function setWindow(gb)
 
 function setWindowsComputers(gb, type)
 {
-  let items = '<b>Computers</b><br><br><div id="sort_items" class="list-group">';
+  let items = '<b>' + btC.TL.SEL.SEL_COMPUTERS + '</b><br><br><div id="sort_items" class="list-group">';
 
   let order = gb.order.computers;
 
   itemsArray = [];
   itemsArray[order.order[0]] = addItem("",0,order);
-  itemsArray[order.order[1]] = addItem(btConstants.COMPUTERS_GROUP,1,order);
-  itemsArray[order.order[2]] = addItem(btConstants.GENERAL_COMPUTER,2,order);
-  itemsArray[order.order[3]] = addItem(btConstants.COMPUTERS_IP,3,order);
-  itemsArray[order.order[4]] = addItem(btConstants.COMPUTERS_CPID,4,order);
-  itemsArray[order.order[5]] = addItem(btConstants.COMPUTERS_PORT,5,order);
-  itemsArray[order.order[6]] = addItem(btConstants.COMPUTERS_PASSWORD,6,order);
-  itemsArray[order.order[7]] = addItem(btConstants.COMPUTERS_BOINC,7,order);
-  itemsArray[order.order[8]] = addItem(btConstants.COMPUTERS_PLATFORM,8,order);
-  itemsArray[order.order[9]] = addItem(btConstants.GENERAL_STATUS,9,order);
+  itemsArray[order.order[1]] = addItem(btC.TL.TAB.COMPUTERS_GROUP,1,order);
+  itemsArray[order.order[2]] = addItem(btC.TL.TAB.GENERAL_COMPUTER,2,order);
+  itemsArray[order.order[3]] = addItem(btC.TL.TAB.COMPUTERS_IP,3,order);
+  itemsArray[order.order[4]] = addItem(btC.TL.TAB.COMPUTERS_CPID,4,order);
+  itemsArray[order.order[5]] = addItem(btC.TL.TAB.COMPUTERS_PORT,5,order);
+  itemsArray[order.order[6]] = addItem(btC.TL.TAB.COMPUTERS_PASSWORD,6,order);
+  itemsArray[order.order[7]] = addItem(btC.TL.TAB.COMPUTERS_BOINC,7,order);
+  itemsArray[order.order[8]] = addItem(btC.TL.TAB.COMPUTERS_PLATFORM,8,order);
+  itemsArray[order.order[9]] = addItem(btC.TL.TAB.GENERAL_STATUS,9,order);
 
   for (let i=0;i<itemsArray.length;i++)
   {
@@ -506,22 +507,22 @@ function setWindowsComputers(gb, type)
 
 function setWindowsProjects(gb, type)
 {
-  let items = '<b>Projects</b><br><br><div id="sort_items" class="list-group">';
+  let items = '<b>' + btC.TL.SEL.SEL_PROJECTS + '</b><br><br><div id="sort_items" class="list-group">';
 
   let order = gb.order.projects;
 
   itemsArray = [];
-  itemsArray[order.order[0]] = addItem(btConstants.GENERAL_COMPUTER,0,order);
-  itemsArray[order.order[1]] = addItem(btConstants.GENERAL_PROJECT,1,order);
-  itemsArray[order.order[2]] = addItem(btConstants.PROJECTS_ACCOUNT,2,order);
-  itemsArray[order.order[3]] = addItem(btConstants.PROJECTS_TEAM,3,order);
-  itemsArray[order.order[4]] = addItem(btConstants.PROJECTS_CREDITS,4,order);
-  itemsArray[order.order[5]] = addItem(btConstants.PROJECTS_CREDITS_AVG,5,order);
-  itemsArray[order.order[6]] = addItem(btConstants.PROJECTS_CREDITS_HOST,6,order);
-  itemsArray[order.order[7]] = addItem(btConstants.PROJECTS_CREDITS_HOST_AVG,7,order);
-  itemsArray[order.order[8]] = addItem(btConstants.PROJECTS_SHARE,8,order);
-  itemsArray[order.order[9]] = addItem(btConstants.GENERAL_STATUS,9,order);
-  itemsArray[order.order[10]] = addItem(btConstants.PROJECTS_REC,10,order);  
+  itemsArray[order.order[0]] = addItem(btC.TL.TAB.GENERAL_COMPUTER,0,order);
+  itemsArray[order.order[1]] = addItem(btC.TL.TAB.GENERAL_PROJECT,1,order);
+  itemsArray[order.order[2]] = addItem(btC.TL.TAB.PROJECTS_ACCOUNT,2,order);
+  itemsArray[order.order[3]] = addItem(btC.TL.TAB.PROJECTS_TEAM,3,order);
+  itemsArray[order.order[4]] = addItem(btC.TL.TAB.PROJECTS_CREDITS,4,order);
+  itemsArray[order.order[5]] = addItem(btC.TL.TAB.PROJECTS_CREDITS_AVG,5,order);
+  itemsArray[order.order[6]] = addItem(btC.TL.TAB.PROJECTS_CREDITS_HOST,6,order);
+  itemsArray[order.order[7]] = addItem(btC.TL.TAB.PROJECTS_CREDITS_HOST_AVG,7,order);
+  itemsArray[order.order[8]] = addItem(btC.TL.TAB.PROJECTS_SHARE,8,order);
+  itemsArray[order.order[9]] = addItem(btC.TL.TAB.GENERAL_STATUS,9,order);
+  itemsArray[order.order[10]] = addItem(btC.TL.TAB.PROJECTS_REC,10,order);  
 
   for (let i=0;i<itemsArray.length;i++)
   {
@@ -534,28 +535,28 @@ function setWindowsProjects(gb, type)
 
 function setWindowsTasks(gb, type)
 {
-  let items = '<b>Tasks</b><br><br><div id="sort_items" class="list-group">';
+  let items = '<b>' + btC.TL.SEL.SEL_TASKS + '</b><br><br><div id="sort_items" class="list-group">';
 
   let order = gb.order.tasks;
 
   itemsArray = [];
-  itemsArray[order.order[0]] = addItem(btConstants.GENERAL_COMPUTER,0,order);
-  itemsArray[order.order[1]] = addItem(btConstants.GENERAL_PROJECT,1,order);
-  itemsArray[order.order[2]] = addItem(btConstants.GENERAL_APPLICATION,2,order);
-  itemsArray[order.order[3]] = addItem(btConstants.GENERAL_NAME,3,order);
-  itemsArray[order.order[4]] = addItem(btConstants.GENERAL_ELAPSED,4,order);
-  itemsArray[order.order[5]] = addItem(btConstants.GENERAL_CPU,5,order);
-  itemsArray[order.order[6]] = addItem(btConstants.GENERAL_PROGRESS,6,order);
-  itemsArray[order.order[7]] = addItem(btConstants.TASK_TIMELEFT,7,order);
-  itemsArray[order.order[8]] = addItem(btConstants.TASK_DEADLINE,8,order);
-  itemsArray[order.order[9]] = addItem(btConstants.TASK_USE,9,order);
-  itemsArray[order.order[10]] = addItem(btConstants.GENERAL_STATUS,10,order);
-  itemsArray[order.order[11]] = addItem(btConstants.TASK_CHECKPOINT,11,order);
-  itemsArray[order.order[12]] = addItem(btConstants.TASK_RECEIVED,12,order);
-  itemsArray[order.order[13]] = addItem(btConstants.TASK_MEMORYV,13,order);
-  itemsArray[order.order[14]] = addItem(btConstants.TASK_MEMORY,14,order);
-  itemsArray[order.order[15]] = addItem(btConstants.TASK_TEMP,15,order);
-  itemsArray[order.order[16]] = addItem(btConstants.TASK_TTHROTTLE,16,order);
+  itemsArray[order.order[0]] = addItem(btC.TL.TAB.GENERAL_COMPUTER,0,order);
+  itemsArray[order.order[1]] = addItem(btC.TL.TAB.GENERAL_PROJECT,1,order);
+  itemsArray[order.order[2]] = addItem(btC.TL.TAB.GENERAL_APPLICATION,2,order);
+  itemsArray[order.order[3]] = addItem(btC.TL.TAB.GENERAL_NAME,3,order);
+  itemsArray[order.order[4]] = addItem(btC.TL.TAB.GENERAL_ELAPSED,4,order);
+  itemsArray[order.order[5]] = addItem(btC.TL.TAB.GENERAL_CPU,5,order);
+  itemsArray[order.order[6]] = addItem(btC.TL.TAB.GENERAL_PROGRESS,6,order);
+  itemsArray[order.order[7]] = addItem(btC.TL.TAB.TASK_TIMELEFT,7,order);
+  itemsArray[order.order[8]] = addItem(btC.TL.TAB.TASK_DEADLINE,8,order);
+  itemsArray[order.order[9]] = addItem(btC.TL.TAB.TASK_USE,9,order);
+  itemsArray[order.order[10]] = addItem(btC.TL.TAB.GENERAL_STATUS,10,order);
+  itemsArray[order.order[11]] = addItem(btC.TL.TAB.TASK_CHECKPOINT,11,order);
+  itemsArray[order.order[12]] = addItem(btC.TL.TAB.TASK_RECEIVED,12,order);
+  itemsArray[order.order[13]] = addItem(btC.TL.TAB.TASK_MEMORYV,13,order);
+  itemsArray[order.order[14]] = addItem(btC.TL.TAB.TASK_MEMORY,14,order);
+  itemsArray[order.order[15]] = addItem(btC.TL.TAB.TASK_TEMP,15,order);
+  itemsArray[order.order[16]] = addItem(btC.TL.TAB.TASK_TTHROTTLE,16,order);
 
   for (let i=0;i<itemsArray.length;i++)
   {
@@ -568,19 +569,19 @@ function setWindowsTasks(gb, type)
 
 function setWindowsTransfers(gb, type)
 {
-  let items = '<b>Transfers</b><br><br><div id="sort_items" class="list-group">';
+  let items = '<b>' + btC.TL.SEL.SEL_TRANSFERS + '</b><br><br><div id="sort_items" class="list-group">';
 
   let order = gb.order.transfers;
 
   itemsArray = [];
-  itemsArray[order.order[0]] = addItem(btConstants.GENERAL_COMPUTER,0,order);
-  itemsArray[order.order[1]] = addItem(btConstants.GENERAL_PROJECT,1,order);
-  itemsArray[order.order[2]] = addItem(btConstants.TRANSFERS_FILE,2,order);
-  itemsArray[order.order[3]] = addItem(btConstants.GENERAL_PROGRESS,3,order);
-  itemsArray[order.order[4]] = addItem(btConstants.TRANSFERS_SIZE,4,order);
-  itemsArray[order.order[5]] = addItem(btConstants.GENERAL_ELAPSED,5,order);
-  itemsArray[order.order[6]] = addItem(btConstants.TRANSFERS_SPEED,6,order);
-  itemsArray[order.order[7]] = addItem(btConstants.GENERAL_STATUS,7,order);
+  itemsArray[order.order[0]] = addItem(btC.TL.TAB.GENERAL_COMPUTER,0,order);
+  itemsArray[order.order[1]] = addItem(btC.TL.TAB.GENERAL_PROJECT,1,order);
+  itemsArray[order.order[2]] = addItem(btC.TL.TAB.TRANSFERS_FILE,2,order);
+  itemsArray[order.order[3]] = addItem(btC.TL.TAB.GENERAL_PROGRESS,3,order);
+  itemsArray[order.order[4]] = addItem(btC.TL.TAB.TRANSFERS_SIZE,4,order);
+  itemsArray[order.order[5]] = addItem(btC.TL.TAB.GENERAL_ELAPSED,5,order);
+  itemsArray[order.order[6]] = addItem(btC.TL.TAB.TRANSFERS_SPEED,6,order);
+  itemsArray[order.order[7]] = addItem(btC.TL.TAB.GENERAL_STATUS,7,order);
 
   for (let i=0;i<itemsArray.length;i++)
   {
@@ -593,16 +594,16 @@ function setWindowsTransfers(gb, type)
 
 function setWindowsMessages(gb, type)
 {
-  let items = '<b>Messages</b><br><br><div id="sort_items" class="list-group">';
+  let items = '<b>' + btC.TL.SEL.SEL_MESSAGES + '</b><br><br><div id="sort_items" class="list-group">';
 
   let order = gb.order.messages;
 
   itemsArray = [];
-  itemsArray[order.order[0]] = addItem(btConstants.GENERAL_COMPUTER,0,order);
-  itemsArray[order.order[1]] = addItem(btConstants.MESSAGES_NR,1,order);
-  itemsArray[order.order[2]] = addItem(btConstants.GENERAL_PROJECT,2,order);
-  itemsArray[order.order[3]] = addItem(btConstants.MESSAGES_TIME,3,order);
-  itemsArray[order.order[4]] = addItem(btConstants.MESSAGES_MESSAGE,4,order);
+  itemsArray[order.order[0]] = addItem(btC.TL.TAB.GENERAL_COMPUTER,0,order);
+  itemsArray[order.order[1]] = addItem(btC.TL.TAB.MESSAGES_NR,1,order);
+  itemsArray[order.order[2]] = addItem(btC.TL.TAB.GENERAL_PROJECT,2,order);
+  itemsArray[order.order[3]] = addItem(btC.TL.TAB.MESSAGES_TIME,3,order);
+  itemsArray[order.order[4]] = addItem(btC.TL.TAB.MESSAGES_MESSAGE,4,order);
 
   for (let i=0;i<itemsArray.length;i++)
   {
@@ -615,20 +616,20 @@ function setWindowsMessages(gb, type)
 
 function setWindowsHistory(gb, type)
 {
-  let items = '<b>History</b><br><br><div id="sort_items" class="list-group">';
+  let items = '<b>' + btC.TL.SEL.SEL_HISTORY + '</b><br><br><div id="sort_items" class="list-group">';
 
   let order = gb.order.history;
 
   itemsArray = [];
-  itemsArray[order.order[0]] = addItem(btConstants.GENERAL_COMPUTER,0,order);
-  itemsArray[order.order[1]] = addItem(btConstants.GENERAL_PROJECT,1,order);
-  itemsArray[order.order[2]] = addItem(btConstants.GENERAL_APPLICATION ,2,order);
-  itemsArray[order.order[3]] = addItem(btConstants.GENERAL_NAME,3,order);
-  itemsArray[order.order[4]] = addItem(btConstants.GENERAL_ELAPSED,4,order);
-  itemsArray[order.order[5]] = addItem(btConstants.GENERAL_CPU,5,order);
-  itemsArray[order.order[6]] = addItem(btConstants.GENERAL_PROGRESS,6,order);  
-  itemsArray[order.order[7]] = addItem(btConstants.HISTORY_COMPLETED,7,order);
-  itemsArray[order.order[8]] = addItem(btConstants.GENERAL_STATUS,8,order);
+  itemsArray[order.order[0]] = addItem(btC.TL.TAB.GENERAL_COMPUTER,0,order);
+  itemsArray[order.order[1]] = addItem(btC.TL.TAB.GENERAL_PROJECT,1,order);
+  itemsArray[order.order[2]] = addItem(btC.TL.TAB.GENERAL_APPLICATION ,2,order);
+  itemsArray[order.order[3]] = addItem(btC.TL.TAB.GENERAL_NAME,3,order);
+  itemsArray[order.order[4]] = addItem(btC.TL.TAB.GENERAL_ELAPSED,4,order);
+  itemsArray[order.order[5]] = addItem(btC.TL.TAB.GENERAL_CPU,5,order);
+  itemsArray[order.order[6]] = addItem(btC.TL.TAB.GENERAL_PROGRESS,6,order);  
+  itemsArray[order.order[7]] = addItem(btC.TL.TAB.HISTORY_COMPLETED,7,order);
+  itemsArray[order.order[8]] = addItem(btC.TL.TAB.GENERAL_STATUS,8,order);
 
   for (let i=0;i<itemsArray.length;i++)
   {
@@ -652,7 +653,7 @@ function addItem(name,id,order)
 function openWindow(gb)
 {
     try {
-        let title = "BoincTasks Js Colomn order";
+        let title = "BoincTasks Js - " + btC.TL.DIALOG_COLUMN_ORDER.DCO_TITLE;
         if (gChildColumn == null)
         {
           let state = windowsState.get("column",400,600)
@@ -675,6 +676,7 @@ function openWindow(gb)
 //          gChildColumn.webContents.openDevTools()
           gChildColumn.show();  
           gChildColumn.setTitle(title);
+          gChildColumn.webContents.send("translations",btC.TL.DIALOG_COLUMN_ORDER);          
           setWindow(gb);
 //          gChildColumn.webContents.send('update', osPlatform, osArch, version); 
           }) 

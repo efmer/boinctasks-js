@@ -34,8 +34,8 @@ $(document).ready(function() {
     
   }
 
-  ipcRenderer.on('computer_scan_explain', (event, msg) => {
-    $("#computer_scan_explain").html(msg);
+  ipcRenderer.on('trans_scan_explain', (event, msg) => {
+    $("#trans_scan_explain").html(msg);
 
     try {
       const links = document.querySelectorAll('a[href]')
@@ -51,6 +51,13 @@ $(document).ready(function() {
     } catch (error) {
       
     }
+
+    ipcRenderer.on('translations', (event, dlg) => {
+      $("#trans_password").html( dlg.DCS_PASSWORD);
+      $("#trans_port").html( dlg.DCS_PORT);
+      $("#start_scan").html( dlg.DCS_START);      
+  });
+
   });
 
   ipcRenderer.on('computer_scan_show', (event, show) => {

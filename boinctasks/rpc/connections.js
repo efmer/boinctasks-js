@@ -74,7 +74,8 @@ const btNotices = new BtNotices();
 const ConnectionsShadow = require('./misc/connections_shadow');
 const connectionsShadow = new ConnectionsShadow();
 
-const btConstants = require('./functions/btconstants');
+const btC = require('./functions/btconstants');
+const btconstants = require('./functions/btconstants');
 
 let gClassAcountManager = null;
 let gClassAddProject = null;
@@ -102,10 +103,9 @@ const INTERVAL_RULES = 30000;
 
 // must be indentical in renderer.js
 
-
 let gB = new Object();
-gB.selectedTab = btConstants.TAB_TASKS;
-gB.headerAction = btConstants.HEADER_NORMAL;
+gB.selectedTab = btC.TAB_TASKS;
+gB.headerAction = btC.HEADER_NORMAL;
 gB.currentTable = null;
 gB.connections = [];
 gB.sortComputers = null;
@@ -159,7 +159,6 @@ class Connections{
     start(mainWindow, menu)
     {
  //       setTimeout(test, 1000); // testing test debug
-
         gB.mainWindow = mainWindow;
         gB.menu = menu;
         rowSelect.init(gB);
@@ -171,7 +170,7 @@ class Connections{
     {
         try {
             if (gB.editComputers) return;
-            if (gB.headerAction === btConstants.HEADER_RESIZE)
+            if (gB.headerAction === btC.HEADER_RESIZE)
             {
                 return;
             }
@@ -186,7 +185,7 @@ class Connections{
     {
         try {
             if (gB.editComputers) return;
-            let idA = id.split(btConstants.SEPERATOR_ITEM);
+            let idA = id.split(btC.SEPERATOR_ITEM);
             if (idA.length < 2)
             {
             return;
@@ -220,13 +219,13 @@ class Connections{
     {
         if (set)
         {
-            gB.headerAction = btConstants.HEADER_RESIZE;
+            gB.headerAction = btC.HEADER_RESIZE;
             gB.mainWindow.webContents.send('table_data_header', gB.currentTable.table.tableHeader(gB, gSidebar),gB.currentTable.name, gB.headerAction)  // update header                
         }
         else
         {
             btHeader.getWidth(gB);   // table header px -> % 
-            gB.headerAction = btConstants.HEADER_NORMAL;
+            gB.headerAction = btC.HEADER_NORMAL;
             gB.mainWindow.webContents.send('table_data_header', gB.currentTable.table.tableHeader(gB, gSidebar),gB.currentTable.name, gB.headerAction)  // update header          
         }
     }
@@ -269,7 +268,7 @@ class Connections{
         {
             if (!gB.editComputersShow)
             {                         
-                gB.mainWindow.webContents.send('set_tab', btConstants.TAB_COMPUTERS);            
+                gB.mainWindow.webContents.send('set_tab', btC.TAB_COMPUTERS);            
                 return;
             }
             gB.editComputersShow = false;
@@ -286,7 +285,7 @@ class Connections{
     sidebar(computer,ctrl)
     {
         gIntervalFastCnt = 0;
-        sidebarComputers.click(gB.mainWindow, gB.connections, computer,ctrl)
+        sidebarComputers.click(gB, computer,ctrl)
     }
 
     requestTab(renderer)
@@ -296,10 +295,10 @@ class Connections{
 
     computerEdit()
     {      
-        this.select(btConstants.TAB_COMPUTERS);        
+        this.select(btC.TAB_COMPUTERS);        
         gB.editComputers = true;
         gB.editComputersShow = false;
-        this.select(btConstants.TAB_COMPUTERS); 
+        this.select(btC.TAB_COMPUTERS); 
     }
 
     computerAdd()
@@ -307,7 +306,7 @@ class Connections{
         if (gB.editComputers === true) return;        
         let con = newCon();
         gB.connections.push(con); 
-        this.select(btConstants.TAB_COMPUTERS);                
+        this.select(btC.TAB_COMPUTERS);                
     }
 
     gotComputers(con)
@@ -380,8 +379,8 @@ class Connections{
             }           
             if (iAdd > 0)
             {
-                gB.mainWindow.webContents.send('set_tab', btConstants.TAB_COMPUTERS);                 
-                this.select(btConstants.TAB_COMPUTERS);
+                gB.mainWindow.webContents.send('set_tab', btC.TAB_COMPUTERS);                 
+                this.select(btC.TAB_COMPUTERS);
                 checkComputers(gB.connections);
                 writeComputers(gB.connections);
                 startConnections()                
@@ -459,13 +458,14 @@ class Connections{
         gSettingsBt.start(gB.settings,gB.theme);
     }
 
-    settingsSet(settings)
+    settingsSet(settings,debug)
     {
         gSettingsBt.set(settings);       // write
         gB.settings = gSettingsBt.get();           // get and check if valid.
         gSettingsBt.send();   
         return gB.settings;
     }
+
     boincAllow(type,combined)
     {
         if (gClassSettingsAllow === null)
@@ -475,18 +475,21 @@ class Connections{
         }
         gClassSettingsAllow.allow(type,gB,combined,boincAllowCallback);
     }
+
     boincBenchmark(type)
     {
         const BoincBenchmark = require('./misc/benchmark');
         const boincBenchmark = new BoincBenchmark();
         boincBenchmark.run(type,gB);
-    }   
+    }
+
     boincReadConfig(type)
     {
         const BoincReadConfig = require('./misc/readconfig');
         const boincReadConfig = new BoincReadConfig();
         boincReadConfig.read(type,gB);
-    }        
+    }
+
     boincSettings(type,settings)
     {
         if (gClassSettingsBoinc === null)
@@ -496,6 +499,7 @@ class Connections{
         }
         gClassSettingsBoinc.settingsBoinc(type,gB,settings);
     }
+
     boincStatistics(type,data)
     {
         if (gClassStatisticsBoinc === null)
@@ -512,6 +516,7 @@ class Connections{
         quickLoad(false);
         gB.mainWindow.webContents.send('table_data_header', gB.currentTable.table.tableHeader(gB, gSidebar),gB.currentTable.name, gB.headerAction);        
     }
+
     rules(type,data,data2)
     {
         if (gClassRulesList === null)
@@ -579,7 +584,7 @@ function clickHeaderProcess(id, shift, alt,ctrl)
     var sort;
     switch (gB.currentTable.name)
     {
-        case btConstants.TAB_COMPUTERS:
+        case btC.TAB_COMPUTERS:
             if (gB.sortComputers == null)
             {
                 gB.sortComputers = new Object;
@@ -596,7 +601,7 @@ function clickHeaderProcess(id, shift, alt,ctrl)
             readWrite.write("settings\\sorting","sorting_computer.json",JSON.stringify(sort));
             processComputers(sort);    
         break;            
-        case btConstants.TAB_PROJECTS:
+        case btC.TAB_PROJECTS:
             if (gB.sortProjects == null)
             {
                 gB.sortProjects = new Object;
@@ -613,7 +618,7 @@ function clickHeaderProcess(id, shift, alt,ctrl)
             readWrite.write("settings\\sorting","sorting_projects.json",JSON.stringify(sort));                
             processProjects(sort);    
         break;            
-        case btConstants.TAB_TASKS:
+        case btC.TAB_TASKS:
             if (gB.sortResults == null)
             {
                 gB.sortResults = new Object;
@@ -630,7 +635,7 @@ function clickHeaderProcess(id, shift, alt,ctrl)
             readWrite.write("settings\\sorting","sorting_results.json",JSON.stringify(sort)); 
             processResults(sort);                       
         break;
-        case btConstants.TAB_TRANSFERS:
+        case btC.TAB_TRANSFERS:
             if (gB.sortTransfers == null)
             {
                 gB.sortTransfers = new Object;
@@ -647,7 +652,7 @@ function clickHeaderProcess(id, shift, alt,ctrl)
             readWrite.write("settings\\sorting","sorting_transfers.json",JSON.stringify(sort));
             processTransfers(gB.sortTransfers);    
         break;            
-        case btConstants.TAB_MESSAGES:
+        case btC.TAB_MESSAGES:
             if (gB.sortMessages == null)
             {
                 gB.sortMessages = new Object;
@@ -664,7 +669,7 @@ function clickHeaderProcess(id, shift, alt,ctrl)
             readWrite.write("settings\\sorting","sorting_messages.json",JSON.stringify(sort));
             processMessages(sort);    
         break;    
-        case btConstants.TAB_HISTORY:
+        case btC.TAB_HISTORY:
             if (gB.sortHistory == null)
             {
                 gB.sortHistory = new Object;
@@ -695,7 +700,7 @@ function toolbarCallback(command)
                 for(let i=0;i<gB.connections.length;i++)
                 {
                     let con = gB.connections[i];
-                    let selId = con.ip + btConstants.SEPERATOR_SELECT + con.computerName;              
+                    let selId = con.ip + btC.SEPERATOR_SELECT + con.computerName;              
                     let sel = gB.rowSelect.computers.rowSelected.indexOf(selId)               
                     if (sel >=0)
                     {
@@ -775,7 +780,6 @@ function stopTimers()
 
 function startConnections()
 {
-    logging.setVersion(gVersionS);
     getComputers();
     getRules();    
     getSorting();
@@ -796,10 +800,10 @@ function startConnections()
     if (!functions.isDefined(gB.connections)) txt += "The list is empty, no computers found, STOP";
     else
     {
-        txt += "Computers: " + gB.connections.length;
+        txt += btC.TL.MSG_GENERAL.MSG_COMPUTERS_FOUND + " " + gB.connections.length;
     }
     logging.log(txt);
-    sidebarComputers.build(gB.mainWindow, gB.connections)
+    sidebarComputers.build(gB)
     connectionsShadow.cloneConnection(gB);
     connectAll();
 }
@@ -1023,7 +1027,11 @@ function getRules()
         try {
             gB.rules.email = JSON.parse(readWrite.read("settings\\email", "email.json"));             
         } catch (error) {
-            gB.rules.email = null;  
+            gB.rules.email = null;
+        }
+        if (gB.rules.email === null)
+        {
+            gB.rules.email = new Object;
         }
 
         if (gClassEmail === null)
@@ -1056,7 +1064,7 @@ function connectAll()
         {
             let con = gB.connections[i];
             if (con.check == '0') continue; // disabled
-            if (gB.selectedTab == btConstants.TAB_TASKS)
+            if (gB.selectedTab == btC.TAB_TASKS)
             {            
                 if (con.sidebar || con.sidebarGrp)
                 {   
@@ -1076,7 +1084,7 @@ function connectAll()
             con.mode = "inactive";
             if (con.check == '0') continue; // disabled
 
-            if (gB.selectedTab == btConstants.TAB_MESSAGES)
+            if (gB.selectedTab == btC.TAB_MESSAGES)
             {
                 if (con.sidebar || con.sidebarGrp)
                 {
@@ -1110,7 +1118,7 @@ function connectAllState()
             if (!con.auth) continue;
             if (con.needState || con.state == null)
             { 
-                logging.logDebug("Read state: " + con.computerName);
+                logging.logDebug(btconstants.TL.MSG_GENERAL.MSG_READ_STATE + " " + con.computerName);
                 connectSingle(gB.connections[i]);
             }
             else 
@@ -1193,7 +1201,7 @@ function connectRules(fetchMode)
 
 function connectSingle(con)
 {
-    if ((gB.selectedTab != btConstants.TAB_COMPUTERS) && (con.check == '0'))
+    if ((gB.selectedTab != btC.TAB_COMPUTERS) && (con.check == '0'))
     {
         con.mode = "inactive";
         return;
@@ -1441,39 +1449,39 @@ function connectAuth(con)
 
         switch (con.selected)
         {
-            case btConstants.TAB_COMPUTERS:
+            case btC.TAB_COMPUTERS:
                 const Computers = require('./computers/computers');
                 const computers = new Computers(); 
                 computers.getComputers(con)
             break;        
-            case btConstants.TAB_PROJECTS:
+            case btC.TAB_PROJECTS:
                 const Projects = require('./projects/projects');
                 const projects = new Projects(); 
                 projects.getProjects(con)
             break;        
-            case btConstants.TAB_TASKS:
+            case btC.TAB_TASKS:
                 const CcStatus = require('./misc/cc_status');
                 const ccStatus = new CcStatus();
                 con.client_callback = getResults;
                 ccStatus.getCcStatus(con);
             break;
-            case btConstants.TAB_TRANSFERS:
+            case btC.TAB_TRANSFERS:
                 const Transfers = require('./transfers/transfers');
                 const transfers = new Transfers();
                 transfers.getTransfers(con);
             break;            
-            case btConstants.TAB_MESSAGES:
+            case btC.TAB_MESSAGES:
                 const Messages = require('./messages/messages');
                 const messages = new Messages(); 
                 messages.getMessages(con)
             break;   
-            case btConstants.TAB_NOTICES:
+            case btC.TAB_NOTICES:
                 const Notices = require('./notices/notices');
                 const notices = new Notices(); 
                 notices.getNotices(con)
             break;    
-            case btConstants.TAB_HISTORY:
-                con.mode = btConstants.TAB_HISTORY; 
+            case btC.TAB_HISTORY:
+                con.mode = btC.TAB_HISTORY; 
             break;
         }
     } catch (error) {
@@ -1485,7 +1493,7 @@ function getResults(con)
 {
     const Results = require('./results/results');
     const results = new Results();
-    results.getResults(con)
+    results.getResults(con);
 }
 
 function process()
@@ -1497,26 +1505,26 @@ function process()
 
     switch (gB.selectedTab)
     {
-        case btConstants.TAB_COMPUTERS:
-            processComputers(gB.sortComputers)
+        case btC.TAB_COMPUTERS:
+            processComputers(gB.sortComputers);
         break;        
-        case btConstants.TAB_PROJECTS:
-            processProjects(gB.sortProjects)
+        case btC.TAB_PROJECTS:
+            processProjects(gB.sortProjects);
         break;        
-        case btConstants.TAB_TASKS:
-            processResults(gB.sortResults)            
+        case btC.TAB_TASKS:
+            processResults(gB.sortResults);
         break;
-        case btConstants.TAB_TRANSFERS:
-            processTransfers(gB.sortTransfers)
+        case btC.TAB_TRANSFERS:
+            processTransfers(gB.sortTransfers);
         break;        
-        case btConstants.TAB_MESSAGES:
-            processMessages(gB.sortMessages)
+        case btC.TAB_MESSAGES:
+            processMessages(gB.sortMessages);
         break; 
-        case btConstants.TAB_NOTICES:
-            processNotices()
+        case btC.TAB_NOTICES:
+            processNotices();
         break; 
-        case btConstants.TAB_HISTORY:
-            processHistory(gB.sortHistory)
+        case btC.TAB_HISTORY:
+            processHistory(gB.sortHistory);
         break;                        
     }
 }
@@ -1531,7 +1539,7 @@ function processComputers(sort)
         const pc = new ProcessComputers(); 
         var cTable =  pc.process(gB.connections,sort);    
         if (cTable.length == 0) return;
-        gB.currentTable.name = btConstants.TAB_COMPUTERS;        
+        gB.currentTable.name = btC.TAB_COMPUTERS;        
         if (gSwitchedTabCnt-- >0)
         {
             var header = btTableComputers.tableHeader(gB,gSidebar);
@@ -1553,7 +1561,7 @@ function processProjects(sort)
         const ProcessProjects = require('./projects/process_projects')
         const pp = new ProcessProjects(); 
         var cTable =  pp.process(gB.connections,sort);
-        gB.currentTable.name = btConstants.TAB_PROJECTS;
+        gB.currentTable.name = btC.TAB_PROJECTS;
         if (gSwitchedTabCnt-- >0)
         {
             var header = btTableProjects.tableHeader(gB,gSidebar);
@@ -1568,15 +1576,15 @@ function processProjects(sort)
     }     
 }
 
-function processResults(sort)
+function processResults(sort,project)
 {
     try {
         const ProcessResults = require('./results/process_results')
         const pr = new ProcessResults(); 
-        let ret =  pr.process(gB.connections, gB.filterExclude,sort);
+        let ret =  pr.process(gB.connections, gB.filterExclude,sort,project);
         gB.readyToReport = pr.readyToReport();
-        let status = "Tasks: " + ret.resultCount;
-        gB.currentTable.name = btConstants.TAB_TASKS;
+        let status = btC.TL.FOOTER.FTR_TASKS + " " + ret.resultCount;
+        gB.currentTable.name = btC.TAB_TASKS;
         if (gSwitchedTabCnt-- >0)
         {
             var header = btTableResults.tableHeader(gB, gSidebar);
@@ -1598,7 +1606,7 @@ function processTransfers(sort)
         const ProcessTransfers = require('./transfers/process_transfers')
         const pt = new ProcessTransfers(); 
         var cTable =  pt.process(gB.connections,sort);
-        gB.currentTable.name = btConstants.TAB_TRANSFERS;
+        gB.currentTable.name = btC.TAB_TRANSFERS;
         if (gSwitchedTabCnt-- >0)
         {
             var header = btTableTransfers.tableHeader(gB, gSidebar);
@@ -1616,7 +1624,7 @@ function processTransfers(sort)
 function processMessages(sort)
 {
     try{
-        gB.currentTable.name = btConstants.TAB_MESSAGES;
+        gB.currentTable.name = btC.TAB_MESSAGES;
         gB.currentTable.table = btTableMessages;
 
         if (gSwitchedTabCnt-- >0)
@@ -1653,8 +1661,8 @@ function processHistory(sort)
             const ProcessHistory = require('./history/process_history')
             const ph = new ProcessHistory(); 
             let ret =  ph.process(gB.connections,sort);
-            let status = "H Tasks: " + ret.resultCount;
-            gB.currentTable.name = btConstants.TAB_HISTORY;
+            let status = btC.TL.FOOTER.FTR_TASKS_HISTORY + " " + ret.resultCount;
+            gB.currentTable.name = btC.TAB_HISTORY;
             if (gSwitchedTabCnt-- >0)
             {
                 var header = btTableHistory.tableHeader(gB, gSidebar);
@@ -1668,7 +1676,7 @@ function processHistory(sort)
         }
         else
         {
-            tableReady("", gVersionS, '<br><br><br><div style="color:red;"><b>Disabled</b></div> Extra->BoincTasks settings to enable');
+            tableReady("", gVersionS, '<br><br><br><div style="color:red;"><b>' + btC.TL.TAB_MSG.TM_HISTORY_DISABLED1 + '</b></div> ' + btC.TL.TAB_MSG.TM_HISTORY_DISABLED2);
         }
     } catch (error) {
         logging.logError('Connections,processHistory', error);      
@@ -1681,7 +1689,7 @@ function processNotices(sort)
         const ProcessNotices = require('./notices/process_notices')
         const pn = new ProcessNotices(); 
         var cTable =  pn.process(gB.connections, btNotices.read());
-        gB.currentTable.name = btConstants.TAB_NOTICES;
+        gB.currentTable.name = btC.TAB_NOTICES;
         gB.currentTable.table = btTableNotices;    
         gB.currentTable.noticesTable = cTable;
         let table = btTableNotices.table(cTable);
@@ -1708,42 +1716,42 @@ function quickLoad(bHeader = true)
         var tableString = "";
         switch (gB.selectedTab)
         {
-            case btConstants.TAB_COMPUTERS:
+            case btC.TAB_COMPUTERS:
                 header =  gB.currentTable.computersHeaderHtml;
                 if (functions.isDefined(gB.currentTable.computerTable))
                 {
                     tableString = btTableComputers.table(gB,gB.currentTable.computerTable);
                 }
             break;        
-            case btConstants.TAB_PROJECTS:
+            case btC.TAB_PROJECTS:
                 header =  gB.currentTable.projectsHeaderHtml;                
                 if (functions.isDefined(gB.currentTable.projectTable))
                 {                
                     tableString = btTableProjects.table(gB, gB.currentTable.projectTable);
                 }
             break;        
-            case btConstants.TAB_TASKS:
+            case btC.TAB_TASKS:
                 header =  gB.currentTable.resultsHeaderHtml;    
                 if (functions.isDefined(gB.currentTable.resultTable))
                 {                               
                     tableString = btTableResults.table(gB, gB.currentTable.resultTable);
                 }
             break;
-            case btConstants.TAB_TRANSFERS:
+            case btC.TAB_TRANSFERS:
                 header =  gB.currentTable.transfersHeaderHtml;    
                 if (functions.isDefined(gB.currentTable.transfersTable))
                 {                               
                     tableString = btTableTransfers.table(gB, gB.currentTable.transfersTable);
                 }
             break;            
-            case btConstants.TAB_MESSAGES:
+            case btC.TAB_MESSAGES:
                 header =  gB.currentTable.messagesHeaderHtml; 
                 if (functions.isDefined(gB.currentTable.messageTable))
                 {                                
                     tableString = btTableMessages.table(gB, gB.currentTable.messageTable);
                 }
             break;  
-            case btConstants.TAB_HISTORY:
+            case btC.TAB_HISTORY:
                 header =  gB.currentTable.historyHeaderHtml; 
                 if (functions.isDefined(gB.currentTable.historyTable))
                 {                                
@@ -1791,7 +1799,7 @@ function busyConnectionsReady()
                 {
                     con.auth = false; // busy timeout = lost connected
                     con.lostConnection = true;
-                    logging.log("Lost connection (busy): " + con.ip + ", " + con.computerName); 
+                    logging.log(btC.TL.MSG_GENERAL.MSG_COMPUTER_LOST + " " + con.ip + ", " + con.computerName); 
                 }
             }
         }
@@ -1851,7 +1859,8 @@ function clickFilter(val)
 
 function updateSideBar()
 {
-    sidebarComputers.setStatus(gB.mainWindow,gB.connections);
+    sidebarComputers.setStatus(gB);
+    sidebarComputers.addProjects(gB);
 }
 
 function btTimer() { 
@@ -1861,7 +1870,7 @@ function btTimer() {
         {          
             if (!connectionsReady())
             {
-                gB.mainWindow.webContents.send('set_status', "Busy");  
+                gB.mainWindow.webContents.send('set_status', btC.TL.FOOTER.FTR_BUSY);  
                 if (gBusyCnt++ < gB.settings.socketTimeout*5)   // 0.2 seconds interval
                 {
                     return;
@@ -1896,7 +1905,7 @@ function btTimer() {
             gB.nextStateFetchTime = current + INTERVAL_STATE;                        
             if (needState())
             {
-                gB.mainWindow.webContents.send('set_status', "Get state"); 
+                gB.mainWindow.webContents.send('set_status', btC.TL.FOOTER.FTR_STATE); 
                 gB.fetchMode = MODE_STATE;
                 gBusyCnt = 0;
                 gBusy = true;                
@@ -1915,7 +1924,7 @@ function btTimer() {
                 switch (gB.fetchMode)
                 {
                     case MODE_NORMAL:
-                        gB.mainWindow.webContents.send('set_status', "Get History"); 
+                        gB.mainWindow.webContents.send('set_status', btC.TL.FOOTER.FTR_HISTORY); 
                         gBusyCnt = 0;
                         gBusy = true;
                         gB.fetchMode = MODE_HISTORY;
@@ -1935,7 +1944,7 @@ function btTimer() {
                 switch (gB.fetchMode)
                 {
                     case MODE_NORMAL:
-                        gB.mainWindow.webContents.send('set_status', "Check Rules"); 
+                        gB.mainWindow.webContents.send('set_status', btC.TL.FOOTER.FTR_RULES); 
                         gBusyCnt = 0;
                         gBusy = true;
                         gB.fetchMode = MODE_RULES;                    
@@ -1972,7 +1981,7 @@ function btTimer() {
             }
             else
             {
-                if (gB.selectedTab === btConstants.TAB_HISTORY)
+                if (gB.selectedTab === btC.TAB_HISTORY)
                 {
                     gB.nextRefresh = current + (gB.settings.historyRefreshRate*1000);
                 }
@@ -1987,7 +1996,7 @@ function btTimer() {
         }
 
         diff /= 400;    // 200 = 0.2 second
-        let dots = "▁▁▁▁▁▁▁▁▁▁▁▁▁▁".substr(0,diff);    // .2 second
+        let dots = "───────────────".substr(0,diff);    // .2 second
         let interval = parseInt(diff/2.5);
         if (interval < 0) interval = 0;
         status =  (interval+1) + " " + dots;

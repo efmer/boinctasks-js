@@ -29,6 +29,7 @@ class MessageItems
         try 
         {
             this.msg = messages.msg;
+            if (this.msg === void 0) return null;
             var len = this.msg.length;
             var conMsg = con.messages;
             var seqnoPrev = 1;
@@ -49,6 +50,7 @@ class MessageItems
             if (seqnoHigh != seqnoPrev)
             {
                 conMsg.seqno = 0;    // rebuild..
+                return null;
             }
 
             var seqno = seqnoPrev;

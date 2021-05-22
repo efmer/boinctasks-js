@@ -56,6 +56,17 @@ $(document).ready(function() {
     ipcRenderer.send('log', 'button_error');
   });
 
+  ipcRenderer.on('translations', (event, dlg) => {
+    g_trans = dlg;
+    $("#log_copy").html( dlg.DLG_BUTTON_COPY);
+    $("#log_clear").html( dlg.DLG_BUTTON_CLEAR);
+    $("#log_log").html( dlg.DLG_BUTTON_LOG);
+    $("#log_debug").html( dlg.DLG_BUTTON_DEBUG);
+    $("#log_rules").html( dlg.DLG_BUTTON_RULES);
+    $("#log_error").html( dlg.DLG_BUTTON_ERROR);
+
+});
+
 
 });
 

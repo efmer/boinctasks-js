@@ -23,7 +23,7 @@ const logging = new Logging();
 const WindowsState = require('../functions/window_state');
 const windowsState = new WindowsState();
 const SendArray = require('../misc/send_array');
-const btconstants = require('../functions/btconstants');
+const btC = require('../functions/btconstants');
 
 const {BrowserWindow} = require('electron');
 
@@ -68,7 +68,7 @@ module.exports = SettingsAllow;
 function settings(gb)
 {
     try {
-        let title = "";
+        let title = "BoincTasks Js - " + btC.TL.DIALOG_BOINC_ALLOW.DSA_TITLE;
         if (gChildSettingsAllow == null)
         {
           let state = windowsState.get("settings_allow",700,800)
@@ -91,6 +91,7 @@ function settings(gb)
 //            gChildSettingsAllow.webContents.openDevTools()
             gChildSettingsAllow.show();  
             gChildSettingsAllow.setTitle(title);
+            gChildSettingsAllow.webContents.send("translations",btC.TL.DIALOG_BOINC_ALLOW);              
             getData(gb);
           })
           gChildSettingsAllow.webContents.on('did-finish-load', () => {
@@ -186,9 +187,9 @@ function showAllow()
     gAllowResults.sort(compare);
 
     let len = gAllowResults.length;
-    let tableCpu = "<table><tr><th></th><th></th><th>snooze (min)<th></tr>";
-    let tableGpu = "<table><tr><th></th><th></th><th>snooze (min)<th></tr>";
-    let tableNetwork = "<table><tr><th></th><th></th><th>snooze (min)<th></tr>";
+    let tableCpu = "<table><tr><th></th><th></th><th>" + btC.TL.DIALOG_BOINC_ALLOW.DSA_SNOOZE_MIN + "<th></tr>";
+    let tableGpu = "<table><tr><th></th><th></th><th>" + btC.TL.DIALOG_BOINC_ALLOW.DSA_SNOOZE_MIN + "<th></tr>";
+    let tableNetwork = "<table><tr><th></th><th></th><th>" + btC.TL.DIALOG_BOINC_ALLOW.DSA_SNOOZE_MIN + "<th></tr>";
   
     gAllowCpu = [];
     gAllowGpu = [];
@@ -262,14 +263,14 @@ function getMode(computer, id, mode, delay, perm)
 function getSelect(computer, id,mode, delay)
 {
   const SELECTED = "selected";
-  let idc = id + btconstants.SEPERATOR_ITEM + computer + btconstants.SEPERATOR_ITEM;
+  let idc = id + btC.SEPERATOR_ITEM + computer + btC.SEPERATOR_ITEM;
   let select = '<select>'
   if (mode == 2) {sel = SELECTED; sels = "✓"} else {sel = ""; sels = "";}
-  select += '<option ' + sel + ' value ="' + idc + RUN_MODE_AUTO + '">Based on prefercence ' + sels + '</option>';
+  select += '<option ' + sel + ' value ="' + idc + RUN_MODE_AUTO + '">' + btC.TL.DIALOG_BOINC_ALLOW.DSA_RUN_AUTO +  ' ' + sels + '</option>';
   if (mode == 1) {sel = SELECTED; sels = "✓"} else {sel = ""; sels = "";}
-  select += '<option ' + sel + ' value ="' + idc + RUN_MODE_ALWAYS + '">Always ' + sels + '</option>';
+  select += '<option ' + sel + ' value ="' + idc + RUN_MODE_ALWAYS + '">' + btC.TL.DIALOG_BOINC_ALLOW.DSA_RUN_ALWAYS + ' ' + sels + '</option>';
   if (mode == 3) {sel = SELECTED; sels = "✓"} else {sel = ""; sels = "";} 
-  select += '<option ' + sel + ' value ="' + idc + RUN_MODE_NEVER + '">Never/snooze ' + sels + '</option>'; 
+  select += '<option ' + sel + ' value ="' + idc + RUN_MODE_NEVER + '">' + btC.TL.DIALOG_BOINC_ALLOW.DSA_RUN_SNOOZE + ' ' + sels + '</option>'; 
   select += '</select>';
   return select;
 }
@@ -310,7 +311,7 @@ function parse(array,snooze)
     for (let i=0; i<array.length; i++)
     {
       let item = array[i];
-      let itemSlit = item.split(btconstants.SEPERATOR_ITEM);
+      let itemSlit = item.split(btC.SEPERATOR_ITEM);
       if (itemSlit.length === 3)
       {
         let obj = new Object();

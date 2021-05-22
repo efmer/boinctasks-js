@@ -16,6 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+const btconstants = require('../functions/btconstants');
 const Functions = require('../functions/functions');
 const functions = new Functions();
 const Logging = require('../functions/logging');
@@ -90,7 +91,7 @@ function auth2(event)
                     }
                     else
                     {
-                        logging.log("Connected to: " + ipc);
+                        logging.log(btconstants.TL.MSG_GENERAL.MSG_COMPUTER_CONNECTED + " " + ipc);
                     }
                     this.client_callback(this);
                 }

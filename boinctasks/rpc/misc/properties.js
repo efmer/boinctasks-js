@@ -94,7 +94,7 @@ function taskInfo(selected,gb)
               {
                   wu = resultF.wu;                        
                   prop += addInfo("Computer",computer);
-                  prop += addInfo("Project", url + " | " + resultF.project);
+                  prop += addInfo("Project", resultF.projectUrl + " | " + resultF.project);
                   let appUf =  conState.getAppUf(con, wu);
                   let app = conState.getApp(con, wu);
                   prop += addInfo("App Version", resultF.version);                        

@@ -24,20 +24,26 @@ const logging = new Logging();
 class ProcessNotices{
     process(connections, btNotices)
     {
+        let table = [];
         try{
-            let cTable = combine(connections, btNotices);
-            condense(cTable); 
-            return cTable;
+            if (btNotices !== null)
+            {
+                table = table.concat(btNotices);
+            }
+            let cTable = combine(connections);
+            condense(cTable);
+            table = table.concat(cTable);
         } catch (error) {
             logging.logError('ProcessNotices,process', error);  
         }
+        return table;
     }
 }
 module.exports = ProcessNotices;
 
-function combine(connections, btNotices)
+function combine(connections)
 {
-    let cTable = btNotices;
+    let cTable = [];
     try 
     {   
         for (let i=0;i<connections.length;i++)          

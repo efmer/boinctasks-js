@@ -92,6 +92,18 @@ $(document).ready(function() {
     $("#info_manager_status").html(msg);
   });
 
+  ipcRenderer.on('translations', (event, dlg) => {
+    $("#trans_selected_computers").html( dlg.DAM_SELECTED_COMPUTERS);
+    $("#trans_add_manager").html( dlg.DAM_ADD_MANAGER);
+    $("#trans_url").html( dlg.DAM_URL);
+    $("#trans_login").html( dlg.DAM_LOGIN);
+    $("#trans_password").html( dlg.DAM_PASSWORD);
+    $("#add_manager_button").html( dlg.DAM_BUTTON_ADD_MANAGER);
+    $("#sync_manager_button").html( dlg.DAM_BUTTON_SYNC);
+    $("#add_manager_website").html( dlg.DAM_BUTTON_WEBSITE);
+    $("#add_manager_detach").html( dlg.DAM_BUTTON_DETACH);    
+  });
+
 });
 
 function managerButton(sync)

@@ -14,7 +14,12 @@ body
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none;
 }
- 
+
+/* footer */
+
+.sidebar_computer_footer {
+	padding-left: 130px;
+}
 
 .bt_footer
 {
@@ -24,13 +29,13 @@ body
 	overflow: hidden;
 	z-index: 102; /* alway main footer */
 	width:100%;
-	padding-left: 110px;
+	min-height: 34px;
 }
 
 /* The header table */
 
 .sidebar_computer_header {
-	width: calc(100% - 114px)!important;
+	width: calc(100% - 136px)!important;
 }
 
 /* The table with header only */
@@ -346,13 +351,13 @@ body
 /* computer sidebar */
 
 .sidebar_computers_margin {
-	padding-left:100px; /* the same as the width in the sidebar */
+	padding-left:120px; /* the same as the width in the sidebar */
 }
 
 .sidebar_computers {
 	font-size: 0.8em;	
 	height: 100%; 
-	width: 100px; /* same as the sidebar margin */
+	width: 120px; /* same as the sidebar margin */
 	position: fixed;
 	z-index: 200;
 	top: 0;

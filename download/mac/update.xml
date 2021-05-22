@@ -1,14 +1,14 @@
 <update>
 	<os>darwin</os>
 	<release> 
-		<version>1.14</version>
+		<version>1.17</version>
 		<info>
 			• Now in a zip package.
 		</info>
 		<url>https://efmer.com/boinctasks-js/boinctasks-js-download/</url>
 	</release>
 	<beta>
-		<version>1.14</version>
+		<version>1.17</version>
 		<info>
 			• Now in a zip package.
 		</info>

@@ -18,47 +18,55 @@
 
 const Logging = require('../functions/logging');
 const logging = new Logging();
+const btC = require('../functions/btconstants');
+
+
+const SIDEBAR_COMPUTER_ID = "__c__";
+const SIDEBAR_PROJECT_ID = "__p__";
+const SIDEBAR_SELECT = 'class="sidebar_computers_sel"';
+
+let gSidebarProjectList = [];
 
 class SidebarComputers{
-  build(window,connections)
+  build(gb)
   {
     try {
       let bFoundGroup = false;
-      let conStatus = getConnectionStatus(connections);
+      let conStatus = getConnectionStatus(gb.connections);
       let group = undefined;
       let list = "";
       let sGroup = "";
 
-      for (let i=0;i< connections.length;i++)
+      for (let i=0;i< gb.connections.length;i++)
       {
-        let con = connections[i];
+        let con = gb.connections[i];
         if (con.check == '1')
         {
           let selComp = '';
           let selGrp = '';
           if (con.sidebar)
           {
-            selComp = 'class="sidebar_computers_sel"';
+            selComp = SIDEBAR_SELECT;
           }
           else selComp = "";
           if (con.sidebarGrp)
           {
-            selGrp = 'class="sidebar_computers_sel"';
+            selGrp = SIDEBAR_SELECT;
           }
           else selGrp = "";
           if (con.group != group)
           {
             group = con.group;         
-            if (group === '') sGroup = "Computers";
+            if (group === '') sGroup = btC.TL.SIDEBAR_COMPUTERS.SBC_COMPUTERS;
             else
             {
               sGroup = group;
               bFoundGroup = true;
             }
-            list += '<div id ="' + 'group,'  + group + '"' + selGrp + '>';
+            list += '<div id ="' + SIDEBAR_COMPUTER_ID + 'group,'  + group + '"' + selGrp + '>';
             list += sGroup + "</div>";
           }
-          list += '<div id ="' + con.computerName + '"' + selComp + '>';
+          list += '<div id ="' + SIDEBAR_COMPUTER_ID + con.computerName + '"' + selComp + '>';
           let status = conStatus[i];
           if (status !== null)
           {
@@ -70,104 +78,140 @@ class SidebarComputers{
         }
       }
 
-      if (bFoundGroup) list += '<br><div id ="__all_computers__">Select all</div>' ;
+      if (bFoundGroup) list = '<div id ="' + SIDEBAR_COMPUTER_ID + '__all_computers__">Select all</div>' + list  ;
 
       if (list.length === 0)
       {
-        list = "No computers....";
+        list = btC.TL.SIDEBAR_COMPUTERS.SBC_NO_COMPUTERS;
       }
       else
       {
-        list += "<br><br><br>"
+        list += "<br>";
       }
-      this.setStatus(window,connections);
-      window.webContents.send('sidebar_computers', list);
+
+      gSidebarProjectList = getProjects(gb);
+      list += '<div id="_add_projects_">' + gSidebarProjectList + '</div>';
+
+      this.setStatus(gb);
+      gb.mainWindow.webContents.send('sidebar_computers', list);
     } catch (error) {
       logging.logError('SidebarComputers,build', error);         
     }  
   }
 
-  click(window,connections, computer,ctrl)
+  click(gb, computer,ctrl)
   {
     try {
-      let group = "";
-      if (computer === "__all_computers__")
+      if (computer === "_sidebar_computers_") return;
+      if (computer === "_add_projects_") return;
+
+      if (computer.indexOf(SIDEBAR_COMPUTER_ID) >=0)
       {
-        connections[0].sidebarGrp = true;
-        group = connections[0].group;
-        for (let i=0;i<connections.length;i++)
+        computer = computer.replace(SIDEBAR_COMPUTER_ID,"");
+        let group = "";
+        if (computer === "__all_computers__")
         {
-          let con = connections[i];  
-          con.sidebarGrp = true;  
-          con.sidebar = false;
-        }
-      }
-      else
-      {
-        if (ctrl)
-        {
-          for (let i=0;i<connections.length;i++)
+          gb.connections[0].sidebarGrp = true;
+          group = connections[0].group;
+          for (let i=0;i<gb.connections.length;i++)
           {
-            let con = connections[i];           
-            if (con.computerName === computer)
-            {
-              con.sidebar = !con.sidebar;
-            }
-            else
-            {
-              let grp = computer.split("group,");
-              if (grp.length === 2)
-              {
-                if (con.group === grp[1])
-                {
-                  con.sidebarGrp = !con.sidebarGrp;  
-                }
-              }
-            }
-          }     
+            let con = gb.connections[i];  
+            con.sidebarGrp = true;  
+            con.sidebar = false;
+          }
         }
         else
         {
-          for (let i=0;i<connections.length;i++)
+          if (ctrl)
           {
-            let con = connections[i];           
-            con.sidebarGrp = false;  
-            con.sidebarGrp = false;   
-            if (con.computerName == computer)
+            for (let i=0;i<gb.connections.length;i++)
             {
-              con.sidebar = true;
-            }
-            else
-            {
-              con.sidebar = false;
-              let grp = computer.split("group,");
-              if (grp.length === 2)
+              let con = gb.connections[i];           
+              if (con.computerName === computer)
               {
-                if (con.group === grp[1])
+                con.sidebar = !con.sidebar;
+              }
+              else
+              {
+                let grp = computer.split("group,");
+                if (grp.length === 2)
                 {
-                  con.sidebarGrp = true;  
+                  if (con.group === grp[1])
+                  {
+                    con.sidebarGrp = !con.sidebarGrp;  
+                  }
                 }
               }
-            }
-          }     
+            }     
+          }
+          else
+          {
+            for (let i=0;i<gb.connections.length;i++)
+            {
+              let con = gb.connections[i];           
+              con.sidebarGrp = false;  
+              con.sidebarGrp = false;   
+              if (con.computerName == computer)
+              {
+                con.sidebar = true;
+              }
+              else
+              {
+                con.sidebar = false;
+                let grp = computer.split("group,");
+                if (grp.length === 2)
+                {
+                  if (con.group === grp[1])
+                  {
+                    con.sidebarGrp = true;  
+                  }
+                }
+              }
+            }     
+          }
+        }
+        this.build(gb)
+      }
+      else 
+      {
+        if (computer.indexOf(SIDEBAR_PROJECT_ID) >=0)
+        {
+          gb.projectSelected = computer.replace(SIDEBAR_PROJECT_ID,"");
+          this.build(gb)
         }
       }
-
-      this.build(window,connections)
     } catch (error) {
       logging.logError('SidebarComputers,click', error);         
     }      
   }
 
-  setStatus(window,connections)
+  setStatus(gb)
   {
     try {
-      let conStatus = getConnectionStatus(connections);
-
-      window.webContents.send('sidebar_computers_status', conStatus);     
+      let conStatus = getConnectionStatus(gb.connections);
+      gb.mainWindow.webContents.send('sidebar_computers_status', conStatus);
     } catch (error) {
       logging.logError('SidebarComputers,setStatus', error);   
     }
+  }
+
+//  getSelectedProject()
+//  {
+//    return gb.projectSelected;
+//  }
+
+  addProjects(gb)
+  {
+    try {
+      let projects = getProjects(gb);
+      if ( projects !== gSidebarProjectList)
+      {
+        gSidebarProjectList = projects;
+        gb.mainWindow.webContents.send('sidebar_projects', projects);        
+      }
+    } catch (error) {
+      logging.logError('SidebarComputers,addProjects', error);   
+    }  
   }
 }
 
@@ -215,4 +259,57 @@ function getConnectionStatus(connections)
   } catch (error) {
     logging.logError('SidebarComputers,getConnectionStatus', error);   
   }
+}
+
+function getProjects(gb)
+{
+  let all = btC.TL.SIDEBAR_COMPUTERS.SBC_PROJECTS;
+  if (gb.projectSelected === void 0) gb.projectSelected = all;
+  let selComp = '';
+  if (gb.projectSelected === all) selComp = SIDEBAR_SELECT;
+  let list = '<div id ="' + SIDEBAR_PROJECT_ID + all + '"' +  selComp + '>' + all +  "</div>";
+  let projects = [];
+  try {
+    for (let i=0;i<gb.connections.length;i++)
+    {
+      let con = gb.connections[i];
+      if (con.check == '1')
+      {
+        if (con.auth)
+        {
+          if (con.state != null)
+          {
+            let cache = con.cacheProject
+            if (cache !== void 0)
+            {
+              for (let c=0;c<cache.project.length;c++)
+              {
+                let project = cache.project[c];
+                  if (projects.indexOf(project) < 0)
+                  {
+                    projects.push(project);
+                  }
+              }
+            }
+          }
+        }
+      }
+    }
+    for (let i=0;i<projects.length;i++)
+    {
+      let selProject;
+      let project = projects[i];
+      if (project === gb.projectSelected) selProject = SIDEBAR_SELECT;
+      else selProject = "";
+      if (project.length >= 10)
+      {
+        project = project.slice(0, 14)
+      }
+      list += '<div id ="' + SIDEBAR_PROJECT_ID + projects[i] + '"' +  selProject + '>┗' + project +  "</div>";
+    }
+  } catch (error) {
+    logging.logError('SidebarComputers,getProjects', error);  
+  }
+
+  return list;
 }

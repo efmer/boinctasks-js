@@ -23,7 +23,8 @@ const windowsState = new WindowsState();
 const ReadWrite  = require('../functions/readwrite');
 const readWrite = new ReadWrite();
 
-const {BrowserWindow} = require('electron')
+const {BrowserWindow} = require('electron');
+const btC = require('../functions/btconstants');
 
 
 // https://www.cssscript.com/color-picker-alpha-selection/
@@ -115,7 +116,7 @@ module.exports = SettingsColor;
 function addColorWindow(theme)
 {
     try {
-        let title = "BoincTasks Settings Color";
+        let title = "BoincTasks Js - " + btC.TL.DIALOG_COLORS_BT.DC_BT_TITLE;
         if (gChildSettingsColor == null)
         {
           let state = windowsState.get("settings_color",700,800)
@@ -135,9 +136,10 @@ function addColorWindow(theme)
           });
           gChildSettingsColor.loadFile('index/index_settings_color.html')
           gChildSettingsColor.once('ready-to-show', () => {    
-//              gChildSettingsColor.webContents.openDevTools()
+            //  gChildSettingsColor.webContents.openDevTools()
               gChildSettingsColor.show();  
               gChildSettingsColor.setTitle(title);
+              gChildSettingsColor.webContents.send("translations",btC.TL.DIALOG_COLORS_BT);                  
               gChildSettingsColor.send('settings_color', gSettingsColor); 
           })
           gChildSettingsColor.webContents.on('did-finish-load', () => {
@@ -155,7 +157,7 @@ function addColorWindow(theme)
         {
           gChildSettingsColor.setTitle(title); 
           gChildSettingsColor.hide();
-          gChildSettingsColor.show();
+          gChildSettingsColor.show();      
           //connections.addProject(gChildAddProject,'ready');    
         }
               

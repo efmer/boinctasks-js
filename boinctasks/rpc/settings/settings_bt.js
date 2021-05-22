@@ -28,7 +28,7 @@ const windowsState = new WindowsState();
 const {BrowserWindow, app} = require('electron');
 const Functions = require('../functions/functions');
 const functions = new Functions();
-const btConstants = require('../functions/btconstants');
+const btC = require('../functions/btconstants');
 
 let gSettingsBt = null;
 let gChildSettings = null;
@@ -54,7 +54,7 @@ class SettingsBt{
   {
     let json = null;
     try {
-      gSettingsBt = settings;
+    gSettingsBt = settings;
       isValid();
       json = JSON.stringify(settings);
       readWrite.write("settings", "settings_boinctasks.json",json);
@@ -78,7 +78,7 @@ module.exports = SettingsBt;
 function settings(settings,theme)
 {
     try {
-        let title = "BoincTasks Settings";
+        let title = "BoincTasks Js " + btC.TL.DIALOG_SETTINGS_BT.DS_BT_TITLE;
         if (gChildSettings == null)
         {
           let state = windowsState.get("settings_boinctasks",700,800)
@@ -101,6 +101,7 @@ function settings(settings,theme)
   //            gChildSettings.webContents.openDevTools()
               gChildSettings.show();  
               gChildSettings.setTitle(title);
+              gChildSettings.webContents.send("translations",btC.TL.DIALOG_SETTINGS_BT);                
               setTimeout(timerSettings,200,settings); // delay to make sure the windows is ready.
           })
           gChildSettings.webContents.on('did-finish-load', () => {
@@ -210,7 +211,7 @@ function isValid()
   {
     gSettingsBt.socketTimeout = 4;
   }
-  btConstants.CONNECTION_TIMEOUT = parseInt(gSettingsBt.socketTimeout);
+  btC.CONNECTION_TIMEOUT = parseInt(gSettingsBt.socketTimeout);
 
   /* Doesn't work in Windows Store
   if (gSettingsBt.startLogin === '1')

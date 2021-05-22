@@ -28,9 +28,10 @@ const windowsState = new WindowsState();
 
 const {BrowserWindow } = require('electron');
 const { networkInterfaces } = require('os');
+const btC = require("../functions/btconstants");
 
 let SCAN_TIMEOUT = 15;
-let NO_PASSWORD = "Unable to connect";
+let NO_PASSWORD = btC.TL.DIALOG_COMPUTER_SCAN.DSC_NO_PASSWORD;
 
 let gChildWindowScan = null;
 let gCssDark = null;
@@ -69,7 +70,7 @@ class ScanComputers{
             lScanPassword = password;
             lScanPort = port;
 
-            gChildWindowScan.webContents.send('computer_scan_explain', "");
+            gChildWindowScan.webContents.send('trans_scan_explain', "");
             lScanFinished = false;
             if (lScanBusy)
             {
@@ -81,8 +82,7 @@ class ScanComputers{
             logging.logDebug("");      
             logging.logDebug("Scan computers: Begin");
 
-            let txt  = "Please be patient this can take a while...<br><br>";
-            gChildWindowScan.webContents.send('computer_scan_text', txt);    
+            gChildWindowScan.webContents.send('computer_scan_text', "");    
             scanAll();
         } catch (error) {
             logging.logError('ScanComputers,startScan', error);     
@@ -326,7 +326,7 @@ function scanFinished()
 function foundList()
 {
     try {
-        let txt = "Computers with BOINC:";
+        let txt = btC.TL.DIALOG_COMPUTER_SCAN.DCS_WITH_BOINC;
         txt += "<br><br>"
         txt += "<table>";
         let len = lScanFoundAllInfo.length;
@@ -352,18 +352,18 @@ function foundList()
 
             txt += "<tr>";
             txt+=  '<td><input type="checkbox" id="scan-check-' + i + '"><td>';
-            txt+= "<td><b>Ip</b>: ";
+            txt+= "<td><b>" + btC.TL.DIALOG_COMPUTER_SCAN.DCS_IP + "</b>: ";
             txt+= '<span id="scan-ip-' + i + '">' + ip + '</span></td>';
-            txt+= "<td><b>Name</b>: ";
+            txt+= "<td><b>" + btC.TL.DIALOG_COMPUTER_SCAN.DCS_NAME + "</b>: ";
             txt+= '<span id="scan-name-' + i + '">' + computerName + '</span></td>';            
-            txt+= "<td><b>Cpid</b>: ";
+            txt+= "<td><b>" + btC.TL.DIALOG_COMPUTER_SCAN.DCS_CPID + "</b>: ";
             txt+= '<span id="scan-cpid-' + i + '">' + cpid + '</span></td>';
             txt+= "</tr>";
         }
         txt += "</table>";
-        txt += '<br><button id="addSelectedButton">Add selected computers</button>';
+        txt += '<br><button id="addSelectedButton">' + btC.TL.DIALOG_COMPUTER_SCAN.DCS_ADD_SELECTED + '</button>';
         txt += "<br><br>";
-        txt += "If you see: " + NO_PASSWORD + " , you found a BOINC client, with a wrong password or a allow to connect problem.";
+        txt += btC.TL.DIALOG_COMPUTER_SCAN.DSC_EXPLAIN_FINISH + " " + NO_PASSWORD + " , " + btC.TL.DIALOG_COMPUTER_SCAN.DSC_EXPLAIN_FINISH2;
         gChildWindowScan.webContents.send('computer_scan_text', txt); 
 
         logging.logDebug("Scan computers: End");
@@ -376,28 +376,29 @@ function foundList()
 function sendList()
 {
     try {
-        let txt = "Computers with BOINC:<br><br>";
+        let txt = btC.TL.DIALOG_COMPUTER_SCAN.DCS_WITH_BOINC;
+        txt += "<br><br>";
 
         let readyTime = lScanTimeoutCount;        
         let phase = "";
-        if (lbScanPhase2) phase = "now scanning using the password";
+        if (lbScanPhase2) phase = btC.TL.DIALOG_COMPUTER_SCAN.DSC_NOW_PASSWORD;
         if (!lbScanPhase2 && lScanPassword.length !== 0)
         {
             readyTime += SCAN_TIMEOUT;
         }
 
-        txt += "To scan: " + lScanCount + " , ready in: " + readyTime + " seconds , " + phase;
+        txt += btC.TL.DIALOG_COMPUTER_SCAN.TO_SCAN + " " +  lScanCount + " " + btC.TL.DIALOG_COMPUTER_SCAN.DCS_READY_IN + " " + readyTime + " " + btC.TL.DIALOG_COMPUTER_SCAN.DCS_SECONDS  + " " + phase;
         txt += "<br><br>";
         txt += "<table>";
         for (let i=0; i<lScanFoundAllInfo.length; i++)
         {
             txt += "<tr>";            
             let sf =  lScanFoundAllInfo[i];
-            txt+= "<td>Ip: ";
+            txt+= "<td>" + btC.TL.DIALOG_COMPUTER_SCAN.DCS_IP + ": ";
             txt+= sf.ip;
-            txt+= "</td><td>Name: ";
+            txt+= "</td><td>" + btC.TL.DIALOG_COMPUTER_SCAN.DCS_NAME + ": ";
             txt+= sf.computerName;
-            txt+= "</td><td>Cpid: ";
+            txt+= "</td><td>" + btC.TL.DIALOG_COMPUTER_SCAN.DCS_CPID + ": ";
             txt+= sf.cpid;
             txt += "</td></tr>";
         }
@@ -490,7 +491,7 @@ function scanFound(scanObj)
 function showComputerScan(theme)
 {
   var log = "";
-  var title = "Computer Scan";
+  var title = "BoincTasks Js - " + btC.TL.DIALOG_COMPUTER_SCAN.DCS_TITLE;
 
   if (gChildWindowScan == null)
   {
@@ -513,6 +514,7 @@ function showComputerScan(theme)
     gChildWindowScan.loadFile('index/index_scan.html')
     gChildWindowScan.once('ready-to-show', () => {    
         windowReady(title);
+        gChildWindowScan.webContents.send("translations",btC.TL.DIALOG_COMPUTER_SCAN);         
  //     childWindowScan.webContents.openDevTools() // debug only
 
     }) 
@@ -553,15 +555,8 @@ function windowReady(title)
     gChildWindowScan.hide()    
     gChildWindowScan.show();  
     gChildWindowScan.webContents.send('computer_scan_text', ""); 
-    gChildWindowScan.webContents.send('computer_scan_show');     
-
-    let explain = "The password can be found in the BOINC data folder in a file called gui_rpc_auth.cfg.<br>";
-    explain += "If you did't already, make sure BOINC connections are allowed by editing remote_host.cfg on the remote computer.<br><br>";
-    explain += '<a href="https://efmer.com/boinctasks-js-find-computers/">Click here read the BoincTasks manual before proceeding</a>.<br><br><br>';
-    explain += "Fill in the password or leave it empty (you don't get a computer name if you leave it empty)<br>";
-    explain += "You may leave the port empty for the default 31416.<br><br>";
-
-    gChildWindowScan.webContents.send('computer_scan_explain', explain);     
+    gChildWindowScan.webContents.send('computer_scan_show');
+    gChildWindowScan.webContents.send('trans_scan_explain', btC.TL.DIALOG_COMPUTER_SCAN.DCS_EXPLAIN);     
     gChildWindowScan.setTitle(title);
 }
 

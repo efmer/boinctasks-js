@@ -46,5 +46,11 @@ $(document).ready(function() {
         } catch (error) {
             var ii = 1;    
         }        
-    }); 
+    });
+
+    ipcRenderer.on('translations', (event, dlg) => {
+        $("#trans_info").html( dlg.DCO_INFO);
+        $("#apply").html( dlg.DCO_APPLY);
+    });
+
 });

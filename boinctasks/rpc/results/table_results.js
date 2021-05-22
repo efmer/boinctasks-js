@@ -21,7 +21,7 @@ const logging = new Logging();
 const Functions = require('../functions/functions');
 const functions = new Functions();
 
-const btConstants = require('../functions/btconstants');
+const btC = require('../functions/btconstants');
 
 class BtTableResults{
   tableHeader(gb, sidebar)
@@ -40,7 +40,7 @@ class BtTableResults{
     {
       if (cTable[0].length === 0)
       {
-        return btConstants.EMPTY_TABLE;
+        return btC.TL.TAB_MSG.TM_EMPTY_TABLE;
       }
     }
     let color = gb.color;
@@ -103,21 +103,30 @@ function tableResultsArray(gb, resultTable, color)
 
     let filter = resultTable[0]
 
+    let bProject = gb.projectSelected !== btC.TL.SIDEBAR_COMPUTERS.SBC_PROJECTS;
+
     for (var i =1; i<resultTable.length; i++) // first is filter
     {
-      var bFoundF = false;
-      var rt = resultTable[i];
+      let rt = resultTable[i];      
+      if (bProject)
+      {
+        if (gb.projectSelected !== rt.project)
+        {
+          continue;
+        }
+      }
+      let bFoundF = false;
       if (rt.filtered)
       {
-        var app = rt.computerName+rt.app+rt.statusS;
-        for (var f=0;f<filter.length;f++)
+        let app = rt.computerName+rt.app+rt.statusS;
+        for (let f=0;f<filter.length;f++)
         {
           if (app === filter[f])
           {
             bFoundF = true;
             tableArray.push(tableResultItem(selRows, i, order, resultTable[i],true, color));
-            var rtf = rt.resultTable;
-            for (var rt=0;rt<rtf.length;rt++)
+            let rtf = rt.resultTable;
+            for (let rt=0;rt<rtf.length;rt++)
             { 
               tableArray.push(tableResultItem(selRows, i+rt, order, rtf[rt],false, color));
             }
@@ -126,9 +135,9 @@ function tableResultsArray(gb, resultTable, color)
       }
       if (!bFoundF)
       {
-        tableArray.push(tableResultItem(selRows, i, order, resultTable[i],false, color));
+          tableArray.push(tableResultItem(selRows, i, order, rt,false, color));
       }
-    }    
+    }
 
     // check if selected still present.
     for (let s=0; s<selRows.rowSelected.length;s++)
@@ -156,23 +165,23 @@ function tableResultsHeader(gb, addText)
   let order = gb.order.tasks;
   if (addText)
   {
-    items[order.order[0]] = addRowHeader(order.check[0],true, gb, 0, btConstants.GENERAL_COMPUTER);
-    items[order.order[1]] = addRowHeader(order.check[1],true, gb, 1, btConstants.GENERAL_PROJECT);
-    items[order.order[2]] = addRowHeader(order.check[2],true, gb, 2, btConstants.GENERAL_APPLICATION);
-    items[order.order[3]] = addRowHeader(order.check[3],true, gb, 3, btConstants.GENERAL_NAME);
-    items[order.order[4]] = addRowHeader(order.check[4],true, gb, 4, btConstants.GENERAL_ELAPSED);
-    items[order.order[5]] = addRowHeader(order.check[5],true, gb, 5, btConstants.GENERAL_CPU);
-    items[order.order[6]] = addRowHeader(order.check[6],true, gb, 6, btConstants.GENERAL_PROGRESS);
-    items[order.order[7]] = addRowHeader(order.check[7],true, gb, 7, btConstants.TASK_TIMELEFT);
-    items[order.order[8]] = addRowHeader(order.check[8],true, gb, 8, btConstants.TASK_DEADLINE);  
-    items[order.order[9]] = addRowHeader(order.check[9],true, gb, 9, btConstants.TASK_USE); 
-    items[order.order[10]] = addRowHeader(order.check[10],true, gb, 10, btConstants.GENERAL_STATUS);
-    items[order.order[11]] = addRowHeader(order.check[11],true, gb, 11, btConstants.TASK_CHECKPOINT);
-    items[order.order[12]] = addRowHeader(order.check[12],true, gb, 12, btConstants.TASK_RECEIVED);
-    items[order.order[13]] = addRowHeader(order.check[13],true, gb, 13, btConstants.TASK_MEMORYV);
-    items[order.order[14]] = addRowHeader(order.check[14],true, gb, 14, btConstants.TASK_MEMORY);
-    items[order.order[15]] = addRowHeader(order.check[15],true, gb, 15, btConstants.TASK_TEMP);
-    items[order.order[16]] = addRowHeader(order.check[16],true, gb, 16, btConstants.TASK_TTHROTTLE);        
+    items[order.order[0]] = addRowHeader(order.check[0],true, gb, 0, btC.TL.TAB.T_GENERAL_COMPUTER); 
+    items[order.order[1]] = addRowHeader(order.check[1],true, gb, 1, btC.TL.TAB.T_GENERAL_PROJECT);
+    items[order.order[2]] = addRowHeader(order.check[2],true, gb, 2, btC.TL.TAB.T_GENERAL_APPLICATION);
+    items[order.order[3]] = addRowHeader(order.check[3],true, gb, 3, btC.TL.TAB.T_GENERAL_NAME);
+    items[order.order[4]] = addRowHeader(order.check[4],true, gb, 4, btC.TL.TAB.T_GENERAL_ELAPSED);
+    items[order.order[5]] = addRowHeader(order.check[5],true, gb, 5, btC.TL.TAB.T_GENERAL_CPU);
+    items[order.order[6]] = addRowHeader(order.check[6],true, gb, 6, btC.TL.TAB.T_GENERAL_PROGRESS);
+    items[order.order[7]] = addRowHeader(order.check[7],true, gb, 7, btC.TL.TAB.T_TASK_TIMELEFT);
+    items[order.order[8]] = addRowHeader(order.check[8],true, gb, 8, btC.TL.TAB.T_TASK_DEADLINE);  
+    items[order.order[9]] = addRowHeader(order.check[9],true, gb, 9, btC.TL.TAB.T_TASK_USE); 
+    items[order.order[10]] = addRowHeader(order.check[10],true, gb, 10, btC.TL.TAB.T_GENERAL_STATUS);
+    items[order.order[11]] = addRowHeader(order.check[11],true, gb, 11, btC.TL.TAB.T_TASK_CHECKPOINT);
+    items[order.order[12]] = addRowHeader(order.check[12],true, gb, 12, btC.TL.TAB.T_T_TASK_RECEIVED);
+    items[order.order[13]] = addRowHeader(order.check[13],true, gb, 13, btC.TL.TAB.T_TASK_MEMORYV);
+    items[order.order[14]] = addRowHeader(order.check[14],true, gb, 14, btC.TL.TAB.T_TASK_MEMORY);
+    items[order.order[15]] = addRowHeader(order.check[15],true, gb, 15, btC.TL.TAB.T_TASK_TEMP);
+    items[order.order[16]] = addRowHeader(order.check[16],true, gb, 16, btC.TL.TAB.T_TASK_TTHROTTLE);        
   }
   else
   {
@@ -215,10 +224,10 @@ function tableResultItem(selRows, i, order, result, filter, colorObj)
     let wuName = result.wuName;
     let app = result.app;
     let status = result.statusS;
-    let selId = wuName + btConstants.SEPERATOR_SELECT + computer + btConstants.SEPERATOR_SELECT + projectUrl;
+    let selId = wuName + btC.SEPERATOR_SELECT + computer + btC.SEPERATOR_SELECT + projectUrl;
     if (result.filtered)
     {
-      selId += app + btConstants.SEPERATOR_FILTER + computer;
+      selId += app + btC.SEPERATOR_FILTER + computer;
     }
     let iSel = selRows.rowSelected.indexOf(selId)
     if (iSel >= 0)
@@ -256,7 +265,7 @@ function tableResultItem(selRows, i, order, result, filter, colorObj)
       {
         wu = "▶ " + wu;        
       }
-      item = '<div id="filter' + btConstants.SEPERATOR_ITEM + computer+app+status + '" class="' + sclass + '">'+ wu + '</div>'  
+      item = '<div id="filter' + btC.SEPERATOR_ITEM + computer+app+status + '" class="' + sclass + '">'+ wu + '</div>'  
       items[order.order[3]] = addRow(order.check[3],selId,3,item);   
     }
     else  items[order.order[3]] = addRow(order.check[3],selId, 3, wuName);  
@@ -355,7 +364,7 @@ function tableResultItem(selRows, i, order, result, filter, colorObj)
         }
         else
         {
-          temp = result.cpuTemp
+          temp = result.cpuTemp + " ℃";
         }
       }
       items[order.order[15]] = addRow(order.check[15], selId, 15, temp);      
@@ -412,7 +421,7 @@ function tableResultItem(selRows, i, order, result, filter, colorObj)
 function addRow(check, rowId, cell, item)
 {
   if (!check) return "";
-  let id = ' id="r'+ btConstants.SEPERATOR_ITEM + rowId + btConstants.SEPERATOR_ITEM + cell +'"';
+  let id = ' id="r'+ btC.SEPERATOR_ITEM + rowId + btC.SEPERATOR_ITEM + cell +'"';
   return '<td' + id + ">" + item + "</td>";
 }
 
@@ -451,7 +460,7 @@ function addRowHeader(check, showSort ,gb , cell, item)
   let width = gb.widthTasks[cell];
   widthS = ' style="width:' + width + '%" ';
 
-  if (gb.headerAction === btConstants.HEADER_RESIZE)
+  if (gb.headerAction === btC.HEADER_RESIZE)
   {
     hclass = 'class="resizer"';
 
@@ -524,10 +533,10 @@ function getColor(i, color, result, cpuGpu)
     {
       switch(statusN) // GPU
       {
-        case btConstants.TASK_STATUS_READY_REPORT_N:
+        case btC.TASK_STATUS_READY_REPORT_N:
             color = color['#gtask_ready_report'];
         break;
-        case btConstants.TASK_STATUS_RUNNING_N:
+        case btC.TASK_STATUS_RUNNING_N:
           if (hp)
           {
             color = color['#gtask_running_hp'];
@@ -537,26 +546,26 @@ function getColor(i, color, result, cpuGpu)
             color = color['#gtask_running'];
           }
         break;
-        case btConstants.TASK_STATUS_WAITING_N:
+        case btC.TASK_STATUS_WAITING_N:
           color = color['#gtask_waiting_run'];
         break;
-        case btConstants.TASK_STATUS_READY_START_N:
+        case btC.TASK_STATUS_READY_START_N:
           color = color['#gtask_ready_start'];
         break; 
-        case btConstants.TASK_STATUS_COMPUTATION_N:
+        case btC.TASK_STATUS_COMPUTATION_N:
           color = color['#gtask_error'];
         break;  
-        case btConstants.TASK_STATUS_SUSPENDED_N: 
+        case btC.TASK_STATUS_SUSPENDED_N: 
           color = color['#gtask_suspended']; 
         break;
-        case btConstants.TASK_STATUS_SUSPENDED_USER_N:
+        case btC.TASK_STATUS_SUSPENDED_USER_N:
           color = color['#gtask_suspended_user'];
         break;        
-        case btConstants.TASK_STATUS_ABORT_N: 
+        case btC.TASK_STATUS_ABORT_N: 
           color = color['#gtask_abort'];
         break;   
-        case btConstants.TASK_STATUS_DOWNLOADING_N:                  
-        case btConstants.TASK_STATUS_UPLOADING_N: 
+        case btC.TASK_STATUS_DOWNLOADING_N:                  
+        case btC.TASK_STATUS_UPLOADING_N: 
           color = color['#gtask_download'];
         break;             
       }      
@@ -565,10 +574,10 @@ function getColor(i, color, result, cpuGpu)
     {
       switch(statusN)
       {
-        case btConstants.TASK_STATUS_READY_REPORT_N:
+        case btC.TASK_STATUS_READY_REPORT_N:
             color = color['#task_ready_report'];
         break;
-        case btConstants.TASK_STATUS_RUNNING_N:
+        case btC.TASK_STATUS_RUNNING_N:
           if (hp)
           {
             color = color['#task_running_hp'];
@@ -578,26 +587,26 @@ function getColor(i, color, result, cpuGpu)
             color = color['#task_running'];
           }
         break;
-        case btConstants.TASK_STATUS_WAITING_N:
+        case btC.TASK_STATUS_WAITING_N:
           color = color['#task_waiting_run'];
         break;
-        case btConstants.TASK_STATUS_READY_START_N:
+        case btC.TASK_STATUS_READY_START_N:
           color = color['#task_ready_start'];
         break; 
-        case btConstants.TASK_STATUS_COMPUTATION_N:
+        case btC.TASK_STATUS_COMPUTATION_N:
           color = color['#task_error'];
         break;  
-        case btConstants.TASK_STATUS_SUSPENDED_N: 
+        case btC.TASK_STATUS_SUSPENDED_N: 
           color = color['#task_suspended']; 
         break;
-        case btConstants.TASK_STATUS_SUSPENDED_USER_N:
+        case btC.TASK_STATUS_SUSPENDED_USER_N:
           color = color['#task_suspended_user'];
         break;        
-        case btConstants.TASK_STATUS_ABORT_N: 
+        case btC.TASK_STATUS_ABORT_N: 
           color = color['#task_abort'];
         break;   
-        case btConstants.TASK_STATUS_DOWNLOADING_N:                  
-        case btConstants.TASK_STATUS_UPLOADING_N: 
+        case btC.TASK_STATUS_DOWNLOADING_N:                  
+        case btC.TASK_STATUS_UPLOADING_N: 
           color = color['#task_download'];
         break;             
       }      

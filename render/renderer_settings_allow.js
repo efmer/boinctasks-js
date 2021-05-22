@@ -66,6 +66,15 @@ $(document).ready(function() {
         });
 
         ipcRenderer.send('settings_allow',combined);
-    });    
+    });
+
+    ipcRenderer.on('translations', (event, dlg) => {
+        $("#trans_allow_cpu").html( dlg.DSA_ALLOW_TO_RUN_CPU);
+        $("#trans_allow_gpu").html( dlg.DSA_ALLOW_TO_RUN_GPU);
+        $("#trans_allow_network").html( dlg.DSA_ALLOW_NETWORK);
+        $("#apply").html( dlg.DSA_BUTTON_APPLY);
+
+    });
+
 });
 

@@ -55,8 +55,25 @@ $(document).ready(function() {
   });
 
   ipcRenderer.on('table_data', (event, tableData, nr) => {
+// might be faster, but not by much...
+//    let el = document.getElementById('bt_table_insert');
+//    el.innerHTML = tableData;
     $("#bt_table_insert").html(tableData);
     $("#footer_number").html(nr);
+
+    $("td").mouseenter(function (e) {
+      try {
+
+        if (e.target.offsetWidth < e.target.scrollWidth)    
+        {
+          let txt = e.target.innerText;
+          e.target.title = txt;
+        }       
+      } catch (error) {        
+      }
+  });
+
+
   });
 
   ipcRenderer.on('notices', (event, msg) => {
@@ -75,6 +92,16 @@ $(document).ready(function() {
     })
   });
 
+  ipcRenderer.on('translations', (event, sel) => {
+    $("#tab_computers").html(sel.SEL_COMPUTERS);
+    $("#tab_projects").html(sel.SEL_PROJECTS);
+    $("#tab_task").html(sel.SEL_TASKS);
+    $("#tab_transfers").html(sel.SEL_TRANSFERS);
+    $("#tab_messages").html(sel.SEL_MESSAGES);
+    $("#tab_history").html(sel.SEL_HISTORY);
+    $("#tab_notices").html(sel.SEL_NOTICES);
+  });
+
   ipcRenderer.on('set_tab', (event, tab) => {
     changeTab(tab,false);
   });
@@ -83,16 +110,7 @@ $(document).ready(function() {
     $("#footer_status").html(status);
   });
 
-  ipcRenderer.on('set_dark_mode', (event, darkmode) => {
-    let mode;
-    if (darkmode)
-    {
-      mode = ' <span id="dark_mode_select" class="ef_btn_toolbar bt_img_dark_dark">Dark</span>';
-    }
-    else
-    {
-      mode = ' <span id="dark_mode_select" class="ef_btn_toolbar bt_img_dark_light">Light</span>';
-    }
+  ipcRenderer.on('set_dark_mode', (event, mode) => {
     $("#footer_dark_mode").html(mode);
 
     $("#dark_mode_select").click(function( event ) {
@@ -105,31 +123,37 @@ $(document).ready(function() {
   });
 
   ipcRenderer.on('sidebar_computers', (event, sidebar) => {
-    $("#sidebar_computers").html(sidebar);
+    $("#_sidebar_computers_").html(sidebar);
   });
+
   ipcRenderer.on('sidebar_computers_status', (event, conStatus) => {
     setConnectionStatus(conStatus);
-  });  
+  }); 
 
   ipcRenderer.on('sidebar_computers_active', (event, set) => {
     if (set)
     {
-      $("#bt_wrapper").addClass("sidebar_computers_margin");  
-      $("#sidebar_computers").removeClass("hidden");         
+      $("#bt_wrapper").addClass("sidebar_computers_margin");
+      $("#bt_toolbar").addClass("sidebar_computer_footer");
+      $("#_sidebar_computers_").removeClass("hidden");         
     }
     else
     {
-      $("#bt_wrapper").removeClass("sidebar_computers_margin"); 
-      $("#sidebar_computers").addClass("hidden");          
+      $("#bt_wrapper").removeClass("sidebar_computers_margin");
+      $("#bt_toolbar").removeClass("sidebar_computer_footer");
+      $("#_sidebar_computers_").addClass("hidden");          
     }
   });
+
+  ipcRenderer.on('sidebar_projects', (event, sidebar) => {
+    $("#_add_projects_").html(sidebar);
+  }); 
 
   ipcRenderer.on('get_computers', (event, connections) => {
     let con = getComputers(connections);
     ipcRenderer.send('got_computers', con);
   });
   
-
  document.getElementById("bt_table_header").onclick = function(e)
  {
    var id = e.target.id;
@@ -153,7 +177,7 @@ $(document).ready(function() {
     ipcRenderer.send('toolbar_click', id) 
   }
 
-  document.getElementById("sidebar_computers").onclick = function(e)
+  document.getElementById("_sidebar_computers_").onclick = function(e)
   {
     var ctrl = e.ctrlKey;     
     var id = e.target.id;

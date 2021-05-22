@@ -10,45 +10,54 @@
   <title>BoincTasks Settings</title>
   </head>
   <body>
-    <b>At login</b><br>
+    <form>
+      <label for="language">Select language:</label>
+      <select id="language_list" name="language" id="language">
+        <option id="lang_english" value="lang_english">English</option>
+        <option id="lang_dutch" value="lang_dutch">Nederlands, Dutch</option>
+      </select>
+    </form>
+    <br>
+
+    <b><div id="trans_login">At login</div></b><br>
     <br>
     <!-- <input id="start_at_login" name="start_at_login" type="checkbox"> <label for="start_at_login"> Start BoincTasks Js at login</label><br> -->
-    <input id="hide_at_login" name="hide_at_login" type="checkbox"> <label for="hide_at_login"> Start BoincTasks Js hidden</label>
+    <input id="hide_at_login" name="hide_at_login" type="checkbox"> <label id="trans_hide" for="hide_at_login"> Start BoincTasks Js hidden</label>
     <br><br><hr>
-    <b>Styling</b><br>
+    <b><div id="trans_styling">Styling</div></b><br>    
     <br>
-    Default = empty, more info <a href="https://efmer.com/boinctasks-js/boinctasks-js-faq/">FAQ</a><br><br>
+    <span id="trans_styling_def">Default = empty, more info </span> <a href="https://efmer.com/boinctasks-js/boinctasks-js-faq/">FAQ</a><br><br>
     <textarea  id="extra_css" name="extra_css" rows="4"></textarea> <label for="extra_css"><br>
     <br><br><hr>
-    <b>Timing</b><br>
+    <b><div id="trans_timing">Timing</div></b><br>
     <br>
-    <input id="refresh_rate" name="refresh_rate" type="text"> <label for="refresh_rate"> Refresh rate (Default 2 seconds, minimum 1 second)</label>
+    <input id="refresh_rate" name="refresh_rate" type="text"> <label id="trans_timing_refresh" for="refresh_rate"> Refresh rate (Default 2 seconds, minimum 1 second)</label>
     <br>
     <br>
-    <input id="history_refresh_rate" name="history_refresh_rate" type="text"><label for="history_refresh_rate"> History refresh rate (default 60 seconds, minimum 20 seconds, 0 to disable)</label>
+    <input id="history_refresh_rate" name="history_refresh_rate" type="text"> <label id="trans_timing_history_refresh" for="history_refresh_rate"> History refresh rate (default 60 seconds, minimum 20 seconds, 0 to disable)</label>
 
     <br><br><hr>
-    <b>History</b><br><br>
-    <input id="history_delete" name="history_delete" type="text"> <label for="history_delete"> Days to keep history (default 7)</label>
+    <b><div id="trans_history">History</div></b><br>    
+    <input id="history_delete" name="history_delete" type="text"> <label id="trans_history_delete" for="history_delete"> Days to keep history (default 7)</label>
 
     <br><br><hr>
-    <b>Messages</b><br><br>
-    Highlighted lines, that match the project and/or part of the message.<br><BR>
-    <label for="highlight_project_0">project </label> <input id="highlight_project_0" name="highlight_project_0" type="text">  <label for="highlight_msg_0"> message </label> <input id="highlight_msg_0" name="highlight_msg_0" type="text"> A<br>
-    <label for="highlight_project_1">project </label> <input id="highlight_project_1" name="highlight_project_1" type="text">  <label for="highlight_msg_1"> message </label> <input id="highlight_msg_1" name="highlight_msg_1" type="text"> B<br>
-    <label for="highlight_project_2">project </label> <input id="highlight_project_2" name="highlight_project_2" type="text">  <label for="highlight_msg_2"> message </label> <input id="highlight_msg_2" name="highlight_msg_2" type="text"> C<br>
-    <label for="highlight_project_3">project </label> <input id="highlight_project_3" name="highlight_project_3" type="text">  <label for="highlight_msg_3"> message </label> <input id="highlight_msg_3" name="highlight_msg_3" type="text"> D<br>
-    <label for="highlight_project_4">project </label> <input id="highlight_project_4" name="highlight_project_4" type="text">  <label for="highlight_msg_4"> message </label> <input id="highlight_msg_4" name="highlight_msg_4" type="text"> E<br>
-    <label for="highlight_project_5">project </label> <input id="highlight_project_5" name="highlight_project_5" type="text">  <label for="highlight_msg_5"> message </label> <input id="highlight_msg_5" name="highlight_msg_5" type="text"> F<br>
-    <label for="highlight_project_6">project </label> <input id="highlight_project_6" name="highlight_project_6" type="text">  <label for="highlight_msg_6"> message </label> <input id="highlight_msg_6" name="highlight_msg_6" type="text"> G<br>
-    <label for="highlight_project_7">project </label> <input id="highlight_project_7" name="highlight_project_7" type="text">  <label for="highlight_msg_7"> message </label> <input id="highlight_msg_7" name="highlight_msg_7" type="text"> H<br>
-    <label for="highlight_project_8">project </label> <input id="highlight_project_8" name="highlight_project_8" type="text">  <label for="highlight_msg_8"> message </label> <input id="highlight_msg_8" name="highlight_msg_8" type="text"> I<br>
-    <label for="highlight_project_9">project </label> <input id="highlight_project_9" name="highlight_project_9" type="text">  <label for="highlight_msg_9"> message </label> <input id="highlight_msg_9" name="highlight_msg_9" type="text"> J<br>
+    <b><div id="trans_messages">Messages</div></b><br>
+    <div id="trans_messages_exp">Highlighted lines, that match the project and/or part of the message</div><br><br>
+    <label id="highlight_project0" for="highlight_project_0">project </label> <input id="highlight_project_0" name="highlight_project_0" type="text">  <label id="highlight_message0" for="highlight_msg_0"> message </label> <input id="highlight_msg_0" name="highlight_msg_0" type="text"> A<br>
+    <label id="highlight_project1" for="highlight_project_1">project </label> <input id="highlight_project_1" name="highlight_project_1" type="text">  <label id="highlight_message1" for="highlight_msg_1"> message </label> <input id="highlight_msg_1" name="highlight_msg_1" type="text"> B<br>
+    <label id="highlight_project2" for="highlight_project_2">project </label> <input id="highlight_project_2" name="highlight_project_2" type="text">  <label id="highlight_message2" for="highlight_msg_2"> message </label> <input id="highlight_msg_2" name="highlight_msg_2" type="text"> C<br>
+    <label id="highlight_project3" for="highlight_project_3">project </label> <input id="highlight_project_3" name="highlight_project_3" type="text">  <label id="highlight_message3" for="highlight_msg_3"> message </label> <input id="highlight_msg_3" name="highlight_msg_3" type="text"> D<br>
+    <label id="highlight_project4" for="highlight_project_4">project </label> <input id="highlight_project_4" name="highlight_project_4" type="text">  <label id="highlight_message4" for="highlight_msg_4"> message </label> <input id="highlight_msg_4" name="highlight_msg_4" type="text"> E<br>
+    <label id="highlight_project5" for="highlight_project_5">project </label> <input id="highlight_project_5" name="highlight_project_5" type="text">  <label id="highlight_message5" for="highlight_msg_5"> message </label> <input id="highlight_msg_5" name="highlight_msg_5" type="text"> F<br>
+    <label id="highlight_project6" for="highlight_project_6">project </label> <input id="highlight_project_6" name="highlight_project_6" type="text">  <label id="highlight_message6" for="highlight_msg_6"> message </label> <input id="highlight_msg_6" name="highlight_msg_6" type="text"> G<br>
+    <label id="highlight_project7" for="highlight_project_7">project </label> <input id="highlight_project_7" name="highlight_project_7" type="text">  <label id="highlight_message7" for="highlight_msg_7"> message </label> <input id="highlight_msg_7" name="highlight_msg_7" type="text"> H<br>
+    <label id="highlight_project8" for="highlight_project_8">project </label> <input id="highlight_project_8" name="highlight_project_8" type="text">  <label id="highlight_message8" for="highlight_msg_8"> message </label> <input id="highlight_msg_8" name="highlight_msg_8" type="text"> I<br>
+    <label id="highlight_project9" for="highlight_project_9">project </label> <input id="highlight_project_9" name="highlight_project_9" type="text">  <label id="highlight_message9" for="highlight_msg_9"> message </label> <input id="highlight_msg_9" name="highlight_msg_9" type="text"> J<br>
 
     <br><br><hr>
-    <b>Advanced</b><br><br>
+    <b><div id="trans_advanced">Advanced</div></b><br>
 
-    <input id="socket_timeout" name="socket_timeout" type="text"><label for="socket_timeout"> Socket timeout (default 8 seconds, minimum 4 seconds)</label> 
+    <input id="socket_timeout" name="socket_timeout" type="text"> <label id="trans_socket" for="socket_timeout"> Socket timeout (default 8 seconds, minimum 4 seconds)</label> 
 
     <br><br><button id="apply">Apply changes</button>
 

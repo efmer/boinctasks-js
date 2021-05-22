@@ -10,80 +10,80 @@
   <title>BoincTasks Boinc Settings</title>
   </head>
   <body>
-    <h2><b>Processor</b></h2>
-    <b>Computing allowed:</b><br>
-    <input type="checkbox" id="processor_onbatteries"> While computer is on batteries<br>
-    <input type="checkbox" id="processor_inuse"> While computer is in use<br>
-    <input type="checkbox" id="processor_usegpu"> Use GPU while computer is in use<br>
+    <h2><b><span id="trans_processor">Processor</span></b></h2>
+    <b><span id="trans_allowed">Computing allowed:</span></b><br>
+    <input type="checkbox" id="processor_onbatteries"> <span id="trans_while_on_batteries">While computer is on batteries</span><br>
+    <input type="checkbox" id="processor_inuse"> <span id="trans_while_in_use">While computer is in use</span><br>
+    <input type="checkbox" id="processor_usegpu"> <span id="trans_GPU_in_use">Use GPU while computer is in use</span><br>
     <br>
     <table>
-      <tr><td>Only after the computer has been idle</td><td><input type="text" id="processor_idle" size="6"></td><td>Minutes</td></tr>
-      <tr><td>Only while usage is less than</td><td><input type="text" id="processor_usage" size="6"></td><td>%</td></tr>
+      <tr><td id="trans_cpu_idle">Only after the computer has been idle</td><td><input type="text" id="processor_idle" size="6"></td><td id="trans_minutes1">Minutes</td></tr>
+      <tr><td id="trans_usage_less">Only while usage is less than</td><td><input type="text" id="processor_usage" size="6"></td><td>%</td></tr>
     </table>
     <br><br>    
-    Allowed between. 01:00 - 22:00 (run between 1 AM and 10 PM) disable: empty both<br> 
+    <span id="trans_allowed_between1">Allowed between. 01:00 - 22:00 (run between 1 AM and 10 PM) disable: empty both</span><br> 
     <br>
     <table id="processor_use">
-      <tr><td>Every day</td><td><input type="text" id="processor_everydayb" size="5"> -</td><td><input type="text" id="processor_everydaye" size="5"></td><td>HH:MM</td></tr>      
+      <tr><td id="trans_every_day1">Every day</td><td><input type="text" id="processor_everydayb" size="5"> -</td><td><input type="text" id="processor_everydaye" size="5"></td><td id="tans_hhmm1">HH:MM</td></tr>      
       <tr><td>&nbsp;</td></tr>
-      <tr><td><input type="checkbox" id="processor_use_0c">Sunday</td><td><input type="text" id="processor_use_0b" size="5"> -</td><td><input type="text" id="processor_use_0e" size="6"></td><td>HH:MM</td></tr>        
-      <tr><td><input type="checkbox" id="processor_use_1c">Monday</td><td><input type="text" id="processor_use_1b" size="5"> -</td><td><input type="text" id="processor_use_1e" size="6"></td></tr>
-      <tr><td><input type="checkbox" id="processor_use_2c">Tuesday</td><td><input type="text" id="processor_use_2b" size="5"> -</td><td><input type="text" id="processor_use_2e" size="6"></td></tr>
-      <tr><td><input type="checkbox" id="processor_use_3c">Wednesday</td><td><input type="text" id="processor_use_3b" size="5"> -</td><td><input type="text" id="processor_use_3e" size="6"></td></tr>
-      <tr><td><input type="checkbox" id="processor_use_4c">Thursday</td><td><input type="text" id="processor_use_4b" size="5"> -</td><td><input type="text" id="processor_use_4e" size="6"></td></tr>
-      <tr><td><input type="checkbox" id="processor_use_5c">Friday</td><td><input type="text" id="processor_use_5b" size="5"> -</td><td><input type="text" id="processor_use_5e" size="6"></td></tr>      
-      <tr><td><input type="checkbox" id="processor_use_6c">Saturday</td><td><input type="text" id="processor_use_6b" size="5"> -</td><td><input type="text" id="processor_use_6e" size="6"></td></tr>          
+      <tr><td><input type="checkbox" id="processor_use_0c"><span id=trans_sunday1>Sunday</span></td><td><input type="text" id="processor_use_0b" size="5"> -</td><td><input type="text" id="processor_use_0e" size="6"></td><td id="tans_hhmm2">HH:MM</td></tr>        
+      <tr><td><input type="checkbox" id="processor_use_1c"><span id=trans_monday1>Monday</span></td><td><input type="text" id="processor_use_1b" size="5"> -</td><td><input type="text" id="processor_use_1e" size="6"></td></tr>
+      <tr><td><input type="checkbox" id="processor_use_2c"><span id=trans_tuesday1>Tuesday</span></td><td><input type="text" id="processor_use_2b" size="5"> -</td><td><input type="text" id="processor_use_2e" size="6"></td></tr>
+      <tr><td><input type="checkbox" id="processor_use_3c"><span id=trans_wednesday1>Wednesday</span></td><td><input type="text" id="processor_use_3b" size="5"> -</td><td><input type="text" id="processor_use_3e" size="6"></td></tr>
+      <tr><td><input type="checkbox" id="processor_use_4c"><span id=trans_thursday1>Thursday</span></td><td><input type="text" id="processor_use_4b" size="5"> -</td><td><input type="text" id="processor_use_4e" size="6"></td></tr>
+      <tr><td><input type="checkbox" id="processor_use_5c"><span id=trans_friday1>Friday</span></td><td><input type="text" id="processor_use_5b" size="5"> -</td><td><input type="text" id="processor_use_5e" size="6"></td></tr>      
+      <tr><td><input type="checkbox" id="processor_use_6c"><span id=trans_saturday1>Saturday</span></td><td><input type="text" id="processor_use_6b" size="5"> -</td><td><input type="text" id="processor_use_6e" size="6"></td></tr>          
     </table>
     <br>
     <table>
-      <tr><td>Switch between applications every</td><td><input type="text" id="processor_switch" size="6"></td><td>Minutes</td></tr>
-      <tr><td>Use at most</td><td><input type="text" id="processor_usemost" size="6"></td><td>% of processors</td></tr>
-      <tr><td>Use at most</td><td><input type="text" id="processor_usemostcpu" size="6"></td><td>% of CPU time</td></tr>      
+      <tr><td id="trans_switch">Switch between applications every</td><td><input type="text" id="processor_switch" size="6"></td><td id=trans_minutes2>Minutes</td></tr>
+      <tr><td id="trans_use_most1">Use at most</td><td><input type="text" id="processor_usemost" size="6"></td><td id="trans_perc_processors">% of processors</td></tr>
+      <tr><td id="trans_use_most2">Use at most</td><td><input type="text" id="processor_usemostcpu" size="6"></td><td id="trans_perc_cpu">% of CPU time</td></tr>      
     </table>
     <br><br><div style="color:red" id="error_msg1"></div><div style="color:rgb(115, 255, 0)" id="ok_msg1"></div><br>
     <button id="apply1">Apply changes</button>
     <hr>
-    <h2><b>Network</b></h2>
+    <h2><b><span id="trans_network">Network</span></b></h2>
     <table id="network_use">
-      <tr><td>Maximum download rate</td><td><input type="text" id="network_dlrate"></td><td>kBytes/sec</td></tr>
-      <tr><td>Maximum upload rate</td><td><input type="text" id="network_uprate"></td><td>kBytes/sec</td></tr>
-      <tr><td>Transfer at most</td><td><input type="text" id="network_transfer"></td><td>Mbytes, every</td><td><input type="text" id="network_transfer_day"></td><td>day(s)</td></tr>
-      <tr><td>Minimum work buffer</td><td><input type="text" id="network_buffermin"></td><td>Days</td><td></td></tr>
-      <tr><td>Additional work buffer</td><td><input type="text" id="network_bufferadd"></td><td>Days</td><td></td></tr>
+      <tr><td id="trans_max_down">Maximum download rate</td><td><input type="text" id="network_dlrate"></td><td id="trans_kbytess1">kBytes/sec</td></tr>
+      <tr><td id="trans_max_up">Maximum upload rate</td><td><input type="text" id="network_uprate"></td><td id="trans_kbytess2">kBytes/sec</td></tr>
+      <tr><td id="trans_at_most">Transfer at most</td><td><input type="text" id="network_transfer"></td><td id="trans_mbytes_every">Mbytes, every</td><td><input type="text" id="network_transfer_day"></td><td id="trans_days1">day</td></tr>
+      <tr><td id="trans_work_buffer">Minimum work buffer</td><td><input type="text" id="network_buffermin"></td><td id="trans_days2">Days</td><td></td></tr>
+      <tr><td id="trans_add_buffer">Additional work buffer</td><td><input type="text" id="network_bufferadd"></td><td id="trans_days3">Days</td><td></td></tr>
     </table>
     <br><br>
-    Allowed between. 03:00 - 11:00 (run between 3 AM and 11 AM) disable: empty both<br> 
+    <span id="trans_allowed_between2">Allowed between. 03:00 - 11:00 (run between 3 AM and 11 AM) disable: empty both</span><br> 
     <br>
     <table>
-      <tr><td>Every day</td><td><input type="text" id="network_everydayb" size="6"> -</td><td><input type="text" id="network_everydaye" size="6"></td><td>HH:MM</td></tr>
+      <tr><td id="trans_every_day2">Every day</td><td><input type="text" id="network_everydayb" size="6"> -</td><td><input type="text" id="network_everydaye" size="6"></td><td id="tans_hhmm2">HH:MM</td></tr>
       <tr><td>&nbsp;</td></tr>
-      <tr><td><input type="checkbox" id="network_use_0c">Sunday</td><td><input type="text" id="network_use_0b" size="5"> -</td><td><input type="text" id="network_use_0e" size="6"></td><td>HH:MM</td></tr>
-      <tr><td><input type="checkbox" id="network_use_1c">Monday</td><td><input type="text" id="network_use_1b" size="5"> -</td><td><input type="text" id="network_use_1e" size="6"></td></tr>
-      <tr><td><input type="checkbox" id="network_use_2c">Tuesday</td><td><input type="text" id="network_use_2b" size="5"> -</td><td><input type="text" id="network_use_2e" size="6"></td></tr>
-      <tr><td><input type="checkbox" id="network_use_3c">Wednesday</td><td><input type="text" id="network_use_3b" size="5"> -</td><td><input type="text" id="network_use_3e" size="6"></td></tr>
-      <tr><td><input type="checkbox" id="network_use_4c">Thursday</td><td><input type="text" id="network_use_4b" size="5"> -</td><td><input type="text" id="network_use_4e" size="6"></td></tr>
-      <tr><td><input type="checkbox" id="network_use_5c">Friday</td><td><input type="text" id="network_use_5b" size="5"> -</td><td><input type="text" id="network_use_5e" size="6"></td></tr>      
-      <tr><td><input type="checkbox" id="network_use_6c">Saturday</td><td><input type="text" id="network_use_6b" size="5"> -</td><td><input type="text" id="network_use_6e" size="6"></td></tr>         
+      <tr><td><input type="checkbox" id="network_use_0c"><span id=trans_sunday2>Sunday</span></td><td><input type="text" id="network_use_0b" size="5"> -</td><td><input type="text" id="network_use_0e" size="6"></td><td>HH:MM</td></tr>
+      <tr><td><input type="checkbox" id="network_use_1c"><span id=trans_monday2>Monday</span></td><td><input type="text" id="network_use_1b" size="5"> -</td><td><input type="text" id="network_use_1e" size="6"></td></tr>
+      <tr><td><input type="checkbox" id="network_use_2c"><span id=trans_tuesday2>Tuesday</span></td><td><input type="text" id="network_use_2b" size="5"> -</td><td><input type="text" id="network_use_2e" size="6"></td></tr>
+      <tr><td><input type="checkbox" id="network_use_3c"><span id=trans_wednesday2>Wednesday</span></td><td><input type="text" id="network_use_3b" size="5"> -</td><td><input type="text" id="network_use_3e" size="6"></td></tr>
+      <tr><td><input type="checkbox" id="network_use_4c"><span id=trans_thursday2>Thursday</span></td><td><input type="text" id="network_use_4b" size="5"> -</td><td><input type="text" id="network_use_4e" size="6"></td></tr>
+      <tr><td><input type="checkbox" id="network_use_5c"><span id=trans_friday2>Friday</span></td><td><input type="text" id="network_use_5b" size="5"> -</td><td><input type="text" id="network_use_5e" size="6"></td></tr>      
+      <tr><td><input type="checkbox" id="network_use_6c"><span id=trans_saturday2>Saturday</span></td><td><input type="text" id="network_use_6b" size="5"> -</td><td><input type="text" id="network_use_6e" size="6"></td></tr>         
     </table>
     <br><br><div style="color:red" id="error_msg2"></div><div style="color:rgb(115, 255, 0)" id="ok_msg2"></div><br>
     <button id="apply2">Apply changes</button>
     <hr>
-    <h2><b>Disk</b></h2>
+    <h2><b><span id="trans_disk">Disk</span></b></h2>
     <table>
-      <tr><td>Use at most</td><td><input type="text" id="disk_usemost" size="10"></td><td>Gigabyte disk space</td></tr>
-      <tr><td>Leave at least</td><td><input type="text" id="disk_least" size="10"></td><td>Gigabyte disk space</td></tr>
-      <tr><td>Use at most</td><td><input type="text" id="disk_mostp" size="10"></td><td>% of disk space</td></tr>
-      <tr><td>Write to disk a most every</td><td><input type="text" id="disk_every" size="10"></td><td>Seconds</td></tr>
-      <tr><td>Use at most</td><td><input type="text" id="disk_swap" size="10"></td><td>% of page swap space</td></tr>
+      <tr><td id="trans_use_most3">Use at most</td><td><input type="text" id="disk_usemost" size="10"></td><td id="trans_giga_disk1">Gigabyte disk space</td></tr>
+      <tr><td id="trans_leave_least1">Leave at least</td><td><input type="text" id="disk_least" size="10"></td><td id="trans_giga_disk2">Gigabyte disk space</td></tr>
+      <tr><td id="trans_use_most4">Use at most</td><td><input type="text" id="disk_mostp" size="10"></td><td id="trans_disk_space">% of disk space</td></tr>
+      <tr><td id="trans_write_disk">Write to disk a most every</td><td><input type="text" id="disk_every" size="10"></td><td id="trans_seconds">Seconds</td></tr>
+      <tr><td id="trans_use_most5">Use at most</td><td><input type="text" id="disk_swap" size="10"></td><td id="trans_swap">% of page swap space</td></tr>
     </table>
 
     <hr>
-    <h2><b>Memory</b></h2>
+    <h2><b><span id="trans_memory">Memory</span></b></h2>
     <table>
-      <tr><td>Use at most</td><td><input type="text" id="memory_usebusy" size="4"></td><td>% When computer is in use</td></tr>
-      <tr><td>Use at most</td><td><input type="text" id="memory_useidle" size="4"></td><td>% When computer is idle</td></tr>      
-      <tr><td><input type="checkbox" id="memory_leave">Leave applications in memory when suspended</td></tr>
+      <tr><td id="trans_use_most6">Use at most</td><td><input type="text" id="memory_usebusy" size="4"></td><td id="trans_perc_use">% When computer is in use</td></tr>
+      <tr><td id="trans_use_most7">Use at most</td><td><input type="text" id="memory_useidle" size="4"></td><td id="trans_perc_idle">% When computer is idle</td></tr>      
     </table>
+    <input type="checkbox" id="memory_leave"><span id="trans_leave_mem">Leave applications in memory when suspended</span>
     <br><br><div style="color:red" id="error_msg2"></div><div style="color:rgb(115, 255, 0)" id="ok_msg2"></div><br>
     <button id="apply3">Apply changes</button>
     <br><br><br><br>    <br><br><br><br>

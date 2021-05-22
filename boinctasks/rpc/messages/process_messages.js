@@ -35,6 +35,7 @@ class ProcessMessages{
             var msg = con.messages;
             if (!functions.isDefined(msg)) return cTable;
             var cTable = msg.msgTable;
+            if (cTable === void 0) return cTable;
             if (sort != null)
             {
                 var col = sort.tCol;

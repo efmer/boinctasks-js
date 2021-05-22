@@ -25,6 +25,7 @@ const windowsState = new WindowsState();
 const SendArray = require('../misc/send_array');
 
 const {BrowserWindow, dialog} = require('electron');
+const btC = require('../functions/btconstants');
 
 let gSettingsBoincCon = null;
 let gChildSettingsBoinc = null;
@@ -73,7 +74,7 @@ function settingsOk(gb)
       }
     }
   }
-  let one = "Please select ONE connected computer";
+  let one =  btC.TL.DIALOG_BOINC_SETTINGS.DBO_BOX_SELECT_ONE;
   if (selected === null)
   {
     if (authCount === 1) selected = localhost;
@@ -85,7 +86,7 @@ function settingsOk(gb)
   }
   if (selCount > 1)
   {
-    showDialog(gb.mainWindow,"You selected more than one computer\n\n" + one);
+    showDialog(gb.mainWindow, btC.TL.DIALOG_BOINC_SETTINGS.DBO_BOX_SELECTED_MORE_ONE + "\n\n" + one);
     return;   
   }
   gSettingsBoincCon = selected;
@@ -96,8 +97,8 @@ function showDialog(mainWindow,msg)
 {
   dialog.showMessageBox(mainWindow,
     {
-      title: 'Unable to show',
-      message: 'Invalid selection' ,
+      title: btC.TL.DIALOG_BOINC_SETTINGS.DBO_BOX_UNABLE_SHOW,
+      message: btC.TL.DIALOG_BOINC_SETTINGS.DBO_BOX_INVALID,
       detail: msg
     })
     return;
@@ -106,7 +107,7 @@ function showDialog(mainWindow,msg)
 function settingsStart(gb,selected)
 {
     try {
-        let title = "Boinc Settings";
+        let title = "BoincTasks Js = " + btC.TL.DIALOG_BOINC_SETTINGS.DBO_TITLE;
         if (gChildSettingsBoinc == null)
         {
           let state = windowsState.get("settings_boinc",700,800)
@@ -130,6 +131,7 @@ function settingsStart(gb,selected)
 //            gChildSettingsBoinc.webContents.openDevTools()
             gChildSettingsBoinc.hide();  
             gChildSettingsBoinc.setTitle(title);
+            gChildSettingsBoinc.webContents.send("translations",btC.TL.DIALOG_BOINC_SETTINGS);              
             getData(selected);
           })
           gChildSettingsBoinc.webContents.on('did-finish-load', () => {
@@ -191,7 +193,8 @@ function dataReady(data)
     let result = parse(this,this.client_completeData);
     if (result != null)
     {
-      gChildSettingsBoinc.setTitle("Boinc Settings: " + this.computerName);
+      let title = "BoincTasks Js - " + btC.TL.DIALOG_BOINC_SETTINGS.DBO_TITLE + " " +  this.computerName
+      gChildSettingsBoinc.setTitle(title);
       gChildSettingsBoinc.webContents.send('settings', result);
       gChildSettingsBoinc.show();
     }

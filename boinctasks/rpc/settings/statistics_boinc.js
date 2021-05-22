@@ -26,9 +26,8 @@ const SendArray = require('../misc/send_array');
 const State = require('../misc/state');
 const conState = new State();
 
-const path = require('path')
-
 const {BrowserWindow} = require('electron');
+const btC = require('../functions/btconstants');
 //const { support } = require('jquery');
 
 let gStatisticsComputer = [];
@@ -63,7 +62,8 @@ class StatisticsBoinc{
 function statisticsStart(gb)
 {
     try {
-      let title = "BoincTasks Boinc Statistics";
+      let bMax = false;
+      let title = "BoincTasks Js - " + btC.TL.DIALOG_BOINC_STATISTICS.DBS_TITLE
       if (gChildStatistics == null)
       {
         let state = windowsState.get("boinc_statistics",700,800)
@@ -81,19 +81,33 @@ function statisticsStart(gb)
             preload: './preload/preload.js'
           }
         });
+        if (state.max)
+        {
+          gChildStatistics.maximize();
+        }        
         gChildStatistics.loadFile('index/index_statistics_boinc.html')
         gChildStatistics.once('ready-to-show', () => {    
-//          gChildStatistics.webContents.openDevTools()
+          //gChildStatistics.webContents.openDevTools()
           gChildStatistics.show();  
           gChildStatistics.setTitle(title);
+
+          try {
+            btC.TL.DIALOG_BOINC_STATISTICS.DBS_MONTH_T = JSON.parse(btC.TL.DIALOG_BOINC_STATISTICS.DBS_MONTH)      
+          } catch (error) {
+            logging.logError('StatisticsBoinc,statisticsStart,DBS_MONTH', error);     
+          }
+          gChildStatistics.webContents.send("translations",btC.TL.DIALOG_BOINC_STATISTICS);     
           getStatistics(gb);
         })
         gChildStatistics.webContents.on('did-finish-load', () => {
           insertCssDark(gb.theme);
-        })          
+        })
+        gChildStatistics.on('maximize', function (event) {
+          bMax = true;
+        });
         gChildStatistics.on('close', () => {
           let bounds = gChildStatistics.getBounds();
-          windowsState.set("boinc_statistics",bounds.x,bounds.y, bounds.width, bounds.height)
+          windowsState.set("boinc_statistics",bounds.x,bounds.y, bounds.width, bounds.height,bMax)
         })     
         gChildStatistics.on('closed', () => {
           gChildStatistics = null
@@ -104,6 +118,14 @@ function statisticsStart(gb)
         gChildStatistics.setTitle(title); 
         gChildStatistics.hide();
         gChildStatistics.show();  
+/*
+        try {
+          btC.TL.DIALOG_BOINC_STATISTICS.DBS_MONTH_T = JSON.parse(btC.TL.DIALOG_BOINC_STATISTICS.DBS_MONTH)      
+        } catch (error) {
+          logging.logError('StatisticsBoinc,statisticsStart,DBS_MONTH', error);     
+        }
+        gChildStatistics.webContents.send("translations",btC.TL.DIALOG_BOINC_STATISTICS);
+*/
         getStatistics(gb);           
       }
     } catch (error) {
@@ -177,6 +199,7 @@ function dataReady(data)
         if (this.conIn.state !== null)
         {
           project = conState.getProject(this.conIn,url);
+
           if (gStatisticsProjectName.indexOf(project) < 0)
           {
             gStatisticsProjectName.push(project);          

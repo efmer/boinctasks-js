@@ -1,6 +1,17 @@
 <notices>
 	<notice>
 		<title>
+			Version 1.18.
+		</title>
+		<description>
+			BoincTasks Js can be easily translated to another language
+			Right now English and Dutch are available
+			The link brings you to the right page, you can read how you can contribute by making a translation available
+		</description>
+		<link>https://efmer.com/boinctasks-js/boinctasks-js-translations/</link>
+	</notice>
+	<notice2>
+		<title>
 			Version 1.15.
 		</title>
 		<description>
@@ -9,5 +20,5 @@
 			Send Sensors supports BoincTasks Js and BoincTasks.
 		</description>
 		<link>https://efmer.com/home/boinctasks-js/</link>
-	</notice>
+	</notice2>
 </notices>

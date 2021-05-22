@@ -64,6 +64,16 @@ class ReadWrite{
         }        
     }
 
+    readResource(folder,fileName)
+    {
+        try {          
+            let dirF = path.join(folder, fileName);              
+            return fs.readFileSync(dirF);
+        } catch (error) {
+            return "";    
+        }
+    }
+
     rename(folder,oldFile,newFile)
     {
         try {

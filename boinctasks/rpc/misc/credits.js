@@ -21,7 +21,8 @@ const logging = new Logging();
 const WindowsState = require('../functions/window_state');
 const windowsState = new WindowsState();
 const os = require('os');
-const {app,BrowserWindow} = require('electron')
+const {app,BrowserWindow} = require('electron');
+const btC = require('../functions/btconstants');
 
 // !!!!!!!!!!!!!!!!!!!!!!! DO NOT USE ABOUT as it it's removed by the packager
 
@@ -46,7 +47,7 @@ function addAboutWindow(version,theme)
 {
     try {
         let info = infoMsg(version);
-        let title = "BoincTasks About";
+        let title = "BoincTasks Js - " + btC.TL.DIALOG_ABOUT.DAB_TITLE;
         if (gChildAbout == null)
         {
           let state = windowsState.get("about",700,800)
@@ -69,6 +70,7 @@ function addAboutWindow(version,theme)
 //            gChildAbout.webContents.openDevTools()
             gChildAbout.show();  
             gChildAbout.setTitle(title);
+            gChildAbout.webContents.send("translations",btC.TL.DIALOG_ABOUT);              
             gChildAbout.webContents.send('about', info); 
           })
           gChildAbout.webContents.on('did-finish-load', () => {
@@ -110,10 +112,10 @@ async function insertCssDark(darkCss)
 
 function infoMsg(version)
 {
-  let msg = "Version: " + version;
+  let msg = btC.TL.DIALOG_ABOUT.DAB_VERSION +  " " + version;
   msg += "<br>";
-  msg += "System running on platform: " + os.platform() + " ,architecture: " + os.arch();
+  msg += btC.TL.DIALOG_ABOUT.DAB_SYSTEM_RUNNING + " " + os.platform() + " , " + btC.TL.DIALOG_ABOUT.DAB_ARCH + " " + os.arch();
   msg += "<br>";
-  msg += "Locale: " + app.getLocale();  
+  msg += btC.TL.DIALOG_ABOUT.DAB_LOCALE + " " + app.getLocale();  
   return msg;
 }

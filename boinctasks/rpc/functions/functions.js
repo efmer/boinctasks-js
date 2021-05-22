@@ -38,10 +38,14 @@ class Functions{
         return false;        
     }     
 
-    getFormattedTimeDiff(time)
+    getFormattedTimeDiff(time, noNeg=false)
     {
         var current = new Date().getTime() / 1000;
         var diff= parseInt(time - current);
+        if (noNeg)
+        {
+             if (diff < 0) return "";
+        }
         return this.getFormattedTimeInterval(diff);
     }
     

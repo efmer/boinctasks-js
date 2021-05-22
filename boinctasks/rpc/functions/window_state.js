@@ -24,8 +24,9 @@ const readWrite = new ReadWrite();
 
 
 class WindowState{
-    set(id, x,y,width,height)
+    set(id, x,y,width,height,bMax = false)
     {
+        let bFull = false;
         try 
         {
             let item = new Object()
@@ -33,6 +34,7 @@ class WindowState{
             item.y = y;
             item.width = width;
             item.height = height;
+            item.max = bMax;
 
             let file = id + ".json";
 
@@ -58,6 +60,7 @@ class WindowState{
             item.height = height;
             item.x = 100;
             item.y = 100;
+            item.max = false;
         }
         return item;
     }

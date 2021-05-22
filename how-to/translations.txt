@@ -1,3 +1,7 @@
 https://poeditor.com/
 
 https://poeditor.com/projects/view?id=440277
+
+Export .JSON key value to folder  ./translations
+
+More info: https://efmer.com/boinctasks-js-translations/

@@ -22,19 +22,19 @@ const Logging = require('../functions/logging');
 const logging = new Logging();
 const State = require('../misc/state');
 const conState = new State();
-const btConstants = require('../functions/btconstants');
+const btC = require('../functions/btconstants');
 
-const statusSuspendedGui = "Suspended";
-const statusNoMoreWork = "No new work";
-const statusInProgress = "In progress";
-const statusUpdating = "Updating";
-const statusReport = "Report completed tasks";
-const statusNeedWork = "Fetch work";
-const statusTrickle = "Send trickle-up";
-const statusUpdatingAM = "Updating account manager";
-const statusInitializing = "Initializing";
-const statusAttaching = "Attaching to project";
-const statusProjectReq = "Req by project";
+const statusSuspendedGui = btC.TL.STATUS.S_PROJECT_SUSPENDED;
+const statusNoMoreWork = btC.TL.STATUS.S_PROJECT_NO_NEW_WORK;
+const statusInProgress = btC.TL.STATUS.S_PROJECT_IN_PROGRESS;
+const statusUpdating = btC.TL.STATUS.S_PROJECT_UPDATING;
+const statusReport = btC.TL.STATUS.S_PROJECT_REPORT_COMP;
+const statusNeedWork = btC.TL.STATUS.S_PROJECT_FETCH;
+const statusTrickle = btC.TL.STATUS.S_PROJECT_TRICKLE;
+const statusUpdatingAM = btC.TL.STATUS.S_PROJECT_ACCOUNT;
+const statusInitializing = btC.TL.STATUS.S_PROJECT_INIT;
+const statusAttaching = btC.TL.STATUS.S_PROJECT_ATTACH;
+const statusProjectReq = btC.TL.STATUS.S_PROJECT_REQ;
 
 class ProjectItems
 {
@@ -155,13 +155,13 @@ function getStatus(item, projectItem)
             status += statusSuspendedGui + " ";
         }
         else{
-            statusN = btConstants.PROJECT_RUNNING_N;
+            statusN = btC.PROJECT_RUNNING_N;
         }
 
         if (functions.isDefined(item.dont_request_more_work))
         {
             status += statusNoMoreWork + " ";
-            statusN = btConstants.PROJECT_NO_MORE_WORK_N;
+            statusN = btC.PROJECT_NO_MORE_WORK_N;
         }
 
         if (functions.isDefined(item.scheduler_rpc_in_progress))
@@ -174,10 +174,10 @@ function getStatus(item, projectItem)
             var min_rpc_time = parseInt(item.min_rpc_time[0]);
             if (min_rpc_time > 0)
             {
-                var deferred  = functions.getFormattedTimeDiff(min_rpc_time);
+                var deferred  = functions.getFormattedTimeDiff(min_rpc_time,true);
                 if (deferred != "") // can be negative...
                 {
-                    status += "Deferred for: " + deferred + " ";
+                    status += btC.TL.STATUS.S_PROJECT_DEFERRED + " " + deferred + " ";
                 }
             }
         }

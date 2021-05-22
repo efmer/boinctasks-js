@@ -19,7 +19,7 @@
 const WindowsState = require('./window_state');
 const windowsState = new WindowsState();
 
-const btConstants = require('./btconstants');
+const btC = require('./btconstants');
 
 const os = require('os');
 const { app, BrowserWindow } = require('electron')
@@ -47,14 +47,18 @@ class Logging{
             this.logRules(version);
             g_logErrorMsg = version;
     
-            let sys = "System running on platform: " + os.platform() + " ,architecture: " + os.arch();
+            let sys = btC.TL.DIALOG_LOGGING.DLG_MSG_PLATFORM + " " + os.platform() + " ," + btC.TL.DIALOG_LOGGING.DLG_MSG_ARCH + " " + os.arch();
             this.log(sys);
             this.logDebug(sys);
     
-            let path = "Folder app: " + app.getPath("home");
+            let path = btC.TL.DIALOG_LOGGING.DLG_MSG_FOLDER_APP + " " + app.getPath("home");
             this.logDebug(path);        
-            path = "Folder data: " + app.getPath("appData");
-            this.logDebug(path);            
+            path = btC.TL.DIALOG_LOGGING.DLG_MSG_FOLDER_DATA + " " + app.getPath("appData");
+            this.logDebug(path);
+            let loc = app.getLocale();
+            let ccode = app.getLocaleCountryCode();
+            let locale = btC.TL.DIALOG_LOGGING.DLG_MSG_LOCALE + " " + loc + " , " + ccode;
+            this.logDebug(locale);
         } catch (error) {
             let ii = 1;
         }
@@ -79,16 +83,16 @@ class Logging{
     {
         switch(gLogging.type)
         {
-            case btConstants.LOGGING_NORMAL:
+            case btC.LOGGING_NORMAL:
                 g_logMsg = "";
             break;
-            case btConstants.LOGGING_DEBUG:
+            case btC.LOGGING_DEBUG:
                 g_logDebugMsg = "";
             break;
-            case btConstants.LOGGING_RULES:
+            case btC.LOGGING_RULES:
                 g_logRulesMsg = "";
             break;            
-            case btConstants.LOGGING_ERROR:
+            case btC.LOGGING_ERROR:
                 g_logErrorMsg = "";
             break;            
         }      
@@ -120,7 +124,7 @@ class Logging{
             let time = getTime();
             let msg = error.message;
             msg += "<br>" + error.stack;
-            g_logErrorMsg += time + " Error: [" + from + "] " + msg + ".</br>"; 
+            g_logErrorMsg += time + " " + btC.TL.DIALOG_LOGGING.DLG_TITLE_ERROR + " [" + from + "] " + msg + ".</br>"; 
         } catch (error) {
             let  ii =1;            
         }        
@@ -131,7 +135,7 @@ class Logging{
         msg = msg.replaceAll("<","&#60;")        
         msg = msg.replaceAll(">","&#62;")
         let time = getTime();
-        g_logErrorMsg += time + " Error: [" + from + "] " + msg + ".</br>";     
+        g_logErrorMsg += time + " " + btC.TL.DIALOG_LOGGING.DLG_TITLE_ERROR + " [" + from + "] " + msg + ".</br>";     
     }
 
     setTheme(css)
@@ -160,7 +164,7 @@ function showLog(logType,theme)
     clearTimeout(gTimerLog);
     gTimerLog =  setInterval(btTimerLog, 2000);
 
-    let title = logTitle(logType)
+    let title = "BoincTasks Js - " + logTitle(logType)
 
     let log = logGet(logType)
     
@@ -191,6 +195,7 @@ function showLog(logType,theme)
         gChildWindowLog.show();  
         gChildWindowLog.webContents.send('log_text', log); 
         gChildWindowLog.setTitle(title);
+        gChildWindowLog.webContents.send("translations",btC.TL.DIALOG_LOGGING);            
 //        gChildWindowLog.webContents.openDevTools()    
       })
       gChildWindowLog.webContents.on('did-finish-load', () => {
@@ -233,14 +238,14 @@ function logTitle(type)
 {
     switch(type)
     {
-        case btConstants.LOGGING_NORMAL:
-            return "Logging";
-        case btConstants.LOGGING_DEBUG:
-            return "Debug Logging";
-        case btConstants.LOGGING_RULES:
-            return "Rules Logging";
-        case btConstants.LOGGING_ERROR:
-            return "Error Logging";
+        case btC.LOGGING_NORMAL:
+            return btC.TL.DIALOG_LOGGING.DLG_TITLE;
+        case btC.LOGGING_DEBUG:
+            return btC.TL.DIALOG_LOGGING.DLG_TITLE_DEBUG;
+        case btC.LOGGING_RULES:
+            return btC.TL.DIALOG_LOGGING.DLG_TITLE_RULES;
+        case btC.LOGGING_ERROR:
+            return btC.TL.DIALOG_LOGGING.DLG_TITLE_ERROR;
     }
     return "??";
 }
@@ -249,13 +254,13 @@ function logGet(type)
 {
     switch(type)
     {
-        case btConstants.LOGGING_NORMAL:
+        case btC.LOGGING_NORMAL:
             return g_logMsg;
-        case btConstants.LOGGING_DEBUG:
+        case btC.LOGGING_DEBUG:
             return g_logDebugMsg;
-        case btConstants.LOGGING_RULES:
+        case btC.LOGGING_RULES:
             return g_logRulesMsg;
-        case btConstants.LOGGING_ERROR:
+        case btC.LOGGING_ERROR:
             return g_logErrorMsg;
         break;
     }

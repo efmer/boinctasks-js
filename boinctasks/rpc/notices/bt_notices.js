@@ -27,6 +27,7 @@ class BtNotices{
     init()
     {
         setTimeout(readNotice, 4000);
+        setTimeout(checkNotice, 10000);        
     }
 
     read()
@@ -49,24 +50,38 @@ function readNotice()
     } catch (error) {
         logging.logError('BtNotices,readNotice', error);       
     }
-  
+}
+
+function checkNotice()
+{
+    if (gBoincTasksNotice === null)
+    {
+        // still no BoincTasks Js notices / Internet connection.
+        readNotice();
+        setTimeout(checkNotice, 10000);  // try again in 10 seconds
+    }
 }
 
 function parseNotices(xml)
 {
     xml = xml.replaceAll("&", "&#38;")
-    var noticesReturn = null;
+    let noticesReturn = null;
     try {
-        var parseString = require('xml2js').parseString;
+        let parseString = require('xml2js').parseString;
         parseString(xml, function (err, result) {
             if (functions.isDefined(result))
             {
-                var noticeArray = result['notices']['notice'];
+                let noticeArray = result['notices']['notice'];
                 if (functions.isDefined(noticeArray))
                 {
                     noticesReturn = noticeArray;
-                    return noticesReturn;
                 }
+                noticeArray = result['notices']['notice2'];
+                if (functions.isDefined(noticeArray))
+                {
+                    noticesReturn.push(noticeArray[0]);
+                }
+                return noticesReturn;                
             }
         });
     } catch (error) {

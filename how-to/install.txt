@@ -18,10 +18,6 @@ express - server side
         2) Install electron
 
         npm i --save-dev electron 
-        Ubuntu npm i --save-dev electron    We might need to add this --scripts-prepend-node-path
-
-        ??npm i electron -g 
-        ??npm install electron@latest
 
         3) Install dependencies
 

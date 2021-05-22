@@ -27,6 +27,62 @@ $(document).ready(function() {
         gSettingsColor = color;
         setColor();
     });
+    ipcRenderer.on('translations', (event, dlg) => {
+        $("#trans_project").html(dlg.DC_BT_PROJECT);        
+        $("#project_running").html(dlg.DC_BT_PROJECT_RUNNING);
+        $("#project_suspended").html(dlg.DC_BT_PROJECT_SUSPENDED);
+        $("#project_nonew").html(dlg.DC_BT_PROJECT_NO_NEW);
+
+        $("#trans_tasks").html(dlg.DC_BT_TASKS);
+        $("#task_download").html(dlg.DC_BT_TASKS_DOWNLOAD);
+        $("#task_ready_report").html(dlg.DC_BT_TASKS_READY_REPORT);
+        $("#task_running").html(dlg.DC_BT_TASKS_RUNNING);
+        $("#task_running_hp").html(dlg.DC_BT_TASKS_RUNNING_HP);
+
+        $("#gtask_download").html(dlg.DC_BT_TASKS_DOWNLOAD);
+        $("#gtask_ready_report").html(dlg.DC_BT_TASKS_READY_REPORT);
+        $("#gtask_running").html(dlg.DC_BT_TASKS_RUNNING);
+        $("#gtask_running_hp").html(dlg.DC_BT_TASKS_RUNNING_HP);
+
+        $("#task_abort").html(dlg.DC_BT_TASKS_ABORT);
+        $("#task_waiting_run").html(dlg.DC_BT_TASKS_WAITING);
+        $("#task_ready_start").html(dlg.DC_BT_TASKS_READY_START);
+        $("#task_error").html(dlg.DC_BT_TASKS_ERROR);
+
+        $("#gtask_abort").html(dlg.DC_BT_TASKS_ABORT);
+        $("#gtask_waiting_run").html(dlg.DC_BT_TASKS_WAITING);
+        $("#gtask_ready_start").html(dlg.DC_BT_TASKS_READY_START);
+        $("#gtask_error").html(dlg.DC_BT_TASKS_ERROR);
+
+        $("#task_suspended").html(dlg.DC_BT_TASKS_SUSPENDED);
+        $("#task_suspended_user").html(dlg.DC_BT_TASKS_SUSPENDED_USR);
+
+        $("#gask_suspended").html(dlg.DC_BT_TASKS_SUSPENDED);
+        $("#gask_suspended_user").html(dlg.DC_BT_TASKS_SUSPENDED_USR);
+
+        $("#trans_messages").html(dlg.DC_BT_MSG);
+        $("#messages_default").html(dlg.DC_BT_MSG_DEFAULT);
+        $("#messages_priority").html(dlg.DC_BT_MSG_PRIORITY);
+        $("#messages_highlight_0").html(dlg.DC_BT_MSG_HIGHLIGHT + ' A');
+        $("#messages_highlight_1").html(dlg.DC_BT_MSG_HIGHLIGHT + ' B');
+        $("#messages_highlight_2").html(dlg.DC_BT_MSG_HIGHLIGHT + ' C');
+        $("#messages_highlight_3").html(dlg.DC_BT_MSG_HIGHLIGHT + ' D');
+        $("#messages_highlight_4").html(dlg.DC_BT_MSG_HIGHLIGHT + ' E');
+        $("#messages_highlight_5").html(dlg.DC_BT_MSG_HIGHLIGHT + ' F');
+        $("#messages_highlight_6").html(dlg.DC_BT_MSG_HIGHLIGHT + ' G');
+        $("#messages_highlight_7").html(dlg.DC_BT_MSG_HIGHLIGHT + ' H');
+        $("#messages_highlight_8").html(dlg.DC_BT_MSG_HIGHLIGHT + ' I');
+        $("#messages_highlight_9").html(dlg.DC_BT_MSG_HIGHLIGHT + ' J');
+
+        $("#trans_history").html(dlg.DC_BT_HISTORY);
+        $("#history_ok").html(dlg.DC_BT_HISTORY_OK);
+        $("#history_error").html(dlg.DC_BT_HISTORY_ERROR);
+        $("#trans_system").html(dlg.DC_BT_SYSTEM);
+        $("#select_background").html(dlg.DC_BT_SYSTEM_SEL_BACK);
+        $("#select_text").html(dlg.DC_BT_SYSTEM_SEL_TEXT);
+        $("#progress_bar").html(dlg.DC_BT_SYSTEM_PROGRESS);
+    });
+
 });
 
 function setColor(color)

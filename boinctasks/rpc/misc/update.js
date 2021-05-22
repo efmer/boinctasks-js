@@ -17,6 +17,7 @@
 */
 
 const TESTING_UPDATE_DARWIN = false;
+const TESTING_UPDATE_LINUX = false;
 const TESTING_UPDATE = false;
 
 const Functions = require('../functions/functions');
@@ -25,12 +26,11 @@ const Logging = require('../functions/logging');
 const logging = new Logging();
 const WindowsState = require('../functions/window_state');
 const windowsState = new WindowsState();
-
-const btConstants = require('../functions/btconstants');
+const btC = require('../functions/btconstants');
 
 const os = require('os');
 const {app,BrowserWindow} = require('electron')
-const shell = require('electron').shell
+const shell = require('electron').shell;
 
 let gReleaseVersion = "";
 let gBetaVersion = "";
@@ -49,14 +49,14 @@ class Update{
   {
     let osPlatform = os.platform();
     if (TESTING_UPDATE_DARWIN) osPlatform = "darwin";
+    if (TESTING_UPDATE_LINUX) osPlatform = "linux";    
     switch(osPlatform)
     {
       case "win32":
         downloadExe(type);
       break;
-      case "darwin":
-        linkExe(type);
-      break;          
+      default:
+        linkExe(type);         
     }
   }
   setTheme(css)
@@ -70,23 +70,26 @@ function updateOs(version)
 {
     try {
         let osPlatform = os.platform();
-        if (TESTING_UPDATE_DARWIN) osPlatform = "darwin";     
+        if (TESTING_UPDATE_DARWIN) osPlatform = "darwin";
+        if (TESTING_UPDATE_LINUX) osPlatform = "linux";
         let osArch = os.arch();
-        let msg = "Platform: " + osPlatform + ", architecture: " + osArch + "<br><br>"; 
-        msg += "<b>Current version: " + version + "</b><br><br>";
+        let msg = btC.TL.DIALOG_UPDATE.DUD_PLATFORM + " " + osPlatform + " , " + btC.TL.DIALOG_UPDATE.DUD_ARCH + " " + osArch + "<br><br>"; 
+        msg += "<b>" + btC.TL.DIALOG_UPDATE.DUD_CURRENT + " " + version + "</b><br><br>";
+
+        msg += btC.TL.DIALOG_UPDATE.DUB_VERSION_WEBSITE + "<br><br><br><br>"
 
         switch(osPlatform)
         {
           case "win32":
-            updateWin32(msg,);
-            return;
+            updateWin32(msg);
           break;
           case "darwin":
             updateDarwin(msg,);
-            return;
+          break;
+          default:
+            updateRest(msg);
           break;          
         }      
-        msg += "<br>Updates are handled automatically."
         gChildUpdate.webContents.send('update_msg', msg);         
     } catch (error) {
         logging.logError('Update,checkUpdate', error);        
@@ -107,6 +110,14 @@ function updateDarwin(msg)
   let msg2 = msg + "Checking for updates on https://efmer.eu"
   gChildUpdate.webContents.send('update_msg', msg2);  
   url = "https://efmer.eu/download/boinc/boinc_tasks_js/mac/update.xml";
+  readUrl(url, msg);
+}
+
+function updateRest(msg)
+{
+  let msg2 = msg + "Checking for updates on https://efmer.eu"
+  gChildUpdate.webContents.send('update_msg', msg2);  
+  url = "https://efmer.eu/download/boinc/boinc_tasks_js/linux/update.xml";
   readUrl(url, msg);
 }
 
@@ -134,22 +145,22 @@ function xmlFound(xml,msg)
               if (TESTING_UPDATE) gCurrentVersion = 0.5 // force new version to show
               if (releaseVersion > gCurrentVersion)
               {
-                br += "Found new release version: " + releaseVersion + "<br>"
+                br += btC.TL.DIALOG_UPDATE.DUD_FOUND_NEW_RELEASE + " " + releaseVersion + "<br>"
                 br += releaseInfo;
-                br += '<br><button id="button_release">Download release version</button>';
+                br += '<br><button id="button_release">' + btC.TL.DIALOG_UPDATE.DUD_DOWNLOAD_RELEASE + '</button>';
                 br += "<br><br>"
               }
 
               if (betaVersion > gCurrentVersion)
               {
-                br += "Found new beta version: " + betaVersion + "<br>"
+                br += btC.TL.DIALOG_UPDATE.DUD_FOUND_NEW_BETA + " " + betaVersion + "<br>"
                 br += betaInfo;
-                br += '<br><button id="button_beta">Download beta version</button>';                
+                br += '<br><button id="button_beta">' + btC.TL.DIALOG_UPDATE.DUD_DOWNLOAD_BETA +'</button>';                
                 br += "<br><br>"
               }
               if (br === "")
               {
-                br += "BoincTasks Js is up-to-date. (Beta: " + betaVersion + " , Release: " + releaseVersion + ")";
+                br +=  btC.TL.DIALOG_UPDATE.DUD_UP_TO_DATE + " (" + btC.TL.DIALOG_UPDATE.DUD_UP_TO_DATE_BETA +  " " + betaVersion + " , "+ btC.TL.DIALOG_UPDATE.DUD_UP_TO_DATE_RELEASE + " " + releaseVersion + ")";
               }
               msg += br;
               bFound = true;
@@ -236,14 +247,13 @@ function downloadExe(type)
         let percNow = perc.toFixed(2)
         if (percS != percNow)
         {
-          gChildUpdate.webContents.send('update_download', "Downloading: " + percS + " %"); 
+          gChildUpdate.webContents.send('update_download', btC.TL.DIALOG_UPDATE.DUB_DOWNLOADING + " " + percS + " %"); 
           percS = percNow;
         }
       });
       resp.on('end', () => {
         try {
           var buffer = Buffer.concat(data);
-          gChildUpdate.webContents.send('update_download', "Download completed."); 
           const ReadWrite  = require('../functions/readwrite');
           const readWrite = new ReadWrite();
           let dir = readWrite.write("temp","btj_setup.exe",buffer);            
@@ -270,7 +280,7 @@ function Install(path)
   let msg = "";
   logging.logDebug("Install,Path used: " + path + "<br>");
   try {
-    msg += '<b><h3 style="color:green;"> New version ready to install.</h3><b><br>Closing down....... soon';
+    msg +=  btC.TL.DIALOG_UPDATE.DUB_NEW_VERSION_READY;
     gChildUpdate.webContents.send('update_download', msg);
     setTimeout(exitApp, 3000)
     var child = require('child_process').execFile;
@@ -298,7 +308,7 @@ function updateWindow(version,theme)
 {
     try {
        
-        let title = "BoincTasks Js Check for update";
+        let title = "BoincTasks Js - " + btC.TL.DIALOG_UPDATE.DUD_TITLE;
         if (gChildUpdate == null)
         {
           let state = windowsState.get("update",400,600)

@@ -50,6 +50,76 @@ $(document).ready(function() {
         defaultSettings()
     });  
 
+    ipcRenderer.on('translations', (event, dlg) => {
+        $("#trans_processor").html( dlg.DBO_PROCESSOR_TITLE);
+        $("#trans_allowed").html( dlg.DBO_PROCESSOR_COMPUTERING_ALLOWED);
+        $("#trans_while_on_batteries").html( dlg.DBO_PROCESSOR_WHILE_BATTERIES);
+        $("#trans_while_in_use").html( dlg.DBO_PROCESSOR_WHILE_IN_USE);
+        $("#trans_GPU_in_use").html( dlg.DBO_PROCESSOR_GPU_WHILE_IN_USE);
+        $("#trans_cpu_idle").html( dlg.DBO_PROCESSOR_ONLY_IDLE);
+        $("#trans_minutes1").html( dlg.DBO_MINUTES);
+        $("#trans_usage_less").html( dlg.DBO_PROCESSOR_ONLY_USAGE_LESS);
+        $("#trans_allowed_between1").html( dlg.DBO_ALLOWED_BETWEEN);
+        $("#trans_every_day1").html( dlg.DBO_PROCESSOR_EVERY_DAY);
+        $("#tans_hhmm1").html( dlg.DBO_HHMM);
+        $("#trans_sunday1").html( dlg.DBO_SUNDAY);
+        $("#trans_monday1").html( dlg.DBO_MONDAY);
+        $("#trans_tuesday1").html( dlg.DBO_TUESDAY);
+        $("#trans_wednesday1").html( dlg.DBO_WEDNESDAY);
+        $("#trans_thursday1").html( dlg.DBO_THURSDAY);
+        $("#trans_friday1").html( dlg.DBO_FRIDAY);
+        $("#trans_saturday1").html( dlg.DBO_SATURDAY);
+        $("#trans_switch").html( dlg.DBO_PROCESSOR_SWITCH);
+        $("#trans_minutes2").html( dlg.DBO_MINUTES);
+        $("#trans_use_most1").html( dlg.DBO_USE_AT_MOST);
+        $("#trans_perc_processors").html( dlg.DBO_PERC_PROCESSOR);
+        $("#trans_use_most2").html( dlg.DBO_USE_AT_MOST);
+        $("#trans_perc_cpu").html( dlg.DBO_PERC_CPU);
+        $("#apply1").html( dlg.DBO_BUTTON_APPLY);
+        $("#trans_network").html( dlg.DBO_NETWORK_TITLE);
+        $("#trans_max_down").html( dlg.DBO_NETWORK_MAX_DOWN);
+        $("#trans_kbytess1").html( dlg.DBO_KBYTES_S);
+        $("#trans_max_up").html( dlg.DBO_NETWORK_MAX_UP);
+        $("#trans_kbytess2").html( dlg.DBO_KBYTES_S);
+        $("#trans_at_most").html( dlg.DBO_NETWORK_TRANSFER_MOST);
+        $("#trans_mbytes_every").html( dlg.DBO_MBYTES_EVERY);
+        $("#trans_days1").html( dlg.DBO_DAYS);
+        $("#trans_work_buffer").html( dlg.DBO_NETWORK_MIN_BUFFER);
+        $("#trans_days2").html( dlg.DBO_DAYS);
+        $("#trans_add_buffer").html( dlg.DBO_NETWORK_ADD_BUFFER);
+        $("#trans_days3").html( dlg.DBO_DAYS);
+        $("#trans_allowed_between2").html( dlg.DBO_ALLOWED_BETWEEN);
+        $("#trans_every_day2").html( dlg.DBO_PROCESSOR_EVERY_DAY);
+        $("#tans_hhmm2").html( dlg.DBO_HHMM);
+        $("#trans_sunday2").html( dlg.DBO_SUNDAY);
+        $("#trans_monday2").html( dlg.DBO_MONDAY);
+        $("#trans_tuesday2").html( dlg.DBO_TUESDAY);
+        $("#trans_wednesday2").html( dlg.DBO_WEDNESDAY);
+        $("#trans_thursday2").html( dlg.DBO_THURSDAY);
+        $("#trans_friday2").html( dlg.DBO_FRIDAY);
+        $("#trans_saturday2").html( dlg.DBO_SATURDAY);
+        $("#apply2").html( dlg.DBO_BUTTON_APPLY);
+        $("#trans_disk").html( dlg.DBO_DISK_TITLE);
+        $("#trans_use_most3").html( dlg.DBO_USE_AT_MOST);
+        $("#trans_giga_disk1").html( dlg.DBO_DISK_GIGABYTE);
+        $("#trans_leave_least1").html( dlg.DBO_LEAVE_AT_LEAST);
+        $("#trans_giga_disk2").html( dlg.DBO_DISK_GIGABYTE);
+        $("#trans_use_most4").html( dlg.DBO_USE_AT_MOST);
+        $("#trans_disk_space").html( dlg.DBO_DISK_PERS_DISK);
+        $("#trans_write_disk").html( dlg.DBO_DISK_WRITE);
+        $("#trans_seconds").html( dlg.DBO_SECONDS);
+        $("#trans_use_most5").html( dlg.DBO_USE_AT_MOST);
+        $("#trans_swap").html( dlg.DBO_DISK_PAGE_SWAP);
+        $("#trans_memory").html( dlg.DBO_MEMORY_TITLE);
+        $("#trans_use_most6").html( dlg.DBO_USE_AT_MOST);
+        $("#trans_perc_use").html( dlg.DBO_WHEN_IN_USE);
+        $("#trans_use_most7").html( dlg.DBO_USE_AT_MOST);
+        $("#trans_perc_idle").html( dlg.DBO_WHEN_IDLE);
+        $("#trans_leave_mem").html( dlg.DBO_MEMORY_LEAVE);
+        $("#apply3").html( dlg.DBO_BUTTON_APPLY);
+        $("#default").html( dlg.DBO_BUTTON_RESET);
+
+    });
 
 });
 

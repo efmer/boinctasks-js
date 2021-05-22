@@ -25,6 +25,7 @@ const windowsState = new WindowsState();
 const BtSocket  = require('./socket'); 
 const Authenticate = require('./authenticate');
 const athenticate = new Authenticate();
+const btC = require('../functions/btconstants');
 
 const { BrowserWindow } = require('electron')
 
@@ -115,7 +116,7 @@ function addProjectOk(connections,item)
 {
     if (item.sel.length == 0)
     {
-        sendError("Select a computer");
+        sendError(btC.TL.DIALOG_ADD_PROJECT.DAB_SELECT_COMPUTER);
         gChildAddProject.webContents.send('add_project_enable');        
         return;
     }
@@ -145,7 +146,7 @@ function addProjects()
                 if (con.computerName === gAddProject.sel[s])
                 {
                     gAddProject.sel.splice(s, 1);
-                    let msg = "Adding to: " + con.computerName;
+                    let msg = btC.TL.DIALOG_ADD_PROJECT.DAB_ADDING_COMPUTER + " " + con.computerName;
                     sendMsg(msg);
                     logging.logDebug(msg); 
                     addProjectComputer(con)
@@ -490,7 +491,7 @@ function attachPoll(event)
                 }
                 if (item.success)
                 {
-                    let msg = gAddProject.computerName + " attached: " + gAddProject.addproject.name;
+                    let msg = gAddProject.computerName + " " + btC.TL.DIALOG_ADD_PROJECT.DAB_ATTACHED + " " + gAddProject.addproject.name;
                     logging.logDebug(msg);
                     sendMsg(msg);
                     addProjects();
@@ -535,29 +536,29 @@ function intError(error)
     switch (error)
     {
         case -113:
-            msg = "Url name not valid" ;
+            msg = btC.TL.DIALOG_ADD_PROJECT.DAP_ERROR_URL;
         break;
         case -224:
         case -214:
-            msg = "Failed to contact the project server";
+            msg = btC.TL.DIALOG_ADD_PROJECT.DAP_ERROR_CONTACT;
         break;
         case -206:
-            msg = "Bad password";
+            msg = btC.TL.DIALOG_ADD_PROJECT.DAP_ERROR_PASSWORD;
         break;
         case -130:
-            msg = "Already attached to this project";
+            msg = btC.TL.DIALOG_ADD_PROJECT.DAP_ERROR_ALREADY;
         break;
         case -136:
-            msg = "Not found in the database";
+            msg = btC.TL.DIALOG_ADD_PROJECT.DAP_ERROR_DATABASE;
         break;
         case -107:
-            msg = "Unable to connect";
+            msg = btC.TL.DIALOG_ADD_PROJECT.DAP_ERROR_CONNECT;
         break;
         case -161:
-            msg = "Not found";
+            msg = btC.TL.DIALOG_ADD_PROJECT.DAP_ERROR_FOUND;
         break;
         case -204:
-            msg = "Problem logging in";
+            msg = btC.TL.DIALOG_ADD_PROJECT.DAP_ERROR_LOGGING;
         break;        
         default: 
             msg = error;
@@ -568,7 +569,7 @@ function intError(error)
 
 function sendError(msg)
 {
-    let emsg = '<span style="color:#FF0000";>Error: ' + msg + '</span>';
+    let emsg = '<span style="color:#FF0000";>' + btC.TL.DIALOG_ADD_PROJECT.DAP_ERROR + " " + msg + '</span>';
     sendMsg(emsg);
 }
 
@@ -597,7 +598,7 @@ function btTimer()
 
 function addProject(theme)
 {
-  let title = "Add a new project";
+  let title = "BoincTasks Js - " + btC.TL.DIALOG_ADD_PROJECT.DAB_TITLE;
   if (gChildAddProject == null)
   {
     let state = windowsState.get("add_project",700,800)
@@ -619,6 +620,7 @@ function addProject(theme)
     gChildAddProject.once('ready-to-show', () => {    
       gChildAddProject.show();  
       gChildAddProject.setTitle(title);
+      gChildAddProject.webContents.send("translations",btC.TL.DIALOG_ADD_PROJECT);         
     }) 
     gChildAddProject.on('close', () => {
       let bounds = gChildAddProject.getBounds();

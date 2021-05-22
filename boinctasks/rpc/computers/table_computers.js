@@ -18,7 +18,7 @@
 
 const Logging = require('../functions/logging');
 const logging = new Logging();
-const btConstants = require('../functions/btconstants');
+const btC = require('../functions/btconstants');
 const Functions = require('../functions/functions');
 const functions = new Functions();
 
@@ -104,12 +104,12 @@ function tableComputersHeader(gb, addText)
     if (addText)
     {
       header += addRowHeader(true,true, gb, 0, "");    
-      header += addRowHeader(true,true, gb, 1, btConstants.COMPUTERS_GROUP);
-      header += addRowHeader(true,true, gb, 2, btConstants.GENERAL_COMPUTER);
-      header += addRowHeader(true,true, gb, 3, btConstants.COMPUTERS_IP);
-      header += addRowHeader(true,true, gb, 4, btConstants.COMPUTERS_CPID);
-      header += addRowHeader(true,true, gb, 5, btConstants.COMPUTERS_PORT);
-      header += addRowHeader(true,true, gb, 6, btConstants.COMPUTERS_PASSWORD);
+      header += addRowHeader(true,true, gb, 1, btC.TL.TAB.T_COMPUTERS_GROUP);
+      header += addRowHeader(true,true, gb, 2, btC.TL.TAB.T_GENERAL_COMPUTER);
+      header += addRowHeader(true,true, gb, 3, btC.TL.TAB.T_COMPUTERS_IP);
+      header += addRowHeader(true,true, gb, 4, btC.TL.TAB.T_COMPUTERS_CPID);
+      header += addRowHeader(true,true, gb, 5, btC.TL.TAB.T_COMPUTERS_PORT);
+      header += addRowHeader(true,true, gb, 6, btC.TL.TAB.T_COMPUTERS_PASSWORD);
     }
     else
     {
@@ -128,15 +128,15 @@ function tableComputersHeader(gb, addText)
   if (addText)
   {
     items[order.order[0]] = addRowHeader(order.check[0],true, gb, 0, "");    
-    items[order.order[1]] = addRowHeader(order.check[1],true, gb, 1, btConstants.COMPUTERS_GROUP);
-    items[order.order[2]] = addRowHeader(order.check[2],true, gb, 2, btConstants.GENERAL_COMPUTER);
-    items[order.order[3]] = addRowHeader(order.check[3],true, gb, 3, btConstants.COMPUTERS_IP);
-    items[order.order[4]] = addRowHeader(order.check[4],true, gb, 4, btConstants.COMPUTERS_CPID);
-    items[order.order[5]] = addRowHeader(order.check[5],true, gb, 5, btConstants.COMPUTERS_PORT);
-    items[order.order[6]] = addRowHeader(order.check[6],true, gb, 6, btConstants.COMPUTERS_PASSWORD);
-    items[order.order[7]] = addRowHeader(order.check[7],true, gb, 7, btConstants.COMPUTERS_BOINC);
-    items[order.order[8]] = addRowHeader(order.check[8],true, gb, 8, btConstants.COMPUTERS_PLATFORM);    
-    items[order.order[9]] = addRowHeader(order.check[9],true, gb, 9, btConstants.GENERAL_STATUS);    
+    items[order.order[1]] = addRowHeader(order.check[1],true, gb, 1, btC.TL.TAB.T_COMPUTERS_GROUP);
+    items[order.order[2]] = addRowHeader(order.check[2],true, gb, 2, btC.TL.TAB.T_GENERAL_COMPUTER);
+    items[order.order[3]] = addRowHeader(order.check[3],true, gb, 3, btC.TL.TAB.T_COMPUTERS_IP);
+    items[order.order[4]] = addRowHeader(order.check[4],true, gb, 4, btC.TL.TAB.T_COMPUTERS_CPID);
+    items[order.order[5]] = addRowHeader(order.check[5],true, gb, 5, btC.TL.TAB.T_COMPUTERS_PORT);
+    items[order.order[6]] = addRowHeader(order.check[6],true, gb, 6, btC.TL.TAB.T_COMPUTERS_PASSWORD);
+    items[order.order[7]] = addRowHeader(order.check[7],true, gb, 7, btC.TL.TAB.T_COMPUTERS_BOINC);
+    items[order.order[8]] = addRowHeader(order.check[8],true, gb, 8, btC.TL.TAB.T_COMPUTERS_PLATFORM);    
+    items[order.order[9]] = addRowHeader(order.check[9],true, gb, 9, btC.TL.TAB.T_GENERAL_STATUS);    
   }
   else
   {
@@ -222,7 +222,7 @@ function tableComputerItem(selRows, row, order, con, edit)
     }
     else 
     {
-      let selId = con.ip + btConstants.SEPERATOR_SELECT + con.computerName;
+      let selId = con.ip + btC.SEPERATOR_SELECT + con.computerName;
       let sel = "";
       let iSel = selRows.rowSelected.indexOf(selId)      
       if (iSel >= 0)    
@@ -266,7 +266,7 @@ function tableComputerItem(selRows, row, order, con, edit)
 function addRow(check,selId,row, cell, item)
 {
   if (!check) return "";  
-  var id = ' id="r'+ btConstants.SEPERATOR_ITEM + row + btConstants.SEPERATOR_ITEM + cell +  btConstants.SEPERATOR_ITEM + selId +'"';
+  var id = ' id="r'+ btC.SEPERATOR_ITEM + row + btC.SEPERATOR_ITEM + cell +  btC.SEPERATOR_ITEM + selId +'"';
   return "<td " + id + ">" + item + "</td>";
 }
 
@@ -304,7 +304,7 @@ function addRowHeader(check,showSort, gb, cell, item)
   let width = gb.widthComputers[cell];
   widthS = ' style="width:' + width + '%" ';
 
-  if (gb.headerAction === btConstants.HEADER_RESIZE)
+  if (gb.headerAction === btC.HEADER_RESIZE)
   {
     hclass = 'class="resizer"';
 

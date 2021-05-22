@@ -20,7 +20,7 @@ const Functions = require('../functions/functions');
 const functions = new Functions();
 const Logging = require('../functions/logging');
 const logging = new Logging();
-const btConstants = require('../functions/btconstants');
+const btC = require('../functions/btconstants');
 
 class BtTableHistory{
   tableHeader(gb,sidebar)
@@ -95,8 +95,17 @@ function tableHistoryArray(gb, historyTable,color)
       selRows.present[s] = false;
     }
 
+    let bProject = gb.projectSelected !== btC.TL.SIDEBAR_COMPUTERS.SBC_PROJECTS;
+
     for (var i =0; i<historyTable.length; i++)
     {
+      if (bProject)
+      {
+        if (gb.projectSelected !== historyTable[i].projectName)
+        {
+          continue;
+        }
+      }
       tableArray.push(tableHistoryItem(selRows,i,order,historyTable[i],color));
     }    
 
@@ -127,14 +136,14 @@ function tableHistoryHeader(gb, addText)
   let order = gb.order.history;
   if (addText)
   {
-    items[order.order[0]] = addRowHeader(order.check[0],true, gb, 0, btConstants.GENERAL_COMPUTER);
-    items[order.order[1]] = addRowHeader(order.check[1],true, gb, 1, btConstants.GENERAL_PROJECT);
-    items[order.order[2]] = addRowHeader(order.check[2],true, gb, 2, btConstants.GENERAL_APPLICATION);
-    items[order.order[3]] = addRowHeader(order.check[3],true, gb, 3, btConstants.GENERAL_NAME);
-    items[order.order[4]] = addRowHeader(order.check[4],true, gb, 4, btConstants.GENERAL_ELAPSED);
-    items[order.order[5]] = addRowHeader(order.check[5],true, gb, 5, btConstants.GENERAL_CPU);
-    items[order.order[6]] = addRowHeader(order.check[6],true, gb, 6, btConstants.HISTORY_COMPLETED);
-    items[order.order[7]] = addRowHeader(order.check[7],true, gb, 7, btConstants.GENERAL_STATUS); 
+    items[order.order[0]] = addRowHeader(order.check[0],true, gb, 0, btC.TL.TAB.T_GENERAL_COMPUTER);
+    items[order.order[1]] = addRowHeader(order.check[1],true, gb, 1, btC.TL.TAB.T_GENERAL_PROJECT);
+    items[order.order[2]] = addRowHeader(order.check[2],true, gb, 2, btC.TL.TAB.T_GENERAL_APPLICATION);
+    items[order.order[3]] = addRowHeader(order.check[3],true, gb, 3, btC.TL.TAB.T_GENERAL_NAME);
+    items[order.order[4]] = addRowHeader(order.check[4],true, gb, 4, btC.TL.TAB.T_GENERAL_ELAPSED);
+    items[order.order[5]] = addRowHeader(order.check[5],true, gb, 5, btC.TL.TAB.T_GENERAL_CPU);
+    items[order.order[6]] = addRowHeader(order.check[6],true, gb, 6, btC.TL.TAB.T_HISTORY_COMPLETED);
+    items[order.order[7]] = addRowHeader(order.check[7],true, gb, 7, btC.TL.TAB.T_GENERAL_STATUS); 
   }
   else
   {
@@ -166,7 +175,7 @@ function tableHistoryItem(selRows, i, order, history, colorObj)
     let projectUrl = history.projectUrl;
     let result =  history.result;
 
-    let selId = result + btConstants.SEPERATOR_SELECT + computer + btConstants.SEPERATOR_SELECT + projectUrl;
+    let selId = result + btC.SEPERATOR_SELECT + computer + btC.SEPERATOR_SELECT + projectUrl;
     let iSel = selRows.rowSelected.indexOf(selId)
     if (iSel >= 0)    
     {
@@ -191,48 +200,69 @@ function tableHistoryItem(selRows, i, order, history, colorObj)
     item = '<div ' + style + cpuS + '</div>'
     items[order.order[5]] = addRow(order.check[5],selId, 5, item);
 
-    let d = new Date(history.completedTime*1000);
-    d.setTime( d.getTime() + d.getTimezoneOffset()*60*1000 );
-    let options = { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-    let timeS = d.toLocaleDateString("en-US", options);
-    items[order.order[6]] = addRow(order.check[6],selId, 6, timeS);
+//    let d = new Date(history.completedTime*1000);
+//    d.setTime( d.getTime() + d.getTimezoneOffset()*60*1000 );
+//    let options = { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+//    let timeS = d.toLocaleDateString("en-US", options);
+    items[order.order[6]] = addRow(order.check[6],selId, 6, history.completedTimeS);
 
     let status = "";
     switch (history.exit)
     {
       case 0:
-        status = "OK";
+        status = btC.TL.STATUS.S_EXIT_0;
+      break;
+      case 128:
+        status = btC.TL.STATUS.S_EXIT_128;
+      break;      
+      case 194:
+        status = btC.TL.STATUS.S_EXIT_194;
+      break;
+      case 195:
+        status = btC.TL.STATUS.S_EXIT_195;
+      break;      
+      case 196:
+        status = btC.TL.STATUS.S_EXIT_196;
+      break;
+      case 197:
+        status = btC.TL.STATUS.S_EXIT_197;
+      break;
+      case 198:
+        status = btC.TL.STATUS.S_EXIT_198;
+      break;
+      case 199:
+        status = btC.TL.STATUS.S_EXIT_199;
+      break;
+      case 200:
+        status = btC.TL.STATUS.S_EXIT_200;
+      break;
+      case 201:
+        status = btC.TL.STATUS.S_EXIT_201;
       break;
       case -221:
       case 202:
-        status = "Aborted by project";
-      break;
-      case 194:
-        status = "Aborted by client";
-      break;
-      case 195:
-        status = "Failed to run";
-      break;      
-      case 196:
-        status = "Disk limit exeeded";
-      break;
-      case 197:
-        status = "Time limit exeeded";
-      break;
-      case 198:
-        status = "Memory limit exeeded";
-      break;
-      case 199:
-        status = "Client exited";
-      break;
-      case 200:
-        status = "Aborted past deadline";
+        status = btC.TL.STATUS.S_EXIT_202;
       break;
       case 203:
-        status = "Aborted by user";
-      break;      
+        status = btC.TL.STATUS.S_EXIT_203;
+      break;
+      case 204:
+        status = btC.TL.STATUS.S_EXIT_204;
+      break;
+      case 205:
+        status = btC.TL.STATUS.S_EXIT_205;
+      break;
+      case 206:
+        status = btC.TL.STATUS.S_EXIT_206;
+      break;
+      case 207:
+        status = btC.TL.STATUS.S_EXIT_207;
+      break;
+      case 208:
+        status = btC.TL.STATUS.S_EXIT_208;
+      break;
       default:
-        status = "Exit code: " + history.exit;
+        status = btC.TL.STATUS.S_EXIT_CODE + " " + history.exit;
     }
     items[order.order[7]] = addRow(order.check[7],selId, 7, status);
 
@@ -252,7 +282,7 @@ function tableHistoryItem(selRows, i, order, history, colorObj)
 function addRow(check,rowId, cell, item)
 {
   if (!check) return "";    
-  var id = ' id="r' + btConstants.SEPERATOR_ITEM + rowId + btConstants.SEPERATOR_ITEM + cell +'"';
+  var id = ' id="r' + btC.SEPERATOR_ITEM + rowId + btC.SEPERATOR_ITEM + cell +'"';
   return "<td " + id + ">" + item + "</td>";
 }
 
@@ -290,7 +320,7 @@ function addRowHeader(check,showSort, gb, cell, item)
   let width = gb.widthHistory[cell];
   widthS = ' style="width:' + width + '%" ';
 
-  if (gb.headerAction === btConstants.HEADER_RESIZE)
+  if (gb.headerAction === btC.HEADER_RESIZE)
   {
     hclass = 'class="resizer"';
 

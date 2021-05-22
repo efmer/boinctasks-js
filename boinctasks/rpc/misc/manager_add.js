@@ -26,7 +26,8 @@ const BtSocket  = require('./socket');
 const Authenticate = require('./authenticate');
 const athenticate = new Authenticate();
 
-const { BrowserWindow } = require('electron')
+const { BrowserWindow } = require('electron');
+const btC = require('../functions/btconstants');
 
 let gTimer = null;
 
@@ -123,7 +124,7 @@ function addManagerOk(item)
         gMsgTotal = "";        
         if (item.sel.length == 0)
         {
-            sendError("Select a computer");
+            sendError(btC.TL.DIALOG_ADD_MANAGER.DAM_ERROR_SELECT_COMPUTER);
             gChildAddManager.webContents.send('add_manager_enable');
             stopTimer();
             return;
@@ -180,12 +181,12 @@ function fetchNext()
         let msg;
         if (gSync)
         {
-            msg = "Synchronizing: " + con.computerName;
+            msg = btC.TL.DIALOG_ADD_MANAGER.DAM_STATUS_SYNCHRONIZE + " " + con.computerName;
         }
         else
         {
-            if (item.url.length === 0) msg = "Detaching: " + con.computerName;
-            else msg = "Adding to: " + con.computerName;
+            if (item.url.length === 0) msg = btC.TL.DIALOG_ADD_MANAGER.DAM_STATUS_DETACHING + " " + con.computerName;
+            else msg = btC.TL.DIALOG_ADD_MANAGER.DAM_STATUS_ADDING + " " + con.computerName;
         }
         sendMsg(msg);
         logging.logDebug(msg);        
@@ -316,7 +317,7 @@ function attachManagerPoll(event)
                     else
                     {
                         logging.logDebug("attachManagerPoll: Ready");
-                        sendMsg("Ready");
+                        sendMsg(btC.TL.DIALOG_ADD_MANAGER.DAM_STATUS_READY);
                     }
                     fetchNext();
                 }
@@ -395,7 +396,7 @@ function intError(error)
     switch (error)
     {        
         case -189:
-            msg = "Url name not valid" ;
+            msg = btC.TL.DIALOG_ADD_MANAGER.DAM_ERROR_URL;
         break;       
         default: 
             msg = error;
@@ -406,7 +407,7 @@ function intError(error)
 
 function sendError(msg)
 {
-    let emsg = '<span style="color:#FF0000";>Error: ' + msg + '</span>';
+    let emsg = '<span style="color:#FF0000";>' + btC.TL.DIALOG_ADD_MANAGER.DAM_ERROR + " " + msg + '</span>';
     sendMsg(emsg);
 }
 
@@ -435,7 +436,7 @@ function btTimer()
 
 function addManager(theme)
 {
-  let title = "Account Manager";
+  let title = "BoincTasks Js - " + btC.TL.DIALOG_ADD_MANAGER.DAM_TITLE;
   if (gChildAddManager == null)
   {
     let state = windowsState.get("account_manager_add",700,800)
@@ -457,6 +458,7 @@ function addManager(theme)
     gChildAddManager.once('ready-to-show', () => {    
         gChildAddManager.show();  
         gChildAddManager.setTitle(title);
+        gChildAddManager.webContents.send("translations",btC.TL.DIALOG_ADD_MANAGER);           
     }) 
     gChildAddManager.on('close', () => {
       let bounds = gChildAddManager.getBounds();
@@ -500,7 +502,7 @@ function info()
     try {
         let connections = gConnections;
         gManagerInfoFound = false;
-        gManagerInfoMsg = "<table id='table_line'><th>Computer</th><th>Manager</th><th>Url</th><th>Credentials</th>";
+        gManagerInfoMsg = "<table id='table_line'><th>" + btC.TL.DIALOG_ADD_MANAGER.DAM_INFO_COMPUTER  + "</th><th>" + btC.TL.DIALOG_ADD_MANAGER.DAM_INFO_MANAGER + "</th><th>" + btC.TL.DIALOG_ADD_MANAGER.DAM_INFO_URL + "</th><th>" + btC.TL.DIALOG_ADD_MANAGER.DAM_INFO_CREDENTIALS  + "</th>";
         gConListInfo = [];
         let conFound = null
         for (let i=0;i<connections.length;i++)
@@ -588,8 +590,8 @@ function infoManagerReady(event)
                         let item = mgr[0];
                         if (functions.isDefined(item.acct_mgr_name)) name = item.acct_mgr_name[0];
                         if (functions.isDefined(item.acct_mgr_url))  url = item.acct_mgr_url[0];
-                        if (functions.isDefined(item.have_credentials)) cred = "yes";
-                        else cred = '<span style="color:red;">NO</span>';
+                        if (functions.isDefined(item.have_credentials)) cred =  btC.TL.DIALOG_ADD_MANAGER.DAM_STATUS_YES;
+                        else cred = '<span style="color:red;">' + btC.TL.DIALOG_ADD_MANAGER.DAM_STATUS_NO + '</span>';
                     }
                 }
                 if (url.length > 0)
