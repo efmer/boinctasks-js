@@ -198,6 +198,14 @@ class Connections{
                     clickFilter(val);
                     processResults(gB.sortResults);
                 break;
+                case "notice_collapse":
+                    btTableNotices.click(gB,val,type)
+                    processNotices();
+                break;
+                case "notice_archive":
+                    btTableNotices.click(gB,val,type)
+                    processNotices();
+                break;                
                 default:
                     rowSelect.clickOnRow(gB, idA, shift,alt,ctrl)
                     quickLoad(false);
@@ -793,6 +801,8 @@ function startConnections()
     gB.editComputersShow = false;
 
     gB.order = settingsColumnOrder.get();
+
+    gB.notices = null;
 
     startTimers();
 
@@ -1683,7 +1693,7 @@ function processHistory(sort)
     }     
 }
 
-function processNotices(sort)
+function processNotices()
 {
     try {
         const ProcessNotices = require('./notices/process_notices')
@@ -1692,7 +1702,7 @@ function processNotices(sort)
         gB.currentTable.name = btC.TAB_NOTICES;
         gB.currentTable.table = btTableNotices;    
         gB.currentTable.noticesTable = cTable;
-        let table = btTableNotices.table(cTable);
+        let table = btTableNotices.table(gB,cTable);
         gB.mainWindow.webContents.send('notices', table) 
         toolbar.show(gB, gB.editComputers);
         gBusy = false;                  

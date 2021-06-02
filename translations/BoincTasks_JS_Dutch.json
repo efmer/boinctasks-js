@@ -84,7 +84,14 @@
         "S_EXIT_CODE": "Afsluitcode:",
         "S_EXIT_192": "Kan geen statefile schrijven [192]",
         "S_EXIT_193": "App gestopt door signal [193]",
-        "S_EXIT_128": "Geen processen om op te wachten [128]"
+        "S_EXIT_128": "Geen processen om op te wachten [128]",
+        "S_NOTICE_MORE": "Meer.....",
+        "S_NOTICE_HIDDEN": "Archief",
+        "S_NOTICES_TRANS_0": "Er is een nieuwe versie van BOINC beschikbaar.",
+        "S_NOTICES_TRANS_1": "Downloaden",
+        "S_NOTICES_TRANS_2": "Uw instellingen staan ​​het ophalen van taken niet toe voor de",
+        "S_NOTICES_TRANS_3": "Om dit op te lossen, kunt u ",
+        "S_NOTICES_TRANS_4": "de projectvoorkeuren, op de website van het project wijzigen"
     },
     "TAB_MSG": {
         "TM_EMPTY_TABLE": "<br><br><br><br><b>Leeg, selecteer verbonden computer(s).",
@@ -251,7 +258,7 @@
         "FTR_RETRY": "Opnieuw proberen",
         "FTR_TASKS": "Taken:",
         "FTR_TASKS_HISTORY": "G Taken:",
-        "FTR_RETRY_ALL": "Alles opnieuw proberen"
+        "FTR_RETRY_ALL": "Alles opnieuw proberen:"
     },
     "BOX_DELETE_FILTER": {
         "BX_FILTER_TITLE": "Kan een filter niet verwijderen",

@@ -79,7 +79,7 @@ function condense(cTable)
                     cTable.splice(j,1);
                 }
             }
-        }      
+        }  
     } catch (error) {
         logging.logError('ProcessProjects,condense', error);      
     }

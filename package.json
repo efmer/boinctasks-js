@@ -5,7 +5,7 @@
   "author": "eFMer <boinc@efmer.com>",
   "url": "https://efmer.com/",
   "license": "GPL-3.0-or-later",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "BoincTasks Js the best way to view BOINC",
   "copyright": "Copyright © 2021 ${author}",
   "main": "main.js",
@@ -17,7 +17,7 @@
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "makeA64": "electron-forge make --arch=arm64",    
+    "makeA64": "electron-forge make --arch=arm64",
     "linux": "electron-builder --linux deb",
     "snapI64": "electron-builder --linux snap --x64",
     "snapA32": "electron-builder --linux snap --armv7l",
@@ -95,6 +95,8 @@
   "dependencies": {
     "highcharts": "^9.0.1",
     "nodemailer": "^6.5.0",
+    "pino": "^6.11.3",
+    "pino-pretty": "^4.8.0",
     "sortablejs": "^1.13.0",
     "xml2js": "^0.4.23"
   },

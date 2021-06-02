@@ -54,7 +54,7 @@ function noticeData()
         for (let i=0;i<notice.length;i++)
         {
             notice[i].computer = this.computerName;
-            let s = notice[i].project_name[0] + notice[i].title[0] + notice[i].description[0];
+            let s = notice[i].title[0] + notice[i].description[0];
             notice[i].hash =  crypto.createHash('md5').update(s).digest("hex");
         }
 

@@ -46,8 +46,8 @@ npm run snapA32
 
 cd /home/fred/sb/boinctasks-js/dist
 snapcraft login
-snapcraft upload --release=candidate boinctasks-js_1.1.8_amd64.snap
-snapcraft upload --release=candidate boinctasks-js_1.1.8_armhf.snap
+snapcraft upload --release=candidate boinctasks-js_1.1.9_amd64.snap
+snapcraft upload --release=candidate boinctasks-js_1.1.9_armhf.snap
 
 // testing
 cd /home/fred/sb/boinctasks-js/dist/

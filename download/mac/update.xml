@@ -1,16 +1,16 @@
 <update>
 	<os>darwin</os>
 	<release> 
-		<version>1.17</version>
+		<version>1.19</version>
 		<info>
-			• Now in a zip package.
+			• Info on the site
 		</info>
 		<url>https://efmer.com/boinctasks-js/boinctasks-js-download/</url>
 	</release>
 	<beta>
-		<version>1.17</version>
+		<version>1.19</version>
 		<info>
-			• Now in a zip package.
+			• Info on the site
 		</info>
 		<url>https://efmer.com/boinctasks-js/boinctasks-js-download/</url>
 	</beta>

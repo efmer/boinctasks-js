@@ -19,6 +19,8 @@
 const WindowsState = require('./window_state');
 const windowsState = new WindowsState();
 
+const fs = require('fs');
+
 const btC = require('./btconstants');
 
 const os = require('os');
@@ -28,6 +30,8 @@ let g_logMsg = "";
 let g_logDebugMsg = "";
 let g_logRulesMsg = "";
 let g_logErrorMsg = "";
+
+let gPino = null;
 
 let gLogging = new Object();
 gLogging.type = 0;
@@ -41,6 +45,7 @@ class Logging{
     setVersion(versionIn)
     {
         try {
+            initPino();
             let version = "BoincTasks Js, " + versionIn;
             this.log(version);
             this.logDebug(version); 
@@ -49,11 +54,13 @@ class Logging{
     
             let sys = btC.TL.DIALOG_LOGGING.DLG_MSG_PLATFORM + " " + os.platform() + " ," + btC.TL.DIALOG_LOGGING.DLG_MSG_ARCH + " " + os.arch();
             this.log(sys);
-            this.logDebug(sys);
+            gPinoDebug.info(sys);
     
             let path = btC.TL.DIALOG_LOGGING.DLG_MSG_FOLDER_APP + " " + app.getPath("home");
             this.logDebug(path);        
-            path = btC.TL.DIALOG_LOGGING.DLG_MSG_FOLDER_DATA + " " + app.getPath("appData");
+            path = btC.TL.DIALOG_LOGGING.DLG_MSG_FOLDER_DATA + " (appData) " + app.getPath("appData");
+            this.logDebug(path);
+            path = btC.TL.DIALOG_LOGGING.DLG_MSG_FOLDER_DATA + " (userData) " + app.getPath("userData");
             this.logDebug(path);
             let loc = app.getLocale();
             let ccode = app.getLocaleCountryCode();
@@ -101,7 +108,8 @@ class Logging{
     logDebug(msg)
     {
         try {
-            let time = getTime();            
+            let time = getTime();
+            gPinoDebug.info(msg);
             g_logDebugMsg += time + " " + msg + ".</br>";    
         } catch (error) {
             let  ii =1;
@@ -124,7 +132,9 @@ class Logging{
             let time = getTime();
             let msg = error.message;
             msg += "<br>" + error.stack;
-            g_logErrorMsg += time + " " + btC.TL.DIALOG_LOGGING.DLG_TITLE_ERROR + " [" + from + "] " + msg + ".</br>"; 
+            let errorMsg = btC.TL.DIALOG_LOGGING.DLG_TITLE_ERROR + " [" + from + "] " + msg;
+            gPinoError.error(errorMsg);            
+            g_logErrorMsg += time + " " + errorMsg + ".</br>"; 
         } catch (error) {
             let  ii =1;            
         }        
@@ -135,7 +145,15 @@ class Logging{
         msg = msg.replaceAll("<","&#60;")        
         msg = msg.replaceAll(">","&#62;")
         let time = getTime();
-        g_logErrorMsg += time + " " + btC.TL.DIALOG_LOGGING.DLG_TITLE_ERROR + " [" + from + "] " + msg + ".</br>";     
+        let errorMsg = btC.TL.DIALOG_LOGGING.DLG_TITLE_ERROR + " [" + from + "] " + msg;
+        gPinoError.error(errorMsg);          
+        g_logErrorMsg += time + " " + errorMsg + ".</br>";     
+    }
+
+    logFile(from,msg)
+    {
+        let txt = "[" + from + "] " + msg;
+        gPinoDebug.info(txt);
     }
 
     setTheme(css)
@@ -145,6 +163,64 @@ class Logging{
 }
 
 module.exports = Logging;
+
+function initPino()
+{
+    try {
+        const pino = require("pino");
+        const loggingFolder = app.getPath("userData") + "/logging";
+        if (!fs.existsSync(loggingFolder))
+        {
+            fs.mkdirSync(loggingFolder, {recursive: true});
+        }
+        const logFileDebug = loggingFolder + "/boinctasks_js_debug";
+        const logFileError = loggingFolder + "/boinctasks_js_error";        
+
+        try {
+            fs.unlinkSync(logFileDebug + '2.log');
+        } catch (error) {}
+        try {
+            fs.unlinkSync(logFileError + '2.log');
+        } catch (error) {}        
+
+        try {
+            fs.renameSync(logFileDebug + '1.log',logFileDebug + '2.log');
+        } catch (error) {}
+        try {
+            fs.renameSync(logFileError + '1.log',logFileError + '2.log');
+        } catch (error) {}        
+
+        try {
+            fs.renameSync(logFileDebug + ".log",logFileDebug + '1.log');
+        } catch (error) {}
+        try {
+            fs.renameSync(logFileError + ".log" ,logFileError + '1.log');
+        } catch (error) {}        
+
+        gPinoDebug = pino(
+            {
+              prettyPrint: {
+                colorize: true,
+                levelFirst: true,
+                translateTime: "yyyy-dd-mm, h:MM:ss TT",
+              },
+            },
+            pino.destination(logFileDebug + ".log")
+          ); 
+          gPinoError = pino(
+            {
+              prettyPrint: {
+                colorize: true,
+                levelFirst: true,
+                translateTime: "yyyy-dd-mm, h:MM:ss TT",
+              },
+            },
+            pino.destination(logFileError + ".log")
+          );                   
+    } catch (error) {
+        var ii = 1;
+    }
+}
 
 function getTime()
 {

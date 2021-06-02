@@ -325,6 +325,51 @@ body
 	background-position: top 1px left 1px;
 }
 
+.bt_img_notice_minus {
+	background: url(./img/toolbar/minus.png) no-repeat;
+	background-size: 16px 16px;	
+	background-position: top 1px left 1px;
+    cursor: cell;	
+}
+
+.bt_img_notice_plus {
+	background: url(./img/toolbar/plus.png) no-repeat;
+	background-size: 16px 16px;
+	background-position: top 1px left 1px;
+    cursor: cell;
+}
+
+.bt_img_notice_archive {
+	background: url(./img/toolbar/cancel.png) no-repeat;
+	background-size: 16px 16px;
+	background-position: top 1px left 1px;
+    cursor: cell;
+}
+
+.bt_notice_header {
+	margin-left:20px;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
+.bt_notice_header_hidden {
+	margin-left:20px;
+	font-size: 1.4em;
+	font-weight: bold;
+	font-style: italic;
+}
+
+.bt_notice_line {
+	border: 1px solid green;
+	border-radius: 2px;
+}
+
+.bt_notice_line_archive {
+	margin-top: 30px;
+	border: 4px solid green;
+	border-radius: 5px;
+}
+
 /* input */
 
 .ef_img_input {	

@@ -17,7 +17,7 @@
 */
 
 // Modules to control application life and create native browser window
-const {ipcMain, app, BrowserWindow, dialog, Menu, Tray, nativeTheme } = require('electron')
+const {ipcMain, app, powerMonitor, BrowserWindow, dialog, Menu, Tray, nativeTheme } = require('electron')
 
 const Logging = require('./boinctasks/rpc/functions/logging');
 const logging = new Logging();
@@ -51,7 +51,8 @@ let gVersion = getVersion();
 let gMainWindow = null;
 let gMainWindowCssKey = null;
 let gMainWindowCssDark = null;
-let g_mainMenu = null;
+let gMainMenu = null;
+let gDockMenu = null;
 
 let gSettings = null;
 //let gTranslation = null;
@@ -62,6 +63,36 @@ let gTray = null;
 let gMenuTemplate;
 
 const isMac = process.platform === 'darwin'
+
+function initDockMenu()
+{
+  gMenuDockTemplate = [
+    {
+      label: btC.TL.MENU.MN_OPEN, click: function () {
+        gMainWindow.show();
+      },
+      label: btC.TL.MENU.MN_ABOUT, click: function () {
+        if (gClassCredits === null)
+        {
+          const Credits = require('./boinctasks/rpc/misc/credits');              
+          gClassCredits = new Credits();
+        }
+        gClassCredits.about(gVersion,gTheme);
+      },
+      label: btC.TL.MENU.MN_SNOOZE, click: function () {
+        connections.boincAllow("menu");
+      }
+      },       
+      {
+        label: btC.TL.MENU.MN_EXIT, click: function () {                
+          app.isQuiting = true;
+          app.quit();
+        }
+      }
+  ];
+  gDockMenu = Menu.buildFromTemplate(gMenuDockTemplate);
+
+}
 
 function initMenu()
 {
@@ -387,7 +418,10 @@ function initialize () {
   function createWindow () {
     // Create the browser window.
 
+    logging.logFile("main, createWindow", "start");
+
     let bMax = false;
+    let maxBounds = null;
     let bShow = app.commandLine.getSwitchValue("show") != "no";
 
     if (gSettings.hideLogin === '1') 
@@ -413,62 +447,84 @@ function initialize () {
     });
     if (state.max)
     {
+      maxBounds = gMainWindow.getBounds();      
+      bMax = true;
+      logging.logFile("main, createWindow", "state.max");
       gMainWindow.maximize();
     }
     try {
-      initMenu(); 
+      initMenu();
     } catch (error) {
-      let msg = error.message;
-      msg += "<br>" + error.stack
-      debugDialog("initMenu ERROR " + msg);
+      logging.logError('main, createWindow', error); 
     }
 //    if (process.platform == 'darwin') {
 //      gMenuTemplate.unshift({label: ''});
 //    }
  
-    const g_mainMenu = Menu.buildFromTemplate(gMenuTemplate);
+    const gMainMenu = Menu.buildFromTemplate(gMenuTemplate);
 
     if (process.platform == 'darwin') {
-      Menu.setApplicationMenu(g_mainMenu); 
+      logging.logFile("main, createWindow", "darwin setApplicationMenu");      
+      Menu.setApplicationMenu(gMainMenu); 
     }
     else
     {
+      logging.logFile("main, createWindow", "win,linux setMenu");        
       Menu.setApplicationMenu(null);
-      gMainWindow.setMenu(g_mainMenu);
+      gMainWindow.setMenu(gMainMenu);
     }
 
     // and load the index.html of the app.
     gMainWindow.loadFile('index/index.html')
 
     gMainWindow.on('close', (e) => {
+      let max = gMainWindow.isMaximized();
       let bounds = gMainWindow.getBounds();
-      windowsState.set("main",bounds.x,bounds.y, bounds.width, bounds.height,bMax)
+      windowsState.set("main",bounds.x,bounds.y, bounds.width, bounds.height,max)
+      logging.logFile("main, createWindow", "close, store window, max:" + max);
 
-      if (!app.isQuiting)
+      if (app.isQuiting)
       {
-        e.preventDefault();
-        gMainWindow.hide();
-        connections.pause();
+        logging.logFile("main, createWindow", "close, isQuiting");
+      }
+      else
+      {
+        if (gMainWindow.isVisible())
+        {
+          logging.logFile("main, createWindow", "close, !isQuiting,isVisible");        
+          e.preventDefault();
+          gMainWindow.hide();
+          connections.pause();
+        }
+        else
+        {
+          logging.logFile("main, createWindow", "close, !isQuiting,!isVisible");
+        }
       }
     })
 
     gMainWindow.on('closed', () => {
       gMainWindow = null
+      logging.logFile("main, createWindow", "closed");      
     })
 
     gMainWindow.on('maximize', function (event) {
       bMax = true;
+      maxBounds = gMainWindow.getBounds();
+      logging.logFile("main, createWindow", "maximize");     
     });
 
     gMainWindow.on('minimize', function (event) {
       event.preventDefault();
 //      gMainWindow.hide(); // do not hide here.
       connections.pause();
+      logging.logFile("main, createWindow", "minimize");      
     });
 
     gMainWindow.on('restore', function (event) {
       connections.resume();
       gMainWindow.show();
+      logging.logFile("main, createWindow", "restore");        
     });
 
     gMainWindow.once('ready-to-show', () => {
@@ -477,7 +533,9 @@ function initialize () {
       gMainWindow.webContents.send("translations",btC.TL.SEL);   
 //      gMainWindow.webContents.openDevTools()
       insertCss();
+      logging.logFile("main, createWindow", "ready-to-show");
     });
+
   }
 
 // This method will be called when Electron has finished
@@ -488,14 +546,24 @@ function initialize () {
     connections.init(gVersion);
 //    gTranslation = connections.translation(gClassBtMenu.check(btC.MENU_DEBUG_TRANSLATIONS));
     logging.setVersion("V " + gVersion);
+    if (isMac) {
+      initDockMenu();
+      app.dock.setMenu(gDockMenu)
+    }
     createWindow();
     rendererRequests(); 
     gTray = createTray();
+    logging.logFile("main, createWindow", "whenReady");  
 
     app.on('activate', function () {
+      logging.logFile("main, createWindow", "activate");  
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+    if (BrowserWindow.getAllWindows().length === 0)
+    {
+      logging.logFile("main, createWindow", "whenReady, getAllWindows === 0"); 
+      createWindow()
+    }
   })
   })
 
@@ -503,11 +571,24 @@ function initialize () {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
   app.on('window-all-closed', function () {
+    logging.logFile("main, createWindow", "window-all-closed");    
     if (process.platform !== 'darwin') app.quit()
   })
 
   app.on('will-quit', function () {
+    logging.logFile("main, createWindow", "will-quit");  
   })
+  
+  app.on('quit', () => {
+    logging.logFile("main, createWindow", "quit");  
+    appExit();
+  });
+
+  powerMonitor.on('shutdown', () => {
+    logging.logFile("main, createWindow", "shutdown");      
+    appExit();
+  });
+
 }
 
 function getTranslation()
@@ -551,9 +632,6 @@ function getTranslation()
             btC.TL = JSON.parse(translation);            
         } catch (error) {
           logging.logError('Main,getTranslation', error);
-          let msg = error.message;
-          msg += "<br>" + error.stack
-          debugDialog("getTranslation ERROR " + msg);
         }
     }    
   } catch (error) {
@@ -561,7 +639,7 @@ function getTranslation()
   } 
   if (btC.TL === null)
   {
-    debugDialog("getTranslation btC.TL === null");
+    logging.logErrorMsg('Main,getTranslation', "getTranslation btC.TL === null");
   }  
 }
 
@@ -577,6 +655,7 @@ async function insertCss()
 
 function appExit()
 {
+  logging.logFile("main, appExit", "isQuiting");  
   app.isQuiting = true;
   app.quit();
 }
@@ -729,11 +808,12 @@ function rendererRequests()
       let mode = JSON.parse(readWrite.read("settings","dark_mode.json")); 
       if (mode.dark) gDarkMode = true;
       else gDarkMode = false;
-    } catch (error) {        
+    } catch (error) {
+      logging.logError('Main,rendererRequests, did-finish-load', error);       
     }
     setDarkMode(false,false);
 
-    connections.start(gMainWindow, g_mainMenu);
+    connections.start(gMainWindow, gMainMenu);
 
     var set = gClassBtMenu.check(btC.MENU_SIDEBAR_COMPUTERS);
     sidebarComputers(set,false);

@@ -84,7 +84,14 @@
         "S_EXIT_CODE": "Exit code:",
         "S_EXIT_192": "Can't write statefile [192]",
         "S_EXIT_193": "App was killed by signal [193]",
-        "S_EXIT_128": "No child processes to wait for [128]"
+        "S_EXIT_128": "No child processes to wait for [128]",
+        "S_NOTICE_MORE": "More.....",
+        "S_NOTICE_HIDDEN": "Archive",
+        "S_NOTICES_TRANS_0": "A new version of BOINC is available.",
+        "S_NOTICES_TRANS_1": "Download",
+        "S_NOTICES_TRANS_2": "Your settings do not allow fetching tasks for",
+        "S_NOTICES_TRANS_3": "To fix this, you can ",
+        "S_NOTICES_TRANS_4": "change Project Preferences on the project's web site"
     },
     "TAB_MSG": {
         "TM_EMPTY_TABLE": "<br><br><br><br><b>Empty, select connected computer(s).",
@@ -251,7 +258,7 @@
         "FTR_RETRY": "Retry",
         "FTR_TASKS": "Tasks:",
         "FTR_TASKS_HISTORY": "H Tasks:",
-        "FTR_RETRY_ALL": "Retry all"
+        "FTR_RETRY_ALL": "Retry all:"
     },
     "BOX_DELETE_FILTER": {
         "BX_FILTER_TITLE": "Unable to delete a Filter",

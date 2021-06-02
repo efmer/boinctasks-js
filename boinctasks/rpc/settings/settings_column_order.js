@@ -486,15 +486,15 @@ function setWindowsComputers(gb, type)
 
   itemsArray = [];
   itemsArray[order.order[0]] = addItem("",0,order);
-  itemsArray[order.order[1]] = addItem(btC.TL.TAB.COMPUTERS_GROUP,1,order);
-  itemsArray[order.order[2]] = addItem(btC.TL.TAB.GENERAL_COMPUTER,2,order);
-  itemsArray[order.order[3]] = addItem(btC.TL.TAB.COMPUTERS_IP,3,order);
-  itemsArray[order.order[4]] = addItem(btC.TL.TAB.COMPUTERS_CPID,4,order);
-  itemsArray[order.order[5]] = addItem(btC.TL.TAB.COMPUTERS_PORT,5,order);
-  itemsArray[order.order[6]] = addItem(btC.TL.TAB.COMPUTERS_PASSWORD,6,order);
-  itemsArray[order.order[7]] = addItem(btC.TL.TAB.COMPUTERS_BOINC,7,order);
-  itemsArray[order.order[8]] = addItem(btC.TL.TAB.COMPUTERS_PLATFORM,8,order);
-  itemsArray[order.order[9]] = addItem(btC.TL.TAB.GENERAL_STATUS,9,order);
+  itemsArray[order.order[1]] = addItem(btC.TL.TAB.T_COMPUTERS_GROUP,1,order);
+  itemsArray[order.order[2]] = addItem(btC.TL.TAB.T_GENERAL_COMPUTER,2,order);
+  itemsArray[order.order[3]] = addItem(btC.TL.TAB.T_COMPUTERS_IP,3,order);
+  itemsArray[order.order[4]] = addItem(btC.TL.TAB.T_COMPUTERS_CPID,4,order);
+  itemsArray[order.order[5]] = addItem(btC.TL.TAB.T_COMPUTERS_PORT,5,order);
+  itemsArray[order.order[6]] = addItem(btC.TL.TAB.T_COMPUTERS_PASSWORD,6,order);
+  itemsArray[order.order[7]] = addItem(btC.TL.TAB.T_COMPUTERS_BOINC,7,order);
+  itemsArray[order.order[8]] = addItem(btC.TL.TAB.T_COMPUTERS_PLATFORM,8,order);
+  itemsArray[order.order[9]] = addItem(btC.TL.TAB.T_GENERAL_STATUS,9,order);
 
   for (let i=0;i<itemsArray.length;i++)
   {
@@ -512,17 +512,17 @@ function setWindowsProjects(gb, type)
   let order = gb.order.projects;
 
   itemsArray = [];
-  itemsArray[order.order[0]] = addItem(btC.TL.TAB.GENERAL_COMPUTER,0,order);
-  itemsArray[order.order[1]] = addItem(btC.TL.TAB.GENERAL_PROJECT,1,order);
-  itemsArray[order.order[2]] = addItem(btC.TL.TAB.PROJECTS_ACCOUNT,2,order);
-  itemsArray[order.order[3]] = addItem(btC.TL.TAB.PROJECTS_TEAM,3,order);
-  itemsArray[order.order[4]] = addItem(btC.TL.TAB.PROJECTS_CREDITS,4,order);
-  itemsArray[order.order[5]] = addItem(btC.TL.TAB.PROJECTS_CREDITS_AVG,5,order);
-  itemsArray[order.order[6]] = addItem(btC.TL.TAB.PROJECTS_CREDITS_HOST,6,order);
-  itemsArray[order.order[7]] = addItem(btC.TL.TAB.PROJECTS_CREDITS_HOST_AVG,7,order);
-  itemsArray[order.order[8]] = addItem(btC.TL.TAB.PROJECTS_SHARE,8,order);
-  itemsArray[order.order[9]] = addItem(btC.TL.TAB.GENERAL_STATUS,9,order);
-  itemsArray[order.order[10]] = addItem(btC.TL.TAB.PROJECTS_REC,10,order);  
+  itemsArray[order.order[0]] = addItem(btC.TL.TAB.T_GENERAL_COMPUTER,0,order);
+  itemsArray[order.order[1]] = addItem(btC.TL.TAB.T_GENERAL_PROJECT,1,order);
+  itemsArray[order.order[2]] = addItem(btC.TL.TAB.T_PROJECTS_ACCOUNT,2,order);
+  itemsArray[order.order[3]] = addItem(btC.TL.TAB.T_PROJECTS_TEAM,3,order);
+  itemsArray[order.order[4]] = addItem(btC.TL.TAB.T_PROJECTS_CREDITS,4,order);
+  itemsArray[order.order[5]] = addItem(btC.TL.TAB.T_PROJECTS_CREDITS_AVG,5,order);
+  itemsArray[order.order[6]] = addItem(btC.TL.TAB.T_PROJECTS_CREDITS_HOST,6,order);
+  itemsArray[order.order[7]] = addItem(btC.TL.TAB.T_PROJECTS_CREDITS_HOST_AVG,7,order);
+  itemsArray[order.order[8]] = addItem(btC.TL.TAB.T_PROJECTS_SHARE,8,order);
+  itemsArray[order.order[9]] = addItem(btC.TL.TAB.T_GENERAL_STATUS,9,order);
+  itemsArray[order.order[10]] = addItem(btC.TL.TAB.T_PROJECTS_REC,10,order);  
 
   for (let i=0;i<itemsArray.length;i++)
   {
@@ -540,23 +540,23 @@ function setWindowsTasks(gb, type)
   let order = gb.order.tasks;
 
   itemsArray = [];
-  itemsArray[order.order[0]] = addItem(btC.TL.TAB.GENERAL_COMPUTER,0,order);
-  itemsArray[order.order[1]] = addItem(btC.TL.TAB.GENERAL_PROJECT,1,order);
-  itemsArray[order.order[2]] = addItem(btC.TL.TAB.GENERAL_APPLICATION,2,order);
-  itemsArray[order.order[3]] = addItem(btC.TL.TAB.GENERAL_NAME,3,order);
-  itemsArray[order.order[4]] = addItem(btC.TL.TAB.GENERAL_ELAPSED,4,order);
-  itemsArray[order.order[5]] = addItem(btC.TL.TAB.GENERAL_CPU,5,order);
-  itemsArray[order.order[6]] = addItem(btC.TL.TAB.GENERAL_PROGRESS,6,order);
-  itemsArray[order.order[7]] = addItem(btC.TL.TAB.TASK_TIMELEFT,7,order);
-  itemsArray[order.order[8]] = addItem(btC.TL.TAB.TASK_DEADLINE,8,order);
-  itemsArray[order.order[9]] = addItem(btC.TL.TAB.TASK_USE,9,order);
-  itemsArray[order.order[10]] = addItem(btC.TL.TAB.GENERAL_STATUS,10,order);
-  itemsArray[order.order[11]] = addItem(btC.TL.TAB.TASK_CHECKPOINT,11,order);
-  itemsArray[order.order[12]] = addItem(btC.TL.TAB.TASK_RECEIVED,12,order);
-  itemsArray[order.order[13]] = addItem(btC.TL.TAB.TASK_MEMORYV,13,order);
-  itemsArray[order.order[14]] = addItem(btC.TL.TAB.TASK_MEMORY,14,order);
-  itemsArray[order.order[15]] = addItem(btC.TL.TAB.TASK_TEMP,15,order);
-  itemsArray[order.order[16]] = addItem(btC.TL.TAB.TASK_TTHROTTLE,16,order);
+  itemsArray[order.order[0]] = addItem(btC.TL.TAB.T_GENERAL_COMPUTER,0,order);
+  itemsArray[order.order[1]] = addItem(btC.TL.TAB.T_GENERAL_PROJECT,1,order);
+  itemsArray[order.order[2]] = addItem(btC.TL.TAB.T_GENERAL_APPLICATION,2,order);
+  itemsArray[order.order[3]] = addItem(btC.TL.TAB.T_GENERAL_NAME,3,order);
+  itemsArray[order.order[4]] = addItem(btC.TL.TAB.T_GENERAL_ELAPSED,4,order);
+  itemsArray[order.order[5]] = addItem(btC.TL.TAB.T_GENERAL_CPU,5,order);
+  itemsArray[order.order[6]] = addItem(btC.TL.TAB.T_GENERAL_PROGRESS,6,order);
+  itemsArray[order.order[7]] = addItem(btC.TL.TAB.T_TASK_TIMELEFT,7,order);
+  itemsArray[order.order[8]] = addItem(btC.TL.TAB.T_TASK_DEADLINE,8,order);
+  itemsArray[order.order[9]] = addItem(btC.TL.TAB.T_TASK_USE,9,order);
+  itemsArray[order.order[10]] = addItem(btC.TL.TAB.T_GENERAL_STATUS,10,order);
+  itemsArray[order.order[11]] = addItem(btC.TL.TAB.T_TASK_CHECKPOINT,11,order);
+  itemsArray[order.order[12]] = addItem(btC.TL.TAB.T_TASK_RECEIVED,12,order);
+  itemsArray[order.order[13]] = addItem(btC.TL.TAB.T_TASK_MEMORYV,13,order);
+  itemsArray[order.order[14]] = addItem(btC.TL.TAB.T_TASK_MEMORY,14,order);
+  itemsArray[order.order[15]] = addItem(btC.TL.TAB.T_TASK_TEMP,15,order);
+  itemsArray[order.order[16]] = addItem(btC.TL.TAB.T_TASK_TTHROTTLE,16,order);
 
   for (let i=0;i<itemsArray.length;i++)
   {
@@ -574,14 +574,14 @@ function setWindowsTransfers(gb, type)
   let order = gb.order.transfers;
 
   itemsArray = [];
-  itemsArray[order.order[0]] = addItem(btC.TL.TAB.GENERAL_COMPUTER,0,order);
-  itemsArray[order.order[1]] = addItem(btC.TL.TAB.GENERAL_PROJECT,1,order);
-  itemsArray[order.order[2]] = addItem(btC.TL.TAB.TRANSFERS_FILE,2,order);
-  itemsArray[order.order[3]] = addItem(btC.TL.TAB.GENERAL_PROGRESS,3,order);
-  itemsArray[order.order[4]] = addItem(btC.TL.TAB.TRANSFERS_SIZE,4,order);
-  itemsArray[order.order[5]] = addItem(btC.TL.TAB.GENERAL_ELAPSED,5,order);
-  itemsArray[order.order[6]] = addItem(btC.TL.TAB.TRANSFERS_SPEED,6,order);
-  itemsArray[order.order[7]] = addItem(btC.TL.TAB.GENERAL_STATUS,7,order);
+  itemsArray[order.order[0]] = addItem(btC.TL.TAB.T_GENERAL_COMPUTER,0,order);
+  itemsArray[order.order[1]] = addItem(btC.TL.TAB.T_GENERAL_PROJECT,1,order);
+  itemsArray[order.order[2]] = addItem(btC.TL.TAB.T_TRANSFERS_FILE,2,order);
+  itemsArray[order.order[3]] = addItem(btC.TL.TAB.T_GENERAL_PROGRESS,3,order);
+  itemsArray[order.order[4]] = addItem(btC.TL.TAB.T_TRANSFERS_SIZE,4,order);
+  itemsArray[order.order[5]] = addItem(btC.TL.TAB.T_GENERAL_ELAPSED,5,order);
+  itemsArray[order.order[6]] = addItem(btC.TL.TAB.T_TRANSFERS_SPEED,6,order);
+  itemsArray[order.order[7]] = addItem(btC.TL.TAB.T_GENERAL_STATUS,7,order);
 
   for (let i=0;i<itemsArray.length;i++)
   {
@@ -599,11 +599,11 @@ function setWindowsMessages(gb, type)
   let order = gb.order.messages;
 
   itemsArray = [];
-  itemsArray[order.order[0]] = addItem(btC.TL.TAB.GENERAL_COMPUTER,0,order);
-  itemsArray[order.order[1]] = addItem(btC.TL.TAB.MESSAGES_NR,1,order);
-  itemsArray[order.order[2]] = addItem(btC.TL.TAB.GENERAL_PROJECT,2,order);
-  itemsArray[order.order[3]] = addItem(btC.TL.TAB.MESSAGES_TIME,3,order);
-  itemsArray[order.order[4]] = addItem(btC.TL.TAB.MESSAGES_MESSAGE,4,order);
+  itemsArray[order.order[0]] = addItem(btC.TL.TAB.T_GENERAL_COMPUTER,0,order);
+  itemsArray[order.order[1]] = addItem(btC.TL.TAB.T_MESSAGES_NR,1,order);
+  itemsArray[order.order[2]] = addItem(btC.TL.TAB.T_GENERAL_PROJECT,2,order);
+  itemsArray[order.order[3]] = addItem(btC.TL.TAB.T_MESSAGES_TIME,3,order);
+  itemsArray[order.order[4]] = addItem(btC.TL.TAB.T_MESSAGES_MESSAGE,4,order);
 
   for (let i=0;i<itemsArray.length;i++)
   {
@@ -621,15 +621,15 @@ function setWindowsHistory(gb, type)
   let order = gb.order.history;
 
   itemsArray = [];
-  itemsArray[order.order[0]] = addItem(btC.TL.TAB.GENERAL_COMPUTER,0,order);
-  itemsArray[order.order[1]] = addItem(btC.TL.TAB.GENERAL_PROJECT,1,order);
-  itemsArray[order.order[2]] = addItem(btC.TL.TAB.GENERAL_APPLICATION ,2,order);
-  itemsArray[order.order[3]] = addItem(btC.TL.TAB.GENERAL_NAME,3,order);
-  itemsArray[order.order[4]] = addItem(btC.TL.TAB.GENERAL_ELAPSED,4,order);
-  itemsArray[order.order[5]] = addItem(btC.TL.TAB.GENERAL_CPU,5,order);
-  itemsArray[order.order[6]] = addItem(btC.TL.TAB.GENERAL_PROGRESS,6,order);  
-  itemsArray[order.order[7]] = addItem(btC.TL.TAB.HISTORY_COMPLETED,7,order);
-  itemsArray[order.order[8]] = addItem(btC.TL.TAB.GENERAL_STATUS,8,order);
+  itemsArray[order.order[0]] = addItem(btC.TL.TAB.T_GENERAL_COMPUTER,0,order);
+  itemsArray[order.order[1]] = addItem(btC.TL.TAB.T_GENERAL_PROJECT,1,order);
+  itemsArray[order.order[2]] = addItem(btC.TL.TAB.T_GENERAL_APPLICATION ,2,order);
+  itemsArray[order.order[3]] = addItem(btC.TL.TAB.T_GENERAL_NAME,3,order);
+  itemsArray[order.order[4]] = addItem(btC.TL.TAB.T_GENERAL_ELAPSED,4,order);
+  itemsArray[order.order[5]] = addItem(btC.TL.TAB.T_GENERAL_CPU,5,order);
+  itemsArray[order.order[6]] = addItem(btC.TL.TAB.T_GENERAL_PROGRESS,6,order);  
+  itemsArray[order.order[7]] = addItem(btC.TL.TAB.T_HISTORY_COMPLETED,7,order);
+  itemsArray[order.order[8]] = addItem(btC.TL.TAB.T_GENERAL_STATUS,8,order);
 
   for (let i=0;i<itemsArray.length;i++)
   {

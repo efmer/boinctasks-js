@@ -1,17 +1,17 @@
 <update>
 	<os>win32</os>
 	<release> 
-		<version>1.18</version>
+		<version>1.19</version>
 		<info>
 			• See website.
 		</info>
-		<url>https://efmer.eu/download/boinc/boinc_tasks_js/windows/boinctasks-js-1_1_8.exe</url>
+		<url>https://efmer.eu/download/boinc/boinc_tasks_js/windows/boinctasks-js-1_1_9.exe</url>
 	</release>
 	<beta>
-		<version>1.18</version>
+		<version>1.19</version>
 		<info>
 			• See website.
 		</info>
-		<url>https://efmer.eu/download/boinc/boinc_tasks_js/windows/boinctasks-js-1_1_8.exe</url>
+		<url>https://efmer.eu/download/boinc/boinc_tasks_js/windows/boinctasks-js-1_1_9.exe</url>
 	</beta>
 </update>
