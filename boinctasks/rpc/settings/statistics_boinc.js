@@ -62,7 +62,6 @@ class StatisticsBoinc{
 function statisticsStart(gb)
 {
     try {
-      let bMax = false;
       let title = "BoincTasks Js - " + btC.TL.DIALOG_BOINC_STATISTICS.DBS_TITLE
       if (gChildStatistics == null)
       {
@@ -82,7 +81,8 @@ function statisticsStart(gb)
           }
         });
         if (state.max)
-        {
+        {     
+          logging.logFile("StatisticsBoinc, statisticsStart", "state.max");
           gChildStatistics.maximize();
         }        
         gChildStatistics.loadFile('index/index_statistics_boinc.html')
@@ -103,11 +103,12 @@ function statisticsStart(gb)
           insertCssDark(gb.theme);
         })
         gChildStatistics.on('maximize', function (event) {
-          bMax = true;
         });
         gChildStatistics.on('close', () => {
+          let max = gChildStatistics.isMaximized();          
           let bounds = gChildStatistics.getBounds();
-          windowsState.set("boinc_statistics",bounds.x,bounds.y, bounds.width, bounds.height,bMax)
+          windowsState.set("boinc_statistics",bounds.x,bounds.y, bounds.width, bounds.height,max)
+          logging.logFile("StatisticsBoinc, statisticsStart", "close, store window, max:" + max);          
         })     
         gChildStatistics.on('closed', () => {
           gChildStatistics = null

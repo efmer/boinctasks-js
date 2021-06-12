@@ -177,6 +177,7 @@ function initMenu()
               sidebarComputers(e.checked,true) 
             }
           },
+          /*
           {
             label:btC.TL.MENU.MN_COLUMN_WIDTH,
             type: "checkbox",
@@ -184,7 +185,8 @@ function initMenu()
             click(e) { 
               setHeaderWidth(e.checked) 
             }
-          },  
+          },
+          */  
           {
             label: btC.TL.MENU.MN_COLUMN_ORDER,
             click(e) { 
@@ -419,9 +421,6 @@ function initialize () {
     // Create the browser window.
 
     logging.logFile("main, createWindow", "start");
-
-    let bMax = false;
-    let maxBounds = null;
     let bShow = app.commandLine.getSwitchValue("show") != "no";
 
     if (gSettings.hideLogin === '1') 
@@ -447,8 +446,6 @@ function initialize () {
     });
     if (state.max)
     {
-      maxBounds = gMainWindow.getBounds();      
-      bMax = true;
       logging.logFile("main, createWindow", "state.max");
       gMainWindow.maximize();
     }
@@ -509,8 +506,6 @@ function initialize () {
     })
 
     gMainWindow.on('maximize', function (event) {
-      bMax = true;
-      maxBounds = gMainWindow.getBounds();
       logging.logFile("main, createWindow", "maximize");     
     });
 
@@ -819,15 +814,15 @@ function rendererRequests()
     sidebarComputers(set,false);
   })
 
-  ipcMain.on("table_click_header", (renderer, id, shift, alt,ctrl) => {
-    connections.clickHeader(id, shift, alt,ctrl)
+  ipcMain.on("table_click_header", (renderer, id, ex, shift, alt,ctrl) => {
+    connections.clickHeader(id, ex, shift, alt,ctrl)
   })
 
   ipcMain.on("table_click", (renderer, id, shift,alt,ctrl) => {
     connections.click(id,shift,alt,ctrl)
   })
 
-  ipcMain.on("header_width", (renderer, type, id, data,total) => {
+  ipcMain.on("header_width", (renderer, type, id, data, total) => {
     connections.headerWidth(type, id, data, total);
   })
 

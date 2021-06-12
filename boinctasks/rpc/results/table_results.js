@@ -456,28 +456,21 @@ function addRowHeader(check, showSort ,gb , cell, item)
       }
     }
   }
-  let widthS = "";
   let width = gb.widthTasks[cell];
-  widthS = ' style="width:' + width + '%" ';
+  let widthS = ' style="width:' + width + 'px" ';
 
-  if (gb.headerAction === btC.HEADER_RESIZE)
+  let id = ' id="' + cell +'"';
+  let idR = ' id="resize,' + cell +'"';
+
+  let th;
+  if (showSort)
   {
-    hclass = 'class="resizer"';
-
-    if (gb.widthTasksPX !== null)
-    {
-      let width = gb.widthTasksPX[cell];
-      widthS = ' style="width:' + width + 'px" ';
-    }
-    else
-    {
-      let width = gb.widthTasks[cell];
-      widthS = ' style="width:' + width + '%" ';
-    }
+    th = "<th " + widthS + id + hclass + ">" +  item + '<span class="bt_img_resize"><img ' + idR + ' src="../boinctasks/css/img/resize.png"></span></th>';
   }
-
-  let id = ' id="' + cell +'"'; 
-  let th = "<th " + widthS + id + hclass + ">" + item + '<div class="resizer"></div></th>';
+  else 
+  {
+    th = "<th " + widthS + id + hclass + ">" + item + '</th>';
+  }
   return th;
 }
 

@@ -50,8 +50,14 @@ $(document).ready(function() {
       break;
     }
 
+//    addHeaderResizeHandler(name);
+
     $('body').removeClass('app-no-scrollbar')
 // 
+  });
+
+  ipcRenderer.on('header_resize_width', (event, ex, name, tab) => {
+    startResize(ex,name, tab);
   });
 
   ipcRenderer.on('table_data', (event, tableData, nr) => {
@@ -154,14 +160,15 @@ $(document).ready(function() {
     ipcRenderer.send('got_computers', con);
   });
   
- document.getElementById("bt_table_header").onclick = function(e)
- {
+// document.getElementById("bt_table_header").onclick = function(e)
+  document.getElementById("bt_table_header").addEventListener('mousedown', e => {
+  
    var id = e.target.id;
    var shift = e.shiftKey;
    var alt = e.altKey;
    var ctrl = e.ctrlKey;   
-   ipcRenderer.send('table_click_header', id,shift,alt,ctrl) 
- }
+   ipcRenderer.send('table_click_header', id, e.clientX, shift,alt,ctrl) 
+  });
 
   $( "#bt_table" ).on( "click", function(e) {
     var id = e.target.id;
@@ -344,37 +351,54 @@ function setConnectionStatus(conStatus)
 
 // BEGIN Resize the header
 
-function normalizeHeader()
+function startResize(ex,name, tab)
 {
-  gHeaderWidth = [];
-  return;
-  const table = document.getElementById('table_header');
-  const cols = table.querySelectorAll('th');
+  // Track the current position of mouse
+  let x = ex;
+  let w = 0;
 
-  let nr = 0; 
-  nr = 0;
-  [].forEach.call(cols, function(col) {
-      let id = document.getElementById(nr); 
-      let styles = window.getComputedStyle(id);
-      let width =  styles.width;      
-      id.style.width = width;    
-      gHeaderWidth.push(width);
-      nr++;
-  }); 
+  let id = document.getElementById(name); 
+
+  // Calculate the current width of column
+  const styles = window.getComputedStyle(id);
+  w = parseInt(styles.width, 10);
+
+  const rsMouseMoveHandler = function(e) {
+    // Determine how far the mouse has been moved
+    const dx = e.clientX - x;
+
+    // Update the width of column
+    id.style.width = `${w + dx}px`;
+  };
+
+  // When user releases the mouse, remove the existing event listeners
+  const rsMouseUpHandler = function() {
+    document.removeEventListener('mousemove', rsMouseMoveHandler);
+    document.removeEventListener('mouseup', rsMouseUpHandler);
+
+    sendHeaderWidth(tab);
+  }; 
+
+  // Attach listeners for document's events
+  document.addEventListener('mousemove', rsMouseMoveHandler);
+  document.addEventListener('mouseup', rsMouseUpHandler);
+
 }
+
 
 function addHeaderResizeHandler(name)
 {
   try {
     const table = document.getElementById('table_header');
-  const cols = table.querySelectorAll('th');
+    const cols = table.querySelectorAll('th');
 
-  [].forEach.call(cols, function(col) {
-      let nr = $(col).attr("id");
-      let id = document.getElementById(nr, name);        
-      createResizableColumn(id, name);
-      nr++;
-  });  
+    [].forEach.call(cols, function(col) {
+        let nr = $(col).attr("id");
+        let id = document.getElementById(nr, name);
+//        let img = id.lastChild;
+        createResizableColumn(id, name);
+        nr++;
+    });  
   } catch (error) {
     var ii = 1;
   }
@@ -434,9 +458,17 @@ function sendHeaderWidth(name)
     let styles = window.getComputedStyle(id);
     let width =  parseFloat(styles.width);
     totalWidth += width;
-    widthArray.push(width)
+    widthArray.push(width);
     nr++;        
-  }); 
+  });
+  
+  let totc = 0;
+  for(let i=0;i<widthArray.length;i++)
+  {
+    totc += widthArray[i];
+  }
+
+  /*
   let perc = 0;
   let widthArrayP = [];
   for (let i=0; i<cols.length;i++)
@@ -446,7 +478,7 @@ function sendHeaderWidth(name)
       widthArrayP[i] = widthPerc;
       perc += widthPerc;
   }
-
+*/
   ipcRenderer.send('header_width', name, idArray, widthArray, totalWidth);
 }
 

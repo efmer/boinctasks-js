@@ -297,31 +297,21 @@ function addRowHeader(check,showSort, gb, cell, item)
       }
     }
   }  
-  //var width = ' width="' + gb.widthComputers[cell] + '%" ';
-  //var id = ' id="' + cell +'"'; 
-  //return "<th " + width + id + hclass + ">" + item + "</th>";
-  let widthS = "";
   let width = gb.widthComputers[cell];
-  widthS = ' style="width:' + width + '%" ';
+  let widthS = ' style="width:' + width + 'px" ';
 
-  if (gb.headerAction === btC.HEADER_RESIZE)
+  let id = ' id="' + cell +'"';
+  let idR = ' id="resize,' + cell +'"';
+
+  let th;
+  if (showSort)
   {
-    hclass = 'class="resizer"';
-
-    if (gb.widthComputersPX !== null)
-    {
-      let width = gb.widthComputersPX[cell];
-      widthS = ' style="width:' + width + 'px" ';
-    }
-    else
-    {
-      let width = gb.widthComputers[cell];
-      widthS = ' style="width:' + width + '%" ';
-    }
+    th = "<th " + widthS + id + hclass + ">" +  item + '<span class="bt_img_resize"><img ' + idR + ' src="../boinctasks/css/img/resize.png"></span></th>';
   }
-
-  let id = ' id="' + cell +'"'; 
-  let th = "<th " + widthS + id + hclass + ">" + item + '<div class="resizer"></div></th>';
+  else 
+  {
+    th = "<th " + widthS + id + hclass + ">" + item + '</th>';
+  }
   return th;
 }
 

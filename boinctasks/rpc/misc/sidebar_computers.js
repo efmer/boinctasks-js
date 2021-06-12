@@ -295,6 +295,9 @@ function getProjects(gb)
         }
       }
     }
+
+    projects.sort(compare);
+
     for (let i=0;i<projects.length;i++)
     {
       let selProject;
@@ -312,4 +315,11 @@ function getProjects(gb)
   }
 
   return list;
+}
+
+function compare(a,b)
+{
+  if (a > b) return 1;
+  if (a < b) return -1;
+  return 0;
 }

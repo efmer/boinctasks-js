@@ -166,7 +166,7 @@ class Connections{
         startConnections();
     }
 
-    clickHeader(id, shift, alt,ctrl)
+    clickHeader(id, ex, shift, alt,ctrl)
     {
         try {
             if (gB.editComputers) return;
@@ -175,7 +175,7 @@ class Connections{
                 return;
             }
     
-            clickHeaderProcess(id, shift, alt,ctrl);            
+            clickHeaderProcess(id, ex, shift, alt,ctrl);            
         } catch (error) {
             logging.logError('Connections,clickHeader', error);             
         }
@@ -217,25 +217,16 @@ class Connections{
         }        
     }
 
-    headerWidth(type, id, data, total)
+    headerWidth(type, id, data, datap, total)
     {
-        btHeader.updateWidth(gB,type, id, data, total);
+        btHeader.updateWidth(gB,type, id, data, datap, total);
         gB.mainWindow.webContents.send('table_data_header', gB.currentTable.table.tableHeader(gB, gSidebar),gB.currentTable.name, gB.headerAction)  // update header
+        gIntervalFastCnt = 0;
     }
 
     setHeaderWidth(set)
     {
-        if (set)
-        {
-            gB.headerAction = btC.HEADER_RESIZE;
-            gB.mainWindow.webContents.send('table_data_header', gB.currentTable.table.tableHeader(gB, gSidebar),gB.currentTable.name, gB.headerAction)  // update header                
-        }
-        else
-        {
-            btHeader.getWidth(gB);   // table header px -> % 
-            gB.headerAction = btC.HEADER_NORMAL;
-            gB.mainWindow.webContents.send('table_data_header', gB.currentTable.table.tableHeader(gB, gSidebar),gB.currentTable.name, gB.headerAction)  // update header          
-        }
+        setHeaderResize(set);
     }
 
     setColumnOrder()
@@ -587,9 +578,20 @@ function test()
 */
 }
 
-function clickHeaderProcess(id, shift, alt,ctrl)
+function clickHeaderProcess(id, ex, shift, alt,ctrl)
 {
     var sort;
+    let pos = id.indexOf("resize");
+    if (pos >= 0)
+    {
+        let idR = id.split(",");
+        if (idR.length > 1)
+        {
+            gB.mainWindow.webContents.send('header_resize_width', ex, idR[1],gB.currentTable.name)         
+        }
+//        setHeaderResize(true);
+        return;
+    }
     switch (gB.currentTable.name)
     {
         case btC.TAB_COMPUTERS:
@@ -607,7 +609,8 @@ function clickHeaderProcess(id, shift, alt,ctrl)
             clickHeader(id,gB.sortComputers,shift,alt,ctrl);
             sort = gB.sortComputers;             
             readWrite.write("settings\\sorting","sorting_computer.json",JSON.stringify(sort));
-            processComputers(sort);    
+            processComputers(sort);
+            updateSideBar();
         break;            
         case btC.TAB_PROJECTS:
             if (gB.sortProjects == null)
@@ -899,6 +902,21 @@ function clickHeader(id,sort,shift,alt,ctrl)
     sort.pCol = newId;
     if (sort.sCol === newId) sort.sCol = -1;
     if (sort.tCol === newId) sort.tCol = -1;     
+}
+
+function setHeaderResize(set)
+{
+    if (set)
+    {
+        gB.headerAction = btC.HEADER_RESIZE;
+        gB.mainWindow.webContents.send('table_data_header', gB.currentTable.table.tableHeader(gB, gSidebar),gB.currentTable.name, gB.headerAction)  // update header                
+    }
+    else
+    {
+        btHeader.getWidth(gB);   // table header px -> % 
+        gB.headerAction = btC.HEADER_NORMAL;
+        gB.mainWindow.webContents.send('table_data_header', gB.currentTable.table.tableHeader(gB, gSidebar),gB.currentTable.name, gB.headerAction)  // update header          
+    }
 }
 
 function getComputers()
@@ -1397,7 +1415,7 @@ function sortArrayComputers(connections)
 {
     try {
         connections.sort(compareComputers);
-        connections.sort(compareComputersGroup);     
+        connections.sort(compareComputersGroup);
     } catch (error) {
         logging.logError('Connections,sortArrayComputers', error);  
     }
@@ -1871,6 +1889,7 @@ function updateSideBar()
 {
     sidebarComputers.setStatus(gB);
     sidebarComputers.addProjects(gB);
+    sidebarComputers.build(gB)    
 }
 
 function btTimer() { 

@@ -44,13 +44,19 @@ function noticeData()
     try 
     {
         let notices = parseNotices(this.client_completeData);
-        if (notices== null)
+        if (notices === null)
         {
             this.notices = null;
             this.mode = 'empty';
             return;
         }
         let notice = notices.notice;
+        if (notice === void 0)
+        {
+            this.notices = null;
+            this.mode = 'empty';
+            return;
+        }
         for (let i=0;i<notice.length;i++)
         {
             notice[i].computer = this.computerName;

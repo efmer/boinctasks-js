@@ -224,32 +224,22 @@ function addRowHeader(showSort, gb, cell, item)
       }
     }
   }  
-//  var width = ' width="' + gb.widthMessages[cell] + '%" ';
-//  var id = ' id="' + cell +'"'; 
-//  return "<th " + width + id + hclass + ">" + item + "</th>";
-let widthS = "";
-let width = gb.widthMessages[cell];
-widthS = ' style="width:' + width + '%" ';
+  let width = gb.widthMessages[cell];
+  let widthS = ' style="width:' + width + 'px" ';
 
-if (gb.headerAction === btC.HEADER_RESIZE)
-{
-  hclass = 'class="resizer"';
+  let id = ' id="' + cell +'"';
+  let idR = ' id="resize,' + cell +'"';
 
-  if (gb.widthMessagesPX !== null)
+  let th;
+  if (showSort)
   {
-    let width = gb.widthMessagesPX[cell];
-    widthS = ' style="width:' + width + 'px" ';
+    th = "<th " + widthS + id + hclass + ">" +  item + '<span class="bt_img_resize"><img ' + idR + ' src="../boinctasks/css/img/resize.png"></span></th>';
   }
-  else
+  else 
   {
-    let width = gb.widthMessages[cell];
-    widthS = ' style="width:' + width + '%" ';
+    th = "<th " + widthS + id + hclass + ">" + item + '</th>';
   }
-}
-
-let id = ' id="' + cell +'"'; 
-let th = "<th " + widthS + id + hclass + ">" + item + '<div class="resizer"></div></th>';
-return th;
+  return th;
 }
 
 function getHeaderArrow(dir)

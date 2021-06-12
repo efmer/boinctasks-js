@@ -49,8 +49,7 @@ class BtHeader{
         get(gb);
     }
 
-    updateWidth(gb,type,idArray, data, total)
-    {
+    updateWidth(gb,type,idArray, data, total)    {
         updateHeaderWidth(gb,type,idArray, data, total);
     }
 }
@@ -99,13 +98,6 @@ function get(gb)
         gb.widthHistory = HEADER_HISTORY_WIDTH;
     }
     valid(gb.widthHistory,btConstants.HISTORY_COLOMN_COUNT);
-
-    gb.widthComputersPX = null;
-    gb.widthProjectsPX = null;
-    gb.widthTasksPX = null;
-    gb.widthTransfersPX = null;
-    gb.widthMessagesPX = null;
-    gb.widthHistoryPX = null;
 }
 
 function valid(table,len)
@@ -127,7 +119,7 @@ function valid(table,len)
     }
 }
 
-function updateHeaderWidth(gb,type, idArray, data,total)
+function updateHeaderWidth(gb,type, idArray, data, total)
 {
     try {
         if (type !== gb.selectedTab) return;
@@ -160,24 +152,20 @@ function updateHeaderWidth(gb,type, idArray, data,total)
 
 function writeHeader(gb,id, len, idArray, data, total)
 {
-    validate(data, len)
-    data2 = [];
-    for (let i=0;i<idArray.length;i++)
-    {
-        let id = idArray[i]
-        data2[id] = data[i];
+    try {
+        validate(data, len)
+        data2 = [];
+        for (let i=0;i<idArray.length;i++)
+        {
+            let id = idArray[i]
+            data2[id] = data[i];
+        }
+        gb[id] = data2;
+    
+        readWrite.write("settings\\header",id + ".json",JSON.stringify(data2));   
+    } catch (error) {
+        logging.logError('BtHeader,writeHeader', error);          
     }
-
-    gb[id+'PX'] = data2;
-
-    let percArray = [];
-    for (let i=0;i<data2.length;i++)
-    {
-        let widthPerc = (data2[i]/total) * 100;
-        widthPerc = parseFloat(widthPerc.toFixed(3)); 
-        percArray.push(widthPerc);
-    }
-    readWrite.write("settings\\header",id + ".json",JSON.stringify(percArray));
 }
 
 function validate(data,len,defaultWidth)
