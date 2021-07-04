@@ -160,7 +160,8 @@
         "MN_OPEN": "Open",
         "MN_SNOOZE": "Snooze",
         "MN_STATISTICS": "Statistics graph",
-        "MN_RULES_EDIT": "Edit"
+        "MN_RULES_EDIT": "Edit",
+        "MN_STATISTICS_TRANSFER": "Data transfer graph"
     },
     "DIALOG_SETTINGS_BT": {
         "DS_BT_TITLE": "Settings",
@@ -418,7 +419,8 @@
         "DBO_BOX_SELECT_ONE": "Please select ONE connected computer",
         "DBO_BOX_SELECTED_MORE_ONE": "You selected more than one computer",
         "DBO_BOX_UNABLE_SHOW": "Unable to show",
-        "DBO_BOX_INVALID": "Invalid selection"
+        "DBO_BOX_INVALID": "Invalid selection",
+        "DBO_LOADING_SETTINGS": "Retrieving the settings...."
     },
     "DIALOG_BOINC_ALLOW": {
         "DSA_TITLE": "Allow to run",
@@ -462,5 +464,17 @@
         "SBC_COMPUTERS": "Computers",
         "SBC_PROJECTS": "Projects",
         "SBC_NO_COMPUTERS": "No computers...."
+    },
+    "BOX_DELETE_COMPUTER": {
+        "BX_DELETE_COMPUTER_TITLE": "Delete the selected computers",
+        "BX_DELETE_COMPUTER_MESSAGE": "Press YES to delete the selected computers.",
+        "BX_DELETE_COMPUTER_DETAIL": "The selected computers will all be deletes as soon as YES is selected."
+    },
+    "DIALOG_BOINC_STATISTICS_TRANSFER": {
+        "DBS_COMPUTERS": "Show these computers",
+        "DBS_BUTTON_HIDE": "Hide",
+        "DBS_STAT_TITLE": "Data transfer graph [ ⇧ upload, ⇓ download]",
+        "DBS_STAT_TRANSFER": "Transferred data",
+        "DBS_TITLE": "Data transfer graph"
     }
 }

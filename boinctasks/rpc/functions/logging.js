@@ -31,8 +31,6 @@ let g_logDebugMsg = "";
 let g_logRulesMsg = "";
 let g_logErrorMsg = "";
 
-let gPino = null;
-
 let gLogging = new Object();
 gLogging.type = 0;
 gLogging.len = 0;

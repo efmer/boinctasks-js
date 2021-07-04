@@ -28,6 +28,8 @@ const btC = require('../functions/btconstants');
 
 const { dialog,clipboard  } = require('electron');
 
+var g_toolbarProperties = null;
+
 const SEND_TASKS = 0;
 const SEND_PROJECTS = 1;
 const SEND_TRANSFERS = 2;
@@ -52,7 +54,22 @@ class Toolbar{
                     else
                     {
                         sel = gb.rowSelect.computers.rowSelected.length  
-                        if (sel > 0) toolbar = getToolbarComputers();
+                        if (sel > 0)
+                        {
+                            let res = gb.rowSelect.computers.rowSelected[0].split(btC.SEPERATOR_SELECT);
+                            if (res.length !== 2) break;
+                            let computer = res[1];
+                            let connections = gb.connections;
+                            for (let c=0; c<connections.length;c++)
+                            {
+                              if (connections[c].computerName === computer)
+                              {
+                                let con = connections[c];
+                                if (con.auth) toolbar = getToolbarComputersAuth();
+                                else toolbar = getToolbarComputers();
+                              }
+                            }
+                        }                        
                     }
                 break;  
                 case "projects":
@@ -99,14 +116,36 @@ class Toolbar{
     
     click(gb,id, callback)
     {
-        try {       
+        try {
             var selected;
+            var properties;
             switch (id)
             {
                 // computer
                 case "toolbar_abort_c":
-                    callback("remove_selected");
-                break;                
+                  dialog.showMessageBox(gb.mainWindow,
+                    {
+                        title: btC.TL.BOX_DELETE_COMPUTER.BX_DELETE_COMPUTER_TITLE,
+                        message: btC.TL.BOX_DELETE_COMPUTER.BX_DELETE_COMPUTER_MESSAGE,
+                        buttons: [btC.TL.BOX_GENERAL.BX_CANCEL, btC.TL.BOX_GENERAL.BX_YES],
+                        defaultId: 0, // bound to buttons array
+                        cancelId: 1 // bound to buttons array
+                    })
+                    .then(result => {
+                        if (result.response === 0) {
+                        // cancel
+                        } else if (result.response === 1) {
+                        // yes
+                        callback("remove_selected");
+                        }
+                    });
+                break;
+                case "toolbar_info_c":          
+                    selected = gb.rowSelect.computers.rowSelected; 
+                    if (g_toolbarProperties === null) g_toolbarProperties = require('./properties');
+                    properties = new g_toolbarProperties();
+                    properties.computer(selected,gb);
+                break;
                 // results
                 case "toolbar_suspend":
                     selected = gb.rowSelect.results.rowSelected;
@@ -126,8 +165,8 @@ class Toolbar{
                 break;
                 case "toolbar_info":
                     selected = gb.rowSelect.results.rowSelected;                    
-                    const Properties = require('./properties');
-                    const properties = new Properties();
+                    if (g_toolbarProperties === null) g_toolbarProperties = require('./properties');
+                    properties = new g_toolbarProperties();
                     properties.task(selected,gb);
                 break;
                 case "toolbar_rules":
@@ -268,6 +307,13 @@ function getToolbarHistory()
 function getToolbarComputers()
 {
     var toolbar =   '<td id="toolbar_abort_c" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;' + btC.TL.FOOTER.FTR_DELETE + '</td>';
+    return toolbar;
+}
+
+function getToolbarComputersAuth()
+{
+    var toolbar =   '<td id="toolbar_abort_c" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;' + btC.TL.FOOTER.FTR_DELETE + '</td>' +
+                    '<td id="toolbar_info_c" class="ef_btn_toolbar bt_img_toolbar_info">&nbsp;'+ btC.TL.FOOTER.FTR_INFO + '</td>';
     return toolbar;
 }
 

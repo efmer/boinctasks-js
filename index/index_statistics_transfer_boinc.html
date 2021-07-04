@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->    
+    <link rel="stylesheet" href="../boinctasks/css/bt.css">
+    
+  <title>BoincTasks Boinc Statistics</title>
+  </head>
+  <body>
+    <table>
+      <tr>
+        <td>
+          <table>
+            <tr><td id="computer_list_all" width="0px">
+              <b><span id="trans_computers">Show these computers</span></b><br>
+              <select id="computer_list" name="computer" multiple class="project_add_select_box">
+              </select> 
+              </td>
+            </td></tr>
+            <tr><td>
+              <button id="select_hide">Hide</button>              
+            </td></tr>
+          </table>
+        </td>
+        <td width="100%">
+          <div id="stats_chart" style="min-width: 310px; margin: 0"></div>
+        </td>
+      </tr>
+    </table>
+
+    <script>window.$ = window.jQuery = require('../boinctasks/lib/jquery.min');</script>
+    <script type="text/javascript">
+      var Highcharts = require('highcharts/highmaps');
+      require('../render/renderer_statistics_transfer_boinc');
+    </script>
+  </body>
+</html>

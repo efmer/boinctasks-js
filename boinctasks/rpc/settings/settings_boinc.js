@@ -106,56 +106,64 @@ function showDialog(mainWindow,msg)
 
 function settingsStart(gb,selected)
 {
-    try {
-        let title = "BoincTasks Js = " + btC.TL.DIALOG_BOINC_SETTINGS.DBO_TITLE;
-        if (gChildSettingsBoinc == null)
-        {
-          let state = windowsState.get("settings_boinc",700,800)
-      
-          gChildSettingsBoinc = new BrowserWindow({
-            'x' : state.x,
-            'y' : state.y,
-            'width': state.width,
-            'height': state.height,
-            show: false, 
-            webPreferences: {
-              sandbox : false,
-              contextIsolation: false,  
-              nodeIntegration: true,
-              nodeIntegrationInWorker: true,        
-              preload: './preload/preload.js'
-            }
-          });
-          gChildSettingsBoinc.loadFile('index/index_settings_boinc.html')
-          gChildSettingsBoinc.once('ready-to-show', () => {    
+  try {
+      let title = "BoincTasks Js = " + btC.TL.DIALOG_BOINC_SETTINGS.DBO_TITLE;
+      if (gChildSettingsBoinc === null)
+      {
+        let state = windowsState.get("settings_boinc",700,800)
+    
+        gChildSettingsBoinc = new BrowserWindow({
+          'x' : state.x,
+          'y' : state.y,
+          'width': state.width,
+          'height': state.height,
+          show: true, 
+          webPreferences: {
+            sandbox : false,
+            contextIsolation: false,  
+            nodeIntegration: true,
+            nodeIntegrationInWorker: true,
+            preload: './preload/preload.js'
+          }
+        });
+
+        gChildSettingsBoinc.loadFile('index/index_settings_boinc.html')
+        gChildSettingsBoinc.once('ready-to-show', () => {
 //            gChildSettingsBoinc.webContents.openDevTools()
-            gChildSettingsBoinc.hide();  
-            gChildSettingsBoinc.setTitle(title);
-            gChildSettingsBoinc.webContents.send("translations",btC.TL.DIALOG_BOINC_SETTINGS);              
-            getData(selected);
-          })
-          gChildSettingsBoinc.webContents.on('did-finish-load', () => {
-            insertCssDark(gb.theme);
-          })
-          gChildSettingsBoinc.on('close', () => {
-            let bounds = gChildSettingsBoinc.getBounds();
-            windowsState.set("settings_boinc",bounds.x,bounds.y, bounds.width, bounds.height)
-          })     
-          gChildSettingsBoinc.on('closed', () => {
-            gChildSettingsBoinc = null
-          })    
-        }
-        else
-        {
-          gChildSettingsBoinc.setTitle(title); 
-          gChildSettingsBoinc.hide();
-//          gChildSettingsBoinc.show();
-          getData(selected)
-        }
-              
-    } catch (error) {
-        logging.logError('SettingsBoinc,settings', error);        
-    }  
+          gChildSettingsBoinc.setTitle(title);
+          gChildSettingsBoinc.webContents.send("translations",btC.TL.DIALOG_BOINC_SETTINGS);
+          let status = '<h2><b>';
+          status += btC.TL.DIALOG_BOINC_SETTINGS.DBO_LOADING_SETTINGS;
+          status += '</b></h2>'
+          gChildSettingsBoinc.webContents.send("header_status",status);                       
+          getData(selected);
+        })
+        gChildSettingsBoinc.webContents.on('did-finish-load', () => {
+          insertCssDark(gb.theme);
+        })
+        gChildSettingsBoinc.on('close', () => {
+          let bounds = gChildSettingsBoinc.getBounds();
+          windowsState.set("settings_boinc",bounds.x,bounds.y, bounds.width, bounds.height)
+        })     
+        gChildSettingsBoinc.on('closed', () => {
+          gChildSettingsBoinc = null
+        })    
+      }
+      else
+      {
+        gChildSettingsBoinc.setTitle(title); 
+        let status = '<h2><b>';
+        status += btC.TL.DIALOG_BOINC_SETTINGS.DBO_LOADING_SETTINGS;
+        status += '</b></h2>'
+        gChildSettingsBoinc.webContents.send("header_status",status);        
+        gChildSettingsBoinc.hide();
+        gChildSettingsBoinc.show();
+        getData(selected)
+      }
+            
+  } catch (error) {
+      logging.logError('SettingsBoinc,settings', error);        
+  }  
 }
 
 async function insertCssDark(darkCss)
@@ -171,32 +179,29 @@ async function insertCssDark(darkCss)
   }
 }
 
-function getData(selected)
+function getData(con)
 {
   try {
     let send = "<get_global_prefs_override/>";
-    setTimeout(sendDelay, 200,selected,send)
+    const sendArray = new SendArray();
+    sendArray.send(con,send, dataReady);
   } catch (error) {
     logging.logError('SettingsBoinc,getData', error);  
   }
-}
-
-function sendDelay(con,send)
-{
-  const sendArray = new SendArray();      
-  sendArray.send(con,send, dataReady);  
 }
 
 function dataReady(data)
 {
   try {
     let result = parse(this,this.client_completeData);
-    if (result != null)
+    if (result !== null)
     {
+      result = validate(result);
       let title = "BoincTasks Js - " + btC.TL.DIALOG_BOINC_SETTINGS.DBO_TITLE + " " +  this.computerName
       gChildSettingsBoinc.setTitle(title);
       gChildSettingsBoinc.webContents.send('settings', result);
       gChildSettingsBoinc.show();
+      gChildSettingsBoinc.webContents.send("header_status","");  
     }
     else
     {
@@ -211,40 +216,89 @@ function parse(con,xml)
 {
     var statusReturn = null;
     try {
-        var parseString = require('xml2js').parseString;
-        parseString(xml, function (err, result) {
-            if (functions.isDefined(result))
+      var parseString = require('xml2js').parseString;
+      parseString(xml, function (err, result) {
+        if (functions.isDefined(result))
+        {
+          let reply = result.boinc_gui_rpc_reply;
+          let error = reply.error;
+          if (functions.isDefined(error))
+          {
+            let errorTxt = error[0];
+            if (errorTxt === "no prefs override file")
             {
-              let reply = result.boinc_gui_rpc_reply;
-              let error = reply.error;
-              if (functions.isDefined(error))
-              {
-                let errorTxt = error[0];
-                if (errorTxt === "no prefs override file")
-                {
-                  logging.logDebug("no prefs override file");  
-                  const sendArray = new SendArray();                
-                  sendArray.send(con,"<get_global_prefs_working/>", dataReady); 
-                  return;
-                }
-                else
-                {
-                  loggging.logError('SettingsBoinc,parse',errorTxt)
-                  return;
-                }
-              }
-                var statusArray = result['boinc_gui_rpc_reply']['global_preferences'];
-                if (functions.isDefined(statusArray))
-                {
-                    statusReturn = statusArray[0];
-                }
+              logging.logDebug(con.computer + ": no prefs override file");  
+              const sendArray = new SendArray();                
+              sendArray.send(con,"<get_global_prefs_working/>", dataReady); 
+              return;
             }
-        });
-        } catch (error) {
-            logging.logError('SettingsBoinc,parse', error);           
-            return null;
+            else
+            {
+              loggging.logError('SettingsBoinc,parse',errorTxt)
+              return;
+            }
+          }
+          var statusArray = result['boinc_gui_rpc_reply']['global_preferences'];
+          if (functions.isDefined(statusArray))
+          {
+              statusReturn = statusArray[0];
+          }
         }
+      });
+      } catch (error) {
+          logging.logError('SettingsBoinc,parse', error);           
+          return null;
+      }
     return statusReturn
+}
+
+function validate(result)
+{
+  valid(result,'run_on_batteries',true);
+  valid(result,'run_if_user_active',false);
+  valid(result,'run_gpu_if_user_active',false);  
+
+  valid(result,'start_hour',0);
+  valid(result,'end_hour',0);
+  valid(result,'net_start_hour',0);
+  valid(result,'net_end_hour',0);
+
+  valid(result,'idle_time_to_run',3);
+  valid(result,'leave_apps_in_memory',false);
+  valid(result,'confirm_before_connecting',true);
+  valid(result,'hangup_if_dialed',false);
+  valid(result,'dont_verify_images',false);
+  valid(result,'work_buf_min_days',0.1);
+  valid(result,'work_buf_additional_days',0.25);
+  valid(result,'max_ncpus_pct',0);
+  valid(result,'cpu_scheduling_period_minutes',60);
+  valid(result,'disk_interval',60);
+  valid(result,'disk_max_used_gb',10);
+  valid(result,'disk_max_used_pct',50);
+  valid(result,'disk_min_free_gb',0.1);
+  valid(result,'vm_max_used_pct',0.75);
+  valid(result,'ram_max_used_busy_pct',0.5);
+  valid(result,'ram_max_used_idle_pct',0.9);
+  valid(result,'max_bytes_sec_up',0);
+  valid(result,'max_bytes_sec_down',0);
+  valid(result,'cpu_usage_limit',100);
+  valid(result,'daily_xfer_limit_mb',0);
+  valid(result,'daily_xfer_period_days',0);
+  return result;
+}
+
+function valid(result,item,value)
+{
+  try {
+    if (result[item] === void 0)
+    {
+      let newItem = [value];
+      result[item] = newItem;
+    }   
+  } catch (error) {
+    logging.logError('SettingsBoinc,valid', error);
+  }
+
 }
 
 // Apply button.

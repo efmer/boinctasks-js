@@ -80,8 +80,9 @@ const btconstants = require('./functions/btconstants');
 let gClassAcountManager = null;
 let gClassAddProject = null;
 let gClassSettingsBoinc = null;
-let gClassSettingsAllow = null;
 let gClassStatisticsBoinc = null;
+let gClassStatisticsTransferBoinc = null;
+let gClassSettingsAllow = null;
 let gRequireSettingsBt = null;
 let gClassHistory = null;
 let gClassRulesList = null;
@@ -509,6 +510,16 @@ class Connections{
         gClassStatisticsBoinc.start(type,gB);
     }
 
+    boincStatisticsTransfer(type,data)
+    {
+        if (gClassStatisticsTransferBoinc === null)
+        {
+            const StatisticsTransferBoinc = require('./settings/statistics_transfer_boinc');            
+            gClassStatisticsTransferBoinc = new StatisticsTransferBoinc();
+        }
+        gClassStatisticsTransferBoinc.start(type,gB);
+    }
+
     colomnOrder(type,data)
     {
         settingsColumnOrder.apply(type,gB,data);
@@ -541,6 +552,7 @@ class Connections{
         logging.setTheme(css);        
         if (gClassAddProject !== null) gClassAddProject.setTheme(css);
         if (gClassStatisticsBoinc !== null) gClassStatisticsBoinc.setTheme(css);
+        if (gClassStatisticsTransferBoinc !== null) gClassStatisticsTransferBoinc.setTheme(css);        
         if (gSettingsBt !== null) gSettingsBt.setTheme(css);
         if (gClassSettingsBoinc !== null) gClassSettingsBoinc.setTheme(css);
         if (gClassSettingsAllow !== null) gClassSettingsAllow.setTheme(css);

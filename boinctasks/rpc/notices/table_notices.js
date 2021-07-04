@@ -248,13 +248,13 @@ function tableNoticesItem(gb, i,notice, color)
     let idD = "notice_archive" + btC.SEPERATOR_ITEM + hash;
     let posCollapsed = gb.notices.colHash.indexOf(hash);
     let posArchive = gb.notices.archHash.indexOf(hash);    
-    if (posCollapsed >= 0) img = " class='bt_img_notice_minus'";
-    else img = " class='bt_img_notice_plus'";
+    if (posCollapsed >= 0) img = " class='bt_img_notice_plus'";
+    else img = " class='bt_img_notice_minus'";
     let imgA = " class='bt_img_notice_archive'";
 
     msg =  "<hr class='bt_notice_line'>";
     msg += "<span id='" + idC + "'" + img + ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class='bt_notice_header'>" + project+ ": " + title + "</span>";
-    if (posCollapsed >=0)
+    if (posCollapsed <0)
     {
       msg+= description;      
       url = notice.link[0];

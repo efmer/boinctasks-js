@@ -61,7 +61,7 @@ function computerData()
                 this.mode = 'empty'
                 return;
             }
-
+            this.computer = computer;
             this.mode = "OK";
         }
     } catch (error) {

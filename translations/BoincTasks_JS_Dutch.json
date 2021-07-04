@@ -160,7 +160,8 @@
         "MN_OPEN": "Openen",
         "MN_SNOOZE": "Sluimer",
         "MN_STATISTICS": "Statistieken grafiek",
-        "MN_RULES_EDIT": "Bewerken"
+        "MN_RULES_EDIT": "Bewerken",
+        "MN_STATISTICS_TRANSFER": "Gegevensoverdracht grafiek"
     },
     "DIALOG_SETTINGS_BT": {
         "DS_BT_TITLE": "Instellingen",
@@ -418,7 +419,8 @@
         "DBO_BOX_SELECT_ONE": "Selecteer EEN verbonden computer",
         "DBO_BOX_SELECTED_MORE_ONE": "U heeft meer dan één computer geselecteerd",
         "DBO_BOX_UNABLE_SHOW": "Kan niet worden weergegeven",
-        "DBO_BOX_INVALID": "Ongeldige selectie"
+        "DBO_BOX_INVALID": "Ongeldige selectie",
+        "DBO_LOADING_SETTINGS": "De instellingen ophalen...."
     },
     "DIALOG_BOINC_ALLOW": {
         "DSA_TITLE": "Toestaan",
@@ -462,5 +464,17 @@
         "SBC_COMPUTERS": "Computers",
         "SBC_PROJECTS": "Projecten",
         "SBC_NO_COMPUTERS": "Geen computers...."
+    },
+    "BOX_DELETE_COMPUTER": {
+        "BX_DELETE_COMPUTER_TITLE": "De geselecteerde computers verwijderen",
+        "BX_DELETE_COMPUTER_MESSAGE": "Druk op JA om de geselecteerde computers te verwijderen.",
+        "BX_DELETE_COMPUTER_DETAIL": "De geselecteerde computers worden allemaal verwijderd zodra JA wordt geselecteerd."
+    },
+    "DIALOG_BOINC_STATISTICS_TRANSFER": {
+        "DBS_COMPUTERS": "Toon deze computers",
+        "DBS_BUTTON_HIDE": "Verberg",
+        "DBS_STAT_TITLE": "Gegevensoverdracht grafiek [ ⇧ upload, ⇓ download]",
+        "DBS_STAT_TRANSFER": "Verzonden data",
+        "DBS_TITLE": "Gegevensoverdracht grafiek"
     }
 }

@@ -80,9 +80,25 @@ class State{
             if (con.cacheProject !== null)
             {
                 let pos = con.cacheProject.url.indexOf(url);
+                pos = -1;
                 if (pos >= 0)
                 {
                     return con.cacheProject.project[pos];
+                }
+                else
+                {
+                    // backup if the project mixes https and http, this might never happen....
+                    let urlS = url.split("//"); 
+                    if (urlS.length === 2)
+                    {
+                        let url2 = urlS[1];
+                        const ismatch = (element) => element.includes(url2);
+                        pos = con.cacheProject.url.findIndex(ismatch)
+                        if (pos >= 0)
+                        {
+                            return con.cacheProject.project[pos];
+                        }
+                    }
                 }
             }
         } catch (error) {
@@ -200,8 +216,17 @@ function buildCache(con)
                 let pos = con.cacheProject.url.indexOf(url);
                 if (pos < 0)
                 {
-                    con.cacheProject.url.push(url);
-                    con.cacheProject.project.push(projectState[i].project_name[0]);
+                    let pName = projectState[i].project_name[0];                    
+                    if (pName.length > 1)
+                    {
+                        con.cacheProject.url.push(url);
+                        con.cacheProject.project.push(pName); 
+                        logging.logDebug('buildCache add: ' + con.computerName + " URL: " + url + " -> " + pName);                                              
+                    }
+                    else
+                    {
+                        logging.logDebug('buildCache poject name short: ' + con.computerName + " URL: " + url + " -> " + pName); 
+                    }
                 }
             }
 

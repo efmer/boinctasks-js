@@ -24,14 +24,13 @@ let g_chartTitle = "";
 let g_chartTitleSub = "";
 let g_data = null;
 
-let g_showProject = true;
-let g_selProject = null;
+let g_showComputer = true;
 let g_selComputer = null;
 
 let g_trans = null;
 
 $(document).ready(function() {
-    ipcRenderer.send('statistics_boinc',"projects");
+    ipcRenderer.send('statistics_transfer_boinc',"ready");
     graphSize();
     $(window).resize(function()
     {
@@ -39,60 +38,41 @@ $(document).ready(function() {
         graphSize();
     });
 
-    ipcRenderer.on('projects', (event,projects,computers) => {
-        $("#project_list").html(projects); 
-        $("#computer_list").html(computers);         
+    ipcRenderer.on('computers', (event,computers) => {
+        $("#computer_list").html(computers);
+        getSelected();
     });
 
     ipcRenderer.on('graph', (event,data) => {       
         g_data = data;
         initGraph();
-        let selected = $("input[name='radio_credit']:checked").val()  
-        addData(selected);
-    });
-
-    $('#radio_credit').change(function(){
-        let selected = $("input[name='radio_credit']:checked").val()  
-        initGraph();
-        addData(selected);
-    }); 
-
-    $('#project_list').on('change', function() {
-        getSelected();
+        addData();
     });
 
     $('#computer_list').on('change', function() {
         getSelected();
     });
 
-    $( "#select_hide" ).on( "click", function() {    
-        if (g_showProject)
+    $( "#select_hide" ).on( "click", function() {
+        if (g_showComputer)
         {
             $("#select_hide").html(">"); 
-            $("#project_list_all").hide(); 
             $("#computer_list_all").hide();             
-            g_showProject = false;                     
+            g_showComputer = false;                     
         }
         else
         {
             $("#select_hide").html(g_trans.DBS_BUTTON_HIDE);             
-            $("#project_list_all").show();
             $("#computer_list_all").show();             
-            g_showProject = true;
+            g_showComputer = true;
         }
-        graphSize();
-        let selected = $("input[name='radio_credit']:checked").val()  
+        graphSize(); 
         initGraph();
-        addData(selected);
+        addData();
     });
 
     ipcRenderer.on('translations', (event, dlg) => {
         g_trans = dlg;
-        $("#trans_host_average").html( dlg.DBS_HOST_AVERAGE);
-        $("#trans_host_total").html( dlg.DBS_HOST_TOTAL);
-        $("#trans_user_average").html( dlg.DBS_USER_AVERAGE);
-        $("#trans_user_total").html( dlg.DBS_USER_TOTAL);
-        $("#trans_projects").html( dlg.DBS_PROJECTS);
         $("#trans_computers").html( dlg.DBS_COMPUTERS);
         $("#select_hide").html( dlg.DBS_BUTTON_HIDE);
 
@@ -101,13 +81,6 @@ $(document).ready(function() {
 
 function getSelected()
 {
-    g_selProject = [];
-    $('#project_list option:selected').each(function()
-    {
-        let sel = $(this).val()
-        g_selProject.push(sel);
-    });    
-
     g_selComputer = [];
     $('#computer_list option:selected').each(function()
     {
@@ -115,85 +88,49 @@ function getSelected()
         g_selComputer.push(sel);
     });    
 
-    let selected = $("input[name='radio_credit']:checked").val()  
     initGraph();
-    addData(selected);
+    addData();
 }
 
 function addData(selected)
 {
     try {
-        if (g_selComputer.length >= 1)
-        {
-            if (g_selProject.length === 1)
-            {
-                addDataSingleProject(selected);
-                return
-            }
-        }
         addDataSingleComputer(selected);
     } catch (error) {   
         var jj = 1;    
     }
 }
 
-function addDataSingleProject(selected)
+function addDataSingleComputer()
 {
     try {
-        if (g_selComputer.length >= 1)
-        {
-            let project = g_selProject[0];
-            g_chartTitle = g_trans.DBS_STAT_PROJECT + ": " + project;
-            gStatisticsChart.setTitle({ text: g_chartTitle });   
-            for (let i=0;i<g_data.length;i++)
-            {
-                var dataArray = g_data[i];
-                let computer = dataArray.computerName;  
-                let seriesName = computer;
-                if (g_selComputer.indexOf(computer) >=0)
-                {
-                    if (project === dataArray.project)
-                    {
-                        gStatisticsChart.addSeries({
-                        name: seriesName,
-                        type: 'line',
-                        data: dataArray[selected],
-                        visible: true,
-                        animation: false                
-                        });
-                    }
-                }
-            }
-        }
-    } catch (error) {
-        var ii = 0;
-    }
-}
-
-function addDataSingleComputer(selected)
-{
-    try {
-        if (g_selComputer.length >= 1)
+        for (let i=0;i<g_selComputer.length;i++)        
         {        
-            let computerName = g_selComputer[0];
-            g_chartTitle = g_trans.DBS_STAT_COMPUTER + ": " + computerName;
+            let computerName = g_selComputer[i];
+            g_chartTitle = g_trans.DBS_STAT_TITLE;
             gStatisticsChart.setTitle({ text: g_chartTitle });                        
             for (let i=0;i<g_data.length;i++)
             {
                 var dataArray = g_data[i];
-                let project = dataArray.project;
-                let seriesName = project;
-                if (g_selProject.indexOf(project) >=0)
+                let seriesName = computerName;
                 {
                     if (computerName === dataArray.computerName)
                     {
                         gStatisticsChart.addSeries({
-                        name: seriesName,
-                        type: 'line',
-                        data: dataArray[selected],
-                        visible: true,
-                        animation: false                
-                        });
+                            name: seriesName + " ⇧",
+                            type: 'line',
+                            dashStyle: 'longdash',
+                            data: dataArray.up,
+                            visible: true,
+                            animation: false                
+                        });                        
+                        gStatisticsChart.addSeries({
+                            name: seriesName + " ⇓",
+                            type: 'line',
+                            data: dataArray.down,
+                            visible: true,
+                            animation: false                
+                        });                        
                     }
                 }
             }
@@ -212,9 +149,7 @@ function initGraph(graphTitel)
     try {
         Highcharts.setOptions({
             lang: {
-                shortMonths: g_trans.DBS_MONTH_T,
-                decimalPoint: '.',
-                thousandsSep: ','
+                shortMonths: g_trans.DBS_MONTH_T
             }
         });   
     } catch (error) {
@@ -257,7 +192,7 @@ function initGraph(graphTitel)
         },
         yAxis: {
             title: {
-                text: g_trans.DBS_STAT_CREDITS
+                text: g_trans.DBS_STAT_TRANSFER
             },
             min: 0,
             plotLines: [{
@@ -300,29 +235,60 @@ function initGraph(graphTitel)
                 enabled: false
         },  
         tooltip: {
-         headerFormat: '<b></b><br>',
-         pointFormat: '{series.name}, {point.x:%b %e}, ' + g_trans.DBS_STAT_CREDITS + ': {point.y:,.2f} '
+            formatter: function () {
+                return this.points.reduce(function (s, point) {
+                    return s + '<br/>' + point.series.name + ': ' + formatByteSize(point.y);
+                }, '<b>' + Highcharts.dateFormat('%e - %b - %Y', new Date(this.x)) + '</b>');
+            },
+            shared: true            
+            /*
+            headerFormat: '<b></b><br>',
+                pointFormat: '{series.name}, {point.x:%b %e}, ' + g_trans.DBS_STAT_TRANSFER + ': {${point.y/1024000}:.6f} ',
+            valueSuffix: ' MB',
+            */
         } 
 	});	
 
 }
 
+function formatByteSize(nr)
+{
+    let str = "";
+    let kb = 1024;
+    let mb = kb*1024;
+    let gb = mb*1024;
+
+    switch (true)
+    {
+        case (nr > gb):
+            str = (nr/gb).toFixed(2) + ' GB';            
+        break;
+        case (nr > mb):
+            str = (nr/mb).toFixed(2) + ' MB';            
+        break;
+        case (nr > kb):
+            str = (nr/kb).toFixed(2) + ' KB';            
+        break;
+        default:
+            str = nr + ' B';
+    }
+    return str;
+}
+
 function graphSize()
 {
-    let iWidthSel = $("#project_list_all").width();
+    let iWidthSel = $("#computer_list_all").width();
     let iWidth = $( window ).width();
-    if (g_showProject)
+    if (g_showComputer)
     {
         iWidth -= iWidthSel;
-        iWidth -= 34;
+        iWidth -= 34;        
     }
     else
     {
         iWidth -= 58;
     }
     var iHeight  = $( window ).height();
-    let iHeightRadio = $("#radio_credit").height();
-    iHeight -= iHeightRadio;    
     iHeight -= 40;
     if (iHeight < 400) iHeight = 400;
     $('#stats_chart').css({width: iWidth, height: iHeight});

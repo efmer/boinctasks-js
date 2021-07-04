@@ -139,8 +139,8 @@ function compare(a,b)
                 if (a.share < b.share) return -1;
                 return 0;            
             case 9: // status
-                if (a.statusS > b.statusS) return 1;
-                if (a.statusS < b.statusS) return -1;
+                if (a.status > b.status) return 1;
+                if (a.status < b.status) return -1;
                 return 0; 
             case 10: // REC
                 if (a.rec > b.rec) return 1;

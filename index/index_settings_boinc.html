@@ -10,6 +10,9 @@
   <title>BoincTasks Boinc Settings</title>
   </head>
   <body>
+    <span id = "header_status">Please wait...</span>
+
+    <span id="all_settings" class="hidden">
     <h2><b><span id="trans_processor">Processor</span></b></h2>
     <b><span id="trans_allowed">Computing allowed:</span></b><br>
     <input type="checkbox" id="processor_onbatteries"> <span id="trans_while_on_batteries">While computer is on batteries</span><br>
@@ -88,6 +91,8 @@
     <button id="apply3">Apply changes</button>
     <br><br><br><br>    <br><br><br><br>
     <button id="default">Reset to Default</button>
+
+    </span>
 
     <script>window.$ = window.jQuery = require('../boinctasks/lib/jquery.min');</script>   
     <script type="text/javascript">

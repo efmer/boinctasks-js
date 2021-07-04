@@ -30,11 +30,14 @@ $(document).ready(function() {
         updateOk("")
         updateError("");
         process(obj);
+        $("#all_settings").removeClass( "hidden" );
     });
+    ipcRenderer.on('header_status', (event,status) => {
+        $("#header_status").html(status);
+    });    
     ipcRenderer.on('settings_ok', (event) => {
         ok();
     });
-
 
     $( "#apply1" ).on( "click", function(event) {
         apply()

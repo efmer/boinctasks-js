@@ -2,7 +2,6 @@
 
 // Installer
 move package from Windows machine to Linux folder DO NOT include the node_modules folder
-remove package-lock.json and node_modules folder from target machine
 cd /home/fred/sb/boinctasks-js/
 npm update --dd
 
@@ -46,8 +45,8 @@ npm run snapA32
 
 cd /home/fred/sb/boinctasks-js/dist
 snapcraft login
-snapcraft upload --release=candidate boinctasks-js_1.2.0_amd64.snap
-snapcraft upload --release=candidate boinctasks-js_1.2.0_armhf.snap
+snapcraft upload --release=candidate boinctasks-js_1.2.1_amd64.snap
+snapcraft upload --release=candidate boinctasks-js_1.2.1_armhf.snap
 
 // testing
 cd /home/fred/sb/boinctasks-js/dist/

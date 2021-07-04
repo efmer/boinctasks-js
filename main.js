@@ -250,6 +250,12 @@ function initMenu()
               connections.boincStatistics("menu");
             }
           },
+          {
+            label: btC.TL.MENU.MN_STATISTICS_TRANSFER,
+            click(e) { 
+              connections.boincStatisticsTransfer("menu");
+          }
+        },          
           { type: 'separator' },
           {
             label: btC.TL.MENU.MN_LOG,
@@ -799,10 +805,13 @@ function getVersion()
 function rendererRequests()
 {
   gMainWindow.webContents.on('did-finish-load', () => {
+    gDarkMode = false;
     try {
       let mode = JSON.parse(readWrite.read("settings","dark_mode.json")); 
-      if (mode.dark) gDarkMode = true;
-      else gDarkMode = false;
+      if (mode !== void 0)
+      {
+        if (mode.dark) gDarkMode = true;
+      }
     } catch (error) {
       logging.logError('Main,rendererRequests, did-finish-load', error);       
     }
@@ -926,6 +935,10 @@ function rendererRequests()
 
   ipcMain.on("statistics_boinc", (renderer, type, data) => {
     connections.boincStatistics(type, data);
+  })
+
+  ipcMain.on("statistics_transfer_boinc", (renderer, type, data) => {
+    connections.boincStatisticsTransfer(type, data);
   })  
 
   ipcMain.on("update", (renderer, type) => {
