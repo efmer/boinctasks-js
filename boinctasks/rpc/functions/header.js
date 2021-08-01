@@ -29,7 +29,7 @@ const HEADER_COMPUTERS_LEN = btConstants.COMPUTERS_COLOMN_COUNT;
 const HEADER_COMPUTERS_WIDTH = [4,10,20,18,14,20,20,10,20,30,10];
 
 const HEADER_PROJECTS_LEN = btConstants.PROJECTS_COLOMN_COUNT;
-const HEADER_PROJECTS_WIDTH = [14,18,28,20,10,10,10,10,10,30]; 
+const HEADER_PROJECTS_WIDTH = [14,18,28,20,10,10,10,10,10,30,10,10,10,10]; 
 
 const HEADER_TASKS_LEN = btConstants.TASKS_COLOMN_COUNT;
 const HEADER_TASKS_WIDTH = [12,18,28,20,10,6,6,10,10,10,20,10,10,10,10,10,10];
@@ -181,7 +181,7 @@ function validate(data,len,defaultWidth)
     {
         if (data[i] < 0.1) 
         {
-            data[i] = 5;
+            data[i] = 10;
         }
     }    
     if (dataLen < len)

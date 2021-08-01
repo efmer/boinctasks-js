@@ -327,6 +327,12 @@ img {
 	background-position: top 1px left 1px;
 }
 
+.bt_img_toolbar_www {
+	background: url(./img/toolbar/www.png) no-repeat;
+	background-size: 24px 24px;	
+	background-position: top 1px left 1px;
+}
+
 .bt_img_dark_dark {
 	background: url(./img/toolbar/dark.png) no-repeat;
 	background-size: 24px 24px;	

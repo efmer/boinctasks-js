@@ -808,7 +808,7 @@ function rendererRequests()
     gDarkMode = false;
     try {
       let mode = JSON.parse(readWrite.read("settings","dark_mode.json")); 
-      if (mode !== void 0)
+      if (mode !== null)
       {
         if (mode.dark) gDarkMode = true;
       }

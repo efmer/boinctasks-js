@@ -38,7 +38,8 @@
         "T_MESSAGES_NR": "Nr",
         "T_MESSAGES_TIME": "Tijd",
         "T_MESSAGES_MESSAGE": "Bericht",
-        "T_HISTORY_COMPLETED": "Klaar"
+        "T_HISTORY_COMPLETED": "Klaar",
+        "T_PROJECTS_VENUE": "Plaats"
     },
     "STATUS": {
         "S_TASK_DOWNLOADING": "Laden",

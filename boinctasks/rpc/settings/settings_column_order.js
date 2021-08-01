@@ -214,7 +214,7 @@ function defaultProjects()
   {
     projects.order[i] = i;
   }
-  for (i=0;i<11;i++)
+  for (i=0;i<btC.PROJECTS_COLOMN_COUNT;i++)
   {
     projects.check[i] = true;
   }
@@ -523,6 +523,7 @@ function setWindowsProjects(gb, type)
   itemsArray[order.order[8]] = addItem(btC.TL.TAB.T_PROJECTS_SHARE,8,order);
   itemsArray[order.order[9]] = addItem(btC.TL.TAB.T_GENERAL_STATUS,9,order);
   itemsArray[order.order[10]] = addItem(btC.TL.TAB.T_PROJECTS_REC,10,order);  
+  itemsArray[order.order[11]] = addItem(btC.TL.TAB.T_PROJECTS_VENUE,11,order);
 
   for (let i=0;i<itemsArray.length;i++)
   {

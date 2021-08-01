@@ -207,6 +207,9 @@ class Toolbar{
                     selected = gb.rowSelect.projects.rowSelected;                       
                     resetProject(gb.mainWindow,selected,gb.connections);
                 break;
+                case "toolbar_www":
+                    wwwShow(gb);
+                break;
                 // transfers
                 case "toolbar_update_t":
                     selected = gb.rowSelect.transfers.rowSelected;                       
@@ -287,7 +290,8 @@ function getToolbarProjects()
                     '<td id="toolbar_resume_p" class="ef_btn_toolbar bt_img_toolbar_resume">&nbsp;' + btC.TL.FOOTER.FTR_RESUME + '</td>' +
                     '<td id="toolbar_nomore_p" class="ef_btn_toolbar bt_img_toolbar_download_not">&nbsp;' + btC.TL.FOOTER.FTR_NO_MORE_WORK  + '</td>' +
                     '<td id="toolbar_allow_p" class="ef_btn_toolbar bt_img_toolbar_download">&nbsp;' + btC.TL.FOOTER.FTR_ALLOW_WORK + '</td>' +                      
-                    '<td id="toolbar_update_p" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_UPDATE + '</td>';
+                    '<td id="toolbar_update_p" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_UPDATE + '</td>' +
+                    '<td id="toolbar_www" class="ef_btn_toolbar bt_img_toolbar_www">&nbsp;' + 'WWW' + '</td>';                    
     return toolbar;
 }
 
@@ -446,6 +450,69 @@ function resetDetachProjectYes(selected,connections,detach)
     } catch (error) {
         logging.logError('Toolbar,detachProjectYes', error);        
     }
+}
+
+function wwwShow(gb)
+{
+    try {      
+        let selected = gb.rowSelect.projects.rowSelected;
+        for (let s=0;s<selected.length;s++)  
+        {
+            let res = selected[s].split(btC.SEPERATOR_SELECT);
+            let computerName = "";
+            let url = "";
+            if (res.length > 2)
+            {
+                computerName = res[1];
+                url = res[2];
+                for (var c=0; c<connections.length;c++)
+                {
+                    let con = connections[c];
+                    if (con.computerName === computerName)
+                    {
+                        if (con.auth === true)
+                        {
+                            let project = con.projects.project;
+                            if (project !== void 0)
+                            {
+                                let len = project.length;
+                                for (i=0;i<len;i++)
+                                {
+                                    if (project[i].master_url[0] === url)
+                                    {
+                                        let projectName = project[i].project_name[0];
+                                        let html = "<ul>";
+                                        let guiUrl = project[i].gui_urls[0].gui_url;
+                                        if (guiUrl !== void 0)
+                                        {
+                                            for (g=0;g<guiUrl.length;g++)
+                                            {
+                                                let gu = guiUrl[g];
+                                                let name = gu.name[0];
+                                                let description = gu.description[0];
+                                                let url = gu.url[0]
+                                                let link = '<span style="font-size:20px"><a href="'+ url + '" target="_blank">' + description + '</a></span>';
+                                                html += '<li><span style="font-size:30px">' + name + "<span></li>";
+                                                html += link + "<br><br>";
+                                            }
+                                            html += '</ul>';
+                                            const Www = require('./www');
+                                            const www = new Www();
+                                            www.show(gb,projectName,html)
+
+                                            return;
+                                        }
+                                    }
+                                } 
+                            }                                                        
+                        }
+                    }
+                }
+            }            
+        }
+    } catch (error) {
+        logging.logError('Toolbar,wwwShow', error);        
+    }  
 }
 
 function task(gb,selected,request,what)

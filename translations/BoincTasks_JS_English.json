@@ -38,7 +38,8 @@
         "T_MESSAGES_NR": "Nr",
         "T_MESSAGES_TIME": "Time",
         "T_MESSAGES_MESSAGE": "Message",
-        "T_HISTORY_COMPLETED": "Completed"
+        "T_HISTORY_COMPLETED": "Completed",
+        "T_PROJECTS_VENUE": "Venue"
     },
     "STATUS": {
         "S_TASK_DOWNLOADING": "Downloading",

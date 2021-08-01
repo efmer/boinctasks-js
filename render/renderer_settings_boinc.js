@@ -253,15 +253,26 @@ function processDays(net,id,days)
 
 function toDecimalFloat(val)
 {
-    let nr = Intl.NumberFormat(gLocale, { minimumFractionDigits: 2 }).format(val);
-    if (isNaN(nr)) errorFloat(val);
+    let nr = val;
+    try {
+        nr = Intl.NumberFormat(gLocale, { minimumFractionDigits: 0 }).format(val);
+        if (isNaN(nr))
+        {
+            errorFloat(val);
+            nr = 0;
+        }         
+    } catch (error) {}
     return nr;
 }
 
 function toDecimalInt(val)
 {
     let vali = parseInt(val);
-    if (isNaN(vali)) errorFloat(vali);
+    if (isNaN(vali))
+    {
+        errorFloat(vali);
+        vali = 0;
+    }
     return vali;
 }
 
@@ -330,11 +341,18 @@ function fetch()
 function getFloat(val)
 {
     try {
-        if (isNaN(val)) errorFloat(val);
-        return parseFloat(val);
+        val = val.replaceAll(",",".");
+        let nr = parseFloat(val);
+        if (isNaN(nr)) 
+        {
+            errorFloat(val);
+            nr = 0;
+        }
+        return nr;
     } catch (error) {                
     }
     errorFloat(val);
+    return 0;
 }
 
 function getTime(sTime)

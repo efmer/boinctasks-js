@@ -37,7 +37,7 @@ module.exports = {
     LANG_DUTCH                  : "lang_dutch",
 
     COMPUTERS_COLOMN_COUNT      : 10,
-    PROJECTS_COLOMN_COUNT       : 11,
+    PROJECTS_COLOMN_COUNT       : 12,
     TASKS_COLOMN_COUNT          : 17,
     TRANSFERS_COLOMN_COUNT      : 8,
     MESSAGES_COLUMN_COUNT       : 5,

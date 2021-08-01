@@ -66,7 +66,7 @@ class ProjectItems
                 projectItem.creditsHostAvg = parseFloat(item.host_expavg_credit);            
                 projectItem.share = parseFloat(item.resource_share);
                 projectItem.rec = parseFloat(item.rec);              
-
+                projectItem.venue = item.host_venue;
                 getStatus(item, projectItem);
                 this.projectTable.push(projectItem);
             }

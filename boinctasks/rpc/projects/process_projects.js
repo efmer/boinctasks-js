@@ -145,7 +145,11 @@ function compare(a,b)
             case 10: // REC
                 if (a.rec > b.rec) return 1;
                 if (a.rec < b.rec) return -1;
-                return 0;                  
+                return 0;
+            case 11: // VENUE
+                if (a.venue > b.venue) return 1;
+                if (a.venue < b.venue) return -1;
+                return 0;                                  
             default:
                 return 0;                                                           
         }

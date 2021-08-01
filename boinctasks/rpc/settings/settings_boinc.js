@@ -129,7 +129,7 @@ function settingsStart(gb,selected)
 
         gChildSettingsBoinc.loadFile('index/index_settings_boinc.html')
         gChildSettingsBoinc.once('ready-to-show', () => {
-//            gChildSettingsBoinc.webContents.openDevTools()
+//          gChildSettingsBoinc.webContents.openDevTools()
           gChildSettingsBoinc.setTitle(title);
           gChildSettingsBoinc.webContents.send("translations",btC.TL.DIALOG_BOINC_SETTINGS);
           let status = '<h2><b>';
