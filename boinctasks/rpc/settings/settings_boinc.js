@@ -254,6 +254,12 @@ function parse(con,xml)
 
 function validate(result)
 {
+  let typeis = typeof result;
+  if (typeis != 'object')
+  {
+    result = new Object()
+  }
+
   valid(result,'run_on_batteries',true);
   valid(result,'run_if_user_active',false);
   valid(result,'run_gpu_if_user_active',false);  
@@ -275,10 +281,10 @@ function validate(result)
   valid(result,'disk_interval',60);
   valid(result,'disk_max_used_gb',10);
   valid(result,'disk_max_used_pct',50);
-  valid(result,'disk_min_free_gb',0.1);
-  valid(result,'vm_max_used_pct',0.75);
-  valid(result,'ram_max_used_busy_pct',0.5);
-  valid(result,'ram_max_used_idle_pct',0.9);
+  valid(result,'disk_min_free_gb',1);
+  valid(result,'vm_max_used_pct',75);
+  valid(result,'ram_max_used_busy_pct',50);
+  valid(result,'ram_max_used_idle_pct',90);
   valid(result,'max_bytes_sec_up',0);
   valid(result,'max_bytes_sec_down',0);
   valid(result,'cpu_usage_limit',100);

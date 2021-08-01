@@ -27,16 +27,6 @@ $(document).ready(function() {
     $("#about_system_text").html(txt);
   });
 
-  const links = document.querySelectorAll('a[href]')
-  Array.prototype.forEach.call(links, function (link) {
-     const url = link.getAttribute('href')
-     if (url.indexOf('http') === 0) {
-        link.addEventListener('click', function (e) {
-            e.preventDefault()
-            shell.openExternal(url)
-        })
-     }
-  })
   ipcRenderer.on('translations', (event, dlg) => {
     $("#trans_intro").html( dlg.DAB_THE_EASY_WAY);
     $("#trans_GNU").html( dlg.DAB_LICENCE);

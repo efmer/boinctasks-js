@@ -34,10 +34,12 @@ const windowsState = new WindowsState();
 const BtMenu = require('./boinctasks/rpc/functions/bt_menu');
 let gClassBtMenu = new BtMenu();
 
+const reqLanguage = require('./boinctasks/rpc/settings/language');
+const gClassLanguage = new reqLanguage();   
+
 const btC = require('./boinctasks/rpc/functions/btconstants');
 
 const path = require('path');
-const { LOGGING_DEBUG } = require('./boinctasks/rpc/functions/btconstants');
 
 var gMenuSettings = null;
 let gClassUpdate = null;
@@ -556,6 +558,8 @@ function initialize () {
     gTray = createTray();
     logging.logFile("main, createWindow", "whenReady");  
 
+    showLanguageSelector(gSettings);
+
     app.on('activate', function () {
       logging.logFile("main, createWindow", "activate");  
     // On macOS it's common to re-create a window in the app when the
@@ -621,12 +625,16 @@ function getTranslation()
     else
     {
         try {
-            if (gSettings.language === void 0) gSettings.language = btC.LANG_ENGLISH;
+            // Language options in index_settings_boinctasks.html
+            if (gSettings.language === void 0) gSettings.language = btC.LANG_ENGLISH;            
             switch (gSettings.language)
             {
                 case btC.LANG_DUTCH:
                     translation = readWrite.readResource(__dirname,"translations/BoincTasks_JS_Dutch.json");
                 break;
+                case btC.LANG_FRENCH:
+                    translation = readWrite.readResource(__dirname,"translations/BoincTasks_JS_French.json");
+                break;                
                 default:
                     translation = readWrite.readResource(__dirname,"translations/BoincTasks_JS_English.json");            
             }
@@ -794,6 +802,18 @@ function createTray() {
   return appIcon;
 }
 
+function showLanguageSelector(settings)
+{
+  try {
+    if (gSettings.languageIsSelected != btC.LANG_NUMBER)
+    {
+      gClassLanguage.showLanguage(settings,gTheme)
+    }      
+  } catch (error) {
+    logging.logError('Main,showLanguageSelector', error);   
+  }
+}
+
 function getVersion()
 {
   let version = app.getVersion();
@@ -915,14 +935,36 @@ function rendererRequests()
   }) 
 
   ipcMain.on("settings_boinctasks", (renderer, settings) => {
-    let lang = gSettings.language;
-    gSettings = connections.settingsSet(settings);
-    if (lang != gSettings.language && !gClassBtMenu.check(btC.MENU_DEBUG_TRANSLATIONS))
-    {
-      app.relaunch()
-      app.exit()
+    try {
+      let lang = gSettings.language;
+      gSettings = connections.settingsSet(settings);
+      if (lang != gSettings.language && !gClassBtMenu.check(btC.MENU_DEBUG_TRANSLATIONS))
+      {
+        app.relaunch()
+        app.exit()
+      }
+      else setCss();      
+    } catch (error) {
+      logging.logError('Main,settings_boinctasks', error);        
     }
-    else setCss();
+
+  })
+
+  ipcMain.on("settings_language", (renderer, settings) => {
+    try {
+      let requireSettingsBt = require('./boinctasks/rpc/settings/settings_bt'); 
+      let settingsBt = new requireSettingsBt();
+      if (gSettings.language != settings.language)
+      {     
+        gSettings = settingsBt.set(settings);
+        app.relaunch()
+        app.exit()
+      }
+      gSettings = settingsBt.set(settings);      
+      gClassLanguage.close();
+    } catch (error) {
+      logging.logError('Main,settings_language', error);        
+    }
   })
 
   ipcMain.on("settings_allow", (renderer, combined) => {

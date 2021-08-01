@@ -461,7 +461,7 @@ class Connections{
     settingsSet(settings,debug)
     {
         gSettingsBt.set(settings);       // write
-        gB.settings = gSettingsBt.get();           // get and check if valid.
+        gB.settings = gSettingsBt.get(); // get and check if valid.
         gSettingsBt.send();   
         return gB.settings;
     }

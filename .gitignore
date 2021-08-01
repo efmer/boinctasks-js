@@ -1,6 +1,6 @@
 package-lock.json
 node_modules
-.vscode
+.vscode/old
 out/
 build/
 snap/

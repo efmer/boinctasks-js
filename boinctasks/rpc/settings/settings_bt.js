@@ -54,7 +54,8 @@ class SettingsBt{
   {
     let json = null;
     try {
-    gSettingsBt = settings;
+      settings.languageIsSelected = btC.LANG_NUMBER;
+      gSettingsBt = settings;
       isValid();
       json = JSON.stringify(settings);
       readWrite.write("settings", "settings_boinctasks.json",json);
@@ -98,7 +99,7 @@ function settings(settings,theme)
           });
             gChildSettings.loadFile('index/index_settings_boinctasks.html')
             gChildSettings.once('ready-to-show', () => {    
-  //            gChildSettings.webContents.openDevTools()
+//              gChildSettings.webContents.openDevTools()
               gChildSettings.show();  
               gChildSettings.setTitle(title);
               gChildSettings.webContents.send("translations",btC.TL.DIALOG_SETTINGS_BT);                
@@ -162,56 +163,63 @@ function getSettings()
     }
    
   } catch (error) {
-    logging.logError('SettingsBt,getSettings', error);      
+    logging.logError('SettingsBt,getSettings', error);
+    gSettingsBt = new Object();
+    isValid();
   }
 }
 
 function isValid()
 {
-  let defaultCss = ".bt_table { font-family: system; font-size: 1.0em;} "
-  if (!functions.isDefined(gSettingsBt.css)) gSettingsBt.css = defaultCss;
-  if (!functions.isDefined(gSettingsBt.refreshRate)) gSettingsBt.refreshRate = 2;
-  if (!functions.isDefined(gSettingsBt.historyRefreshRate)) gSettingsBt.historyRefreshRate = 60;
-  if (!functions.isDefined(gSettingsBt.historyDelete)) gSettingsBt.historyDelete = 7;
-  if (!functions.isDefined(gSettingsBt.socketTimeout)) gSettingsBt.socketTimeout = 10;
+  try {
+    let defaultCss = ".bt_table { font-family: system; font-size: 1.0em;} "
+    if (!functions.isDefined(gSettingsBt.css)) gSettingsBt.css = defaultCss;
+    if (!functions.isDefined(gSettingsBt.refreshRate)) gSettingsBt.refreshRate = 2;
+    if (!functions.isDefined(gSettingsBt.historyRefreshRate)) gSettingsBt.historyRefreshRate = 60;
+    if (!functions.isDefined(gSettingsBt.historyDelete)) gSettingsBt.historyDelete = 7;
+    if (!functions.isDefined(gSettingsBt.socketTimeout)) gSettingsBt.socketTimeout = 10;
 
-  if (gSettingsBt.css.length === 0)
-  {
-    gSettingsBt.css = defaultCss;
-  }
-
-  if (isNaN(gSettingsBt.fontSize) || gSettingsBt.fontSize === 0)
-  {
-    gSettingsBt.fontSize = 1;
-  }
-
-  if (isNaN(gSettingsBt.refreshRate) || gSettingsBt.refreshRate < 1 || gSettingsBt.refreshRate.length === 0) 
-  {
-    gSettingsBt.refreshRate = 2;
-  }
-
-  if (gSettingsBt.historyRefreshRate.length === 0)
-  {
-    gSettingsBt.historyRefreshRate = 0;
-  }
-
-  if (gSettingsBt.historyRefreshRate != 0)  // 0 is disabled.
-  {
-    if (isNaN(gSettingsBt.historyRefreshRate) || gSettingsBt.historyRefreshRate < 20) 
+    if (gSettingsBt.css.length === 0)
     {
-      gSettingsBt.historyRefreshRate = 60;
+      gSettingsBt.css = defaultCss;
     }
-  }  
-  if (isNaN(gSettingsBt.historyDelete) || gSettingsBt.historyDelete < 1 || gSettingsBt.historyDelete > 30 || gSettingsBt.historyDelete.length === 0) 
-  {
-    gSettingsBt.historyDelete = 7;
-  }
 
-  if (isNaN(gSettingsBt.socketTimeout) || gSettingsBt.socketTimeout < 4) 
-  {
-    gSettingsBt.socketTimeout = 4;
+    if (isNaN(gSettingsBt.fontSize) || gSettingsBt.fontSize === 0)
+    {
+      gSettingsBt.fontSize = 1;
+    }
+
+    if (isNaN(gSettingsBt.refreshRate) || gSettingsBt.refreshRate < 1 || gSettingsBt.refreshRate.length === 0) 
+    {
+      gSettingsBt.refreshRate = 2;
+    }
+
+    if (gSettingsBt.historyRefreshRate.length === 0)
+    {
+      gSettingsBt.historyRefreshRate = 0;
+    }
+
+    if (gSettingsBt.historyRefreshRate != 0)  // 0 is disabled.
+    {
+      if (isNaN(gSettingsBt.historyRefreshRate) || gSettingsBt.historyRefreshRate < 20) 
+      {
+        gSettingsBt.historyRefreshRate = 60;
+      }
+    }  
+    if (isNaN(gSettingsBt.historyDelete) || gSettingsBt.historyDelete < 1 || gSettingsBt.historyDelete > 30 || gSettingsBt.historyDelete.length === 0) 
+    {
+      gSettingsBt.historyDelete = 7;
+    }
+
+    if (isNaN(gSettingsBt.socketTimeout) || gSettingsBt.socketTimeout < 4) 
+    {
+      gSettingsBt.socketTimeout = 4;
+    }
+    btC.CONNECTION_TIMEOUT = parseInt(gSettingsBt.socketTimeout);
+  } catch (error) {
+    logging.logError('SettingsBt,isValid', error);  
   }
-  btC.CONNECTION_TIMEOUT = parseInt(gSettingsBt.socketTimeout);
+  
 
   /* Doesn't work in Windows Store
   if (gSettingsBt.startLogin === '1')

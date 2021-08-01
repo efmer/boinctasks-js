@@ -1,3 +1,9 @@
+// share folder
+https://support.apple.com/en-gb/guide/mac-help/mchlp1657/mac
+
+access:
+//ip/sb
+
 copy all files except node_modules
 
 // start app for testing

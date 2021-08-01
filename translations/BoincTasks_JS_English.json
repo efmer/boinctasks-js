@@ -436,7 +436,7 @@
     },
     "DIALOG_ABOUT": {
         "DAB_TITLE": "About",
-        "DAB_THE_EASY_WAY": "BoincTasks Js the easy way the show and control BOINC",
+        "DAB_THE_EASY_WAY": "BoincTasks Js the easy way to show and control BOINC",
         "DAB_LICENCE": "This program is free software: you can redistribute it and/or modify<br>\nit under the terms of the GNU General Public License as published by<br>\nthe Free Software Foundation, version 3 of the License.<br><br>\nThis program is distributed in the hope that it will be useful,<br>\nbut WITHOUT ANY WARRANTY; without even the implied warranty of<br>\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the<br>\nGNU General Public License for more details.<br>\nYou should have received a copy of the GNU General Public License<br>\nalong with this program.<br>\nIf not, see <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">GPLv3</a>.",
         "DAB_BOINC": "BoincTasks Js uses the <a href=\"https://boinc.berkeley.edu/\">BOINC</a> protocol to communicate with BOINC clients.",
         "DAB_FOLLOWING_SOFTWARE": "The following software was used to create BoincTasks Js:",

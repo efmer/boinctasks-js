@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->  
+    <link rel="stylesheet" href="../boinctasks/css/bt.css">
+    <title>Language</title>
+  </head>
+  <body>
+    <img src="../boinctasks/css/img/bt/icon.png"><br>
+    <!-- Identical to index_settings_boinctasks.html -->
+    <br>
+    <b>Select a language:</b>
+    <br><br>
+    <button id="lang_english">English</button>
+    <br><br>
+    <button id="lang_dutch">Dutch, Nederlands</button>
+    <br><br>
+    <button id="lang_french">French, Français</button>
+
+    <br><br><br><br><br><br>    
+    © Copyright <a href="https://efmer.com/">eFMer</a>, Fred Melgert<br>
+    <br>
+    <span id="trans_GNU"></span>
+
+    <script>window.$ = window.jQuery = require('../boinctasks/lib/jquery.min');</script>
+    <script type="text/javascript">
+      require('../render/renderer_language')
+    </script>
+  </body>
+</html>
