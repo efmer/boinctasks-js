@@ -282,35 +282,56 @@ function removeSelected()
 
 function getComputers(connections)
 {
-  try {
-    for (let i=0; i<connections.length;i++)
-    {
-      let idName = i;
-      let id = "#check-"+ idName;
-      let val = $(id).is(":checked");
+  for (let i=0; i<connections.length;i++)
+  {
+    let idName = i;
+    let val,id;
+    try {
+      id = "#check-"+ idName;
+      val = $(id).is(":checked");
       if (val) val = 1;
       else val = 0;
-      connections[i].check = val;
+      connections[i].check = val;      
+    } catch (error) {
+      connections[i].check = false;
+    }
 
+    try {
       id = "#group-"+ idName;
       val = $(id).val();
-      connections[i].group = val;
+      connections[i].group = val;      
+    } catch (error) {
+      connections[i].group = "";
+    }
 
+    try {
       id = "#computer-"+ idName;
       val = $(id).val();
-      connections[i].computerName = val;
-      
+      connections[i].computerName = val; 
+    } catch (error) {
+      connections[i].computerName = "Error";  
+    }
+
+    try {
       id = "#ip-"+ idName;
       val = $(id).val();
-      connections[i].ip = val;
+      connections[i].ip = val; 
+    } catch (error) {
+      connections[i].ip = "";       
+    }
 
+    try {
       id = "#cpid-"+ idName;
       val = $(id).val();
-      connections[i].cpid = val;
+      connections[i].cpid = val;      
+    } catch (error) {
+      connections[i].cpid = "";
+    }
 
+    try {
       id = "#port-"+ idName;
       val = $(id).val();
-      if (val == "") val = -1;
+      if (val === "") val = "31416";
       let ports = val.split(";");
       if (ports.length > 1)
       {
@@ -319,15 +340,23 @@ function getComputers(connections)
         temp.port =  parseInt(ports[1]);
         connections[i].temp = temp;
       }
-      else connections[i].port = parseInt(val);
+      else connections[i].port = parseInt(val);        
+    } catch (error) {
+      connections[i].port = 31416;
+    }
+    if (isNaN(connections[i].port))
+    {
+      connections[i].port = 31416;
+    }
 
+    try {
       id = "#pass-"+ idName;
       val = $(id).val();
-      connections[i].passWord = val;       
+      connections[i].passWord = val;  
+    } catch (error) {
+      connections[i].passWord = "";
     }
-  } catch (error) {
-    
-  }   
+  }
   return connections;
 }
 

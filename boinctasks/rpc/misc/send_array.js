@@ -16,9 +16,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-
-// !!! Eventually remove this in favor of connections_shadow
-
 const Functions = require('../functions/functions');
 const functions = new Functions();
 const Logging = require('../functions/logging');

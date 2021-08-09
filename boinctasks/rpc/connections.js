@@ -71,6 +71,9 @@ const settingsColumnOrder = new SettingsColumnOrder();
 const BtNotices = require('./notices/bt_notices');
 const btNotices = new BtNotices();
 
+const BtSocket  = require('./misc/socket');
+const Authenticate = require('./misc/authenticate');
+
 const ConnectionsShadow = require('./misc/connections_shadow');
 const connectionsShadow = new ConnectionsShadow();
 
@@ -1252,17 +1255,16 @@ function connectSingle(con)
     if (!con.auth)
     {
         // we must create a socket for every connection
-        const BtSocket  = require('./misc/socket');
-        const btSocket = new BtSocket();
-        if(con.clientClass == null)
-        {
-            con.clientClass = btSocket;
-        }
-        con.clientClass.socket(con);
-
-        const Authenticate = require('./misc/authenticate');
+//        const btSocket = new BtSocket();
+//        if(con.clientClass == null)
+//        {
+//            con.clientClass = btSocket;
+//        }
+//        con.clientClass.socket(con);
+        con.client_socket = new BtSocket();
+        con.client_socket.socket(con);
         const athenticate = new Authenticate();
-        con.client_callback = connectAuth;        
+        con.client_callback = connectAuth;
         athenticate.authorize(con);
     }
     else
@@ -1353,11 +1355,14 @@ function getConnections(computers)
             {
                 con.computerName = decodeURI(computer.id_name.toString());            
             }
-            if (con.ip.toLowerCase() == "localhost")
+            if (con.ip.toLowerCase() === "localhost")
             {
-                if (con.passWord == "")
+                if ((con.port === "") || (con.port === 31416))
                 {
-                    con.passWord = boinc.getPassword().toString()
+                    if (con.passWord === "")
+                    {
+                        con.passWord = boinc.getPassword().toString()
+                    }
                 }
             }
             con.group = "";

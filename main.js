@@ -41,10 +41,11 @@ const btC = require('./boinctasks/rpc/functions/btconstants');
 
 const path = require('path');
 
-var gMenuSettings = null;
+let gMenuSettings = null;
 let gClassUpdate = null;
 let gClassCredits = null;
 let gClassScanComputers = null;
+let gClassPing = null;
 
 const gotTheLock = app.requestSingleInstanceLock()
 
@@ -283,30 +284,6 @@ function initMenu()
               logging.showLog(btC.LOGGING_ERROR,gTheme);
             }
           },
-          {
-            label: 'Debug',
-              submenu: [
-                {
-                  label:'Debug mode',
-                  type: "checkbox",
-                  checked: btC.DEBUG,          
-                  click() {
-                    btC.DEBUG = !btC.DEBUG;
-                  }
-                },
-                {
-                  label:'Test translation',
-                  type: "checkbox",
-                  checked: gClassBtMenu.check(btC.MENU_MN_DEBUG_TRANSLATIONS),
-                  click() {
-                    let set = gClassBtMenu.check(btC.MENU_MN_DEBUG_TRANSLATIONS);
-                    set = !set;
-                    gClassBtMenu.set(btC.MENU_MN_DEBUG_TRANSLATIONS,set);
-                    gClassBtMenu.write();
-                  }
-                }
-            ] 
-          },
       ] 
     },
     {
@@ -348,7 +325,38 @@ function initMenu()
             click(e) { 
               connections.boincReadConfig("menu");
             }
-          },                                          
+          },
+          { type: 'separator' },
+          {
+            label: 'Debug',
+              submenu: [
+                {
+                  label:'Debug mode',
+                  type: "checkbox",
+                  checked: btC.DEBUG,          
+                  click() {
+                    btC.DEBUG = !btC.DEBUG;
+                  }
+                },
+                {
+                  label:'Test translation',
+                  type: "checkbox",
+                  checked: gClassBtMenu.check(btC.MENU_MN_DEBUG_TRANSLATIONS),
+                  click() {
+                    let set = gClassBtMenu.check(btC.MENU_MN_DEBUG_TRANSLATIONS);
+                    set = !set;
+                    gClassBtMenu.set(btC.MENU_MN_DEBUG_TRANSLATIONS,set);
+                    gClassBtMenu.write();
+                  }
+                },
+                {
+                  label:'Ping',       
+                  click() {
+                    ping();
+                  }
+                },                
+            ] 
+          },
       ] 
     },
     {
@@ -462,9 +470,6 @@ function initialize () {
     } catch (error) {
       logging.logError('main, createWindow', error); 
     }
-//    if (process.platform == 'darwin') {
-//      gMenuTemplate.unshift({label: ''});
-//    }
  
     const gMainMenu = Menu.buildFromTemplate(gMenuTemplate);
 
@@ -887,6 +892,10 @@ function rendererRequests()
     }
     gClassScanComputers.startScan(password, port);
   })
+
+  ipcMain.on("ping_start", (renderer, data) => {
+    gClassPing.start(data);
+  })
   
   ipcMain.on("add_project", (renderer, type, sel) => {
     connections.processProject(type,sel);
@@ -1032,6 +1041,16 @@ function startScanComputers()
     gClassScanComputers = new ScanComputers();    
   }  
   gClassScanComputers.showScan(gTheme);
+}
+
+function ping()
+{
+  if (gClassPing === null)
+  {
+    const ping = require('./boinctasks/rpc/computers/ping');    
+    gClassPing = new ping();    
+  }  
+  gClassPing.showPing(gTheme);
 }
 
 function sidebarComputers(set,write)

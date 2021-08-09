@@ -34,7 +34,7 @@ let SCAN_TIMEOUT = 15;
 let NO_PASSWORD = btC.TL.DIALOG_COMPUTER_SCAN.DSC_NO_PASSWORD;
 
 let gChildWindowScan = null;
-let gCssDark = null;
+let gCssDarkScan = null;
 
 let lScanLocalIp = null;
 let lScanCount = 0;
@@ -540,13 +540,13 @@ function showComputerScan(theme)
 async function insertCssDark(darkCss)
 {
   try {
-    if (gCssDark !== null)
+    if (gCssDarkScan !== null)
     {
-        gChildWindowScan.webContents.removeInsertedCSS(gCssDark) 
+        gChildWindowScan.webContents.removeInsertedCSS(gCssDarkScan) 
     }    
-    gCssDark = await gChildWindowScan.webContents.insertCSS(darkCss);  
+    gCssDarkScan = await gChildWindowScan.webContents.insertCSS(darkCss);  
   } catch (error) {
-    gCssDark = null;
+    gCssDarkScan = null;
   }
 }
 
