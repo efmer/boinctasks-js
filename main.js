@@ -945,6 +945,7 @@ function rendererRequests()
 
   ipcMain.on("settings_boinctasks", (renderer, settings) => {
     try {
+      if (gSettings.language === void 0) gSettings.language = btC.LANG_ENGLISH;      
       let lang = gSettings.language;
       gSettings = connections.settingsSet(settings);
       if (lang != gSettings.language && !gClassBtMenu.check(btC.MENU_DEBUG_TRANSLATIONS))
@@ -952,7 +953,8 @@ function rendererRequests()
         app.relaunch()
         app.exit()
       }
-      else setCss();      
+      else setCss();
+      connections.settingsClose();
     } catch (error) {
       logging.logError('Main,settings_boinctasks', error);        
     }

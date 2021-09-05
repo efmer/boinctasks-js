@@ -73,6 +73,14 @@ class SettingsBt{
   {
       insertCssDark(css);
   }
+
+  close()
+  {
+    if (gChildSettings !== null)
+    {
+      gChildSettings.close();
+    }
+  }
 }
 module.exports = SettingsBt;
 

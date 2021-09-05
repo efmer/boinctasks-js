@@ -151,7 +151,7 @@ class Connections{
     init(version)
     {
         gVersionS = "V " + version;
-        if (gRequireSettingsBt === null)
+        if (gSettingsBt === null)
         {
             gRequireSettingsBt = require('./settings/settings_bt');            
             gSettingsBt = new gRequireSettingsBt();
@@ -467,6 +467,11 @@ class Connections{
         gB.settings = gSettingsBt.get(); // get and check if valid.
         gSettingsBt.send();   
         return gB.settings;
+    }
+
+    settingsClose()
+    {
+        gSettingsBt.close();
     }
 
     boincAllow(type,combined)

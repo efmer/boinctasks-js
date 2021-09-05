@@ -78,7 +78,6 @@ $(document).ready(function() {
     });
 
     $( "#apply" ).on( "click", function(event) {
-        let item = new Object();
         get();
     });
 });
@@ -107,39 +106,60 @@ function get()
 {
     let item = new Object();
 
-    $('#language_list option:selected').each(function() {
-        let sel = this.id;
-        item.language = sel;
-    });
+    try {
+        item.language = $('#language_list option:selected').attr('id');        
+    } catch (error) {}
 
-//    item.startLogin = getBool($("#start_at_login").is(":checked"));    
-    item.hideLogin = getBool($("#hide_at_login").is(":checked")); 
-    item.css = $("#extra_css").val();
+    try {
+        item.hideLogin = getBool($("#hide_at_login").is(":checked")); 
+        item.css = $("#extra_css").val();     
+    } catch (error) {
+        item.css = "";
+    }
 
-    let refreshRate = $("#refresh_rate").val();
-    if (isNaN(refreshRate )) refreshRate = 2;
-    if (refreshRate < 1) refreshRate = 2;
-    $("#refresh_rate").val(refreshRate);        
-    item.refreshRate = refreshRate;
+    try {
+        let refreshRate = $("#refresh_rate").val();
+        if (isNaN(refreshRate )) refreshRate = 2;
+        if (refreshRate < 1) refreshRate = 2;
+        $("#refresh_rate").val(refreshRate);        
+        item.refreshRate = refreshRate;        
+    } catch (error) {
+        item.refreshRate = 2;
+    }
 
+    try {
+        let historyRefreshRate = $("#history_refresh_rate").val();
+        if (isNaN(historyRefreshRate )) historyRefreshRate = 60;
+        $("#history_refresh_rate").val(historyRefreshRate);        
+        item.historyRefreshRate = historyRefreshRate;        
+    } catch (error) {
+        item.historyRefreshRate = 60;
+    }
 
-    let historyRefreshRate = $("#history_refresh_rate").val();
-    if (isNaN(historyRefreshRate )) historyRefreshRate = 60;
-    $("#history_refresh_rate").val(historyRefreshRate);        
-    item.historyRefreshRate = historyRefreshRate;
+    try {
+        let historyDelete = $("#history_delete").val();
+        if (isNaN(historyDelete )) historyDelete = 7;
+        $("#history_delete").val(historyDelete);        
+        item.historyDelete = historyDelete;        
+    } catch (error) {
+        item.historyDelete = 7;
+    }
 
-    let historyDelete = $("#history_delete").val();
-    if (isNaN(historyDelete )) historyDelete = 7;
-    $("#history_delete").val(historyDelete);        
-    item.historyDelete = historyDelete;
+    try {
+        let socketTimeout = $("#socket_timeout").val();
+        if (isNaN(socketTimeout )) socketTimeout = 8;
+        if (socketTimeout < 4) socketTimeout = 4;
+        $("#socket_timeout").val(socketTimeout);        
+        item.socketTimeout = socketTimeout;        
+    } catch (error) {
+        item.socketTimeout = 8 
+    }
 
-    let socketTimeout = $("#socket_timeout").val();
-    if (isNaN(socketTimeout )) socketTimeout = 8;
-    if (socketTimeout < 4) socketTimeout = 4;
-    $("#socket_timeout").val(socketTimeout);        
-    item.socketTimeout = socketTimeout;
+    try {
+        item.messages =  getMessages();        
+    } catch (error) {        
+    }
 
-    item.messages =  getMessages();
     ipcRenderer.send('settings_boinctasks', item);    
 }
 

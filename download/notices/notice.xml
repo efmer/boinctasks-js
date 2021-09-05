@@ -1,24 +1,21 @@
 <notices>
 	<notice>
 		<title>
-			Version 1.18.
+			SendSensor Version 1.10.
 		</title>
 		<description>
-			BoincTasks Js can be easily translated to another language
-			Right now English and Dutch are available
-			The link brings you to the right page, you can read how you can contribute by making a translation available
+			SendSensor is now available for ARM, like Rasberry PI.
 		</description>
-		<link>https://efmer.com/boinctasks-js/boinctasks-js-translations/</link>
+		<link>https://efmer.com/boinctasks-js/send-sensor-download/</link>
 	</notice>
 	<notice2>
 		<title>
-			Version 1.15.
+			Version 1.23.
 		</title>
 		<description>
-			BoincTasks Js now supports Arm
-			A companion App Send Sensors is now available for Linux, to remotely monitor CPU/GPU Temperature and GPU Runtime %.
-			Send Sensors supports BoincTasks Js and BoincTasks.
+			BoincTasks Js now supports Windows WSL
+			Probably the best way to run Linux tasks in Windows.
 		</description>
-		<link>https://efmer.com/home/boinctasks-js/</link>
+		<link>https://efmer.com/boinctasks/wsl/</link>
 	</notice2>
 </notices>

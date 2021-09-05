@@ -114,7 +114,7 @@ function start(connections)
 
 function addProjectOk(connections,item)
 {
-    if (item.sel.length == 0)
+    if (item.sel.length === 0)
     {
         sendError(btC.TL.DIALOG_ADD_PROJECT.DAB_SELECT_COMPUTER);
         gChildAddProject.webContents.send('add_project_enable');        
@@ -124,6 +124,13 @@ function addProjectOk(connections,item)
     gAddProject.msgTotal = "";
     gAddProject.sel = item.sel;
     gAddProject.addItem = item;
+    if (gAddProject.addproject.url !== gAddProject.addItem.url)
+    {    
+        gAddProject.addproject.url = gAddProject.addItem.url;
+        gAddProject.addproject.name = "Project defined by changed url";
+        let msg = gAddProject.addproject.name + " : " + gAddProject.addItem.url;
+        logging.logDebug(msg); 
+    }
     addProjects();
 }
 
@@ -132,7 +139,7 @@ function addProjects()
     try {
 
         stopTimer();
-        if (gAddProject.sel.length == 0)
+        if (gAddProject.sel.length === 0)
         {
             gChildAddProject.webContents.send('add_project_enable');
             return; // add projects for all computers.
@@ -203,8 +210,8 @@ function addProjectListChanged(sel)
             {
                 getSelectedProjectDescription(project)
 
-                let url = project.url[0]; // force https
-//                url = url.replace("http:", "https:");
+                let url = project.url[0];
+//                url = url.replace("http:", "https:"); // force https
 
                 gAddProject.addproject.url = url;
                 gAddProject.addproject.web_url = project.web_url[0]; 
