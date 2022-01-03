@@ -514,7 +514,7 @@ function defaultSettings()
     $("#network_everydaye").val("00:00");
     
     $("#disk_usemost").val(10);        
-    $("#disk_least").val(0.5);
+    $("#disk_least").val(1);
     $("#disk_mostp").val(50);
     $("#disk_every").val(60);
     $("#disk_swap").val(30);

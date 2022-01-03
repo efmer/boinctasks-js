@@ -15,8 +15,7 @@ cd Users\fred\sb
 npm update --dd
 
 x64
-npm run make
-arm64
+npm run make arm64
 npm run makeA64
 
 local testing ./out/BoincTasks Js-darwin-x64

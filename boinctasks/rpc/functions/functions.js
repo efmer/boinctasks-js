@@ -17,6 +17,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+const btC = require('../functions/btconstants');
+
 class Functions{
     sendRequest(client, request)
     {
@@ -28,6 +30,7 @@ class Functions{
             return null;
         }
     } 
+
     isDefined(check)
     {
         if (check === null) return false;
@@ -36,7 +39,7 @@ class Functions{
             return true;
         }
         return false;        
-    }     
+    } 
 
     getFormattedTimeDiff(time, noNeg=false)
     {
@@ -87,13 +90,22 @@ class Functions{
     {
         let timeS = "Invalid";
         try {
-            var d = new Date(time*1000);
-            d.setTime( d.getTime() + d.getTimezoneOffset()*60*1000 );
-            var options = { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-            timeS = d.toLocaleDateString("en-US", options);            
+            let d = new Date(time*1000);
+            let options = { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            timeS = d.toLocaleDateString(btC.LOCALE, options);            
         } catch (error) {   
         }
         return timeS;
+    }
+
+    getBtLocale(app)
+    {
+        try {
+            let loc = app.getLocale();
+            btC.LOCALE = loc;    
+        } catch (error) {
+            this.logError('Functions,getLocale', error);            
+        }           
     }
 }
 module.exports = Functions;

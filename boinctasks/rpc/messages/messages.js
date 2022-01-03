@@ -20,7 +20,6 @@ const Functions = require('../functions/functions');
 const functions = new Functions();
 const Logging = require('../functions/logging');
 const logging = new Logging();
-const btConstants = require('../functions/btconstants');
 
 class MessageItems
 {
@@ -30,37 +29,41 @@ class MessageItems
         {
             this.msg = messages.msg;
             if (this.msg === void 0) return null;
-            var len = this.msg.length;
-            var conMsg = con.messages;
-            var seqnoPrev = 1;
-            var seqnoHigh = 1;
-            var i = 0;
+            let len = this.msg.length;
+            let conMsg = con.messages;
+            let seqnoPrevHigh = 1;
+            let seqnoHigh = 1;
+            let i = 0;
             if (functions.isDefined(conMsg))
             {
                 this.msgTable = conMsg.msgTable;
-                seqnoHigh = parseInt(this.msg[0].seqno);
-                seqnoPrev = conMsg.seqno;
-                i = 1;  // we already got the fist
+                if (len > 0)
+                {
+                    seqnoHigh = parseInt(this.msg[len-1].seqno);
+                }
+                seqnoPrevHigh = con.msgSeqnoHigh;
+                i = seqnoPrevHigh;
             }
             else
             {
+                con.msgSeqnoHigh = 0; 
                 this.msgTable = [];
             }
-    
-            if (seqnoHigh != seqnoPrev)
+ 
+            if (this.msgTable.length === 0)
             {
-                conMsg.seqno = 0;    // rebuild..
-                return null;
+                i = 0;
             }
 
-            var seqno = seqnoPrev;
+            let seqno = seqnoHigh;
+            let bAdd = false;
             for (i; i< len; i++)
             {
-                var item = this.msg[i];
-                var time = parseInt(item.time);
+                let item = this.msg[i];
+                let time = parseInt(item.time);
                 seqno = parseInt(item.seqno); 
                 let timeS = functions.getFormattedTime(time);
-                var messageItem = new Object();
+                let messageItem = new Object();
                 messageItem.computer = con.computerName;                
                 messageItem.seqno = seqno;
                 messageItem.project = item.project.toString();
@@ -70,8 +73,41 @@ class MessageItems
                 messageItem.body = item.body.toString();
 
                 this.msgTable.push(messageItem);
+                bAdd = true;
             }
-            this.seqno = seqno;
+            
+            if (bAdd)            
+            {                             
+                let sLen = this.msgTable.length;
+                if (sLen > 0)
+                {
+                    let seqArray = [];
+                    for (let s=0;s<sLen;s++)
+                    {
+                        seqArray.push(parseInt(this.msgTable[s].seqno));
+                    }
+                    seqArray.sort(sortSeqCompare);  // sort the list because it may be out of sequence.
+
+                    // Check for a gap in the sequence.
+                    let sSeqNo = seqArray[0];
+                    for (let s=1;s<sLen;s++)
+                    {
+                        let sSeqRead = seqArray[s];
+                        let sSeqOffset = Math.abs(sSeqRead - sSeqNo);
+                        if (sSeqOffset !== 1)
+                        {
+                            // something is wrong
+                            con.msgSeqnoHigh = 0; 
+                            this.msgTable = [];
+                            return null;                    
+                        }
+                        sSeqNo = seqArray[s];                    
+                    }
+                }
+                else seqno = 0;                
+            }        
+
+            con.msgSeqnoHigh = seqno;
         } catch (error) {
             logging.logError('Messages,add', error);             
             return null;
@@ -180,4 +216,15 @@ function parseMessages(xml)
         return null;
     }
     return messagesReturn
+}
+
+function sortSeqCompare(a,b)
+{
+    try {
+            if (a > b) return 1;
+            if (a < b) return -1;
+            return 0;
+    } catch (error) {
+        logging.logError('Messages,sortSeqCompare', error); 
+    }
 }

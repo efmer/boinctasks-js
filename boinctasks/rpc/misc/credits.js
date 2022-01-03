@@ -24,7 +24,7 @@ const os = require('os');
 const {app,BrowserWindow} = require('electron');
 const btC = require('../functions/btconstants');
 
-// !!!!!!!!!!!!!!!!!!!!!!! DO NOT USE ABOUT as it it's removed by the packager
+// !!!!!!!!!!!!!!!!!!!!!!! DO NOT USE ABOUT it will be auto removed by the packager
 
 let gChildAbout = null;
 let gCssDarkAbout = null;
@@ -115,7 +115,13 @@ function infoMsg(version)
   let msg = btC.TL.DIALOG_ABOUT.DAB_VERSION +  " " + version;
   msg += "<br>";
   msg += btC.TL.DIALOG_ABOUT.DAB_SYSTEM_RUNNING + " " + os.platform() + " , " + btC.TL.DIALOG_ABOUT.DAB_ARCH + " " + os.arch();
+  if (process.windowsStore)
+  {
+    msg += " - Windows Store";
+  }
   msg += "<br>";
-  msg += btC.TL.DIALOG_ABOUT.DAB_LOCALE + " " + app.getLocale();  
+  msg += btC.TL.DIALOG_ABOUT.DAB_LOCALE + " " + app.getLocale();
+  msg += "<br>";
+  msg += btC.TL.DIALOG_ABOUT.DAB_REGION + " " + app.getLocaleCountryCode();
   return msg;
 }

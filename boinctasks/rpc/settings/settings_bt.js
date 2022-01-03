@@ -182,6 +182,7 @@ function isValid()
   try {
     let defaultCss = ".bt_table { font-family: system; font-size: 1.0em;} "
     if (!functions.isDefined(gSettingsBt.css)) gSettingsBt.css = defaultCss;
+    if (!functions.isDefined(gSettingsBt.dateCountry)) gSettingsBt.dateCountry = "";
     if (!functions.isDefined(gSettingsBt.refreshRate)) gSettingsBt.refreshRate = 2;
     if (!functions.isDefined(gSettingsBt.historyRefreshRate)) gSettingsBt.historyRefreshRate = 60;
     if (!functions.isDefined(gSettingsBt.historyDelete)) gSettingsBt.historyDelete = 7;

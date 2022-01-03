@@ -182,7 +182,9 @@
         "DS_BT_SOCKET_TO": "Socket time-out (standaard 8 seconden, minimaal 4 seconden)",
         "DS_BT_BUTTON_APPLY": "Pas wijzigingen toe",
         "DS_BT_HISTORY": "Geschiedenis",
-        "DC_BT_PROJECT_SUSPENDED": "Onderbroken"
+        "DC_BT_PROJECT_SUSPENDED": "Onderbroken",
+        "DS_BT_REGION": "Regio",
+        "DS_BT_LOCALE": "Locale (standaard = leeg, en-US, nl-NL)"
     },
     "DIALOG_COLORS_BT": {
         "DC_BT_TITLE": "Instellingen Kleur",
@@ -443,7 +445,8 @@
         "DAB_VERSION": "Versie:",
         "DAB_SYSTEM_RUNNING": "Systeem draait op platform:",
         "DAB_ARCH": "architectuur:",
-        "DAB_LOCALE": "Locale:"
+        "DAB_LOCALE": "Locale:",
+        "DAB_REGION": "Regio:"
     },
     "DIALOG_UPDATE": {
         "DUD_TITLE": "Controleer op updates",

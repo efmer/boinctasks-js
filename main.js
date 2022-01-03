@@ -40,6 +40,8 @@ const gClassLanguage = new reqLanguage();
 const btC = require('./boinctasks/rpc/functions/btconstants');
 
 const path = require('path');
+const Functions = require('./boinctasks/rpc/functions/functions');
+const functions = new Functions();
 
 let gMenuSettings = null;
 let gClassUpdate = null;
@@ -550,6 +552,22 @@ function initialize () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
   app.whenReady().then(() => {
+
+
+    let userDc = false;
+    if (functions.isDefined(gSettings.locale))
+    {
+      userDc = gSettings.locale.length > 0;
+    }
+    if (userDc)
+    {
+      btC.LOCALE = gSettings.locale;
+    }
+    else
+    {
+      functions.getBtLocale(app);
+    }
+    
     gMenuSettings = gClassBtMenu.read();
     connections.init(gVersion);
 //    gTranslation = connections.translation(gClassBtMenu.check(btC.MENU_DEBUG_TRANSLATIONS));
@@ -947,8 +965,11 @@ function rendererRequests()
     try {
       if (gSettings.language === void 0) gSettings.language = btC.LANG_ENGLISH;      
       let lang = gSettings.language;
+      let locale = gSettings.locale;
       gSettings = connections.settingsSet(settings);
-      if (lang != gSettings.language && !gClassBtMenu.check(btC.MENU_DEBUG_TRANSLATIONS))
+      let restart = (lang != gSettings.language && !gClassBtMenu.check(btC.MENU_DEBUG_TRANSLATIONS)) || locale != gSettings.locale;
+
+      if (restart)
       {
         app.relaunch()
         app.exit()

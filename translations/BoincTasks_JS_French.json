@@ -106,7 +106,7 @@
         "SEL_TASKS": "Tâches",
         "SEL_TRANSFERS": "Transferts",
         "SEL_MESSAGES": "Messages",
-        "SEL_HISTORY": "historique",
+        "SEL_HISTORY": "Historique",
         "SEL_NOTICES": "Avis"
     },
     "SUSPEND_REASON": {
@@ -345,7 +345,7 @@
         "DBS_STAT_CREDITS": "Crédits",
         "DBS_STAT_PROJECT": "Projet",
         "DBS_STAT_COMPUTER": "Ordinateur",
-        "DBS_MONTH": "[«Jan», «Fév», «Mar», «Avr», «Mai», «Juin», «Jui», «Août», «Sep», «Oct», «Nov», «Déc»]"
+        "DBS_MONTH": "[\"Jan\",\"Fév\",\"Mar\", \"Avr\",\"Mai\",\"Juin\",\"Jui\",\"Août\",\"Sep\",\"Oct\",\"Nov\",\"Déc\"]"
     },
     "DIALOG_LOGGING": {
         "DLG_TITLE": "Enregistrement",

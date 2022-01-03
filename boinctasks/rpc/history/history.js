@@ -25,7 +25,10 @@ const State = require('../misc/state');
 const conState = new State();
 const ReadWrite  = require('../functions/readwrite');
 const btConstants = require('../functions/btconstants');
+const {app} = require('electron');
 const readWrite = new ReadWrite();
+
+let locale = "";
 
 class History{
     getHistory(con, btSetting)
@@ -115,6 +118,10 @@ function historyAdd(con, state, historyArray)
         
         con.history.resultCount = 0;
         con.history.changed = false;
+        if (locale === "")
+        {
+            locale = app.getLocale();
+        }
         for (let i=0; i< historyArray.length; i++)
         {
             let item = historyArray[i];
@@ -138,12 +145,7 @@ function historyAdd(con, state, historyArray)
             newItem.cpuTime = item.cpu_time[0];
             newItem.completedTime = item.completed_time[0];
 
-            // toLocaleDateString is an extremely slow process, so we do it here once.
-            let d = new Date(newItem.completedTime*1000);
-            d.setTime( d.getTime() + d.getTimezoneOffset()*60*1000 );
-            let options = { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-            newItem.completedTimeS = d.toLocaleDateString("en-US", options);
-
+            newItem.completedTimeS = functions.getFormattedTime(newItem.completedTime); // *1000???
             newItem.createTime = item.create_time[0];
             let projectName = "";
             if (state != null)
@@ -287,12 +289,7 @@ function readHistory(con)
                     let result = item.result;
                     let hash = crypto.createHash('md5').update(projectUrl+result).digest("hex");
                     con.history.hash.push(hash);
-
-                    // toLocaleDateString is an extremely slow process, so we do it here once.
-                    let d = new Date(item.completedTime*1000);
-                    d.setTime( d.getTime() + d.getTimezoneOffset()*60*1000 );
-                    let options = { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-                    item.completedTimeS = d.toLocaleDateString("en-US", options);
+                    item.completedTimeS = functions.getFormattedTime(item.completedTime); // *1000???;
                 }
             }
         }

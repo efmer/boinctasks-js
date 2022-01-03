@@ -106,7 +106,7 @@
         "SEL_TASKS": "Tasks",
         "SEL_TRANSFERS": "Transfers",
         "SEL_MESSAGES": "Messages",
-        "SEL_HISTORY": "history",
+        "SEL_HISTORY": "History",
         "SEL_NOTICES": "Notices"
     },
     "SUSPEND_REASON": {
@@ -182,7 +182,9 @@
         "DS_BT_SOCKET_TO": "Socket timeout (default 8 seconds, minimum 4 seconds)",
         "DS_BT_BUTTON_APPLY": "Apply changes",
         "DS_BT_HISTORY": "History",
-        "DC_BT_PROJECT_SUSPENDED": "Suspended"
+        "DC_BT_PROJECT_SUSPENDED": "Suspended",
+        "DS_BT_REGION": "Region",
+        "DS_BT_LOCALE": "Locale (default = empty, en-US, nl-NL)"
     },
     "DIALOG_COLORS_BT": {
         "DC_BT_TITLE": "Settings Color",
@@ -443,7 +445,8 @@
         "DAB_VERSION": "Version:",
         "DAB_SYSTEM_RUNNING": "System running on platform:",
         "DAB_ARCH": "architecture:",
-        "DAB_LOCALE": "Locale:"
+        "DAB_LOCALE": "Locale:",
+        "DAB_REGION": "Region:"
     },
     "DIALOG_UPDATE": {
         "DUD_TITLE": "Check for update",

@@ -19,6 +19,7 @@
 // WARNING DO NOT translate text.
 
 module.exports = {
+    LOCALE                      : "en-US",
     TL                          : null,
     DEBUG                       : false,
     DEBUG_TRANSLATION           : false,

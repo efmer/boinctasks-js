@@ -141,13 +141,20 @@ function xmlFound(xml,msg)
               gBetaVersion = beta.url[0];
 
               let br = "";
-
+              let showButton = true;
+              if (process.windowsStore)
+              {
+                showButton = false;
+              }
               if (TESTING_UPDATE) gCurrentVersion = 0.5 // force new version to show
               if (releaseVersion > gCurrentVersion)
               {
                 br += btC.TL.DIALOG_UPDATE.DUD_FOUND_NEW_RELEASE + " " + releaseVersion + "<br>"
                 br += releaseInfo;
-                br += '<br><button id="button_release">' + btC.TL.DIALOG_UPDATE.DUD_DOWNLOAD_RELEASE + '</button>';
+                if (showButton)
+                {
+                  br += '<br><button id="button_release">' + btC.TL.DIALOG_UPDATE.DUD_DOWNLOAD_RELEASE + '</button>';                  
+                }
                 br += "<br><br>"
               }
 
@@ -155,7 +162,10 @@ function xmlFound(xml,msg)
               {
                 br += btC.TL.DIALOG_UPDATE.DUD_FOUND_NEW_BETA + " " + betaVersion + "<br>"
                 br += betaInfo;
-                br += '<br><button id="button_beta">' + btC.TL.DIALOG_UPDATE.DUD_DOWNLOAD_BETA +'</button>';                
+                if (showButton)
+                {
+                  br += '<br><button id="button_beta">' + btC.TL.DIALOG_UPDATE.DUD_DOWNLOAD_BETA +'</button>';                
+                }
                 br += "<br><br>"
               }
               if (br === "")

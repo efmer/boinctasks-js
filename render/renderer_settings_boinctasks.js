@@ -38,6 +38,10 @@ $(document).ready(function() {
         $("#trans_hide").html( dlg.DS_BT_HIDE_START);
         $("#trans_styling").html( dlg.DS_BT_STYLING);
         $("#trans_styling_def").html( dlg.DS_BT_STYLING_DEF);
+
+        $("#trans_region").html( dlg.DS_BT_REGION);
+        $("#trans_locale").html( dlg.DS_BT_LOCALE);
+
         $("#trans_timing").html( dlg.DS_BT_TIMING);
         $("#trans_timing_refresh").html( dlg.DS_BT_TIMING_REFRESH);
         $("#trans_timing_history_refresh").html( dlg.DS_BT_HISTORY_REFRESH);
@@ -94,6 +98,8 @@ function set(item)
     $("#extra_css").val(item.css);
 
     $("#refresh_rate").val( item.refreshRate );
+
+    $("#locale").val( item.locale );
     $("#history_refresh_rate").val( item.historyRefreshRate );    
     $("#history_delete").val( item.historyDelete ); 
     $("#socket_timeout").val( item.socketTimeout ); 
@@ -115,6 +121,13 @@ function get()
         item.css = $("#extra_css").val();     
     } catch (error) {
         item.css = "";
+    }
+
+    try {
+        let locale = $("#locale").val();
+        item.locale = locale;
+    } catch (error) {
+        item.locale = "";
     }
 
     try {
