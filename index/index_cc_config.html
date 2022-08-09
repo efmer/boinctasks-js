@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->  
+    <link rel="stylesheet" href="../boinctasks/css/bt.css">       
+    
+    <title>CC_Config Updating</title>
+  </head>
+  <body>    
+    <button id="cc_config_update">Update</button>
+    <br>
+    <br>
+    <div id="error_text"></div>
+    <textarea spellcheck="false" class="cc_textarea" id="xml_text"></textarea>
+    <script>window.$ = window.jQuery = require('../boinctasks/lib/jquery.min');</script>
+    <script type="text/javascript">
+      require('../render/renderer_cc_config')
+    </script>
+  </body>
+</html>

@@ -262,7 +262,9 @@
         "FTR_RETRY": "Opnieuw proberen",
         "FTR_TASKS": "Taken:",
         "FTR_TASKS_HISTORY": "G Taken:",
-        "FTR_RETRY_ALL": "Alles opnieuw proberen:"
+        "FTR_RETRY_ALL": "Alles opnieuw proberen:",
+        "FTR_CC_CONFIG": "Edit cc_config.xml",
+        "FTR_APP_CONFIG": "Edit: app_config.xml"
     },
     "BOX_DELETE_FILTER": {
         "BX_FILTER_TITLE": "Kan een filter niet verwijderen",
@@ -480,5 +482,20 @@
         "DBS_STAT_TITLE": "Gegevensoverdracht grafiek [ ⇧ upload, ⇓ download]",
         "DBS_STAT_TRANSFER": "Verzonden data",
         "DBS_TITLE": "Gegevensoverdracht grafiek"
+    },
+    "BOX_CONFIG": {
+        "BX_CC_CONFIG_TITLE": "cc_config.xml",
+        "BX_CC_CONFIG_INVALID_TAG_MESSAGE": "Ongeldige start- en stoptag",
+        "BX_CC_CONFIG_INVALID_TAG_TITLE": "Ongeldige cc_config gelezen, mist <boinc_gui_rpc_reply> tag",
+        "BX_CC_CONFIG_INVALID_XML": "Het XML bestand is niet correct",
+        "BX_APP_CONFIG_TITLE": "app_config.xml",
+        "BX_APP_CONFIG_INVALID_TAG_MESSAGE": "Ongeldige start- en stoptag",
+        "BX_APP_CONFIG_INVALID_TAG_TITLE": "Ongeldige app_config gelezen, mist <boinc_gui_rpc_reply> tag "
+    },
+    "DIALOG_EDIT_CC_CONFIG": {
+        "DEC_TITLE": "Edit: cc_config.xml"
+    },
+    "DIALOG_EDIT_APP_CONFIG": {
+        "DEA_TITLE": "Edit: app_config.xml"
     }
 }

@@ -343,11 +343,11 @@ function initMenu()
                 {
                   label:'Test translation',
                   type: "checkbox",
-                  checked: gClassBtMenu.check(btC.MENU_MN_DEBUG_TRANSLATIONS),
+                  checked: gClassBtMenu.check(btC.MENU_DEBUG_TRANSLATIONS),
                   click() {
-                    let set = gClassBtMenu.check(btC.MENU_MN_DEBUG_TRANSLATIONS);
+                    let set = gClassBtMenu.check(btC.MENU_DEBUG_TRANSLATIONS);
                     set = !set;
-                    gClassBtMenu.set(btC.MENU_MN_DEBUG_TRANSLATIONS,set);
+                    gClassBtMenu.set(btC.MENU_DEBUG_TRANSLATIONS,set);
                     gClassBtMenu.write();
                   }
                 },
@@ -435,16 +435,32 @@ function initialize () {
     })
   }
   
-  function createWindow () {
-    // Create the browser window.
-
-    logging.logFile("main, createWindow", "start");
-    let bShow = app.commandLine.getSwitchValue("show") != "no";
+  function showApp()
+  {
+    let showArg = app.commandLine.getSwitchValue("show");
+    let bShow = false;
 
     if (gSettings.hideLogin === '1') 
     {
       bShow = false;
+      logging.logDebug("main, showApp BoincTasks settings: hideLogin: yes");   
     }
+
+    if (showArg == "yes")  //--show=yes
+    {
+      bShow = true;
+      logging.logDebug("main, showApp arg: show=yes");        
+    }
+    logging.logDebug("main, showApp show: " + showArg);    
+    return bShow;
+  }
+
+  function createWindow () {
+    // Create the browser window.
+
+    logging.logFile("main, createWindow", "start");
+
+    let bShow = false;
 
     let state = windowsState.get("main",1200,600)
     gMainWindow = new BrowserWindow({
@@ -462,6 +478,7 @@ function initialize () {
         preload: path.join(__dirname, './preload/preload.js')
       },
     });
+
     if (state.max)
     {
       logging.logFile("main, createWindow", "state.max");
@@ -538,6 +555,18 @@ function initialize () {
     });
 
     gMainWindow.once('ready-to-show', () => {
+
+      // extra check to hide app at startup
+      let bShow = showApp();
+      if (bShow)
+      {
+        gMainWindow.show();
+      }
+      else
+      {
+        gMainWindow.hide();
+      }
+
       let title = "BoincTasks Js " + gVersion;
       gMainWindow.setTitle(title);
       gMainWindow.webContents.send("translations",btC.TL.SEL);   
@@ -552,8 +581,6 @@ function initialize () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
   app.whenReady().then(() => {
-
-
     let userDc = false;
     if (functions.isDefined(gSettings.locale))
     {
@@ -568,10 +595,10 @@ function initialize () {
       functions.getBtLocale(app);
     }
     
-    gMenuSettings = gClassBtMenu.read();
+    //gMenuSettings = gClassBtMenu.read();
     connections.init(gVersion);
+    logging.setVersion("V " + gVersion);    
 //    gTranslation = connections.translation(gClassBtMenu.check(btC.MENU_DEBUG_TRANSLATIONS));
-    logging.setVersion("V " + gVersion);
     if (isMac) {
       initDockMenu();
       app.dock.setMenu(gDockMenu)
@@ -626,7 +653,6 @@ function getTranslation()
     let settingsBt = new requireSettingsBt();
     gSettings = settingsBt.get();
     let debug = gClassBtMenu.check(btC.MENU_DEBUG_TRANSLATIONS);
-    debug = false;
     let translation;
     if (debug)
     {
@@ -657,7 +683,10 @@ function getTranslation()
                 break;
                 case btC.LANG_FRENCH:
                     translation = readWrite.readResource(__dirname,"translations/BoincTasks_JS_French.json");
-                break;                
+                break;
+                case btC.LANG_GERMAN:
+                    translation = readWrite.readResource(__dirname,"translations/BoincTasks_JS_German.json");
+                break;                                
                 default:
                     translation = readWrite.readResource(__dirname,"translations/BoincTasks_JS_English.json");            
             }
@@ -776,6 +805,9 @@ async function insertCssDark(darkCss)
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
+logging.init();
+
+gMenuSettings = gClassBtMenu.read();
 getTranslation();
 initialize()
 
@@ -971,8 +1003,8 @@ function rendererRequests()
 
       if (restart)
       {
-        app.relaunch()
-        app.exit()
+        app.relaunch({ args: process.argv.slice(1).concat(['--show=yes']) })
+        app.exit(0)
       }
       else setCss();
       connections.settingsClose();
@@ -1031,6 +1063,14 @@ function rendererRequests()
     gDarkMode = !gDarkMode;
     setDarkMode(true,false);
   })
+
+  ipcMain.on("cc_config", (renderer, type, xml) => {
+    connections.cc_config(xml);
+  }) 
+
+  ipcMain.on("app_config", (renderer, type, xml) => {
+    connections.app_config(xml);
+  }) 
 }
 
 function setCss()

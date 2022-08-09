@@ -162,7 +162,7 @@ function settingsStart(gb,selected)
       }
             
   } catch (error) {
-      logging.logError('SettingsBoinc,settings', error);        
+      logging.logError('SettingsBoinc,settingsStart', error);        
   }  
 }
 

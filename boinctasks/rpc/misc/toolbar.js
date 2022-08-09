@@ -29,6 +29,7 @@ const btC = require('../functions/btconstants');
 const { dialog,clipboard  } = require('electron');
 
 var g_toolbarProperties = null;
+//var gClassCcConfig = null;
 
 const SEND_TASKS = 0;
 const SEND_PROJECTS = 1;
@@ -146,6 +147,15 @@ class Toolbar{
                     properties = new g_toolbarProperties();
                     properties.computer(selected,gb);
                 break;
+                case "toolbar_cc_config_c":          
+                    selected = gb.rowSelect.computers.rowSelected;
+                    if (gClassCcConfig === null)
+                    {
+                        const ccConfig = require('../computers/cc_config');                    
+                        gClassCcConfig = new ccConfig(); 
+                    }
+                    gClassCcConfig.ccConfigRead(gb,selected);
+                break;                
                 // results
                 case "toolbar_suspend":
                     selected = gb.rowSelect.results.rowSelected;
@@ -198,6 +208,15 @@ class Toolbar{
                 case "toolbar_update_p":
                     selected = gb.rowSelect.projects.rowSelected;                       
                     task(gb,selected,"project_update",SEND_PROJECTS);
+                break;
+                case "toolbar_app_config_p":
+                    selected = gb.rowSelect.projects.rowSelected;
+                    if (gClassAppConfig === null) 
+                    {
+                        const appConfig = require('../computers/app_config');
+                        gClassAppConfig = new appConfig(); 
+                    }
+                    gClassAppConfig.appConfigRead(gb,selected);
                 break;
                 case "toolbar_detach_p":
                     selected = gb.rowSelect.projects.rowSelected;                       
@@ -284,7 +303,8 @@ function getToolbarTransfersSelect()
 
 function getToolbarProjects()
 {
-    var toolbar =   '<td id="toolbar_detach_p" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;' + btC.TL.FOOTER.FTR__DETACH + '</td>' +
+    var toolbar =   '<td id="toolbar_app_config_p" class="ef_btn_toolbar bt_img_toolbar_list">&nbsp;' + btC.TL.FOOTER.FTR_APP_CONFIG + '</td>' +
+                    '<td id="toolbar_detach_p" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;' + btC.TL.FOOTER.FTR__DETACH + '</td>' +
                     '<td id="toolbar_reset_p" class="ef_btn_toolbar bt_img_toolbar_back">&nbsp;' + btC.TL.FOOTER.FTR_RESET + '</td>' +
                     '<td id="toolbar_suspend_p" class="ef_btn_toolbar bt_img_toolbar_pause">&nbsp;' + btC.TL.FOOTER.FTR_SUSPEND + '</td>' +
                     '<td id="toolbar_resume_p" class="ef_btn_toolbar bt_img_toolbar_resume">&nbsp;' + btC.TL.FOOTER.FTR_RESUME + '</td>' +
@@ -316,8 +336,10 @@ function getToolbarComputers()
 
 function getToolbarComputersAuth()
 {
-    var toolbar =   '<td id="toolbar_abort_c" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;' + btC.TL.FOOTER.FTR_DELETE + '</td>' +
+    var toolbar =   '<td id="toolbar_cc_config_c" class="ef_btn_toolbar bt_img_toolbar_list">&nbsp;'+ btC.TL.FOOTER.FTR_CC_CONFIG + '</td>' +
+                    '<td id="toolbar_abort_c" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;' + btC.TL.FOOTER.FTR_DELETE + '</td>' +
                     '<td id="toolbar_info_c" class="ef_btn_toolbar bt_img_toolbar_info">&nbsp;'+ btC.TL.FOOTER.FTR_INFO + '</td>';
+                    
     return toolbar;
 }
 

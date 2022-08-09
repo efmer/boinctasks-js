@@ -503,9 +503,9 @@ function getCpuGpu(res, cpuGpu)
     res = res.replace(" NVIDIA GPUs","NV");
     res = res.replace(" NVIDIA GPU","NV");
     res = res.replace(" Nvidia GPU", "NV");
-    res = res.replace(" ATI GPUs","ATI");
-    res = res.replace(" AMD/ATI GPU", "ATI");
-    res = res.replace(" AMD / ATI GPU", "ATI");
+    res = res.replace(" ATI GPUs","AMD");
+    res = res.replace(" AMD/ATI GPU", "AMD");
+    res = res.replace(" AMD / ATI GPU", "AMD");
   
     res = res.replace(" intel GPU", "INT");
     res = res.replace(" intel_gpu GPU","INT");

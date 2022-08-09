@@ -33,12 +33,16 @@ class Functions{
 
     isDefined(check)
     {
-        if (check === null) return false;
-        if (check !== void 0)
-        {
-            return true;
-        }
-        return false;        
+        try {
+            if (check === null) return false;
+            if (check !== void 0)
+            {
+                return true;
+            }
+            return false; 
+        } catch (error) {
+            return false;
+        }                  
     } 
 
     getFormattedTimeDiff(time, noNeg=false)

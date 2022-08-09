@@ -182,7 +182,9 @@
         "DS_BT_SOCKET_TO": "Délai d'attente pour les sockets (par défaut 8 secondes, minimum 4 secondes)",
         "DS_BT_BUTTON_APPLY": "Appliquer",
         "DS_BT_HISTORY": "Historique",
-        "DC_BT_PROJECT_SUSPENDED": "Suspendu"
+        "DC_BT_PROJECT_SUSPENDED": "Suspendu",
+        "DS_BT_REGION": "Région",
+        "DS_BT_LOCALE": "Locale (par défaut = empty, en-US, nl-NL)"
     },
     "DIALOG_COLORS_BT": {
         "DC_BT_TITLE": "Réglages couleur",
@@ -260,7 +262,9 @@
         "FTR_RETRY": "Réessayer",
         "FTR_TASKS": "Tâches",
         "FTR_TASKS_HISTORY": "H Tâches",
-        "FTR_RETRY_ALL": "Réessayer tout"
+        "FTR_RETRY_ALL": "Réessayer tout",
+        "FTR_CC_CONFIG": "Éditer cc_config.xml",
+        "FTR_APP_CONFIG": "Éditer : app_config.xml"
     },
     "BOX_DELETE_FILTER": {
         "BX_FILTER_TITLE": "Impossible de supprimer un filtre",
@@ -443,7 +447,8 @@
         "DAB_VERSION": "Version",
         "DAB_SYSTEM_RUNNING": "Système fonctionnant sur la plate-forme :",
         "DAB_ARCH": "architecture",
-        "DAB_LOCALE": "Local"
+        "DAB_LOCALE": "Local",
+        "DAB_REGION": "Région :"
     },
     "DIALOG_UPDATE": {
         "DUD_TITLE": "Vérifier les mise à jour",
@@ -477,5 +482,20 @@
         "DBS_STAT_TITLE": "Graphique de transfert de données [ ⇧ envoi, ⇓ réception]",
         "DBS_STAT_TRANSFER": "Données transférées",
         "DBS_TITLE": "Graphique de transfert de données"
+    },
+    "BOX_CONFIG": {
+        "BX_CC_CONFIG_TITLE": "cc_config.xml",
+        "BX_CC_CONFIG_INVALID_TAG_MESSAGE": "Balise de début et de fin non valide",
+        "BX_CC_CONFIG_INVALID_TAG_TITLE": "Lecture de cc_config invalide, balise <boinc_gui_rpc_reply> manquante.",
+        "BX_CC_CONFIG_INVALID_XML": "Le XML n'est pas valide",
+        "BX_APP_CONFIG_TITLE": "app_config.xml",
+        "BX_APP_CONFIG_INVALID_TAG_MESSAGE": "Balise de début et de fin non valide",
+        "BX_APP_CONFIG_INVALID_TAG_TITLE": "Lecture d'app_config invalide, balise <boinc_gui_rpc_reply> manquante."
+    },
+    "DIALOG_EDIT_CC_CONFIG": {
+        "DEC_TITLE": "Éditer : cc_config.xml"
+    },
+    "DIALOG_EDIT_APP_CONFIG": {
+        "DEA_TITLE": "Éditer : app_config.xml"
     }
 }

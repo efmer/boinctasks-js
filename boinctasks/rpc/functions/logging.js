@@ -40,10 +40,17 @@ let gChildWindowLog = null;
 let gCssDarkLog = null;
 
 class Logging{
+    init()
+    {
+        try {
+            initPino();           
+        } catch (error) {
+            let ii = 1;
+        }      
+    }
     setVersion(versionIn)
     {
         try {
-            initPino();
             let version = "BoincTasks Js, " + versionIn;
             this.log(version);
             this.logDebug(version); 

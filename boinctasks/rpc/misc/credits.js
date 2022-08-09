@@ -88,7 +88,8 @@ function addAboutWindow(version,theme)
         {
             gChildAbout.setTitle(title); 
             gChildAbout.hide();
-            gChildAbout.show();  
+            gChildAbout.show(); 
+            gChildAbout.webContents.send("translations",btC.TL.DIALOG_ABOUT);               
             gChildAbout.webContents.send('about', info);             
         }
               

@@ -92,6 +92,9 @@ let gClassRulesList = null;
 let gClassRulesProcess = null;
 let gClassEmail = null;
 
+gClassCcConfig = null;
+gClassAppConfig = null;
+
 const MODE_NORMAL = 0;      // normal mode
 const MODE_STATE = 1;       // fetching the state
 const MODE_RESULTS = 2;
@@ -553,6 +556,23 @@ class Connections{
         }
         gClassEmail.email(gB,type,item);
     }
+    cc_config(xml)
+    {
+        if (gClassCcConfig === null)
+        {
+            return;
+        }
+        gClassCcConfig.update(gB,xml);
+    }
+    app_config(xml)
+    {
+        if (gClassAppConfig === null)
+        {
+            return;
+        }
+        gClassAppConfig.update(gB,xml);
+    }
+
     setTheme(css,darkmode,bSingle)
     {
         gB.theme = css;
@@ -566,7 +586,9 @@ class Connections{
         if (gClassSettingsAllow !== null) gClassSettingsAllow.setTheme(css);
         if (gClassRulesList !== null) gClassRulesList.setTheme(css);
         if (gClassEmail !== null) gClassEmail.setTheme(css);
-        if (gClassAcountManager !== null) gClassAcountManager.setTheme(css);    
+        if (gClassAcountManager !== null) gClassAcountManager.setTheme(css);
+        if (gClassCcConfig !== null) gClassCcConfig.setTheme(css);
+        if (gClassAppConfig !== null) gClassAppConfig.setTheme(css);        
         if (!bSingle)
         {
             gClassSettingsColor.setTheme(darkmode,css);

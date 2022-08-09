@@ -262,7 +262,9 @@
         "FTR_RETRY": "Retry",
         "FTR_TASKS": "Tasks:",
         "FTR_TASKS_HISTORY": "H Tasks:",
-        "FTR_RETRY_ALL": "Retry all:"
+        "FTR_RETRY_ALL": "Retry all:",
+        "FTR_CC_CONFIG": "Edit cc_config.xml",
+        "FTR_APP_CONFIG": "Edit: app_config.xml"
     },
     "BOX_DELETE_FILTER": {
         "BX_FILTER_TITLE": "Unable to delete a Filter",
@@ -480,5 +482,20 @@
         "DBS_STAT_TITLE": "Data transfer graph [ ⇧ upload, ⇓ download]",
         "DBS_STAT_TRANSFER": "Transferred data",
         "DBS_TITLE": "Data transfer graph"
+    },
+    "BOX_CONFIG": {
+        "BX_CC_CONFIG_TITLE": "cc_config.xml",
+        "BX_CC_CONFIG_INVALID_TAG_MESSAGE": "Invalid start and stop tag",
+        "BX_CC_CONFIG_INVALID_TAG_TITLE": "Invalid cc_config read, missing expected <boinc_gui_rpc_reply> tag",
+        "BX_CC_CONFIG_INVALID_XML": "The XML is invalid",
+        "BX_APP_CONFIG_TITLE": "app_config.xml",
+        "BX_APP_CONFIG_INVALID_TAG_MESSAGE": "Invalid start and stop tag",
+        "BX_APP_CONFIG_INVALID_TAG_TITLE": "Invalid app_config read, missing expected <boinc_gui_rpc_reply> tag"
+    },
+    "DIALOG_EDIT_CC_CONFIG": {
+        "DEC_TITLE": "Edit: cc_config.xml"
+    },
+    "DIALOG_EDIT_APP_CONFIG": {
+        "DEA_TITLE": "Edit: app_config.xml"
     }
 }

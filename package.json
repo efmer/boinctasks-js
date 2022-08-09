@@ -5,7 +5,7 @@
   "author": "eFMer <boinc@efmer.com>",
   "url": "https://efmer.com/",
   "license": "GPL-3.0-or-later",
-  "version": "1.2.7",
+  "version": "1.2.9",
   "description": "BoincTasks Js the best way to view BOINC",
   "copyright": "Copyright © 2022 ${author}",
   "main": "main.js",
