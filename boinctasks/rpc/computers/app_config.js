@@ -199,7 +199,7 @@ function dataReady(data)
     xml = xml.replaceAll("\3","");  
     xml = xml.replaceAll(tagReplyBegin,""); 
     xml = xml.replaceAll(tagReplyEnd,"");     
-    let title = "BoincTasks Js - " + btC.TL.DIALOG_EDIT_APP_CONFIG.DEA_TITLE + " " +  this.computerName
+    let title = "BoincTasks Js - " + btC.TL.DIALOG_EDIT_APP_CONFIG.DEA_TITLE + " " +  this.computerName + " - " + gAppConfigUrl;
     gChildAppConfig.setTitle(title);
     gChildAppConfig.webContents.send('error_text', error);    
     gChildAppConfig.webContents.send('xml_text', xml);

@@ -1,12 +1,12 @@
 [Setup]
 AppName=BoincTasks Js
-AppVerName=BoincTasks Js by eFMer V 1.29
-AppVersion=1.29
+AppVerName=BoincTasks Js by eFMer V 1.30
+AppVersion=1.30
 WizardStyle=modern
 AppPublisher=eFMer
 AppPublisherURL=https://efmer.com/
 AppSupportURL=https://forum.efmer.com/
-AppUpdatesURL=https://efmer.com/download-boinctasks/
+AppUpdatesURL=https://efmer.com/boinctasks-js/boinctasks-js-download/
 AppComments=BoincTasks the visual BOINC interface - the best way to view your BOINC tasks
 DefaultDirName={commonpf}\eFMer\BoincTasks-Js
 DefaultGroupName=EFMER BoincTasks Js

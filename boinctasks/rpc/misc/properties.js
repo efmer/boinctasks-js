@@ -23,7 +23,7 @@ const functions = new Functions();
 
 const WindowsState = require('../functions/window_state');
 const windowsState = new WindowsState();
-const State = require('../misc/state');
+const State = require('./state');
 const conState = new State();
 
 const btC = require('../functions/btconstants');
@@ -37,6 +37,10 @@ class Properties{
   task(selected,gb)
   {
     taskInfo(selected,gb)
+  }  
+  project(selected,gb)
+  {
+    projectInfo(selected,gb)
   }
   computer(selected,gb)
   {
@@ -173,6 +177,88 @@ function taskInfo(selected,gb)
       }
   } catch (error) {
       logging.logError('Properties,taskInfo', error);    
+  }
+}
+
+function projectInfo(selected,gb)
+{
+  try {
+    let temp;
+    let connections = gb.connections;
+    let prop = "<table>";
+    for (let i=0;i<selected.length;i++ )
+    {
+      let res = selected[i].split(btC.SEPERATOR_SELECT);
+      if (res.length !== 3) break;
+      let computer = res[1];
+
+      if (i>0) prop += addLine();
+      for (let c=0; c<connections.length;c++)
+      {
+        if (connections[c].computerName === computer)
+        {
+          let con = connections[c];
+          prop += addInfo("Computer",computer);          
+          let time = null;
+          let projects = null;
+          try {
+            projects = con.projects.project;
+          } catch (error) {}
+          if (projects !== null)
+          {
+            let lenp = projects.length;
+            let url = res[2];
+            for (p=0;p<lenp;p++)
+            {
+              let project = projects[p];
+              if (project.master_url == url)
+              {             
+                prop += addInfo("Project name", project.project_name);
+                prop += addInfo("Master Url", project.master_url);
+                prop += addInfo("Directory", project.project_dir);                
+                prop += addInfo("Cross project ID", project.cross_project_id);
+                prop += addInfo("User name", project.user_name);
+                prop += addInfo("Team", project.team_name);
+                prop += addInfo("Venue", project.host_venue);
+                prop += addInfo("Resource share", project.resource_share);
+
+                prop += addInfo("Jobs completed", project.njobs_success);
+                prop += addInfo("Jobs error", project.njobs_error);
+                prop += addInfo("Jobs failure", project.nrpc_failures);
+                prop += addInfo("Host id", project.hostid);
+                prop += addInfo("User id", project.userid);
+                prop += addLine();
+
+                prop += addInfo("Duration correction factor", project.duration_correction_factor);
+                prop += addInfo("Scheduling priority", project.sched_priority);
+
+                prop += addLine();
+                prop += addInfo("Disk desired", project.desired_disk_usage);
+                prop += addInfo("Disk shared", project.disk_share);
+                prop += addInfo("Disk usage", project.disk_usage);
+                prop += addLine();
+
+                prop += addInfo("User avg credit", project.user_expavg_credit);
+                prop += addInfo("User total credit", project.user_total_credit);
+                prop += addInfo("Host avg credit", project.host_expavg_credit);
+                prop += addInfo("Host total credit", project.host_total_credit);
+              }
+            }
+          }        
+        }
+      }
+      prop += "</table>";
+      if (prop.length > 100)
+      {
+        properties(prop,gb.theme);
+      }
+      else
+      {
+        properties("Nothing found".gb.theme);
+      }      
+    }
+  } catch (error) {
+    logging.logError('Properties,computerInfo', error);    
   }
 }
 

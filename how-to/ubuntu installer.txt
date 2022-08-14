@@ -44,9 +44,19 @@ npm run snapI64
 npm run snapA32
 
 cd /home/fred/sb/boinctasks-js/dist
+
+------------------------------
+First time:
+snapcraft export-login snap_login
+sudo nano /etc/environment  add export SNAPCRAFT_STORE_CREDENTIALS=$(cat snap_login)
+remove ($HOME/.config/snapcraft/snapcraft.cfg) -> rm ~/.config/snapcraft/snapcraft.cfg
+------------------------------
+
+>> No longer working on newer snap versions snapcraft login
 snapcraft login
-snapcraft upload --release=candidate boinctasks-js_1.2.9_amd64.snap
-snapcraft upload --release=candidate boinctasks-js_1.2.9_armhf.snap
+
+snapcraft upload --release=candidate boinctasks-js_1.3.0_amd64.snap
+snapcraft upload --release=candidate boinctasks-js_1.3.0_armhf.snap
 
 // testing
 cd /home/fred/sb/boinctasks-js/dist/

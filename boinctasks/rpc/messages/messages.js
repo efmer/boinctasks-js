@@ -42,17 +42,11 @@ class MessageItems
                     seqnoHigh = parseInt(this.msg[len-1].seqno);
                 }
                 seqnoPrevHigh = con.msgSeqnoHigh;
-                i = seqnoPrevHigh;
             }
             else
             {
                 con.msgSeqnoHigh = 0; 
                 this.msgTable = [];
-            }
- 
-            if (this.msgTable.length === 0)
-            {
-                i = 0;
             }
 
             let seqno = seqnoHigh;
@@ -74,6 +68,7 @@ class MessageItems
 
                 this.msgTable.push(messageItem);
                 bAdd = true;
+                con.msgSeqnoAdded = seqno;
             }
             
             if (bAdd)            
@@ -134,9 +129,9 @@ class Messages{
             }
             else
             {
-                let seqno = messages.seqno-1;
+                let seqno = con.msgSeqnoHigh; //messages.seqno-1; xxxx
                 if (seqno < 1) seqno = 1;
-                request = "<get_messages><seqno>" + seqno + "</seqno></get_messages>";
+                request = "<get_messages><seqno>" + seqno + "</seqno></get_messages>";           
             }
             functions.sendRequest(con.client_socket, request);            
         } catch (error) {           
@@ -159,9 +154,12 @@ function messagesData()
             this.mode = 'empty';
             return;
         }
-        var messageItems = new MessageItems();
-        messageItems.add(this, messages)
-        this.messages = messageItems;  
+        if (messages.msg != void 0)
+        {
+            var messageItems = new MessageItems();
+            messageItems.add(this, messages)
+            this.messages = messageItems;  
+        }
         this.mode = "OK";
     } catch (error) {
         logging.logError('Messages,messagesData', error);           
@@ -169,7 +167,6 @@ function messagesData()
         this.error = error;
     }
 } 
-
 
 function parseMessages(xml)
 {

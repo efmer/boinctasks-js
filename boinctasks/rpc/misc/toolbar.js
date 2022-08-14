@@ -226,6 +226,12 @@ class Toolbar{
                     selected = gb.rowSelect.projects.rowSelected;                       
                     resetProject(gb.mainWindow,selected,gb.connections);
                 break;
+                case "toolbar_info_p":
+                    selected = gb.rowSelect.projects.rowSelected;                    
+                    if (g_toolbarProperties === null) g_toolbarProperties = require('./properties');
+                    properties = new g_toolbarProperties();
+                    properties.project(selected,gb);
+                break;
                 case "toolbar_www":
                     wwwShow(gb);
                 break;
@@ -309,12 +315,12 @@ function getToolbarProjects()
                     '<td id="toolbar_suspend_p" class="ef_btn_toolbar bt_img_toolbar_pause">&nbsp;' + btC.TL.FOOTER.FTR_SUSPEND + '</td>' +
                     '<td id="toolbar_resume_p" class="ef_btn_toolbar bt_img_toolbar_resume">&nbsp;' + btC.TL.FOOTER.FTR_RESUME + '</td>' +
                     '<td id="toolbar_nomore_p" class="ef_btn_toolbar bt_img_toolbar_download_not">&nbsp;' + btC.TL.FOOTER.FTR_NO_MORE_WORK  + '</td>' +
-                    '<td id="toolbar_allow_p" class="ef_btn_toolbar bt_img_toolbar_download">&nbsp;' + btC.TL.FOOTER.FTR_ALLOW_WORK + '</td>' +                      
+                    '<td id="toolbar_allow_p" class="ef_btn_toolbar bt_img_toolbar_download">&nbsp;' + btC.TL.FOOTER.FTR_ALLOW_WORK + '</td>' +
                     '<td id="toolbar_update_p" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_UPDATE + '</td>' +
-                    '<td id="toolbar_www" class="ef_btn_toolbar bt_img_toolbar_www">&nbsp;' + 'WWW' + '</td>';                    
+                    '<td id="toolbar_info_p" class="ef_btn_toolbar bt_img_toolbar_info">&nbsp;'+ btC.TL.FOOTER.FTR_INFO + '</td>' +
+                    '<td id="toolbar_www" class="ef_btn_toolbar bt_img_toolbar_www">&nbsp;' + 'WWW' + '</td>';
     return toolbar;
 }
-
 
 function getToolbarMessages()
 {
