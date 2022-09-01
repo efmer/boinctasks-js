@@ -451,7 +451,13 @@ function initialize () {
       bShow = true;
       logging.logDebug("main, showApp arg: show=yes");        
     }
-    logging.logDebug("main, showApp show: " + showArg);    
+    let argTxt = showArg;
+    if (showArg == '')
+    {
+      argTxt = "arg is empty"
+    }
+
+    logging.logDebug("main, showApp showArg: " + argTxt);    
     return bShow;
   }
 
@@ -479,11 +485,6 @@ function initialize () {
       },
     });
 
-    if (state.max)
-    {
-      logging.logFile("main, createWindow", "state.max");
-      gMainWindow.maximize();
-    }
     try {
       initMenu();
     } catch (error) {
@@ -556,7 +557,7 @@ function initialize () {
 
     gMainWindow.once('ready-to-show', () => {
 
-      // extra check to hide app at startup
+      // extra check to hide app at startup      
       let bShow = showApp();
       if (bShow)
       {
@@ -575,6 +576,13 @@ function initialize () {
       logging.logFile("main, createWindow", "ready-to-show");
     });
 
+    gMainWindow.once('show', () => {
+      if (state.max)
+      {
+        logging.logFile("main, createWindow", "state.max");
+        gMainWindow.maximize();
+      }
+    });
   }
 
 // This method will be called when Electron has finished

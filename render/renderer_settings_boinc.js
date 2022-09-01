@@ -29,7 +29,7 @@ $(document).ready(function() {
         gError = false;
         updateOk("")
         updateError("");
-        process(obj);
+        process(obj);        
         $("#all_settings").removeClass( "hidden" );
     });
     ipcRenderer.on('header_status', (event,status) => {
@@ -157,52 +157,51 @@ function apply()
 
 function process(obj)
 {
-    try {
+    try {      
         disableApply(false);
         clearDays()
 
-        $("error_msg").html("");
-
+        var id;
         $("#processor_onbatteries").prop("checked", obj.run_on_batteries[0]==='1');
         $("#processor_inuse").prop("checked", obj.run_if_user_active[0]==='1');    
         $("#processor_usegpu").prop("checked", obj.run_gpu_if_user_active[0]==='1');
 
-        $("#processor_idle").val(toDecimalFloat(obj.idle_time_to_run[0]));
-        $("#processor_usage").val(toDecimalFloat(obj.cpu_usage_limit[0]));        
+        id = '#processor_idle';$(id).val(toDecimalFloat(obj.idle_time_to_run[0]),id);
+        id = '#processor_usage';$(id).val(toDecimalFloat(obj.cpu_usage_limit[0]),id);
 
         $("#processor_everydayb").val(toTime(obj.start_hour[0]));
         $("#processor_everydaye").val(toTime(obj.end_hour[0]));        
 
-        $("#processor_switch").val(toDecimalFloat(obj.cpu_scheduling_period_minutes[0]));
-        $("#processor_usemost").val(toDecimalFloat(obj.max_ncpus_pct[0]));
-        $("#processor_usemostcpu").val(toDecimalFloat(obj.cpu_usage_limit[0]));
+        id = '#processor_switch';$(id).val(toDecimalFloat(obj.cpu_scheduling_period_minutes[0]),id);
+        id = '#processor_usemost';$(id).val(toDecimalFloat(obj.max_ncpus_pct[0]),id);
+        id = '#processor_usemostcpu';$(id).val(toDecimalFloat(obj.cpu_usage_limit[0]),id);
 
-        $("#network_dlrate").val(toDecimalFloat(obj.max_bytes_sec_down[0]));
-        $("#network_uprate").val(toDecimalFloat(obj.max_bytes_sec_up[0]));
-        $("#network_transfer").val(toDecimalFloat(obj.daily_xfer_limit_mb[0]));
-        $("#network_transfer_day").val(toDecimalInt(obj.daily_xfer_period_days[0]));
-        $("#network_buffermin").val(toDecimalFloat(obj.work_buf_min_days[0]));
-        $("#network_bufferadd").val(toDecimalFloat(obj.work_buf_additional_days[0]));
+        id = '#network_dlrate';$(id).val(toDecimalFloat(obj.max_bytes_sec_down[0]),id);
+        id = '#network_uprate';$(id).val(toDecimalFloat(obj.max_bytes_sec_up[0]),id);
+        id = '#network_transfer';$(id).val(toDecimalFloat(obj.daily_xfer_limit_mb[0]),id);
+        id = '#network_transfer_day';$(id).val(toDecimalInt(obj.daily_xfer_period_days[0]),id);
+        id = '#network_buffermin';$(id).val(toDecimalFloat(obj.work_buf_min_days[0]),id);
+        id = '#network_bufferadd';$(id).val(toDecimalFloat(obj.work_buf_additional_days[0]),id);
 
         $("#network_everydayb").val(toTime(obj.net_start_hour[0]));
         $("#network_everydaye").val(toTime(obj.net_end_hour[0]));
         
-        $("#disk_usemost").val(toDecimalFloat(obj.disk_max_used_gb[0]));        
-        $("#disk_least").val(toDecimalFloat(obj.disk_min_free_gb[0]));
-        $("#disk_mostp").val(toDecimalFloat(obj.disk_max_used_pct[0]));
-        $("#disk_every").val(toDecimalFloat(obj.disk_interval[0]));
-        $("#disk_swap").val(toDecimalFloat(obj.vm_max_used_pct[0]));
+        id = '#disk_usemost';$(id).val(toDecimalFloat(obj.disk_max_used_gb[0]),id);
+        id = '#disk_least';$(id).val(toDecimalFloat(obj.disk_min_free_gb[0]),id);
+        id = '#disk_mostp';$(id).val(toDecimalFloat(obj.disk_max_used_pct[0]),id);
+        id = '#disk_every';$(id).val(toDecimalFloat(obj.disk_interval[0]),id);
+        id = '#disk_swap';$(id).val(toDecimalFloat(obj.vm_max_used_pct[0]),id);
 
-        $("#memory_usebusy").val(toDecimalFloat(obj.ram_max_used_busy_pct[0]));
-        $("#memory_useidle").val(toDecimalFloat(obj.ram_max_used_idle_pct[0]));
+        id='#memory_usebusy';$(id).val(toDecimalFloat(obj.ram_max_used_busy_pct[0]),id);
+        id='#memory_useidle';$(id).val(toDecimalFloat(obj.ram_max_used_idle_pct[0]),id);
 
         $("#memory_leave").prop("checked", obj.leave_apps_in_memory[0]==='1');
-        
-        processDays(false,"processor_use_",obj.day_prefs);
-        processDays(true,"network_use_",obj.day_prefs);
+    
+        id = "processor_use_";processDays(false, id ,obj.day_prefs);
+        id = "network_use_"; processDays(true,id,obj.day_prefs);
 
     } catch (error) {
-        var ii = 1;
+        updateError("Processing error (process): " + id + " - " + error);        
     }
 }
 
@@ -223,6 +222,10 @@ function clearDays()
 
 function processDays(net,id,days)
 {
+    if (days == undefined)
+    {
+        return;
+    }
     for (let i=0;i<days.length;i++)
     {
         let item = days[i];
@@ -251,26 +254,26 @@ function processDays(net,id,days)
     }
 }
 
-function toDecimalFloat(val)
+function toDecimalFloat(val,id)
 {
     let nr = val;
     try {
         nr = Intl.NumberFormat(gLocale, { minimumFractionDigits: 0 }).format(val);
         if (isNaN(nr))
         {
-            errorFloat(val);
+            errorFloat(val,id);
             nr = 0;
         }         
     } catch (error) {}
     return nr;
 }
 
-function toDecimalInt(val)
+function toDecimalInt(val,id)
 {
     let vali = parseInt(val);
     if (isNaN(vali))
     {
-        errorFloat(vali);
+        errorFloat(vali,id);
         vali = 0;
     }
     return vali;
@@ -298,34 +301,35 @@ function fetch()
         items.run_if_user_active = getBool($("#processor_inuse").is(":checked"));    
         items.run_gpu_if_user_active = getBool($("#processor_usegpu").is(":checked"));
     
-        items.idle_time_to_run = getFloat($("#processor_idle").val());
-        items.cpu_usage_limit = getFloat($("#processor_usage").val());
+        var id;
+        id = 'processor_idle';items.idle_time_to_run = getFloat($("#" + id).val(),id);
+        id = 'processor_usage';items.cpu_usage_limit = getFloat($("#" + id).val(),id);
     
         items.start_hour = getTime($("#processor_everydayb").val());
         items.end_hour = getTime($("#processor_everydaye").val());
     
-        items.cpu_scheduling_period_minutes = getFloat($("#processor_switch").val());
-        items.max_ncpus_pct = getFloat($("#processor_usemost").val());
-        items.cpu_usage_limit = getFloat($("#processor_usemostcpu").val());
+        id = 'processor_switch';items.cpu_scheduling_period_minutes = getFloat($("#" + id).val(),id);
+        id = 'processor_usemost';items.max_ncpus_pct = getFloat($("#" + id).val(),id);
+        id = 'processor_usemostcpu';items.cpu_usage_limit = getFloat($("#" + id).val(),id);
     
-        items.max_bytes_sec_down = getFloat($("#network_dlrate").val());
-        items.max_bytes_sec_up = getFloat($("#network_uprate").val());
-        items.daily_xfer_limit_mb = getFloat($("#network_transfer").val());
-        items.daily_xfer_period_days = getFloat($("#network_transfer_day").val());
-        items.work_buf_min_days = getFloat($("#network_buffermin").val());
-        items.work_buf_additional_days = getFloat($("#network_bufferadd").val());
+        id = 'network_dlrate';items.max_bytes_sec_down = getFloat($("#" + id).val(),id);
+        id = 'network_uprate';items.max_bytes_sec_up = getFloat($("#" + id).val(),id);
+        id = 'network_transfer';items.daily_xfer_limit_mb = getFloat($("#" + id).val(),id);
+        id = 'network_transfer_day';items.daily_xfer_period_days = getFloat($("#" + id).val(),id);
+        id = 'network_buffermin';items.work_buf_min_days = getFloat($("#" + id).val(),id);
+        id = 'network_bufferadd';items.work_buf_additional_days = getFloat($("#" + id).val(),id);
     
         items.net_start_hour = getTime($("#network_everydayb").val());
         items.net_end_hour = getTime($("#network_everydaye").val());
         
-        items.disk_max_used_gb = getFloat($("#disk_usemost").val());        
-        items.disk_min_free_gb = getFloat($("#disk_least").val());
-        items.disk_max_used_pct = getFloat($("#disk_mostp").val());
-        items.disk_interval = getFloat($("#disk_every").val());
-        items.vm_max_used_pct = getFloat($("#disk_swap").val());
+        id = 'disk_usemost';items.disk_max_used_gb = getFloat($("#" + id).val(),id);        
+        id = 'disk_least';items.disk_min_free_gb = getFloat($("#" + id).val(),id);
+        id = 'disk_mostp';items.disk_max_used_pct = getFloat($("#" + id).val(),id);
+        id = 'disk_every';items.disk_interval = getFloat($("#" + id).val(),id);
+        id = 'disk_swap';items.vm_max_used_pct = getFloat($("#" + id).val(),id);
     
-        items.ram_max_used_busy_pct = getFloat($("#memory_usebusy").val());
-        items.ram_max_used_idle_pct = getFloat($("#memory_useidle").val());
+        id = 'memory_usebusy';items.ram_max_used_busy_pct = getFloat($("#" + id).val(),id);
+        id = 'memory_useidle';items.ram_max_used_idle_pct =getFloat($("#" + id).val(),id);
     
         items.leave_apps_in_memory = getBool($("#memory_leave").is(":checked"));
         
@@ -333,25 +337,26 @@ function fetch()
         getDaysP(items);
         getDaysN(items);       
     } catch (error) {
-        updateError("Processing error: " + error);
+        updateError("Processing error (fetch): " + error);
     }
     return items;
 }
 
-function getFloat(val)
+function getFloat(val,id)
 {
     try {
         val = val.replaceAll(",",".");
+        val = val.replaceAll(" ","");
         let nr = parseFloat(val);
         if (isNaN(nr)) 
         {
-            errorFloat(val);
+            errorFloat(val,id);
             nr = 0;
         }
         return nr;
     } catch (error) {                
     }
-    errorFloat(val);
+    errorFloat(val,id);
     return 0;
 }
 
@@ -370,12 +375,12 @@ function getTime(sTime)
         let minutes  = sTime.substring(pos+1);
         if (minutes.length != 2) errorTime(sTime);
     
-        if (isNaN(hour)) errorFloat(hour);        
+        if (isNaN(hour)) errorFloat(hour, 'Time hour');
         hour = parseInt(hour);
         if (hour < 0) errorTime(sTime);
         if (hour > 24) errorTime(sTime);
     
-        if (isNaN(minutes)) errorFloat(minutes);        
+        if (isNaN(minutes)) errorFloat(minutes, 'Time minute');
         minutes = parseInt(minutes);
         if (minutes < 0) errorTime(sTime);
         if (minutes > 59) errorTime(sTime);
@@ -443,9 +448,9 @@ function errorTime(msg)
     gError = true;
 }
 
-function errorFloat(msg)
+function errorFloat(msg,id)
 {
-    updateError("Invalid number: " + msg);
+    updateError("In: " + id + " Invalid number: " + msg );
     gError = true;
 }
 
