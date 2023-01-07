@@ -22,6 +22,14 @@ const btC = require('../functions/btconstants');
 const Functions = require('../functions/functions');
 const functions = new Functions();
 
+const EDIT_CHECK_WIDTH = 4;
+const EDIT_GROUP_WIDTH  = 16;
+const EDIT_COMPUTER_WIDTH  = 30;
+const EDIT_IP_WIDTH  = 10;
+const EDIT_CPID_WIDTH  = 10;
+const EDIT_PORT_WIDTH  = 10;
+const EDIT_PASS_WIDTH  = 20;
+
 class BtTableComputer{
   tableHeader(gb, sidebar)
   {
@@ -103,53 +111,57 @@ function tableComputersHeader(gb, addText)
   {
     if (addText)
     {
-      header += addRowHeader(true,true, gb, 0, "");    
-      header += addRowHeader(true,true, gb, 1, btC.TL.TAB.T_COMPUTERS_GROUP);
-      header += addRowHeader(true,true, gb, 2, btC.TL.TAB.T_GENERAL_COMPUTER);
-      header += addRowHeader(true,true, gb, 3, btC.TL.TAB.T_COMPUTERS_IP);
-      header += addRowHeader(true,true, gb, 4, btC.TL.TAB.T_COMPUTERS_CPID);
-      header += addRowHeader(true,true, gb, 5, btC.TL.TAB.T_COMPUTERS_PORT);
-      header += addRowHeader(true,true, gb, 6, btC.TL.TAB.T_COMPUTERS_PASSWORD);
+      header += addRowHeader(true,true, gb, 0, "",EDIT_CHECK_WIDTH);    
+      header += addRowHeader(true,true, gb, 1, btC.TL.TAB.T_COMPUTERS_GROUP,EDIT_GROUP_WIDTH);
+      header += addRowHeader(true,true, gb, 2, btC.TL.TAB.T_GENERAL_COMPUTER,EDIT_COMPUTER_WIDTH);
+      header += addRowHeader(true,true, gb, 3, btC.TL.TAB.T_COMPUTERS_IP,EDIT_IP_WIDTH);
+      header += addRowHeader(true,true, gb, 4, btC.TL.TAB.T_COMPUTERS_CPID,EDIT_CPID_WIDTH);
+      header += addRowHeader(true,true, gb, 5, btC.TL.TAB.T_COMPUTERS_PORT,EDIT_PORT_WIDTH);
+      header += addRowHeader(true,true, gb, 6, btC.TL.TAB.T_COMPUTERS_PASSWORD,EDIT_PASS_WIDTH);
     }
     else
     {
-      header += addRowHeader(true,true, gb, 0, "");    
-      header += addRowHeader(true,true, gb, 1, ""); 
-      header += addRowHeader(true,true, gb, 2, ""); 
-      header += addRowHeader(true,true, gb, 3, ""); 
-      header += addRowHeader(true,true, gb, 4, ""); 
-      header += addRowHeader(true,true, gb, 5, ""); 
-      header += addRowHeader(true,true, gb, 6, "");    
+      
+      header += addRowHeader(true,true, gb, 0, "",EDIT_CHECK_WIDTH);    
+      header += addRowHeader(true,true, gb, 1, "",EDIT_GROUP_WIDTH); 
+      header += addRowHeader(true,true, gb, 2, "",EDIT_COMPUTER_WIDTH); 
+      header += addRowHeader(true,true, gb, 3, "",EDIT_IP_WIDTH); 
+      header += addRowHeader(true,true, gb, 4, "",EDIT_CPID_WIDTH); 
+      header += addRowHeader(true,true, gb, 5, "",EDIT_PORT_WIDTH); 
+      header += addRowHeader(true,true, gb, 6, "",EDIT_PASS_WIDTH);    
+      
     }
     header +="</tr>"
     return header;
   }
-
-  if (addText)
-  {
-    items[order.order[0]] = addRowHeader(order.check[0],true, gb, 0, "");    
-    items[order.order[1]] = addRowHeader(order.check[1],true, gb, 1, btC.TL.TAB.T_COMPUTERS_GROUP);
-    items[order.order[2]] = addRowHeader(order.check[2],true, gb, 2, btC.TL.TAB.T_GENERAL_COMPUTER);
-    items[order.order[3]] = addRowHeader(order.check[3],true, gb, 3, btC.TL.TAB.T_COMPUTERS_IP);
-    items[order.order[4]] = addRowHeader(order.check[4],true, gb, 4, btC.TL.TAB.T_COMPUTERS_CPID);
-    items[order.order[5]] = addRowHeader(order.check[5],true, gb, 5, btC.TL.TAB.T_COMPUTERS_PORT);
-    items[order.order[6]] = addRowHeader(order.check[6],true, gb, 6, btC.TL.TAB.T_COMPUTERS_PASSWORD);
-    items[order.order[7]] = addRowHeader(order.check[7],true, gb, 7, btC.TL.TAB.T_COMPUTERS_BOINC);
-    items[order.order[8]] = addRowHeader(order.check[8],true, gb, 8, btC.TL.TAB.T_COMPUTERS_PLATFORM);    
-    items[order.order[9]] = addRowHeader(order.check[9],true, gb, 9, btC.TL.TAB.T_GENERAL_STATUS);    
-  }
   else
   {
-    items[order.order[0]] = addRowHeader(order.check[0],false, gb, 0, "");
-    items[order.order[1]] = addRowHeader(order.check[1],false, gb, 1, "");
-    items[order.order[2]] = addRowHeader(order.check[2],false, gb, 2, "");  
-    items[order.order[3]] = addRowHeader(order.check[3],false, gb, 3, "");  
-    items[order.order[4]] = addRowHeader(order.check[4],false, gb, 4, ""); 
-    items[order.order[5]] = addRowHeader(order.check[5],false, gb, 5, ""); 
-    items[order.order[6]] = addRowHeader(order.check[6],false, gb, 6, ""); 
-    items[order.order[7]] = addRowHeader(order.check[7],false, gb, 7, "");
-    items[order.order[8]] = addRowHeader(order.check[8],false, gb, 8, "");
-    items[order.order[9]] = addRowHeader(order.check[9],false, gb, 9, "");    
+    if (addText)
+    {
+      items[order.order[0]] = addRowHeader(order.check[0],true, gb, 0, "",0);    
+      items[order.order[1]] = addRowHeader(order.check[1],true, gb, 1, btC.TL.TAB.T_COMPUTERS_GROUP,0);
+      items[order.order[2]] = addRowHeader(order.check[2],true, gb, 2, btC.TL.TAB.T_GENERAL_COMPUTER,0);
+      items[order.order[3]] = addRowHeader(order.check[3],true, gb, 3, btC.TL.TAB.T_COMPUTERS_IP,0);
+      items[order.order[4]] = addRowHeader(order.check[4],true, gb, 4, btC.TL.TAB.T_COMPUTERS_CPID,0);
+      items[order.order[5]] = addRowHeader(order.check[5],true, gb, 5, btC.TL.TAB.T_COMPUTERS_PORT,0);
+      items[order.order[6]] = addRowHeader(order.check[6],true, gb, 6, btC.TL.TAB.T_COMPUTERS_PASSWORD,0);
+      items[order.order[7]] = addRowHeader(order.check[7],true, gb, 7, btC.TL.TAB.T_COMPUTERS_BOINC,0);
+      items[order.order[8]] = addRowHeader(order.check[8],true, gb, 8, btC.TL.TAB.T_COMPUTERS_PLATFORM,0);    
+      items[order.order[9]] = addRowHeader(order.check[9],true, gb, 9, btC.TL.TAB.T_GENERAL_STATUS,0);
+    }
+    else
+    {
+      items[order.order[0]] = addRowHeader(order.check[0],false, gb, 0, "",0);
+      items[order.order[1]] = addRowHeader(order.check[1],false, gb, 1, "",0);
+      items[order.order[2]] = addRowHeader(order.check[2],false, gb, 2, "",0);  
+      items[order.order[3]] = addRowHeader(order.check[3],false, gb, 3, "",0);  
+      items[order.order[4]] = addRowHeader(order.check[4],false, gb, 4, "",0); 
+      items[order.order[5]] = addRowHeader(order.check[5],false, gb, 5, "",0); 
+      items[order.order[6]] = addRowHeader(order.check[6],false, gb, 6, "",0); 
+      items[order.order[7]] = addRowHeader(order.check[7],false, gb, 7, "",0);
+      items[order.order[8]] = addRowHeader(order.check[8],false, gb, 8, "",0);
+      items[order.order[9]] = addRowHeader(order.check[9],false, gb, 9, "",0);    
+    }
   }
   for (let i=0;i<items.length;i++)
   {
@@ -232,7 +244,7 @@ function tableComputerItem(selRows, row, order, con, edit)
       }
 
       table = "<tr " + sel + ">";
-      let check = "";
+      let check = "-";
       if (con.check == "1") check = "✓";
       items[order.order[0]] = addRow(order.check[0],selId,row, 0, check);
       items[order.order[1]] = addRow(order.check[1],selId,row, 1, con.group);
@@ -270,7 +282,7 @@ function addRow(check,selId,row, cell, item)
   return "<td " + id + ">" + item + "</td>";
 }
 
-function addRowHeader(check,showSort, gb, cell, item)
+function addRowHeader(check,showSort, gb, cell, item, forceWidth)
 {
   if (!check) return "";
   let sort = gb.sortComputers;
@@ -297,8 +309,16 @@ function addRowHeader(check,showSort, gb, cell, item)
       }
     }
   }  
-  let width = gb.widthComputers[cell];
-  let widthS = ' style="width:' + width + 'px" ';
+  let widthS;
+  if (forceWidth === 0)
+  {
+    let width = gb.widthComputers[cell];
+    widthS = ' style="width:' + width + 'px" ';
+  }
+  else
+  {
+    widthS = ' style="width:' + forceWidth + '%" ';  
+  }
 
   let id = ' id="' + cell +'"';
   let idR = ' id="resize,' + cell +'"';

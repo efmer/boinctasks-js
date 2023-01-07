@@ -87,7 +87,7 @@ function statisticsStart(gb)
         }        
         gChildStatistics.loadFile('index/index_statistics_boinc.html')
         gChildStatistics.once('ready-to-show', () => {    
-          //gChildStatistics.webContents.openDevTools()
+//        gChildStatistics.webContents.openDevTools()
           gChildStatistics.show();  
           gChildStatistics.setTitle(title);
 
@@ -200,10 +200,11 @@ function dataReady(data)
         if (this.conIn.state !== null)
         {
           project = conState.getProject(this.conIn,url);
-
-          if (gStatisticsProjectName.indexOf(project) < 0)
+          let indexPN = gStatisticsProjectName.indexOf(project);
+          if (indexPN < 0)
           {
-            gStatisticsProjectName.push(project);          
+            gStatisticsProjectName.push(project);
+            url = functions.normalizeUrl(url);
             gStatisticsProjectUrl.push(url);
           }
         }
@@ -273,6 +274,7 @@ function getProjects()
     {
       let stats = gStatisticsProjects[s].stats;
       let url = stats.master_url[0];
+      url = functions.normalizeUrl(url);
 
       let found = gStatisticsProjectUrl.indexOf(url);
       let project = gStatisticsProjectName[found];

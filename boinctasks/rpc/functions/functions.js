@@ -111,5 +111,11 @@ class Functions{
             this.logError('Functions,getLocale', error);            
         }           
     }
+
+    normalizeUrl(url)
+    {
+        url = url.replace("https","http");
+        return url;
+    }
 }
 module.exports = Functions;
