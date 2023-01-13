@@ -14,7 +14,7 @@ npm run make
 cd /home/fred/sb/boinctasks-js/out/make/deb/x64
 snap remove boinctasks-js
 sudo dpkg --remove boinctasks-js
-sudo dpkg -i ./boinctasks-js_1.2.7_amd64.deb
+sudo dpkg -i ./boinctasks-js_1.3.3_amd64.deb
 boinctasks-js
 sudo dpkg --remove boinctasks-js
 
@@ -55,8 +55,8 @@ remove ($HOME/.config/snapcraft/snapcraft.cfg) -> rm ~/.config/snapcraft/snapcra
 >> No longer working on newer snap versions snapcraft login
 snapcraft login
 
-snapcraft upload --release=candidate boinctasks-js_1.3.0_amd64.snap
-snapcraft upload --release=candidate boinctasks-js_1.3.0_armhf.snap
+snapcraft upload --release=candidate boinctasks-js_1.3.3_amd64.snap
+snapcraft upload --release=candidate boinctasks-js_1.3.3_armhf.snap
 
 // testing
 cd /home/fred/sb/boinctasks-js/dist/
@@ -65,7 +65,7 @@ cd /home/fred/sb/boinctasks-js/dist/
 // make sure the deb is NOT installed
 sudo dpkg --remove boinctasks-js
 cd /home/fred/sb/boinctasks-js/dist
-sudo snap install boinctasks-js_1.1.7_amd64.snap --dangerous
+sudo snap install boinctasks-js_1.3.3_amd64.snap --dangerous
 snap run boinctasks-js
 
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

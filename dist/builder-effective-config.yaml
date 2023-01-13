@@ -1,0 +1,47 @@
+directories:
+  output: dist
+  buildResources: build
+asar: true
+appId: com.efmer.boinctasksjs
+compression: maximum
+afterSign: build/notarize.js
+win:
+  target: nsis
+  icon: appicons/icons/png/512x512.png
+linux:
+  executableName: boinctasks-js
+  icon: appicons/icons/mac/icon.icns
+  target:
+    - deb
+deb: {}
+mac:
+  appId: com.efmer.boinctasksjs
+  executableName: Boinctasks Js
+  icon: appicons/icons/mac/icon.icns
+  target:
+    - dmg
+  category: public.app-category.utilities
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+files:
+  - filter:
+      - ./appicons/icons/**
+      - ./boinctasks/**
+      - ./translations/**
+      - ./index/**
+      - ./render/**
+      - ./preload
+      - main.js
+      - '!.git'
+      - '!.github'
+      - '!.gitignore'
+      - '!.vscode'
+      - '!package.json'
+      - '!out'
+      - '!download'
+      - '!how-to'
+      - '!snap'
+      - '!private'
+electronVersion: 12.2.3

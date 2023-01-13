@@ -241,6 +241,7 @@ function tableResultItem(selRows, i, order, result, filter, colorObj)
     if (result.resources.length > 0)
     {
       use = result.resources[0];
+//      use = "0.001 CPU + 1 Apple M1"  // testing GPU
       use = getCpuGpu(use, cpuGpu);
     }
     else use = "";
@@ -513,6 +514,15 @@ function getCpuGpu(res, cpuGpu)
     res = res.replace("device ","d");
     res = res.replace("Device ", "d");
   }
+  else
+  {
+    if (res.indexOf("Apple") >=0)
+    {
+      cpuGpu.cuda = true;
+      res = res.replace("Apple ", "A ");
+    }
+  }
+
   return res;
 }
 
