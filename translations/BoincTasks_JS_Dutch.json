@@ -184,7 +184,8 @@
         "DS_BT_HISTORY": "Geschiedenis",
         "DC_BT_PROJECT_SUSPENDED": "Onderbroken",
         "DS_BT_REGION": "Regio",
-        "DS_BT_LOCALE": "Locale (standaard = leeg, en-US, nl-NL)"
+        "DS_BT_LOCALE": "Locale (standaard = leeg, en-US, nl-NL)",
+        "DS_BT_RESTART": "Opnieuw opstarten om"
     },
     "DIALOG_COLORS_BT": {
         "DC_BT_TITLE": "Instellingen Kleur",
@@ -331,7 +332,7 @@
         "DAM_ERROR": "Fout:",
         "DAM_ERROR_URL": "URL-naam niet geldig",
         "DAM_ERROR_SELECT_COMPUTER": "Kies een computer",
-        "DAM_STATUS_SYNCHRONIZE": "\nSynchroniseren:",
+        "DAM_STATUS_SYNCHRONIZE": "Synchroniseren:",
         "DAM_STATUS_DETACHING": "Verwijderen:",
         "DAM_STATUS_ADDING": "Toevoegen aan:",
         "DAM_STATUS_READY": "Klaar",

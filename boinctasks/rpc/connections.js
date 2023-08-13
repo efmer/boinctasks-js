@@ -16,6 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+const {app } = require('electron')
+
 const Functions = require('./functions/functions');
 const functions = new Functions();
 const Logging = require('./functions/logging');
@@ -142,6 +144,7 @@ let gTimer = null;
 let gBusyCnt = 0;
 let gBusy = true;
 let gPauze = false;
+let gRestartAllowed = false;    // prevent a restart loop
 //let gIntervalTime = 9; // 0.2 sec
 let gIntervalFastCnt = 0;   // fast after startup and after a tab switch
 
@@ -1604,6 +1607,15 @@ function process()
 function processComputers(sort)
 {    
     try {
+ //       gB.currentTable.computerTable = null;
+        gB.currentTable.resultTable = null;
+        gB.currentTable.transfersTable = null;
+        gB.currentTable.messageTable = null;
+        gB.currentTable.historyTable = null;
+        gB.currentTable.noticesTable = null;
+        gB.currentTable.projectTable = null;
+
+
         if (gB.editComputers && gB.editComputersShow) return;
  //       if (gB.connections[0].selected != "computers") return;
 
@@ -1614,14 +1626,15 @@ function processComputers(sort)
         gB.currentTable.name = btC.TAB_COMPUTERS;        
         if (gSwitchedTabCnt-- >0)
         {
-            var header = btTableComputers.tableHeader(gB,gSidebar);
-            gB.mainWindow.webContents.send('table_data_header', header,  gB.currentTable.name, gB.headerAction);
-            gB.currentTable.computersHeaderHtml = header;
+            gB.mainWindow.webContents.send('table_data_header', btTableComputers.tableHeader(gB,gSidebar),  gB.currentTable.name, gB.headerAction);
+            gB.currentTable.computersHeaderHtml = btTableComputers.tableHeader(gB,gSidebar);
         }
         gB.currentTable.table = btTableComputers;
         gB.currentTable.computerTable = cTable;
         tableReady("", gVersionS, btTableComputers.table(gB,cTable));   
         gB.editComputersShow = true;
+        cTable = null;
+        pc = null;
     } catch (error) {
         logging.logError('Connections,processComputers', error);        
     }    
@@ -1630,19 +1643,28 @@ function processComputers(sort)
 function processProjects(sort)
 {
     try{
+        gB.currentTable.computerTable = null;
+        gB.currentTable.resultTable = null;
+        gB.currentTable.transfersTable = null;
+        gB.currentTable.messageTable = null;
+        gB.currentTable.historyTable = null;
+        gB.currentTable.noticesTable = null;
+ //       gB.currentTable.projectTable = null;
+
         const ProcessProjects = require('./projects/process_projects')
         const pp = new ProcessProjects(); 
         var cTable =  pp.process(gB.connections,sort);
         gB.currentTable.name = btC.TAB_PROJECTS;
         if (gSwitchedTabCnt-- >0)
         {
-            var header = btTableProjects.tableHeader(gB,gSidebar);
-            gB.mainWindow.webContents.send('table_data_header', header, gB.currentTable.name, gB.headerAction);
-            gB.currentTable.projectsHeaderHtml = header;
+            gB.mainWindow.webContents.send('table_data_header', btTableProjects.tableHeader(gB,gSidebar), gB.currentTable.name, gB.headerAction);
+            gB.currentTable.projectsHeaderHtml = btTableProjects.tableHeader(gB,gSidebar);
         }
         gB.currentTable.table = btTableProjects;    
         gB.currentTable.projectTable = cTable;
         tableReady("", gVersionS, btTableProjects.table(gB, cTable))
+        cTable = null;
+        pp = null;
     } catch (error) {
         logging.logError('Connections,processProjects', error);        
     }     
@@ -1651,6 +1673,14 @@ function processProjects(sort)
 function processResults(sort,project)
 {
     try {
+        gB.currentTable.computerTable = null;
+//        gB.currentTable.resultTable = null;
+        gB.currentTable.transfersTable = null;
+        gB.currentTable.messageTable = null;
+        gB.currentTable.historyTable = null;
+        gB.currentTable.noticesTable = null;
+        gB.currentTable.projectTable = null;
+
         const ProcessResults = require('./results/process_results')
         const pr = new ProcessResults(); 
         let ret =  pr.process(gB.connections, gB.filterExclude,sort,project);
@@ -1659,14 +1689,14 @@ function processResults(sort,project)
         gB.currentTable.name = btC.TAB_TASKS;
         if (gSwitchedTabCnt-- >0)
         {
-            var header = btTableResults.tableHeader(gB, gSidebar);
-            gB.mainWindow.webContents.send('table_data_header', header, gB.currentTable.name, gB.headerAction);
-            gB.currentTable.resultsHeaderHtml = header;
+            gB.mainWindow.webContents.send('table_data_header', btTableResults.tableHeader(gB, gSidebar), gB.currentTable.name, gB.headerAction);
+            gB.currentTable.resultsHeaderHtml = btTableResults.tableHeader(gB, gSidebar);
         }
 
         gB.currentTable.table = btTableResults;    
         gB.currentTable.resultTable = ret.cTable;
         tableReady(status, gVersionS, btTableResults.table(gB,ret.cTable))
+        cTable = null;
     } catch (error) {
         logging.logError('Connections,processResults', error);      
     }     
@@ -1675,6 +1705,14 @@ function processResults(sort,project)
 function processTransfers(sort)
 {
     try {
+        gB.currentTable.computerTable = null;
+        gB.currentTable.resultTable = null;
+//        gB.currentTable.transfersTable = null;
+        gB.currentTable.messageTable = null;
+        gB.currentTable.historyTable = null;
+        gB.currentTable.noticesTable = null;
+        gB.currentTable.projectTable = null;
+
         const ProcessTransfers = require('./transfers/process_transfers')
         const pt = new ProcessTransfers(); 
         var cTable =  pt.process(gB.connections,sort);
@@ -1688,6 +1726,7 @@ function processTransfers(sort)
         gB.currentTable.table = btTableTransfers;    
         gB.currentTable.transfersTable = cTable;
         tableReady("", gVersionS,btTableTransfers.table(gB,cTable))
+        cTable = null;
     } catch (error) {
         logging.logError('Connections,processTransfers', error);      
     }     
@@ -1696,6 +1735,15 @@ function processTransfers(sort)
 function processMessages(sort)
 {
     try{
+        gB.currentTable.computerTable = null;
+        gB.currentTable.resultTable = null;
+        gB.currentTable.transfersTable = null;
+//        gB.currentTable.messageTable = null;
+        gB.currentTable.historyTable = null;
+        gB.currentTable.noticesTable = null;
+        gB.currentTable.projectTable = null;
+
+
         gB.currentTable.name = btC.TAB_MESSAGES;
         gB.currentTable.table = btTableMessages;
 
@@ -1717,6 +1765,8 @@ function processMessages(sort)
                 var cTable =  pm.process(con,sort);           
                 gB.currentTable.messageTable = cTable;
                 tableReady("", gVersionS, btTableMessages.table(gB, cTable))
+                cTable = null;
+                pm = null;
                 break;
             }
         }
@@ -1728,6 +1778,14 @@ function processMessages(sort)
 function processHistory(sort)
 {
     try {
+        gB.currentTable.computerTable = null;
+        gB.currentTable.resultTable = null;
+        gB.currentTable.transfersTable = null;
+        gB.currentTable.messageTable = null;
+ //       gB.currentTable.historyTable = null;
+        gB.currentTable.noticesTable = null;
+        gB.currentTable.projectTable = null;
+
         if ( gB.settings.historyRefreshRate > 0)
         {
             const ProcessHistory = require('./history/process_history')
@@ -1745,6 +1803,8 @@ function processHistory(sort)
             gB.currentTable.table = btTableHistory;    
             gB.currentTable.historyTable = ret.cTable;
             tableReady(status, gVersionS, btTableHistory.table(gB,ret.cTable))
+            ph = null;
+            cTable = null;
         }
         else
         {
@@ -1758,6 +1818,14 @@ function processHistory(sort)
 function processNotices()
 {
     try {
+        gB.currentTable.computerTable = null;
+        gB.currentTable.resultTable = null;
+        gB.currentTable.transfersTable = null;
+        gB.currentTable.messageTable = null;
+        gB.currentTable.historyTable = null;
+ //       gB.currentTable.noticesTable = null;
+        gB.currentTable.projectTable = null;
+
         const ProcessNotices = require('./notices/process_notices')
         const pn = new ProcessNotices(); 
         var cTable =  pn.process(gB.connections, btNotices.read());
@@ -1768,6 +1836,8 @@ function processNotices()
         gB.mainWindow.webContents.send('notices', table) 
         toolbar.show(gB, gB.editComputers);
         gBusy = false;                  
+        pn = null;
+        cTable = null;
     } catch (error) {
         logging.logError('Connections,processNotices', error);      
     }     
@@ -2026,10 +2096,34 @@ function btTimer() {
                 }                
             }
         }      
+        let restartTime = false
+        if (gB.settings.restartTimeCheck == true)   // might be a string so use ==
+        {
+            let currentDate = new Date();
+            let minutes = currentDate.getMinutes();
+            if (gB.settings.restartTimeMinutes == minutes)
+            {                    
+                let hours = currentDate.getHours();
+                if (gB.settings.restartTimeHours == hours)
+                {                
+                    restartTime = true;
+                    if (gRestartAllowed)
+                    {                  
+                        gRestartAllowed = false;  
+                        app.relaunch();
+                        app.exit();
+                    }
+                }
+            }
+        }
+        if (!restartTime)
+        {
+            gRestartAllowed = true;
+        }
 
         if (gPauze)
         {
-            if (gB.mainWindow.isVisible())  // once in a while gPause is true while the windoes is visible.
+            if (gB.mainWindow.isVisible())  // once in a while gPause is true while the window is visible.
             {
                 gPauze = false;
             }
@@ -2069,7 +2163,7 @@ function btTimer() {
         }
 
         diff /= 400;    // 200 = 0.2 second
-        let dots = "───────────────".substr(0,diff);    // .2 second
+        let dots = "───────────────".substring(0,diff);    // .2 second
         let interval = parseInt(diff/2.5);
         if (interval < 0) interval = 0;
         status =  (interval+1) + " " + dots;

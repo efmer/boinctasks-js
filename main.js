@@ -18,6 +18,9 @@
 
 // Modules to control application life and create native browser window
 const {ipcMain, app, powerMonitor, BrowserWindow, dialog, Menu, Tray, nativeTheme } = require('electron')
+app.commandLine.appendSwitch('no-sandbox');
+app.commandLine.appendSwitch('disable-seccomp-filter-sandbox');
+app.commandLine.appendSwitch('disable-gpu');
 
 const Logging = require('./boinctasks/rpc/functions/logging');
 const logging = new Logging();
@@ -341,6 +344,18 @@ function initMenu()
                   }
                 },
                 {
+                  label:'Show debug window',
+                  type: "checkbox",
+                  checked: btC.DEBUG_WINDOW,                    
+                  click() {
+                    btC.DEBUG_WINDOW = !btC.DEBUG_WINDOW;
+                    if (btC.DEBUG_WINDOW)
+                    {
+                      gMainWindow.webContents.openDevTools();
+                    }
+                  }
+                },                
+                {
                   label:'Test translation',
                   type: "checkbox",
                   checked: gClassBtMenu.check(btC.MENU_DEBUG_TRANSLATIONS),
@@ -554,7 +569,7 @@ function initialize () {
       gMainWindow.show();
       logging.logFile("main, createWindow", "restore");        
     });
-
+    
     gMainWindow.once('ready-to-show', () => {
 
       // extra check to hide app at startup      
@@ -708,7 +723,9 @@ function getTranslation()
   } 
   if (btC.TL === null)
   {
-    logging.logErrorMsg('Main,getTranslation', "getTranslation btC.TL === null");
+    // no logging possible yet, so show a box
+    dialog.showErrorBox('BoincTasks Js Main,getTranslation', "Translations missing: getTranslation btC.TL === null")
+    app.quit();
   }  
 }
 
@@ -881,7 +898,11 @@ function getVersion()
 {
   let version = app.getVersion();
   let split = version.split('.');
-  let versionS = split[0] + '.' + split[1] + split[2];
+  let versionS = split[0] + '.' + split[1];
+  if (split[2] != "0")
+  {
+    versionS += "." + split[2];
+  }
   return versionS;
 }
 

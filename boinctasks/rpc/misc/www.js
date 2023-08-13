@@ -58,7 +58,7 @@ function showWww(gb,projectName,html)
               contextIsolation: false,  
               nodeIntegration: true,
               nodeIntegrationInWorker: true,        
-              preload: './preload/preload.js'
+              preload:'${__dirname}/preload/preload.js',
             }
           });
           gChildWww.loadFile('index/index_www.html')

@@ -43,7 +43,7 @@ class SettingsBt{
   get()
   {
     try {
-      getSettings();          
+      getSettings();
     } catch (error) {
       logging.logError('SettingsBt,get', error);         
     }
@@ -102,12 +102,15 @@ function settings(settings,theme)
               contextIsolation: false,  
               nodeIntegration: true,
               nodeIntegrationInWorker: true,        
-              preload: './preload/preload.js'
+              preload:'${__dirname}/preload/preload.js',
             }
           });
             gChildSettings.loadFile('index/index_settings_boinctasks.html')
             gChildSettings.once('ready-to-show', () => {    
-//              gChildSettings.webContents.openDevTools()
+            if (btC.DEBUG_WINDOW)
+              {
+                gChildSettings.webContents.openDevTools()
+              }
               gChildSettings.show();  
               gChildSettings.setTitle(title);
               gChildSettings.webContents.send("translations",btC.TL.DIALOG_SETTINGS_BT);                
@@ -187,6 +190,26 @@ function isValid()
     if (!functions.isDefined(gSettingsBt.historyRefreshRate)) gSettingsBt.historyRefreshRate = 60;
     if (!functions.isDefined(gSettingsBt.historyDelete)) gSettingsBt.historyDelete = 7;
     if (!functions.isDefined(gSettingsBt.socketTimeout)) gSettingsBt.socketTimeout = 10;
+
+    // restart at a certain time of day
+    let restartTime = gSettingsBt.restartTime;
+    if (restartTime == '')
+    {
+      gSettingsBt.restartTimeCheck = false;
+    }
+    else
+    {
+      let timeSplit = restartTime.split(":");
+      if (timeSplit.length == 2)
+      {
+        gSettingsBt.restartTimeHours = timeSplit[0];
+        gSettingsBt.restartTimeMinutes = timeSplit[1];
+      }
+      else
+      {
+        gSettingsBt.restartTimeCheck = false; 
+      }
+    }
 
     if (gSettingsBt.css.length === 0)
     {

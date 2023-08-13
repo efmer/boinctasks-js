@@ -58,7 +58,7 @@ function selectLanguage(settings,theme)
               contextIsolation: false,  
               nodeIntegration: true,
               nodeIntegrationInWorker: true,        
-              preload: './preload/preload.js'
+              preload:'${__dirname}/preload/preload.js',
             }
           });
           gChildLanguage.loadFile('index/index_language.html')

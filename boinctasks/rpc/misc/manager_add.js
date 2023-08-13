@@ -451,7 +451,7 @@ function addManager(theme)
         contextIsolation: false,  
         nodeIntegration: true,
         nodeIntegrationInWorker: true
- //       preload: './preload/preload.js'
+ //     preload:'${__dirname}/preload/preload.js',
       }
     });
     gChildAddManager.loadFile('index/index_manager_add.html')

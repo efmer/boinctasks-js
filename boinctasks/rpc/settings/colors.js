@@ -131,7 +131,7 @@ function addColorWindow(theme)
               contextIsolation: false,  
               nodeIntegration: true,
               nodeIntegrationInWorker: true,        
-              preload: './preload/preload.js'
+              preload:'${__dirname}/preload/preload.js',
             }
           });
           gChildSettingsColor.loadFile('index/index_settings_color.html')

@@ -66,6 +66,8 @@ class BtSocket{
         })
         con.client_socket.on('close', function() {
             var ii = 1;
+            con.client_socket.end();                 
+            con.client_socket.destroy();            
         }); 
 /*        
         con.client_socket.on('timeout', function() { 

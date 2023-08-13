@@ -261,6 +261,7 @@ function resultData()
         else
         {
             let results = parseResults(this.client_completeData);
+            this.client_completeData = "";
             if (results == null)
             {
                 this.results = null;
@@ -271,6 +272,7 @@ function resultData()
             resultItems.add(this, this.state, results)
 
             this.results = resultItems;  
+            resultItems = null;
             this.mode = "OK";
         }    
     } catch (error) {

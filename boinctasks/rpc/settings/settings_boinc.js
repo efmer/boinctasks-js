@@ -123,13 +123,16 @@ function settingsStart(gb,selected)
             contextIsolation: false,  
             nodeIntegration: true,
             nodeIntegrationInWorker: true,
-            preload: './preload/preload.js'
+            preload:'${__dirname}/preload/preload.js',
           }
         });
 
         gChildSettingsBoinc.loadFile('index/index_settings_boinc.html')
         gChildSettingsBoinc.once('ready-to-show', () => {
-//          gChildSettingsBoinc.webContents.openDevTools()
+          if (btC.DEBUG_WINDOW)
+          {
+            gChildSettingsBoinc.webContents.openDevTools()
+          }
           gChildSettingsBoinc.setTitle(title);
           gChildSettingsBoinc.webContents.send("translations",btC.TL.DIALOG_BOINC_SETTINGS);
           let status = '<h2><b>';

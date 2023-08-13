@@ -94,7 +94,7 @@ function AppConfigStart(gb,url,con)
             contextIsolation: false,  
             nodeIntegration: true,
             nodeIntegrationInWorker: true,
-            preload: './preload/preload.js'
+            preload:'${__dirname}/preload/preload.js',
           }
         });
 

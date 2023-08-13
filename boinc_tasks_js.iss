@@ -1,7 +1,7 @@
 [Setup]
 AppName=BoincTasks Js
-AppVerName=BoincTasks Js by eFMer V 1.33
-AppVersion=1.33
+AppVerName=BoincTasks Js by eFMer V 1.34.2
+AppVersion=1.34.2
 WizardStyle=modern
 AppPublisher=eFMer
 AppPublisherURL=https://efmer.com/
@@ -40,17 +40,14 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: out\winarm\boinctasksjs-win32-arm64\*.*; DestDir: {app}; Check: InstallARM64;
 Source: out\winarm\boinctasksjs-win32-arm64\locales\*.*; DestDir: {app}\locales\;
 Source: out\winarm\boinctasksjs-win32-arm64\resources\*.*; DestDir: {app}\resources\ ;
-Source: out\winarm\boinctasksjs-win32-arm64\swiftshader\*.*; DestDir: {app}\swiftshader\;
 ;X64
 Source: out\win64\boinctasksjs-win32-x64\*.*; DestDir: {app}; Check: InstallX64; Flags: solidbreak
 Source: out\win64\boinctasksjs-win32-x64\locales\*.*; DestDir: {app}\locales\;
 Source: out\win64\boinctasksjs-win32-x64\resources\*.*; DestDir: {app}\resources\ ;
-Source: out\win64\boinctasksjs-win32-x64\swiftshader\*.*; DestDir: {app}\swiftshader\;
 ;X86
 Source: out\win32\boinctasksjs-win32-ia32\*.*; DestDir: {app}; Check: InstallOtherArch; Flags: solidbreak
 Source: out\win32\boinctasksjs-win32-ia32\locales\*.*; DestDir: {app}\locales\;
 Source: out\win32\boinctasksjs-win32-ia32\resources\*.*; DestDir: {app}\resources\ ;
-Source: out\win32\boinctasksjs-win32-ia32\swiftshader\*.*; DestDir: {app}\swiftshader\;
 ;Common
 Source: boinctasks_licence.txt; DestDir: {app};Flags: solidbreak
 Source: appicons\icons\win\icon.ico; DestDir: {app};

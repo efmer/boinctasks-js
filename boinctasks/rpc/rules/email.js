@@ -105,7 +105,7 @@ function editEmail(gb)
             contextIsolation: false,  
             nodeIntegration: true,
             nodeIntegrationInWorker: true,        
-            preload: './preload/preload.js'
+            preload:'${__dirname}/preload/preload.js',
           }
         });
         gChildSettingsEmail.loadFile('index/index_email.html')

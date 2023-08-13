@@ -333,7 +333,7 @@ function updateWindow(version,theme)
               contextIsolation: false,  
               nodeIntegration: true,
               nodeIntegrationInWorker: true,        
-              preload: './preload/preload.js'
+              preload:'${__dirname}/preload/preload.js',
             }
           });
           gChildUpdate.loadFile('index/index_update.html')

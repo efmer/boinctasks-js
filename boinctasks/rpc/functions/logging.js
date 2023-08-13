@@ -268,7 +268,7 @@ function showLog(logType,theme)
           contextIsolation: false,  
           nodeIntegration: true,
           nodeIntegrationInWorker: true,
-//          preload: path.join(__dirname, './preload/preload_log.js')
+          preload:'${__dirname}/preload/preload.js',
         }
       });
       gChildWindowLog.loadFile('index/index_log.html')

@@ -105,6 +105,7 @@ function projectData()
     try 
     {
         let projects = parseProjects(this.client_completeData);
+        this.client_completeData = "";    
         if (projects == null)
         {
             this.projects = null;
@@ -113,8 +114,8 @@ function projectData()
         }
         var projectItems = new ProjectItems();
         projectItems.add(this, this.state, projects)
-
         this.projects = projectItems;  
+        projectItems = null;
         this.mode = "OK";               
     } catch (error) {
         logging.logError('Projects,projectData', error);           

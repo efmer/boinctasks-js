@@ -31,7 +31,7 @@ class ProcessResults{
         ret.resultCount = 0;
         try 
         {       
-            ret = new Object();
+//            ret = new Object();
             combine(connections, ret);
 
             if (sort != null)

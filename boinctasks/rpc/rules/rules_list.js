@@ -99,7 +99,7 @@ function editRulesWindow(gb,ruleItem = null)
             contextIsolation: false,  
             nodeIntegration: true,
             nodeIntegrationInWorker: true,        
-            preload: './preload/preload.js'
+            preload:'${__dirname}/preload/preload.js',
           }
         });
         gChildSettingsRules.loadFile('index/index_rules_list.html')

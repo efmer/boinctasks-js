@@ -43,6 +43,7 @@ function transferData()
     try 
     {
         var transfers = parseTransfers(this.client_completeData);
+        this.client_completeData = "";   
         if (transfers == null)
         {
             this.transfers = null;

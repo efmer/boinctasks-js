@@ -44,6 +44,7 @@ function noticeData()
     try 
     {
         let notices = parseNotices(this.client_completeData);
+        this.client_completeData = "";   
         if (notices === null)
         {
             this.notices = null;

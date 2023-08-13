@@ -36,6 +36,8 @@ $(document).ready(function() {
     ipcRenderer.on('translations', (event, dlg) => {
         $("#trans_login").html( dlg.DS_BT_LOGIN);
         $("#trans_hide").html( dlg.DS_BT_HIDE_START);
+        $("#trans_restart_check").html( dlg.DS_BT_RESTART);
+
         $("#trans_styling").html( dlg.DS_BT_STYLING);
         $("#trans_styling_def").html( dlg.DS_BT_STYLING_DEF);
 
@@ -94,6 +96,8 @@ function set(item)
 
     //    $("#start_at_login").prop("checked", item.startLogin==='1');
     $("#hide_at_login").prop("checked", item.hideLogin==='1');
+    $("#restart_time_check").prop("checked", item.restartTimeCheck==='1');
+    $("#restart_time").val( item.restartTime );  
 
     $("#extra_css").val(item.css);
 
@@ -121,6 +125,13 @@ function get()
         item.css = $("#extra_css").val();     
     } catch (error) {
         item.css = "";
+    }
+
+    try {
+        item.restartTimeCheck = getBool($("#restart_time_check").is(":checked")); 
+        item.restartTime = $("#restart_time").val();  
+    } catch (error) {
+        item.restartTime = "error";
     }
 
     try {

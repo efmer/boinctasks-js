@@ -507,7 +507,7 @@ function showComputerScan(theme)
         contextIsolation: false,  
         nodeIntegration: true,
         nodeIntegrationInWorker: true,        
-        preload: './preload/preload.js'
+        preload:'${__dirname}/preload/preload.js',
       }
     });
 

@@ -83,7 +83,7 @@ function settings(gb)
               contextIsolation: false,  
               nodeIntegration: true,
               nodeIntegrationInWorker: true,        
-              preload: './preload/preload.js'
+              preload:'${__dirname}/preload/preload.js',
             }
           });
           gChildSettingsAllow.loadFile('index/index_settings_allow.html')

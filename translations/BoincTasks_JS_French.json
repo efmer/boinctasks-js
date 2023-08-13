@@ -184,7 +184,8 @@
         "DS_BT_HISTORY": "Historique",
         "DC_BT_PROJECT_SUSPENDED": "Suspendu",
         "DS_BT_REGION": "Région",
-        "DS_BT_LOCALE": "Locale (par défaut = empty, en-US, nl-NL)"
+        "DS_BT_LOCALE": "Locale (par défaut = vide, en-US, nl-NL)",
+        "DS_BT_RESTART": "Restart at"
     },
     "DIALOG_COLORS_BT": {
         "DC_BT_TITLE": "Réglages couleur",

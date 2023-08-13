@@ -669,7 +669,7 @@ function openWindow(gb)
               contextIsolation: false,  
               nodeIntegration: true,
               nodeIntegrationInWorker: true,        
-              preload: './preload/preload.js'
+              preload:'${__dirname}/preload/preload.js',
             }
           });
           gChildColumn.loadFile('index/index_column_order.html')
