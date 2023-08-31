@@ -25,7 +25,9 @@ const SIDEBAR_COMPUTER_ID = "__c__";
 const SIDEBAR_PROJECT_ID = "__p__";
 const SIDEBAR_SELECT = 'class="sidebar_computers_sel"';
 
-let gSidebarProjectList = [];
+let gSidebarProjectList = "";
+let gSidebarComputers = "";
+let gConStatus = "";
 
 class SidebarComputers{
   build(gb)
@@ -89,11 +91,16 @@ class SidebarComputers{
         list += "<br>";
       }
 
-      gSidebarProjectList = getProjects(gb);
+      gSidebarProjectList = getProjects(gb);      
       list += '<div id="_add_projects_">' + gSidebarProjectList + '</div>';
 
       this.setStatus(gb);
-      gb.mainWindow.webContents.send('sidebar_computers', list);
+
+      if (gSidebarComputers != list)
+      {
+        gb.mainWindow.webContents.send('sidebar_computers', list);
+        gSidebarComputers = list;
+      }
     } catch (error) {
       logging.logError('SidebarComputers,build', error);         
     }  
@@ -189,7 +196,12 @@ class SidebarComputers{
   {
     try {
       let conStatus = getConnectionStatus(gb.connections);
-      gb.mainWindow.webContents.send('sidebar_computers_status', conStatus);
+      let conStatusJ = JSON.stringify(conStatus);
+      if (conStatusJ != gConStatus)
+      {
+        gb.mainWindow.webContents.send('sidebar_computers_status', conStatus);
+        gConStatus = conStatusJ;
+      }
     } catch (error) {
       logging.logError('SidebarComputers,setStatus', error);   
     }

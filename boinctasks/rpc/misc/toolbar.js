@@ -28,8 +28,9 @@ const btC = require('../functions/btconstants');
 
 const { dialog,clipboard  } = require('electron');
 
-var g_toolbarProperties = null;
-//var gClassCcConfig = null;
+let g_toolbarProperties = null;
+
+let gToolbarData = "";
 
 const SEND_TASKS = 0;
 const SEND_PROJECTS = 1;
@@ -104,22 +105,24 @@ class Toolbar{
                     if (sel > 0) toolbar = getToolbarHistory();
                 break;                
             }
-            gb.mainWindow.webContents.send('toolbar', toolbar);        
+            sendToolbar(gb.mainWindow, toolbar);
+  
         } catch (error) {
             logging.logError('Toolbar,show', error);             
         }        
     }
 
     hide(window)
-    {
+    {   
+        gToolbarData = "";
         window.webContents.send('toolbar', "", false);  
     }
     
     click(gb,id, callback)
     {
         try {
-            var selected;
-            var properties;
+            let selected;
+            let properties;
             switch (id)
             {
                 // computer
@@ -267,18 +270,29 @@ class Toolbar{
   
   module.exports = Toolbar;
 
+function sendToolbar(window, toolbar)
+{
+    if (gToolbarData != toolbar)
+    {
+        window.webContents.send('toolbar', toolbar);
+        gToolbarData = toolbar;
+        return;
+    }
+    let ii = 1;
+}
+
 function getToolbarResultsSel(gb)
 {
-    var toolbar =   '<td id="toolbar_abort" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;' + btC.TL.FOOTER.FTR_ABORT  + '</td>' +
-                    '<td id="toolbar_suspend" class="ef_btn_toolbar bt_img_toolbar_pause">&nbsp;' + btC.TL.FOOTER.FTR_SUSPEND + '</td>' +
-                    '<td id="toolbar_resume" class="ef_btn_toolbar bt_img_toolbar_resume">&nbsp;' + btC.TL.FOOTER.FTR_RESUME + '</td>' +
-                    '<td id="toolbar_update" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_UPDATE + '</td>' +
-                    '<td id="toolbar_info" class="ef_btn_toolbar bt_img_toolbar_info">&nbsp;'+ btC.TL.FOOTER.FTR_INFO + '</td>' +                      
-                    '<td id="toolbar_rules" class="ef_btn_toolbar bt_img_toolbar_list">&nbsp;'+ btC.TL.FOOTER.FTR_RULE + '</td>';
+    var toolbar =   '<span id="toolbar_abort" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;' + btC.TL.FOOTER.FTR_ABORT  + '</span>' +
+                    '<span id="toolbar_suspend" class="ef_btn_toolbar bt_img_toolbar_pause">&nbsp;' + btC.TL.FOOTER.FTR_SUSPEND + '</span>' +
+                    '<span id="toolbar_resume" class="ef_btn_toolbar bt_img_toolbar_resume">&nbsp;' + btC.TL.FOOTER.FTR_RESUME + '</span>' +
+                    '<span id="toolbar_update" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_UPDATE + '</span>' +
+                    '<span id="toolbar_info" class="ef_btn_toolbar bt_img_toolbar_info">&nbsp;'+ btC.TL.FOOTER.FTR_INFO + '</span>' +                      
+                    '<span id="toolbar_rules" class="ef_btn_toolbar bt_img_toolbar_list">&nbsp;'+ btC.TL.FOOTER.FTR_RULE + '</span>';
     let iReady = gb.readyToReport;
     if (iReady > 0)
     {
-        toolbar +=   '<td id="toolbar_completed" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_READY_TO_REPORT  +  iReady + '</td>';
+        toolbar +=   '<span id="toolbar_completed" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_READY_TO_REPORT  +  iReady + '</span>';
     }                    
     return toolbar;
 }
@@ -289,69 +303,69 @@ function getToolbarResults(gb)
     let iReady = gb.readyToReport;
     if (iReady > 0)
     {
-        toolbar +=   '<td id="toolbar_completed" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_READY_TO_REPORT + iReady + '</td>'                     
+        toolbar +=   '<span id="toolbar_completed" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_READY_TO_REPORT + iReady + '</span>'                     
     }
     return toolbar;
 }
 
 function getToolbarTransfers(cnt)
 {
-    var toolbar =   '<td id="toolbar_update_t_all" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_RETRY_ALL + cnt + '</td>';
+    var toolbar =   '<span id="toolbar_update_t_all" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_RETRY_ALL + cnt + '</span>';
     return toolbar;
 }
 
 function getToolbarTransfersSelect()
 {
-    var toolbar =   '<td id="toolbar_update_t" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_RETRY + '</td>' +
-                    '<td id="toolbar_abort_t" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;' + btC.TL.FOOTER.FTR_ABORT + '</td>';      
+    var toolbar =   '<span id="toolbar_update_t" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_RETRY + '</span>' +
+                    '<span id="toolbar_abort_t" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;' + btC.TL.FOOTER.FTR_ABORT + '</span>';      
     return toolbar;
 }
 
 function getToolbarProjects()
 {
-    var toolbar =   '<td id="toolbar_app_config_p" class="ef_btn_toolbar bt_img_toolbar_list">&nbsp;' + btC.TL.FOOTER.FTR_APP_CONFIG + '</td>' +
-                    '<td id="toolbar_detach_p" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;' + btC.TL.FOOTER.FTR__DETACH + '</td>' +
-                    '<td id="toolbar_reset_p" class="ef_btn_toolbar bt_img_toolbar_back">&nbsp;' + btC.TL.FOOTER.FTR_RESET + '</td>' +
-                    '<td id="toolbar_suspend_p" class="ef_btn_toolbar bt_img_toolbar_pause">&nbsp;' + btC.TL.FOOTER.FTR_SUSPEND + '</td>' +
-                    '<td id="toolbar_resume_p" class="ef_btn_toolbar bt_img_toolbar_resume">&nbsp;' + btC.TL.FOOTER.FTR_RESUME + '</td>' +
-                    '<td id="toolbar_nomore_p" class="ef_btn_toolbar bt_img_toolbar_download_not">&nbsp;' + btC.TL.FOOTER.FTR_NO_MORE_WORK  + '</td>' +
-                    '<td id="toolbar_allow_p" class="ef_btn_toolbar bt_img_toolbar_download">&nbsp;' + btC.TL.FOOTER.FTR_ALLOW_WORK + '</td>' +
-                    '<td id="toolbar_update_p" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_UPDATE + '</td>' +
-                    '<td id="toolbar_info_p" class="ef_btn_toolbar bt_img_toolbar_info">&nbsp;'+ btC.TL.FOOTER.FTR_INFO + '</td>' +
-                    '<td id="toolbar_www" class="ef_btn_toolbar bt_img_toolbar_www">&nbsp;' + 'WWW' + '</td>';
+    var toolbar =   '<span id="toolbar_app_config_p" class="ef_btn_toolbar bt_img_toolbar_list">&nbsp;' + btC.TL.FOOTER.FTR_APP_CONFIG + '</span>' +
+                    '<span id="toolbar_detach_p" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;' + btC.TL.FOOTER.FTR__DETACH + '</span>' +
+                    '<span id="toolbar_reset_p" class="ef_btn_toolbar bt_img_toolbar_back">&nbsp;' + btC.TL.FOOTER.FTR_RESET + '</span>' +
+                    '<span id="toolbar_suspend_p" class="ef_btn_toolbar bt_img_toolbar_pause">&nbsp;' + btC.TL.FOOTER.FTR_SUSPEND + '</span>' +
+                    '<span id="toolbar_resume_p" class="ef_btn_toolbar bt_img_toolbar_resume">&nbsp;' + btC.TL.FOOTER.FTR_RESUME + '</span>' +
+                    '<span id="toolbar_nomore_p" class="ef_btn_toolbar bt_img_toolbar_download_not">&nbsp;' + btC.TL.FOOTER.FTR_NO_MORE_WORK  + '</span>' +
+                    '<span id="toolbar_allow_p" class="ef_btn_toolbar bt_img_toolbar_download">&nbsp;' + btC.TL.FOOTER.FTR_ALLOW_WORK + '</span>' +
+                    '<span id="toolbar_update_p" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_UPDATE + '</span>' +
+                    '<span id="toolbar_info_p" class="ef_btn_toolbar bt_img_toolbar_info">&nbsp;'+ btC.TL.FOOTER.FTR_INFO + '</span>' +
+                    '<span id="toolbar_www" class="ef_btn_toolbar bt_img_toolbar_www">&nbsp;' + 'WWW' + '</span>';
     return toolbar;
 }
 
 function getToolbarMessages()
 {
-    var toolbar =   '<td id="toolbar_clipboard_m" class="ef_btn_toolbar bt_img_toolbar_clipboard">&nbsp;' + btC.TL.FOOTER.FTR_CLIPBOARD + '</td>';  
+    var toolbar =   '<span id="toolbar_clipboard_m" class="ef_btn_toolbar bt_img_toolbar_clipboard">&nbsp;' + btC.TL.FOOTER.FTR_CLIPBOARD + '</span>';  
     return toolbar;
 }
 
 function getToolbarHistory()
 {
-    var toolbar =   '<td id="toolbar_clipboard_h" class="ef_btn_toolbar bt_img_toolbar_clipboard">&nbsp;' + btC.TL.FOOTER.FTR_CLIPBOARD + '</td>';  
+    var toolbar =   '<span id="toolbar_clipboard_h" class="ef_btn_toolbar bt_img_toolbar_clipboard">&nbsp;' + btC.TL.FOOTER.FTR_CLIPBOARD + '</span>';  
     return toolbar;
 }
 
 function getToolbarComputers()
 {
-    var toolbar =   '<td id="toolbar_abort_c" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;' + btC.TL.FOOTER.FTR_DELETE + '</td>';
+    var toolbar =   '<span id="toolbar_abort_c" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;' + btC.TL.FOOTER.FTR_DELETE + '</span>';
     return toolbar;
 }
 
 function getToolbarComputersAuth()
 {
-    var toolbar =   '<td id="toolbar_cc_config_c" class="ef_btn_toolbar bt_img_toolbar_list">&nbsp;'+ btC.TL.FOOTER.FTR_CC_CONFIG + '</td>' +
-                    '<td id="toolbar_abort_c" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;' + btC.TL.FOOTER.FTR_DELETE + '</td>' +
-                    '<td id="toolbar_info_c" class="ef_btn_toolbar bt_img_toolbar_info">&nbsp;'+ btC.TL.FOOTER.FTR_INFO + '</td>';
+    var toolbar =   '<span id="toolbar_cc_config_c" class="ef_btn_toolbar bt_img_toolbar_list">&nbsp;'+ btC.TL.FOOTER.FTR_CC_CONFIG + '</span>' +
+                    '<span id="toolbar_abort_c" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;' + btC.TL.FOOTER.FTR_DELETE + '</span>' +
+                    '<span id="toolbar_info_c" class="ef_btn_toolbar bt_img_toolbar_info">&nbsp;'+ btC.TL.FOOTER.FTR_INFO + '</span>';
                     
     return toolbar;
 }
 
 function getToolbarEditComputers()
 {
-    var toolbar =  '<td id="toolbar_ok_c" class="ef_btn_toolbar bt_img_toolbar_ok">&nbsp;' + btC.TL.FOOTER.FTR_UPDATE_CHANGES + '</td>'
+    var toolbar =  '<span id="toolbar_ok_c" class="ef_btn_toolbar bt_img_toolbar_ok">&nbsp;' + btC.TL.FOOTER.FTR_UPDATE_CHANGES + '</span>'
     return toolbar;
 }
 

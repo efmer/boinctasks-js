@@ -20,17 +20,16 @@
 
 const { ipcRenderer } = require('electron')
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", () => {
     ipcRenderer.on('settings_allow', (event,cpu,gpu,network) => {
-        $("#allow_to_run_cpu").html(cpu);
-        $("#allow_to_run_gpu").html(gpu);
-        $("#allow_network").html(network); 
-        $('#apply').attr("disabled", false);                
+        SetHtml('allow_to_run_cpu',cpu);
+        SetHtml('allow_to_run_gpu',gpu);
+        SetHtml('allow_network',network);
+        document.getElementById('apply').disabled = false;                 
     });
  
-    $( "#apply" ).on( "click", function(event) {
-
-        $('#apply').attr("disabled", true);
+    document.getElementById('apply').addEventListener("click", function(event){
+        document.getElementById('apply').disabled = true;  
         let combined = new Object();
         combined.selCpu = [];
         combined.selGpu = [];
@@ -39,42 +38,55 @@ $(document).ready(function() {
         combined.snoozeGpu = [];
         combined.snoozeNetwork = [];        
 
-        $('#allow_to_run_cpu option:selected').each(function() {
-            let sel = $(this).val()
-            combined.selCpu.push(sel);
-        });
-        $('#allow_to_run_gpu option:selected').each(function() {
-            let sel = $(this).val()
-            combined.selGpu.push(sel);
-        });
-        $('#allow_network option:selected').each(function() {
-            let sel = $(this).val()
-            combined.selNetwork.push(sel);
-        });
-
-        $('#allow_to_run_cpu input').each(function() {
-            let sel = $(this).val()
-            combined.snoozeCpu.push(sel);
-        });
-        $('#allow_to_run_gpu input').each(function() {
-            let sel = $(this).val()
-            combined.snoozeGpu.push(sel);
-        });
-        $('#allow_network input').each(function() {
-            let sel = $(this).val()
-            combined.snoozeNetwork.push(sel);
-        });
-
+        readBox('allow_to_run_cpu',combined.selCpu,combined.snoozeCpu);
+        readBox('allow_to_run_gpu',combined.selGpu,combined.snoozeGpu);
+        readBox('allow_network',combined.selNetwork,combined.snoozeNetwork);        
         ipcRenderer.send('settings_allow',combined);
     });
 
     ipcRenderer.on('translations', (event, dlg) => {
-        $("#trans_allow_cpu").html( dlg.DSA_ALLOW_TO_RUN_CPU);
-        $("#trans_allow_gpu").html( dlg.DSA_ALLOW_TO_RUN_GPU);
-        $("#trans_allow_network").html( dlg.DSA_ALLOW_NETWORK);
-        $("#apply").html( dlg.DSA_BUTTON_APPLY);
-
+        SetHtml('trans_allow_cpu',dlg.DSA_ALLOW_TO_RUN_CPU);
+        SetHtml('trans_allow_gpu',dlg.DSA_ALLOW_TO_RUN_GPU);
+        SetHtml('trans_allow_network',dlg.DSA_ALLOW_NETWORK);
+        SetHtml('apply',dlg.DSA_BUTTON_APPLY);
     });
 
 });
 
+function readBox(tag,pushSel,pushSnooze)
+{
+    let el = document.getElementById(tag);
+    let cols = el.querySelectorAll('tr'); 
+    for (let ic=0;ic<cols.length;ic++)
+    {
+        let colq = cols[ic].querySelectorAll('td');  
+        for (let i=0;i<colq.length;i+=3)
+        {
+            let option = colq[i+1].firstElementChild;
+            for (let ii=0;ii<option.length;ii++)
+            {
+                let opIi = option[ii];
+                let val = opIi.value;
+                if (opIi.selected)
+                {
+                    pushSel.push(val);
+                    break;
+                }
+            };
+            let input = colq[i+2].firstElementChild;
+            let snooze = parseInt(input.value);
+            pushSnooze.push(snooze);
+        };
+    };
+}
+
+function SetHtml(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.innerHTML = data; 
+    data = null;
+  } catch (error) {
+    let i = 1;
+  }
+}

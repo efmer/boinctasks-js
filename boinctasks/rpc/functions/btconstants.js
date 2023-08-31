@@ -62,6 +62,7 @@ module.exports = {
     TASK_STATUS_ABORT_N         : 10,
     
     MENU_SIDEBAR_COMPUTERS      : "sidebar_computers",
+    MENU_DEBUG_WINDOW           : "debug_window",
     MENU_DEBUG_TRANSLATIONS     : "debug_translation",
 
     SEPERATOR_ITEM  	        : "¼",

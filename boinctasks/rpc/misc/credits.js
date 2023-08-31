@@ -21,7 +21,7 @@ const logging = new Logging();
 const WindowsState = require('../functions/window_state');
 const windowsState = new WindowsState();
 const os = require('os');
-const {app,BrowserWindow} = require('electron');
+const {app,BrowserWindow,shell} = require('electron');
 const btC = require('../functions/btconstants');
 
 // !!!!!!!!!!!!!!!!!!!!!!! DO NOT USE ABOUT it will be auto removed by the packager
@@ -62,24 +62,37 @@ function addAboutWindow(version,theme)
               contextIsolation: false,  
               nodeIntegration: true,
               nodeIntegrationInWorker: true,        
-              preload:'${__dirname}/preload/preload.js',
+   //           preload:'${__dirname}/preload/preload.js',
             }
           });
+
+          // open links in external browser
+          gChildAbout.webContents.setWindowOpenHandler((details) => {
+            shell.openExternal(details.url);
+            return { action: "deny" };
+          })
+
           gChildAbout.loadFile('index/index_credits.html')
           gChildAbout.once('ready-to-show', () => {    
-//            gChildAbout.webContents.openDevTools()
+            if (btC.DEBUG_WINDOW)
+            {
+              gChildAbout.webContents.openDevTools()
+            }
             gChildAbout.show();  
-            gChildAbout.setTitle(title);
-            gChildAbout.webContents.send("translations",btC.TL.DIALOG_ABOUT);              
-            gChildAbout.webContents.send('about', info); 
+            gChildAbout.setTitle(title);            
           })
+
           gChildAbout.webContents.on('did-finish-load', () => {
             insertCssDark(theme);
+            gChildAbout.webContents.send("translations",btC.TL.DIALOG_ABOUT);              
+            gChildAbout.webContents.send('about', info);             
           })
+
           gChildAbout.on('close', () => {
             let bounds = gChildAbout.getBounds();
             windowsState.set("about",bounds.x,bounds.y, bounds.width, bounds.height)
           })     
+          
           gChildAbout.on('closed', () => {
             gChildAbout = null
           })    
@@ -114,15 +127,12 @@ async function insertCssDark(darkCss)
 function infoMsg(version)
 {
   let msg = btC.TL.DIALOG_ABOUT.DAB_VERSION +  " " + version;
-  msg += "<br>";
-  msg += btC.TL.DIALOG_ABOUT.DAB_SYSTEM_RUNNING + " " + os.platform() + " , " + btC.TL.DIALOG_ABOUT.DAB_ARCH + " " + os.arch();
+  msg += "<br>" + btC.TL.DIALOG_ABOUT.DAB_SYSTEM_RUNNING + " " + os.platform() + " , " + btC.TL.DIALOG_ABOUT.DAB_ARCH + " " + os.arch();
   if (process.windowsStore)
   {
     msg += " - Windows Store";
   }
-  msg += "<br>";
-  msg += btC.TL.DIALOG_ABOUT.DAB_LOCALE + " " + app.getLocale();
-  msg += "<br>";
-  msg += btC.TL.DIALOG_ABOUT.DAB_REGION + " " + app.getLocaleCountryCode();
+  msg += "<br>" + btC.TL.DIALOG_ABOUT.DAB_LOCALE + " " + app.getLocale();
+  msg += "<br>" + btC.TL.DIALOG_ABOUT.DAB_REGION + " " + app.getLocaleCountryCode();
   return msg;
 }

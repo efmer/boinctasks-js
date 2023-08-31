@@ -21,21 +21,21 @@
 const { ipcRenderer } = require('electron')
 const shell = require('electron').shell
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", () => {
   try {    
     document.getElementById("start_scan").onclick = function(e)
     {
-      let password = $("#password_scan").val();    
-      let port = $("#port_scan").val(); 
-      ipcRenderer.send('scan_computers_start', password, port);      
-      $("#start_scan").hide();    
+      let password = document.getElementById('password_scan').value;
+      let port = document.getElementById('port_scan').value;
+      ipcRenderer.send('scan_computers_start', password, port);
+      document.getElementById('start_scan').disabled = true;     
     } 
   } catch (error) {
     
   }
 
   ipcRenderer.on('trans_scan_explain', (event, msg) => {
-    $("#trans_scan_explain").html(msg);
+    SetHtml('trans_scan_explain',msg)
 
     try {
       const links = document.querySelectorAll('a[href]')
@@ -53,20 +53,19 @@ $(document).ready(function() {
     }
 
     ipcRenderer.on('translations', (event, dlg) => {
-      $("#trans_password").html( dlg.DCS_PASSWORD);
-      $("#trans_port").html( dlg.DCS_PORT);
-      $("#start_scan").html( dlg.DCS_START);      
-  });
+      SetHtml('trans_password',dlg.DCS_PASSWORD)
+      SetHtml('trans_port',dlg.DCS_PORT)
+      SetHtml('start_scan',dlg.DCS_START)     
+    });
 
   });
 
   ipcRenderer.on('computer_scan_show', (event, show) => {
-    $("#start_scan").show();
+    document.getElementById('start_scan').disabled = false;     
   });
 
   ipcRenderer.on('computer_scan_text', (event, tableData) => {
-    $("#computer_scan_insert_text").html(tableData);
-
+    SetHtml('computer_scan_insert_text',tableData) 
     try {    
       document.getElementById("addSelectedButton").onclick = function(e)
       {
@@ -90,32 +89,50 @@ function selectedComputers()
     while (1)
     {
       let item = new Object()
-      let id = "#scan-check-"+ idName;
-      let check = $(id).is(":checked");
-      if (check) item.check = true;
-      else item.check = false;
-
-      id = "#scan-ip-"+ idName;
-      item.ip = $(id).text();
+      let id = "scan-check-"+ idName;
+      let el = document.getElementById(id);
+      if (el == null)
+      {
+        break;
+      }
+      item.check = el.checked;
+      id = "scan-ip-"+ idName;
+      item.ip = document.getElementById(id).innerText;
       if (item.ip === '')
       {
         break;
-      }      
+      }
+      if (item.ip == "127.0.0.1")
+      {
+        item.ip = "localhost";
+      }
 
-      id = "#scan-cpid-"+ idName;
-      item.cpid = $(id).text();
+      id = "scan-cpid-"+ idName;
+      item.cpid =  document.getElementById(id).innerText;
 
-      id = "#scan-name-"+ idName;
-      item.computerName = $(id).text();
+      id = "scan-name-"+ idName;
+      item.computerName =  document.getElementById(id).innerText;
 
       idName++;
       toAdd.push(item)
       if (idName > 100) break;
-      password = $("#password_scan").val();    
-      port = $("#port_scan").val(); 
+      password = document.getElementById('password_scan').value;  
+      port = document.getElementById('port_scan').value;
+      var ii = 1;
     }
   } catch (error) {
     var ii = 1;
   }   
   ipcRenderer.send('scan_computers_found', toAdd, port, password) 
+}
+
+function SetHtml(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.innerHTML = data; 
+    data = null;
+  } catch (error) {
+    let i = 1;
+  }
 }

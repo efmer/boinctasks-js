@@ -24,76 +24,84 @@ gPasswordVisible = false;
 
 const { shell,ipcRenderer } = require('electron')
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", () => {
   ipcRenderer.on('add_project_init', (event, listC, listP, info) => {
-    $("#computer_list").html(listC);
-    $("#project_list").html(listP);
-
-    $("#project_description").html(info.description);
-    $("#add_project_url").val(info.url);
-    $("#add_project_login_name").val(info.email);
-    $("#add_project_password").val(info.password);  
+    SetHtml('computer_list',listC);
+    SetHtml('project_list',listP);
+    SetHtml('project_description',info.description);
+    SetValue('add_project_url',info.url);
+    SetValue('add_project_login_name',info.email);
+    SetValue('add_project_password',info.password);
 
     gInfo = info;
 
-    $("#add_project_website").click(function( event ) {
+    document.getElementById('add_project_website').addEventListener("click", function(event){  
       let url = gInfo.web_url
       shell.openExternal(url);     
     });
 
-    $("#add_project_button").click(function( event ) {
+    document.getElementById('add_project_button').addEventListener("click", function(event){      
       projectButton()    
     });
 
-    $(".ef_img_input").click(function( event ) {
-      $(".ef_img_input").toggleClass("bt_img_input_eye bt_img_input_eye_not");        
+    document.getElementById('password_eye').addEventListener("click", function(event){         
       if (gPasswordVisible)
       {
-        $("#add_project_password").attr("type", "password");       
+        document.getElementById('password_eye').classList.add("bt_img_input_eye_not");  
+        document.getElementById('password_eye').classList.remove("bt_img_input_eye");          
+        document.getElementById('add_project_password').setAttribute('type', 'password');   
       }
       else
       {
-        $("#add_project_password").attr("type", "text");       
+        document.getElementById('password_eye').classList.remove("bt_img_input_eye_not");  
+        document.getElementById('password_eye').classList.add("bt_img_input_eye");           
+        document.getElementById('add_project_password').setAttribute('type', 'text');              
       }
       gPasswordVisible = !gPasswordVisible;    
     });
 
     try {
-      $("#project_list").on("change", function(event) {
-        let sel = $('option:selected', this).text();
+      let sel = -1;
+      document.getElementById('project_list').addEventListener("click", function(event){ 
+        for (var option of document.getElementById('project_list').options)
+        {
+            if (option.selected) {
+                sel = option.text;
+            }
+        } 
         ipcRenderer.send('add_project','project_changed', sel) 
       }) 
     } catch (error) {
       var ii = 1;
     } 
 
-    $('#add_project_button').attr("disabled", false);
+    document.getElementById('add_project_button').disabled = false;  
   });
 
   ipcRenderer.on('add_project_description', (event, info) => {
-    $("#project_description").html(info.description);
-    $("#add_project_url").val(info.url);
+    SetHtml('project_description',info.description);
+    SetValue('add_project_url',info.url);
     gInfo = info;
   });
 
   ipcRenderer.on('add_project_status', (event, msg) => {
-    $("#add_project_status").html(msg);
+    SetHtml('add_project_status',msg);
   });
 
   ipcRenderer.on('add_project_enable', (event) => {
-    $('#add_project_button').attr("disabled", false);
+    document.getElementById('add_project_button').disabled = false;      
   });
 
   ipcRenderer.send('add_project','ready');
 
   ipcRenderer.on('translations', (event, dlg) => {
-    $("#add_project_website").html( dlg.DAP_WEBSITE);
-    $("#trans_password").html( dlg.DAP_PASSWORD);
-    $("#trans_login").html( dlg.DAP_LOGIN);
-    $("#trans_project_url").html( dlg.DAP_PROJECT_URL);
-    $("#trans_add_project").html( dlg.DAP_ADD_PROJECT);
-    $("#trans_add_project_computers").html( dlg.DAP_ADD_TO_COMPUTERS);
-    $("#add_project_button").html( dlg.DAP_ADD_PROJECT_BUTTON);    
+    SetHtml('add_project_website',dlg.DAP_WEBSITE);
+    SetHtml('trans_password',dlg.DAP_PASSWORD);
+    SetHtml('trans_login',dlg.DAP_LOGIN);
+    SetHtml('trans_project_url',dlg.DAP_PROJECT_URL);
+    SetHtml('trans_add_project',dlg.DAP_ADD_PROJECT);
+    SetHtml('trans_add_project_computers',dlg.DAP_ADD_TO_COMPUTERS);
+    SetHtml('add_project_button',dlg.DAP_ADD_PROJECT_BUTTON); 
   });
 
 });
@@ -102,20 +110,44 @@ function projectButton()
 {
   let item = new Object() ;
   try {
-    $('#add_project_button').attr("disabled", true);
-
-    item.loginName = $('#add_project_login_name').val();
-    item.passWord  = $('#add_project_password').val();
-    item.url  = $('#add_project_url').val();
+    document.getElementById('add_project_button').disabled = true;   
+    item.loginName = document.getElementById('add_project_login_name').value;
+    item.passWord  = document.getElementById('add_project_password').value;
+    item.url  = document.getElementById('add_project_url').value;
     
     let selArray = [];
-    $('#computer_list option:selected').each(function() {
-      let sel = $(this).val()
-      selArray.push(sel);
-    });
+    for (var option of document.getElementById('computer_list').options)
+    {
+        if (option.selected) {
+            sel = option.text;
+            selArray.push(sel);            
+        }
+    } 
     item.sel = selArray;
     ipcRenderer.send('add_project', 'ok', item);
   } catch (error) {
     var ii = 1;
   }   
+}
+
+function SetHtml(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.innerHTML = data; 
+    data = null;
+  } catch (error) {
+    let i = 1;
+  }
+}
+
+function SetValue(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.value = data; 
+    data = null;
+  } catch (error) {
+    let i = 1;
+  }
 }

@@ -29,17 +29,15 @@ let g_selComputer = null;
 
 let g_trans = null;
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", () => {
     ipcRenderer.send('statistics_transfer_boinc',"ready");
     graphSize();
-    $(window).resize(function()
-    {
-//        SetTitlePosition();        
+    addEventListener("resize", (event) => {          
         graphSize();
     });
 
     ipcRenderer.on('computers', (event,computers) => {
-        $("#computer_list").html(computers);
+        SetHtml('computer_list',computers);
         getSelected();
     });
 
@@ -49,44 +47,45 @@ $(document).ready(function() {
         addData();
     });
 
-    $('#computer_list').on('change', function() {
+    document.getElementById('computer_list').addEventListener("click", function(event){  
         getSelected();
     });
 
-    $( "#select_hide" ).on( "click", function() {
+    document.getElementById('select_hide').addEventListener("click", function(event){  
         if (g_showComputer)
         {
-            $("#select_hide").html(">"); 
-            $("#computer_list_all").hide();             
+            SetHtml('select_hide',">");
+            document.getElementById('computer_list_all').style.display = "none";            
             g_showComputer = false;                     
         }
         else
         {
-            $("#select_hide").html(g_trans.DBS_BUTTON_HIDE);             
-            $("#computer_list_all").show();             
+            SetHtml('select_hide',g_trans.DBS_BUTTON_HIDE);
+            document.getElementById('computer_list_all').style.display = "block";          
             g_showComputer = true;
         }
-        graphSize(); 
-        initGraph();
-        addData();
+
+        graphSize();
+        getSelected();
     });
 
     ipcRenderer.on('translations', (event, dlg) => {
         g_trans = dlg;
-        $("#trans_computers").html( dlg.DBS_COMPUTERS);
-        $("#select_hide").html( dlg.DBS_BUTTON_HIDE);
-
+        SetHtml('trans_computers',dlg.DBS_COMPUTERS);   
+        SetHtml('select_hide',dlg.DBS_BUTTON_HIDE);   
     });
 });
 
 function getSelected()
 {
     g_selComputer = [];
-    $('#computer_list option:selected').each(function()
+    g_selComputer = [];
+    for (var option of document.getElementById('computer_list').options)
     {
-        let sel = $(this).val()
-        g_selComputer.push(sel);
-    });    
+        if (option.selected) {
+            g_selComputer.push(option.value);
+        }
+    } 
 
     initGraph();
     addData();
@@ -155,23 +154,23 @@ function initGraph(graphTitel)
     } catch (error) {
         var ii = 1;
     }
-
-    gStatisticsChart = new Highcharts.chart({	
+    let iHeight = graphHeight();
+    gStatisticsChart = Highcharts.chart("stats_chart",{	
         chart: {
+            height: iHeight,
             events: {
                 load: function () { // change legend symbol
-                $(".highcharts-legend-item path").attr('stroke-width', 10);
+              //  $(".highcharts-legend-item path").attr('stroke-width', 10);
             },
             redraw: function () { // change legend symbol
-                $(".highcharts-legend-item path").attr('stroke-width', 10);
+              //  $(".highcharts-legend-item path").attr('stroke-width', 10);
             }
             },
             zoomType: 'x',
             backgroundColor: 'rgb(245, 245, 245)',
             yAxis: {
                 gridLineDashStyle: 'longdash'
-            },
-            renderTo: 'stats_chart',        
+            },      
         },  
         title: {
             text: g_chartTitle,
@@ -210,11 +209,6 @@ function initGraph(graphTitel)
                 lineWidth: 1,
                 events: {
                     legendItemClick: function (x) {
-        //				if (g_single_multiple_selection == 1)
-        //				{
-        //					HideSeries();
-        //				}
-        //				LegendSelectionChanged();
                     }
                 }  
             }
@@ -240,14 +234,10 @@ function initGraph(graphTitel)
                     return s + '<br/>' + point.series.name + ': ' + formatByteSize(point.y);
                 }, '<b>' + Highcharts.dateFormat('%e - %b - %Y', new Date(this.x)) + '</b>');
             },
-            shared: true            
-            /*
-            headerFormat: '<b></b><br>',
-                pointFormat: '{series.name}, {point.x:%b %e}, ' + g_trans.DBS_STAT_TRANSFER + ': {${point.y/1024000}:.6f} ',
-            valueSuffix: ' MB',
-            */
+            shared: true
         } 
 	});	
+    graphSize();
 
 }
 
@@ -277,20 +267,47 @@ function formatByteSize(nr)
 
 function graphSize()
 {
-    let iWidthSel = $("#computer_list_all").width();
-    let iWidth = $( window ).width();
+    let iWidth = graphWidth();
+    let iHeight = graphHeight();
+    if (gStatisticsChart != null)
+    {
+        gStatisticsChart.setSize(iWidth,iHeight);
+    }
+}
+
+
+function graphWidth()
+{
+    let iWidthSel = document.getElementById('computer_list_all').offsetWidth; 
+    let iWidth = window.innerWidth;
     if (g_showComputer)
     {
         iWidth -= iWidthSel;
-        iWidth -= 34;        
+        iWidth -= 34;
     }
     else
     {
         iWidth -= 58;
     }
-    var iHeight  = $( window ).height();
+    return iWidth;
+}
+
+function graphHeight()
+{
+    var iHeight  = window.innerHeight;   
     iHeight -= 40;
     if (iHeight < 400) iHeight = 400;
-    $('#stats_chart').css({width: iWidth, height: iHeight});
-    if (gStatisticsChart != null)  gStatisticsChart.redraw()
+    return iHeight;
+}
+
+
+function SetHtml(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.innerHTML = data; 
+    data = null;
+  } catch (error) {
+    let i = 1;
+  }
 }

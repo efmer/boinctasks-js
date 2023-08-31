@@ -348,8 +348,12 @@ function initMenu()
                   type: "checkbox",
                   checked: btC.DEBUG_WINDOW,                    
                   click() {
-                    btC.DEBUG_WINDOW = !btC.DEBUG_WINDOW;
-                    if (btC.DEBUG_WINDOW)
+                    let set = gClassBtMenu.check(btC.MENU_DEBUG_WINDOW);
+                    set = !set;
+                    gClassBtMenu.set(btC.MENU_DEBUG_WINDOW,set);
+                    gClassBtMenu.write();
+                    btC.DEBUG_WINDOW = set;
+                    if (set)
                     {
                       gMainWindow.webContents.openDevTools();
                     }
@@ -371,7 +375,17 @@ function initMenu()
                   click() {
                     ping();
                   }
-                },                
+                },  
+                {
+                  label:'Test language',       
+                  click() {
+                    gSettings.languageIsSelected = -1;
+                    showLanguageSelector(gSettings);
+                  }
+                },
+                
+            
+
             ] 
           },
       ] 
@@ -455,7 +469,7 @@ function initialize () {
     let showArg = app.commandLine.getSwitchValue("show");
     let bShow = false;
 
-    if (gSettings.hideLogin === '1') 
+    if (gSettings.hideLogin == true) 
     {
       bShow = false;
       logging.logDebug("main, showApp BoincTasks settings: hideLogin: yes");   
@@ -473,6 +487,7 @@ function initialize () {
     }
 
     logging.logDebug("main, showApp showArg: " + argTxt);    
+    logging.logDebug("main, showApp actual: " + bShow);      
     return bShow;
   }
 
@@ -496,7 +511,7 @@ function initialize () {
         contextIsolation: false,  
         nodeIntegration: true,
         nodeIntegrationInWorker: true,        
-        preload: path.join(__dirname, './preload/preload.js')
+//        : path.join(__dirname, './preload/preload.js')
       },
     });
 
@@ -571,8 +586,7 @@ function initialize () {
     });
     
     gMainWindow.once('ready-to-show', () => {
-
-      // extra check to hide app at startup      
+      // extra check to hide app at startup   
       let bShow = showApp();
       if (bShow)
       {
@@ -586,8 +600,7 @@ function initialize () {
       let title = "BoincTasks Js " + gVersion;
       gMainWindow.setTitle(title);
       gMainWindow.webContents.send("translations",btC.TL.SEL);   
-//      gMainWindow.webContents.openDevTools()
-      insertCss();
+      insertCss();    
       logging.logFile("main, createWindow", "ready-to-show");
     });
 
@@ -595,11 +608,25 @@ function initialize () {
       if (state.max)
       {
         logging.logFile("main, createWindow", "state.max");
-        gMainWindow.maximize();
+        gMainWindow.maximize();       
       }
+      if (btC.DEBUG_WINDOW)
+      {
+        let devtools = new BrowserWindow();
+        gMainWindow.webContents.setDevToolsWebContents(devtools.webContents);
+        gMainWindow.webContents.openDevTools({ mode: 'detach' });
+
+        //gMainWindow.webContents.openDevTools();
+      }       
     });
+
+    gMainWindow.webContents.on('did-finish-load', () => {
+      logging.logFile("main, createWindow", "did-finish-load");      
+    }) 
+
   }
 
+ 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -833,6 +860,7 @@ async function insertCssDark(darkCss)
 logging.init();
 
 gMenuSettings = gClassBtMenu.read();
+btC.DEBUG_WINDOW = gClassBtMenu.check(btC.MENU_DEBUG_WINDOW);
 getTranslation();
 initialize()
 

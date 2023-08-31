@@ -455,24 +455,35 @@ function addManager(theme)
       }
     });
     gChildAddManager.loadFile('index/index_manager_add.html')
-    gChildAddManager.once('ready-to-show', () => {    
+    gChildAddManager.once('ready-to-show', () => {  
+        if (btC.DEBUG_WINDOW)
+        {                    
+            gChildAddManager.webContents.openDevTools();
+        }           
         gChildAddManager.show();  
-        gChildAddManager.setTitle(title);
-        gChildAddManager.webContents.send("translations",btC.TL.DIALOG_ADD_MANAGER);           
+        gChildAddManager.setTitle(title);        
     }) 
+
+    gChildAddManager.webContents.on('did-finish-load', () => {
+        insertCssDark(theme);
+        gChildAddManager.webContents.send("translations",btC.TL.DIALOG_ADD_MANAGER);           
+    })
+
     gChildAddManager.on('close', () => {
       let bounds = gChildAddManager.getBounds();
       windowsState.set("account_manager_add",bounds.x,bounds.y, bounds.width, bounds.height)
     })
-    gChildAddManager.webContents.on('did-finish-load', () => {
-        insertCssDark(theme);
-    })
+    
     gChildAddManager.on('closed', () => {
         gChildAddManager = null
     })    
   }
   else
   {
+    if (btC.DEBUG_WINDOW)
+    {                    
+        gChildAddManager.webContents.openDevTools();
+    } 
     gChildAddManager.setTitle(title); 
     gChildAddManager.hide();
     gChildAddManager.show(); 

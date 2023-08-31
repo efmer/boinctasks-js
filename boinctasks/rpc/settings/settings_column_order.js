@@ -28,12 +28,14 @@ const functions = new Functions();
 
 const {BrowserWindow} = require('electron')
 
+let gCssDarkOrder = null;
+
 class SettingsColumnOrder
 {
-    start(gb)
+    start(gb,theme)
     {
       if (gb.selectedTab === btC.TAB_NOTICES) return;
-        openWindow(gb);
+        openWindow(gb,theme);
     }
 
     get()
@@ -73,6 +75,10 @@ class SettingsColumnOrder
       } catch (error) {
         logging.logError('SettingsColumnOrder,set', error);          
       }
+    }
+    setTheme(theme)
+    {
+        insertCssDark(theme);
     }
 }
 
@@ -651,7 +657,7 @@ function addItem(name,id,order)
   return item;
 }
 
-function openWindow(gb)
+function openWindow(gb,theme)
 {
     try {
         let title = "BoincTasks Js - " + btC.TL.DIALOG_COLUMN_ORDER.DCO_TITLE;
@@ -669,18 +675,25 @@ function openWindow(gb)
               contextIsolation: false,  
               nodeIntegration: true,
               nodeIntegrationInWorker: true,        
-              preload:'${__dirname}/preload/preload.js',
+    //          preload:'${__dirname}/preload/preload.js',
             }
           });
           gChildColumn.loadFile('index/index_column_order.html')
           gChildColumn.once('ready-to-show', () => {    
-//          gChildColumn.webContents.openDevTools()
-          gChildColumn.show();  
-          gChildColumn.setTitle(title);
-          gChildColumn.webContents.send("translations",btC.TL.DIALOG_COLUMN_ORDER);          
-          setWindow(gb);
-//          gChildColumn.webContents.send('update', osPlatform, osArch, version); 
+            if (btC.DEBUG_WINDOW)
+            {
+              gChildColumn.webContents.openDevTools()
+            }  
+            gChildColumn.show();  
+            gChildColumn.setTitle(title);
           }) 
+    
+          gChildColumn.webContents.on('did-finish-load', () => {
+            insertCssDark(theme);
+            gChildColumn.webContents.send("translations",btC.TL.DIALOG_COLUMN_ORDER);          
+            setWindow(gb);
+          }) 
+
           gChildColumn.on('close', () => {
             let bounds = gChildColumn.getBounds();
             windowsState.set("column",bounds.x,bounds.y, bounds.width, bounds.height)
@@ -695,10 +708,26 @@ function openWindow(gb)
             gChildColumn.hide();
             gChildColumn.show();  
             setWindow(gb);
-//            gChildColumn.webContents.send('update', osPlatform, osArch, version);             
+            if (btC.DEBUG_WINDOW)
+            {
+              gChildColumn.webContents.openDevTools()
+            }          
         }
               
     } catch (error) {
         logging.logError('SettingsColumnOrder,openWindow', error);        
     }  
+}
+
+async function insertCssDark(darkCss)
+{
+  try {
+    if (gCssDarkOrder !== null)
+    {
+      gChildColumn.webContents.removeInsertedCSS(gCssDarkOrder) 
+    }    
+    gCssDarkOrder = await gChildColumn.webContents.insertCSS(darkCss);  
+  } catch (error) {
+    gCssDarkOrder = null;
+  }
 }

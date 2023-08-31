@@ -84,7 +84,7 @@ function auth2(event)
                 }
                 else
                 {
-                    let ipc =  this.ip + ", " + this.computerName;
+                    let ipc =  this.ip + ':' + this.port + ", " + this.computerName;
                     if (this.isShadow)
                     {
                         logging.logDebug("Authenticated (shadow): " + ipc);

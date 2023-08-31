@@ -20,6 +20,7 @@ const Functions = require('../functions/functions');
 const functions = new Functions();
 const Logging = require('../functions/logging');
 const logging = new Logging();
+const btC = require('../functions/btconstants');
 const WindowsState = require('../functions/window_state');
 const windowsState = new WindowsState();
 const ReadWrite  = require('../functions/readwrite');
@@ -105,12 +106,15 @@ function editEmail(gb)
             contextIsolation: false,  
             nodeIntegration: true,
             nodeIntegrationInWorker: true,        
-            preload:'${__dirname}/preload/preload.js',
+            //:'${__dirname}/preload/preload.js',
           }
         });
         gChildSettingsEmail.loadFile('index/index_email.html')
         gChildSettingsEmail.once('ready-to-show', () => {    
-//            gChildSettingsEmail.webContents.openDevTools()
+            if (btC.DEBUG_WINDOW)
+            {
+                gChildSettingsEmail.webContents.openDevTools()
+            }  
             gChildSettingsEmail.show();  
             gChildSettingsEmail.setTitle(title);
             set(gb);
@@ -128,6 +132,10 @@ function editEmail(gb)
       }
       else
       {
+        if (btC.DEBUG_WINDOW)
+        {
+            gChildSettingsEmail.webContents.openDevTools()
+        }          
         gChildSettingsEmail.setTitle(title); 
         gChildSettingsEmail.hide();
         gChildSettingsEmail.show();
@@ -195,6 +203,10 @@ function sendEmail(rules, eSubject, eBody)
         let send = rules.email.send;
 
         let data = rules.email.data;
+        if (data == undefined)
+        {
+            data = null;
+        }
         if (data === null)
         {
             transporter = nodemailer.createTransport({

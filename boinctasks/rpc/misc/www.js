@@ -18,6 +18,7 @@
 
 const Logging = require('../functions/logging');
 const logging = new Logging();
+const btC = require('../functions/btconstants');
 const WindowsState = require('../functions/window_state');
 const windowsState = new WindowsState();
 const {BrowserWindow} = require('electron');
@@ -29,6 +30,8 @@ class Www{
   show(gb,projectName,html)
   {
     showWww(gb,projectName,html);
+    let theme = gb.theme;
+    insertCssDark(theme);
           
   } catch (error) {    
   } 
@@ -58,18 +61,21 @@ function showWww(gb,projectName,html)
               contextIsolation: false,  
               nodeIntegration: true,
               nodeIntegrationInWorker: true,        
-              preload:'${__dirname}/preload/preload.js',
+   //           preload:'${__dirname}/preload/preload.js',
             }
           });
           gChildWww.loadFile('index/index_www.html')
           gChildWww.once('ready-to-show', () => {    
-//            gChildAbout.webContents.openDevTools()
+            if (btC.DEBUG_WINDOW)
+            {
+              gChildWww.webContents.openDevTools()
+            }
             gChildWww.show();  
             gChildWww.setTitle(title);             
-            gChildWww.webContents.send('www', html); 
           })
           gChildWww.webContents.on('did-finish-load', () => {
             insertCssDark(theme);
+            gChildWww.webContents.send('www', html);             
           })
           gChildWww.on('close', () => {
             let bounds = gChildWww.getBounds();
@@ -81,10 +87,14 @@ function showWww(gb,projectName,html)
         }
         else
         {
-            gChildWww.setTitle(title); 
-            gChildWww.hide();
-            gChildWww.show();  
-            gChildWww.webContents.send('www', html);             
+          if (btC.DEBUG_WINDOW)
+          {
+            gChildWww.webContents.openDevTools()
+          }          
+          gChildWww.setTitle(title); 
+          gChildWww.hide();
+          gChildWww.show();  
+          gChildWww.webContents.send('www', html);             
         }
               
     } catch (error) {
@@ -97,9 +107,9 @@ async function insertCssDark(darkCss)
   try {
     if (gCssDarkWww !== null)
     {
-        gCssDarkWww.webContents.removeInsertedCSS(gCssDarkAbout) 
+      gChildWww.webContents.removeInsertedCSS(gCssDarkWww) 
     }    
-    gCssDarkWww = await gChildAbout.webContents.insertCSS(darkCss);  
+    gCssDarkWww = await gChildWww.webContents.insertCSS(darkCss);  
   } catch (error) {
     gCssDarkWww = null;
   }

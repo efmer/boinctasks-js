@@ -18,6 +18,9 @@
 
 const Logging = require('../functions/logging');
 const logging = new Logging();
+
+const btC = require('../functions/btconstants');
+
 const Functions = require('../functions/functions');
 const functions = new Functions();
 const WindowsState = require('../functions/window_state');
@@ -99,14 +102,20 @@ function editRulesWindow(gb,ruleItem = null)
             contextIsolation: false,  
             nodeIntegration: true,
             nodeIntegrationInWorker: true,        
-            preload:'${__dirname}/preload/preload.js',
+       //     preload:'${__dirname}/preload/preload.js',
           }
         });
         gChildSettingsRules.loadFile('index/index_rules_list.html')
         gChildSettingsRules.once('ready-to-show', () => {    
-//        gChildSettingsRules.webContents.openDevTools()
+          if (btC.DEBUG_WINDOW)
+          {                    
+            gChildSettingsRules.webContents.openDevTools();
+          } 
         gChildSettingsRules.show();  
-          gChildSettingsRules.setTitle(title);
+        gChildSettingsRules.setTitle(title);
+        })
+        gChildSettingsRules.webContents.on('did-finish-load', () => {
+          insertCssDark(gb.theme);
           if (ruleItem === null)
           {
             editRules(gb);
@@ -114,10 +123,7 @@ function editRulesWindow(gb,ruleItem = null)
           else
           {
             addRule(ruleItem);
-          }
-        })
-        gChildSettingsRules.webContents.on('did-finish-load', () => {
-          insertCssDark(gb.theme);
+          }          
         })        
         gChildSettingsRules.on('close', () => {
           let bounds = gChildSettingsRules.getBounds();
@@ -129,6 +135,10 @@ function editRulesWindow(gb,ruleItem = null)
       }
       else
       {
+        if (btC.DEBUG_WINDOW)
+        {                    
+          gChildSettingsRules.webContents.openDevTools();
+        }         
         gChildSettingsRules.setTitle(title); 
         gChildSettingsRules.hide();
         gChildSettingsRules.show();

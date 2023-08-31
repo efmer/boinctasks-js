@@ -18,30 +18,25 @@
 
 'use strict';
 
-//var g_timer = null;
-var g_busyCnt = 0;
-
 const HEADER_NORMAL = 0;
 const HEADER_RESIZE = 1;
 
-var g_mainReady = false;
-
+let gSwapTable = false;
 let gHeaderWidth = null;
 
 const { ipcRenderer } = require('electron')
 const shell = require('electron').shell
 
 ipcRenderer.on('finish_load', (event, data) => {
-  g_mainReady = true;
+
 });
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", () => {
 
   const { ipcRenderer } = require('electron')
 
   ipcRenderer.on('table_data_header', (event, tableData, name, action) => {
-    $("#bt_table_header_insert").html(tableData);
-
+    SetHtml('bt_table_header_insert',tableData)
     switch (action)
     {
       case HEADER_RESIZE:
@@ -52,7 +47,7 @@ $(document).ready(function() {
 
 //    addHeaderResizeHandler(name);
 
-    $('body').removeClass('app-no-scrollbar')
+//    document.getElementById('body').classList.remove("app-no-scrollbar");  $$$$$
 // 
   });
 
@@ -61,29 +56,17 @@ $(document).ready(function() {
   });
 
   ipcRenderer.on('table_data', (event, tableData, nr) => {
-// might be faster, but not by much...
-//    let el = document.getElementById('bt_table_insert');
-//    el.innerHTML = tableData;
-    $("#bt_table_insert").html(tableData);
-    $("#footer_number").html(nr);
-
-    $("td").mouseenter(function (e) {
-      try {
-
-        if (e.target.offsetWidth < e.target.scrollWidth)    
-        {
-          let txt = e.target.innerText;
-          e.target.title = txt;
-        }       
-      } catch (error) {        
-      }
-  });
-
-
-  });
+    SwapTable(tableData);
+//    SetHtml('bt_table_insert',tableData)
+    if(nr != undefined)
+    {
+      SetHtml('footer_number',nr)
+    }
+});
 
   ipcRenderer.on('notices', (event, msg) => {
-    $("#bt_table_insert").html(msg);
+    SwapTable(msg);
+//    SetHtml('bt_table_insert',msg)
 
     // in case there are any links, like in notices
     const links = document.querySelectorAll('a[href]')
@@ -99,13 +82,18 @@ $(document).ready(function() {
   });
 
   ipcRenderer.on('translations', (event, sel) => {
-    $("#tab_computers").html(sel.SEL_COMPUTERS);
-    $("#tab_projects").html(sel.SEL_PROJECTS);
-    $("#tab_task").html(sel.SEL_TASKS);
-    $("#tab_transfers").html(sel.SEL_TRANSFERS);
-    $("#tab_messages").html(sel.SEL_MESSAGES);
-    $("#tab_history").html(sel.SEL_HISTORY);
-    $("#tab_notices").html(sel.SEL_NOTICES);
+
+    SetHtml('tab_computers',sel.SEL_COMPUTERS);
+    SetHtml('tab_projects',sel.SEL_PROJECTS);
+    SetHtml('tab_task',sel.SEL_TASKS);
+    SetHtml('tab_transfers',sel.SEL_TRANSFERS);
+    SetHtml('tab_messages',sel.SEL_MESSAGES);
+    SetHtml('tab_history',sel.SEL_HISTORY);
+    SetHtml('tab_notices',sel.SEL_NOTICES);
+    let table = document.getElementById("bt_table");
+//    let table1 = document.getElementById("bt_table_insert1"); 
+    table.addEventListener("click", clickTable);
+//    table1.addEventListener("click", clickTable);
   });
 
   ipcRenderer.on('set_tab', (event, tab) => {
@@ -113,23 +101,22 @@ $(document).ready(function() {
   });
 
   ipcRenderer.on('set_status', (event, status) => {
-    $("#footer_status").html(status);
+    SetHtml('footer_status',status);
   });
 
   ipcRenderer.on('set_dark_mode', (event, mode) => {
-    $("#footer_dark_mode").html(mode);
-
-    $("#dark_mode_select").click(function( event ) {
+    SetHtml('footer_dark_mode',mode);
+    document.getElementById('dark_mode_select').addEventListener("click", function(event){
       ipcRenderer.send('dark_mode_select');
-    });
+    });    
   });
 
   ipcRenderer.on('toolbar', (event, toolbar) => {
-    $("#bt_toolbar_insert").html(toolbar);
+    SetHtml('bt_toolbar_insert',toolbar);
   });
 
   ipcRenderer.on('sidebar_computers', (event, sidebar) => {
-    $("#_sidebar_computers_").html(sidebar);
+    SetHtml('_sidebar_computers_',sidebar);
   });
 
   ipcRenderer.on('sidebar_computers_status', (event, conStatus) => {
@@ -139,20 +126,20 @@ $(document).ready(function() {
   ipcRenderer.on('sidebar_computers_active', (event, set) => {
     if (set)
     {
-      $("#bt_wrapper").addClass("sidebar_computers_margin");
-      $("#bt_toolbar").addClass("sidebar_computer_footer");
-      $("#_sidebar_computers_").removeClass("hidden");         
+      document.getElementById('bt_wrapper').classList.add("sidebar_computers_margin");
+      document.getElementById('bt_toolbar').classList.add("sidebar_computer_footer");      
+      document.getElementById('_sidebar_computers_').classList.remove("hidden");       
     }
     else
     {
-      $("#bt_wrapper").removeClass("sidebar_computers_margin");
-      $("#bt_toolbar").removeClass("sidebar_computer_footer");
-      $("#_sidebar_computers_").addClass("hidden");          
+      document.getElementById('bt_wrapper').classList.remove("sidebar_computers_margin"); 
+      document.getElementById('bt_toolbar').classList.remove("sidebar_computer_footer");             
+      document.getElementById('_sidebar_computers_').classList.add("hidden");              
     }
   });
 
   ipcRenderer.on('sidebar_projects', (event, sidebar) => {
-    $("#_add_projects_").html(sidebar);
+    SetHtml('_add_projects_',sidebar);
   }); 
 
   ipcRenderer.on('get_computers', (event, connections) => {
@@ -160,32 +147,20 @@ $(document).ready(function() {
     ipcRenderer.send('got_computers', con);
   });
   
-// document.getElementById("bt_table_header").onclick = function(e)
-  document.getElementById("bt_table_header").addEventListener('mousedown', e => {
-  
+  document.getElementById("bt_table_header").addEventListener('mousedown', e => {  
    var id = e.target.id;
    var shift = e.shiftKey;
    var alt = e.altKey;
    var ctrl = e.ctrlKey;   
-   ipcRenderer.send('table_click_header', id, e.clientX, shift,alt,ctrl) 
-  });
-
-  $( "#bt_table" ).on( "click", function(e) {
-    var id = e.target.id;
-    var shift = e.shiftKey;
-    var alt = e.altKey;
-    var ctrl = e.ctrlKey;     
-    ipcRenderer.send('table_click', id,shift,alt,ctrl) 
+   ipcRenderer.send('table_click_header', id, e.clientX, shift,alt,ctrl); 
   });
  
-  document.getElementById("bt_toolbar").onclick = function(event)
-  {
+  document.getElementById('bt_toolbar').addEventListener("click", function(event){ 
     var id = event.target.id;
-    ipcRenderer.send('toolbar_click', id) 
-  }
+    ipcRenderer.send('toolbar_click', id);
+  });
 
-  document.getElementById("_sidebar_computers_").onclick = function(e)
-  {
+  document.getElementById("_sidebar_computers_").onclick = function(e) {
     var ctrl = e.ctrlKey;     
     var id = e.target.id;
     ipcRenderer.send('sidebar_click', id,ctrl) 
@@ -194,31 +169,114 @@ $(document).ready(function() {
 
   // tabs
 
-  $("#tab_computers").click(function( event ) {
+  document.getElementById('tab_computers').addEventListener("click", function(event){
     changeTab("computers",true);
   });
-  $("#tab_projects").click(function( event ) {
+
+  document.getElementById('tab_projects').addEventListener("click", function(event){   
     changeTab("projects",true);
   });
-  $("#tab_task").click(function( event ) {
+
+  document.getElementById('tab_task').addEventListener("click", function(event){     
     changeTab("tasks",true);    
   });
-  $("#tab_transfers").click(function( event ) {
+
+  document.getElementById('tab_transfers').addEventListener("click", function(event){    
     changeTab("transfers",true);
   });
-  $("#tab_messages").click(function( event ) {
+
+  document.getElementById('tab_messages').addEventListener("click", function(event){     
     changeTab("messages",true);
   });
-  $("#tab_history").click(function( event ) {
+
+  document.getElementById('tab_history').addEventListener("click", function(event){    
     changeTab("history",true);
   });
-  $("#tab_notices").click(function( event ) {
+
+  document.getElementById('tab_notices').addEventListener("click", function(event){     
     changeTab("notices",true);
   });
 
   ipcRenderer.send('tab_request', 0)  // initial tab
 
 });
+
+// Swap the tables, makes sure the listeners are always there.
+// not sure if this helps at all.
+
+function SwapTable(tableData)
+{
+  let table0 = document.getElementById("bt_table_insert0");
+  let table1 = document.getElementById("bt_table_insert1");  
+  if (gSwapTable)
+  {  
+    table1.innerHTML = tableData;
+    table1.style.display = "block";    
+    table0.style.display = "none";
+    gSwapTable = false;
+  }
+  else
+  {    
+    table0.innerHTML = tableData;
+    table0.style.display = "block";     
+    table1.style.display = "none"; 
+    gSwapTable = true;
+  }
+  tableData = null;
+}
+
+function clickTable(event)
+{  
+  var id = event.target.id;
+  let bMissed = false;
+  if (id == 'bt_table')
+  {
+    bMissed = true;
+  }
+  if (id.length<2)
+  {
+    bMissed = true;
+  }
+  if (bMissed)
+  {
+    // Clicked while the tables were swapping.
+    setTimeout(clickTable2(event), 200);    
+  }
+  var shift = event.shiftKey;
+  var alt = event.altKey;
+  var ctrl = event.ctrlKey;     
+  ipcRenderer.send('table_click', id,shift,alt,ctrl); 
+}
+
+function clickTable2(event)
+{
+  let x = event.clientX;
+  let y = event.clientY;
+  // try again at the same click location
+  let el = document.elementFromPoint(x, y);
+  let id = null;
+  // from point gives an element.
+  if (el.localName == 'td')
+  {
+    id = el.id;
+  }
+  else
+  {
+    if (el.localName == 'span')
+    {
+      id = el.id;
+    }
+    else
+    {
+      id = el;
+    }
+  }
+  var shift = event.shiftKey;
+  var alt = event.altKey;
+  var ctrl = event.ctrlKey;     
+  ipcRenderer.send('table_click', id,shift,alt,ctrl); 
+}
+
 
 function changeTab(name,send)
 {
@@ -227,37 +285,37 @@ function changeTab(name,send)
     case "computers":
       removeSelected();
       setTab('computers',send);
-      $("#tab_computers").addClass("bt_btn_tabs_select");     
+      document.getElementById('tab_computers').classList.add("bt_btn_tabs_select");
     break;
     case "projects":
       removeSelected();
       setTab('projects',send);
-      $("#tab_projects").addClass("bt_btn_tabs_select");
+      document.getElementById('tab_projects').classList.add("bt_btn_tabs_select");
     break;
     case "transfers":
       removeSelected();
       setTab('transfers',send)
-      $("#tab_transfers").addClass("bt_btn_tabs_select");
+      document.getElementById('tab_transfers').classList.add("bt_btn_tabs_select");
     break;
     case "messages":
       removeSelected();
       setTab('messages',send);
-      $("#tab_messages").addClass("bt_btn_tabs_select");    
+      document.getElementById('tab_messages').classList.add("bt_btn_tabs_select");        
     break;
     case "history":
       removeSelected();
       setTab('history',send);
-      $("#tab_history").addClass("bt_btn_tabs_select");    
+      document.getElementById('tab_history').classList.add("bt_btn_tabs_select");          
     break;
     case "notices":
       removeSelected();
       setTab('notices',send);
-      $("#tab_notices").addClass("bt_btn_tabs_select");    
+      document.getElementById('tab_notices').classList.add("bt_btn_tabs_select");  
     break;
     default:
       removeSelected();
       setTab('tasks',send);
-      $("#tab_task").addClass("bt_btn_tabs_select");
+      document.getElementById('tab_task').classList.add("bt_btn_tabs_select");      
   }
 }
 
@@ -270,14 +328,14 @@ function setTab(selected,send)
 }
 
 function removeSelected()
-{
-  $( "#tab_computers").removeClass("bt_btn_tabs_select");
-  $( "#tab_projects").removeClass("bt_btn_tabs_select");
-  $( "#tab_task").removeClass("bt_btn_tabs_select");
-  $( "#tab_transfers").removeClass("bt_btn_tabs_select");
-  $( "#tab_messages").removeClass("bt_btn_tabs_select");
-  $( "#tab_history").removeClass("bt_btn_tabs_select");    
-  $( "#tab_notices").removeClass("bt_btn_tabs_select");   
+{ 
+  document.getElementById('tab_computers').classList.remove("bt_btn_tabs_select");  
+  document.getElementById('tab_projects').classList.remove("bt_btn_tabs_select");  
+  document.getElementById('tab_task').classList.remove("bt_btn_tabs_select");  
+  document.getElementById('tab_transfers').classList.remove("bt_btn_tabs_select");  
+  document.getElementById('tab_messages').classList.remove("bt_btn_tabs_select");  
+  document.getElementById('tab_history').classList.remove("bt_btn_tabs_select");  
+  document.getElementById('tab_notices').classList.remove("bt_btn_tabs_select");  
 }
 
 function getComputers(connections)
@@ -287,8 +345,8 @@ function getComputers(connections)
     let idName = i;
     let val,id;
     try {
-      id = "#check-"+ idName;
-      val = $(id).is(":checked");
+      id = "check-"+ idName;
+      val = document.getElementById(id).checked;
       if (val) val = 1;
       else val = 0;
       connections[i].check = val;      
@@ -297,40 +355,40 @@ function getComputers(connections)
     }
 
     try {
-      id = "#group-"+ idName;
-      val = $(id).val();
+      id = "group-"+ idName;
+      val = document.getElementById(id).value;
       connections[i].group = val;      
     } catch (error) {
       connections[i].group = "";
     }
 
     try {
-      id = "#computer-"+ idName;
-      val = $(id).val();
+      id = "computer-"+ idName;
+      val = document.getElementById(id).value;
       connections[i].computerName = val; 
     } catch (error) {
       connections[i].computerName = "Error";  
     }
 
     try {
-      id = "#ip-"+ idName;
-      val = $(id).val();
+      id = "ip-"+ idName;
+      val = document.getElementById(id).value;
       connections[i].ip = val; 
     } catch (error) {
       connections[i].ip = "";       
     }
 
     try {
-      id = "#cpid-"+ idName;
-      val = $(id).val();
+      id = "cpid-"+ idName;
+      val = document.getElementById(id).value;
       connections[i].cpid = val;      
     } catch (error) {
       connections[i].cpid = "";
     }
 
     try {
-      id = "#port-"+ idName;
-      val = $(id).val();
+      id = "port-"+ idName;
+      val = document.getElementById(id).value;
       if (val === "") val = "31416";
       let ports = val.split(";");
       if (ports.length > 1)
@@ -350,8 +408,8 @@ function getComputers(connections)
     }
 
     try {
-      id = "#pass-"+ idName;
-      val = $(id).val();
+      id = "pass-"+ idName;
+      val = document.getElementById(id).value;
       connections[i].passWord = val;  
     } catch (error) {
       connections[i].passWord = "";
@@ -370,7 +428,7 @@ function setConnectionStatus(conStatus)
       {
         let id = item[0];
         let status = item[1];
-        $(id).html(status);
+        SetHtml(id,status);
       }
     }
   } catch (error) { 
@@ -422,7 +480,7 @@ function addHeaderResizeHandler(name)
     const cols = table.querySelectorAll('th');
 
     [].forEach.call(cols, function(col) {
-        let nr = $(col).attr("id");
+        let nr = document.getElementById(col).getAttribute("id");
         let id = document.getElementById(nr, name);
 //        let img = id.lastChild;
         createResizableColumn(id, name);
@@ -481,7 +539,7 @@ function sendHeaderWidth(name)
   let widthArray = [];
   let idArray = [];
   [].forEach.call(cols, function(col) {    
-    let nr = $(col).attr("id");
+    let nr = col.getAttribute('id');
     idArray.push(nr);
     let id = document.getElementById(nr);  
     let styles = window.getComputedStyle(id);
@@ -512,3 +570,14 @@ function sendHeaderWidth(name)
 }
 
 // END Resize the header
+
+function SetHtml(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.innerHTML = data; 
+    data = null;
+  } catch (error) {
+    let i = 1;
+  }
+}

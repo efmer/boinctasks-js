@@ -21,17 +21,17 @@ const shell = require('electron').shell
 
 'use strict';
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", () => {
 
   ipcRenderer.on('about', (event, txt) => {
-    $("#about_system_text").html(txt);
+    SetHtml('about_system_text',txt)
   });
 
   ipcRenderer.on('translations', (event, dlg) => {
-    $("#trans_intro").html( dlg.DAB_THE_EASY_WAY);
-    $("#trans_GNU").html( dlg.DAB_LICENCE);
-    $("#trans_BOINC").html( dlg.DAB_BOINC);
-    $("#trans_software_used").html( dlg.DAB_FOLLOWING_SOFTWARE);
+    SetHtml('trans_intro',dlg.DAB_THE_EASY_WAY);
+    SetHtml('trans_GNU',dlg.DAB_LICENCE);
+    SetHtml('trans_BOINC',dlg.DAB_BOINC);
+    SetHtml('trans_software_used',dlg.DAB_FOLLOWING_SOFTWARE);
 
     const links = document.querySelectorAll('a[href]')
     Array.prototype.forEach.call(links, function (link) {
@@ -43,7 +43,17 @@ $(document).ready(function() {
           })
        }
     })
+  });
 
 });
 
-});
+function SetHtml(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.innerHTML = data; 
+    data = null;
+  } catch (error) {
+    let i = 1;
+  }
+}

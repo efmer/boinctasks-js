@@ -31,7 +31,7 @@
       <td><label id="trans_login" for="login_name">Login name:</label></td><td><input class="project_add_input" type="text" id="add_project_login_name" name="login_name"></td><td>  <button id="add_project_button">Add project</button></td>
     </tr>
     <tr>
-      <td><label id="trans_password" for="password">Password:</label></td><td><input class="project_add_input" type="password" id="add_project_password" name="password"><span class = "ef_img_input bt_img_input_eye_not"></span></td>
+      <td><label id="trans_password" for="password">Password:</label></td><td><input class="project_add_input" type="password" id="add_project_password" name="password"><span class = "ef_img_input bt_img_input_eye_not" id="password_eye"></span></td>
     </tr>
     </table>
     <br><br>
@@ -40,9 +40,6 @@
     <br>
     <div id = "add_project_status"></div>
 
-    <script>window.$ = window.jQuery = require('../boinctasks/lib/jquery.min');</script>
-    <script type="text/javascript">
-      require('../render/renderer_add_project')
-    </script>
+    <script type="text/javascript" src ='../render/renderer_add_project.js'></script>
   </body>
 </html>

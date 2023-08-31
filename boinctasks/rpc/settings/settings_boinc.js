@@ -123,7 +123,7 @@ function settingsStart(gb,selected)
             contextIsolation: false,  
             nodeIntegration: true,
             nodeIntegrationInWorker: true,
-            preload:'${__dirname}/preload/preload.js',
+    //        preload:'${__dirname}/preload/preload.js',
           }
         });
 
@@ -133,16 +133,16 @@ function settingsStart(gb,selected)
           {
             gChildSettingsBoinc.webContents.openDevTools()
           }
-          gChildSettingsBoinc.setTitle(title);
-          gChildSettingsBoinc.webContents.send("translations",btC.TL.DIALOG_BOINC_SETTINGS);
-          let status = '<h2><b>';
-          status += btC.TL.DIALOG_BOINC_SETTINGS.DBO_LOADING_SETTINGS;
-          status += '</b></h2>'
-          gChildSettingsBoinc.webContents.send("header_status",status);                       
+          gChildSettingsBoinc.setTitle(title);              
           getData(selected);
         })
         gChildSettingsBoinc.webContents.on('did-finish-load', () => {
           insertCssDark(gb.theme);
+          gChildSettingsBoinc.webContents.send("translations",btC.TL.DIALOG_BOINC_SETTINGS);              
+          let status = '<h2><b>';
+          status += btC.TL.DIALOG_BOINC_SETTINGS.DBO_LOADING_SETTINGS;
+          status += '</b></h2>'
+          gChildSettingsBoinc.webContents.send("header_status",status);               
         })
         gChildSettingsBoinc.on('close', () => {
           let bounds = gChildSettingsBoinc.getBounds();
@@ -273,6 +273,7 @@ function validate(result)
   valid(result,'net_end_hour',0);
 
   valid(result,'idle_time_to_run',3);
+  valid(result,'suspend_cpu_usage',0);
   valid(result,'leave_apps_in_memory',false);
   valid(result,'confirm_before_connecting',true);
   valid(result,'hangup_if_dialed',false);
@@ -336,6 +337,7 @@ function sendSettings(settings)
     send += getTag("  ","ram_max_used_busy_pct",settings);
     send += getTag("  ","ram_max_used_idle_pct",settings);
     send += getTag("  ","idle_time_to_run",settings);
+    send += getTag("  ","suspend_cpu_usage",settings);   
     send += getTag("  ","max_bytes_sec_up",settings);
     send += getTag("  ","max_bytes_sec_down",settings);
     send += getTag("  ","cpu_usage_limit",settings);

@@ -30,94 +30,104 @@ let g_selComputer = null;
 
 let g_trans = null;
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", () => {
     ipcRenderer.send('statistics_boinc',"projects");
     graphSize();
-    $(window).resize(function()
-    {
-//        SetTitlePosition();        
+    addEventListener("resize", (event) => {       
         graphSize();
     });
 
     ipcRenderer.on('projects', (event,projects,computers) => {
-        $("#project_list").html(projects); 
-        $("#computer_list").html(computers);         
+        SetHtml('project_list',projects);
+        SetHtml('computer_list',computers);
     });
 
     ipcRenderer.on('graph', (event,data) => {       
         g_data = data;
         initGraph();
-        let selected = $("input[name='radio_credit']:checked").val()  
+        let selected = creditSelected(); 
         addData(selected);
     });
 
-    $('#radio_credit').change(function(){
-        let selected = $("input[name='radio_credit']:checked").val()  
+    document.getElementById('radio_credit').addEventListener("click", function(event){  
+        let selected = creditSelected(); 
         initGraph();
         addData(selected);
     }); 
 
-    $('#project_list').on('change', function() {
+    document.getElementById('project_list').addEventListener("click", function(event){  
         getSelected();
     });
 
-    $('#computer_list').on('change', function() {
+    document.getElementById('computer_list').addEventListener("click", function(event){      
         getSelected();
     });
 
-    $( "#select_hide" ).on( "click", function() {    
+    document.getElementById('select_hide').addEventListener("click", function(event){         
         if (g_showProject)
         {
-            $("#select_hide").html(">"); 
-            $("#project_list_all").hide(); 
-            $("#computer_list_all").hide();             
+            SetHtml('select_hide',">");
+            document.getElementById('project_list_all').style.display = "none";
+            document.getElementById('computer_list_all').style.display = "none";            
             g_showProject = false;                     
         }
         else
         {
-            $("#select_hide").html(g_trans.DBS_BUTTON_HIDE);             
-            $("#project_list_all").show();
-            $("#computer_list_all").show();             
+            SetHtml('select_hide',g_trans.DBS_BUTTON_HIDE);
+            document.getElementById('project_list_all').style.display = "block";
+            document.getElementById('computer_list_all').style.display = "block";          
             g_showProject = true;
         }
         graphSize();
-        let selected = $("input[name='radio_credit']:checked").val()  
-        initGraph();
-        addData(selected);
+        getSelected();
     });
 
     ipcRenderer.on('translations', (event, dlg) => {
         g_trans = dlg;
-        $("#trans_host_average").html( dlg.DBS_HOST_AVERAGE);
-        $("#trans_host_total").html( dlg.DBS_HOST_TOTAL);
-        $("#trans_user_average").html( dlg.DBS_USER_AVERAGE);
-        $("#trans_user_total").html( dlg.DBS_USER_TOTAL);
-        $("#trans_projects").html( dlg.DBS_PROJECTS);
-        $("#trans_computers").html( dlg.DBS_COMPUTERS);
-        $("#select_hide").html( dlg.DBS_BUTTON_HIDE);
-
+        SetHtml('trans_host_average',dlg.DBS_HOST_AVERAGE);
+        SetHtml('trans_host_total',dlg.DBS_HOST_TOTAL)
+        SetHtml('trans_user_average',dlg.DBS_USER_AVERAGE)
+        SetHtml('trans_user_total',dlg.DBS_USER_TOTAL)
+        SetHtml('trans_projects',dlg.DBS_PROJECTS)
+        SetHtml('trans_computers',dlg.DBS_COMPUTERS)
+        SetHtml('select_hide',dlg.DBS_BUTTON_HIDE)
     });
 });
 
 function getSelected()
 {
     g_selProject = [];
-    $('#project_list option:selected').each(function()
+    for (var option of document.getElementById('project_list').options)
     {
-        let sel = $(this).val()
-        g_selProject.push(sel);
-    });    
+        if (option.selected) {
+            g_selProject.push(option.value);
+        }
+    } 
 
     g_selComputer = [];
-    $('#computer_list option:selected').each(function()
+    for (var option of document.getElementById('computer_list').options)
     {
-        let sel = $(this).val()
-        g_selComputer.push(sel);
-    });    
+        if (option.selected) {
+            g_selComputer.push(option.value);
+        }
+    } 
+    let selected = creditSelected(); 
 
-    let selected = $("input[name='radio_credit']:checked").val()  
     initGraph();
     addData(selected);
+}
+
+function creditSelected()
+{
+    let selected = -1;
+    var element = document.getElementsByName('radio_credit');
+     for (let i = 0; i < element.length; i++) {
+        if (element[i].checked)
+        {
+            selected=element[i].value;
+        }
+    }
+    return selected;
 }
 
 function addData(selected)
@@ -221,22 +231,23 @@ function initGraph(graphTitel)
         var ii = 1;
     }
 
-    gStatisticsChart = new Highcharts.chart({	
+    let iHeight = graphHeight();
+    gStatisticsChart = Highcharts.chart("stats_chart",{	
         chart: {
+            height: iHeight,
             events: {
                 load: function () { // change legend symbol
-                $(".highcharts-legend-item path").attr('stroke-width', 10);
+//                $(".highcharts-legend-item path").attr('stroke-width', 10);
             },
             redraw: function () { // change legend symbol
-                $(".highcharts-legend-item path").attr('stroke-width', 10);
+//                $(".highcharts-legend-item path").attr('stroke-width', 10);
             }
             },
             zoomType: 'x',
             backgroundColor: 'rgb(245, 245, 245)',
             yAxis: {
                 gridLineDashStyle: 'longdash'
-            },
-            renderTo: 'stats_chart',        
+            }    
         },  
         title: {
             text: g_chartTitle,
@@ -304,27 +315,52 @@ function initGraph(graphTitel)
          pointFormat: '{series.name}, {point.x:%b %e}, ' + g_trans.DBS_STAT_CREDITS + ': {point.y:,.2f} '
         } 
 	});	
+    graphSize();
+}
 
+function graphWidth()
+{
+    let iWidthSel = document.getElementById('project_list_all').offsetWidth; 
+    let iWidth = window.innerWidth;
+    if (g_showProject)
+    {
+        iWidth -= iWidthSel;
+        iWidth -= 54;
+    }
+    else
+    {
+        iWidth -= 78;
+    }
+    return iWidth;
+}
+
+function graphHeight()
+{
+    var iHeight  = window.innerHeight;
+    let iHeightRadio = document.getElementById('radio_credit').offsetHeight;
+    iHeight -= iHeightRadio;    
+    iHeight -= 40;
+    if (iHeight < 400) iHeight = 400;
+    return iHeight;
 }
 
 function graphSize()
 {
-    let iWidthSel = $("#project_list_all").width();
-    let iWidth = $( window ).width();
-    if (g_showProject)
+    let iWidth = graphWidth();
+    let iHeight = graphHeight();
+    if (gStatisticsChart != null)
     {
-        iWidth -= iWidthSel;
-        iWidth -= 34;
+        gStatisticsChart.setSize(iWidth,iHeight);
     }
-    else
-    {
-        iWidth -= 58;
-    }
-    var iHeight  = $( window ).height();
-    let iHeightRadio = $("#radio_credit").height();
-    iHeight -= iHeightRadio;    
-    iHeight -= 40;
-    if (iHeight < 400) iHeight = 400;
-    $('#stats_chart').css({width: iWidth, height: iHeight});
-    if (gStatisticsChart != null)  gStatisticsChart.redraw()
+}
+
+function SetHtml(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.innerHTML = data; 
+    data = null;
+  } catch (error) {
+    let i = 1;
+  }
 }

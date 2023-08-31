@@ -18,11 +18,14 @@
 
 var net = require("net");
 const Logging = require('../functions/logging');
+const logging = new Logging();
+const btconstants = require('../functions/btconstants');
 
 class TempSocket{
     socket(con)
     {
     try {
+        con.temp.connected = false;
         var ip = con.ip;
         var port = con.temp.port;
 
@@ -33,6 +36,9 @@ class TempSocket{
         con.temp.client_socket.connect(port, ip);       // connect adds listeners that HAVE to be removed.
 
         con.temp.client_socket.on('connect',function(){
+            con.temp.connected = true;
+            let msg = btconstants.TL.MSG_GENERAL.MSG_COMPUTER_CONNECTED + " °C " + ip + ':' + port + "," + con.computerName;
+            logging.logDebug(msg);
         });
 
         con.temp.client_socket.on('data', function(data) {
@@ -54,10 +60,12 @@ class TempSocket{
             invalidate(con);
         });        
     } catch (error) {
+        logging.logError('TempSocket,client', error);
         con.temp.client_socket.end();
         con.temp.client_socket.destroy();
         con.temp.clientClass = null;
-        invalidate(con);        
+        invalidate(con);
+        lostConnectionTemp(con,"error2")
     }
     }
 }
@@ -66,8 +74,19 @@ module.exports = TempSocket;
 
 function invalidate(con)
 {
-    con.temp.cpu = void 0;
-    con.temp.gpu = void 0;
-    con.temp.cpuT= void 0;
-    con.temp.gpuT= void 0;
+    try {
+        if (con.temp.connected)
+        {
+            let msg = btconstants.TL.MSG_GENERAL.MSG_COMPUTER_LOST + " °C " + con.ip + ':' + con.temp.port + "," + con.computerName;
+            logging.logDebug(msg);         
+        }
+
+        con.temp.connected = false;
+        con.temp.cpu = void 0;
+        con.temp.gpu = void 0;
+        con.temp.cpuT= void 0;
+        con.temp.gpuT= void 0;
+    } catch (error) {
+        logging.logError('TempSocket,invalidate', error);        
+    }
 }

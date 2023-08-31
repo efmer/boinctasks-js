@@ -71,7 +71,7 @@ function statisticsTransferStart(gb)
             contextIsolation: false,  
             nodeIntegration: true,
             nodeIntegrationInWorker: true,        
-            preload:'${__dirname}/preload/preload.js',
+   //         preload:'${__dirname}/preload/preload.js',
           }
         });
         if (state.max)
@@ -81,29 +81,35 @@ function statisticsTransferStart(gb)
         }        
         gChildStatisticsTransfer.loadFile('index/index_statistics_transfer_boinc.html')
         gChildStatisticsTransfer.once('ready-to-show', () => {    
-//          gChildStatisticsTransfer.webContents.openDevTools()
-          gChildStatisticsTransfer.show();  
-          gChildStatisticsTransfer.setTitle(title);
+            if (btC.DEBUG_WINDOW)
+            {
+              gChildStatisticsTransfer.webContents.openDevTools()
+            }
+            gChildStatisticsTransfer.webContents.send("translations",btC.TL.DIALOG_BOINC_STATISTICS_TRANSFER);  // Translations must be this early.           
+            gChildStatisticsTransfer.show();  
+            gChildStatisticsTransfer.setTitle(title);
+        })
 
+        gChildStatisticsTransfer.webContents.on('did-finish-load', () => {
+          insertCssDark(gb.theme);   
           try {
             btC.TL.DIALOG_BOINC_STATISTICS_TRANSFER.DBS_MONTH_T = JSON.parse(btC.TL.DIALOG_BOINC_STATISTICS.DBS_MONTH)      
           } catch (error) {
             logging.logError('StatisticsBoinc,statisticsStart,DBS_MONTH', error);     
-          }
-          gChildStatisticsTransfer.webContents.send("translations",btC.TL.DIALOG_BOINC_STATISTICS_TRANSFER);     
-          getStatisticsTransfer(gb);
+          }          
+          getStatisticsTransfer(gb);          
         })
-        gChildStatisticsTransfer.webContents.on('did-finish-load', () => {
-          insertCssDark(gb.theme);
-        })
+
         gChildStatisticsTransfer.on('maximize', function (event) {
         });
+
         gChildStatisticsTransfer.on('close', () => {
           let max = gChildStatisticsTransfer.isMaximized();          
           let bounds = gChildStatisticsTransfer.getBounds();
           windowsState.set("boinc_statistics_transfer",bounds.x,bounds.y, bounds.width, bounds.height,max)
           logging.logFile("StatisticsTransferBoinc, statisticsTransferStart", "close, store window, max:" + max);          
-        })     
+        })  
+           
         gChildStatisticsTransfer.on('closed', () => {
           gChildStatisticsTransfer = null
         })    

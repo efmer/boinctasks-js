@@ -242,10 +242,21 @@ function tableComputerItem(selRows, row, order, con, edit)
         selRows.present[iSel] = true;        
         sel = ' class ="bt_table_selected" ';
       }
+      else
+      {
+        if (con.check != "1")
+        {
+          sel = ' class ="warning_text" '; 
+        }
+      }
 
       table = "<tr " + sel + ">";
-      let check = "-";
-      if (con.check == "1") check = "✓";
+      let check = "⛔";
+      if (con.check == "1")
+      {
+         check = "✅";
+      }
+      
       items[order.order[0]] = addRow(order.check[0],selId,row, 0, check);
       items[order.order[1]] = addRow(order.check[1],selId,row, 1, con.group);
       items[order.order[2]] = addRow(order.check[2],selId,row, 2, con.computerName);

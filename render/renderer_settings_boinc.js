@@ -23,104 +23,104 @@ const {ipcRenderer } = require('electron');
 let gLocale = "";
 let gError = false;
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", () => {
     gLocale =  navigator.language,
     ipcRenderer.on('settings', (event,obj) => {
         gError = false;
         updateOk("")
         updateError("");
-        process(obj);        
-        $("#all_settings").removeClass( "hidden" );
+        process(obj);
+        document.getElementById('all_settings').classList.remove("hidden");  
     });
     ipcRenderer.on('header_status', (event,status) => {
-        $("#header_status").html(status);
+        SetHtml("header_status",status);
     });    
     ipcRenderer.on('settings_ok', (event) => {
         ok();
     });
 
-    $( "#apply1" ).on( "click", function(event) {
+    document.getElementById('apply1').addEventListener("click", function(event){      
         apply()
     });  
-    $( "#apply2" ).on( "click", function(event) {
+    document.getElementById('apply2').addEventListener("click", function(event){      
         apply()
     }); 
-    $( "#apply3" ).on( "click", function(event) {
+    document.getElementById('apply3').addEventListener("click", function(event){     
         apply()
     });         
 
-    $( "#default" ).on( "click", function(event) {
+    document.getElementById('default').addEventListener("click", function(event){   
         defaultSettings()
     });  
 
     ipcRenderer.on('translations', (event, dlg) => {
-        $("#trans_processor").html( dlg.DBO_PROCESSOR_TITLE);
-        $("#trans_allowed").html( dlg.DBO_PROCESSOR_COMPUTERING_ALLOWED);
-        $("#trans_while_on_batteries").html( dlg.DBO_PROCESSOR_WHILE_BATTERIES);
-        $("#trans_while_in_use").html( dlg.DBO_PROCESSOR_WHILE_IN_USE);
-        $("#trans_GPU_in_use").html( dlg.DBO_PROCESSOR_GPU_WHILE_IN_USE);
-        $("#trans_cpu_idle").html( dlg.DBO_PROCESSOR_ONLY_IDLE);
-        $("#trans_minutes1").html( dlg.DBO_MINUTES);
-        $("#trans_usage_less").html( dlg.DBO_PROCESSOR_ONLY_USAGE_LESS);
-        $("#trans_allowed_between1").html( dlg.DBO_ALLOWED_BETWEEN);
-        $("#trans_every_day1").html( dlg.DBO_PROCESSOR_EVERY_DAY);
-        $("#tans_hhmm1").html( dlg.DBO_HHMM);
-        $("#trans_sunday1").html( dlg.DBO_SUNDAY);
-        $("#trans_monday1").html( dlg.DBO_MONDAY);
-        $("#trans_tuesday1").html( dlg.DBO_TUESDAY);
-        $("#trans_wednesday1").html( dlg.DBO_WEDNESDAY);
-        $("#trans_thursday1").html( dlg.DBO_THURSDAY);
-        $("#trans_friday1").html( dlg.DBO_FRIDAY);
-        $("#trans_saturday1").html( dlg.DBO_SATURDAY);
-        $("#trans_switch").html( dlg.DBO_PROCESSOR_SWITCH);
-        $("#trans_minutes2").html( dlg.DBO_MINUTES);
-        $("#trans_use_most1").html( dlg.DBO_USE_AT_MOST);
-        $("#trans_perc_processors").html( dlg.DBO_PERC_PROCESSOR);
-        $("#trans_use_most2").html( dlg.DBO_USE_AT_MOST);
-        $("#trans_perc_cpu").html( dlg.DBO_PERC_CPU);
-        $("#apply1").html( dlg.DBO_BUTTON_APPLY);
-        $("#trans_network").html( dlg.DBO_NETWORK_TITLE);
-        $("#trans_max_down").html( dlg.DBO_NETWORK_MAX_DOWN);
-        $("#trans_kbytess1").html( dlg.DBO_KBYTES_S);
-        $("#trans_max_up").html( dlg.DBO_NETWORK_MAX_UP);
-        $("#trans_kbytess2").html( dlg.DBO_KBYTES_S);
-        $("#trans_at_most").html( dlg.DBO_NETWORK_TRANSFER_MOST);
-        $("#trans_mbytes_every").html( dlg.DBO_MBYTES_EVERY);
-        $("#trans_days1").html( dlg.DBO_DAYS);
-        $("#trans_work_buffer").html( dlg.DBO_NETWORK_MIN_BUFFER);
-        $("#trans_days2").html( dlg.DBO_DAYS);
-        $("#trans_add_buffer").html( dlg.DBO_NETWORK_ADD_BUFFER);
-        $("#trans_days3").html( dlg.DBO_DAYS);
-        $("#trans_allowed_between2").html( dlg.DBO_ALLOWED_BETWEEN);
-        $("#trans_every_day2").html( dlg.DBO_PROCESSOR_EVERY_DAY);
-        $("#tans_hhmm2").html( dlg.DBO_HHMM);
-        $("#trans_sunday2").html( dlg.DBO_SUNDAY);
-        $("#trans_monday2").html( dlg.DBO_MONDAY);
-        $("#trans_tuesday2").html( dlg.DBO_TUESDAY);
-        $("#trans_wednesday2").html( dlg.DBO_WEDNESDAY);
-        $("#trans_thursday2").html( dlg.DBO_THURSDAY);
-        $("#trans_friday2").html( dlg.DBO_FRIDAY);
-        $("#trans_saturday2").html( dlg.DBO_SATURDAY);
-        $("#apply2").html( dlg.DBO_BUTTON_APPLY);
-        $("#trans_disk").html( dlg.DBO_DISK_TITLE);
-        $("#trans_use_most3").html( dlg.DBO_USE_AT_MOST);
-        $("#trans_giga_disk1").html( dlg.DBO_DISK_GIGABYTE);
-        $("#trans_leave_least1").html( dlg.DBO_LEAVE_AT_LEAST);
-        $("#trans_giga_disk2").html( dlg.DBO_DISK_GIGABYTE);
-        $("#trans_use_most4").html( dlg.DBO_USE_AT_MOST);
-        $("#trans_disk_space").html( dlg.DBO_DISK_PERS_DISK);
-        $("#trans_write_disk").html( dlg.DBO_DISK_WRITE);
-        $("#trans_seconds").html( dlg.DBO_SECONDS);
-        $("#trans_use_most5").html( dlg.DBO_USE_AT_MOST);
-        $("#trans_swap").html( dlg.DBO_DISK_PAGE_SWAP);
-        $("#trans_memory").html( dlg.DBO_MEMORY_TITLE);
-        $("#trans_use_most6").html( dlg.DBO_USE_AT_MOST);
-        $("#trans_perc_use").html( dlg.DBO_WHEN_IN_USE);
-        $("#trans_use_most7").html( dlg.DBO_USE_AT_MOST);
-        $("#trans_perc_idle").html( dlg.DBO_WHEN_IDLE);
-        $("#trans_leave_mem").html( dlg.DBO_MEMORY_LEAVE);
-        $("#apply3").html( dlg.DBO_BUTTON_APPLY);
-        $("#default").html( dlg.DBO_BUTTON_RESET);
+        SetHtml("trans_processor",dlg.DBO_PROCESSOR_TITLE);
+        SetHtml("trans_allowed",dlg.DBO_PROCESSOR_COMPUTERING_ALLOWED);
+        SetHtml("trans_while_on_batteries",dlg.DBO_PROCESSOR_WHILE_BATTERIES);
+        SetHtml("trans_while_in_use",dlg.DBO_PROCESSOR_WHILE_IN_USE);
+        SetHtml("trans_GPU_in_use",dlg.DBO_PROCESSOR_GPU_WHILE_IN_USE);
+        SetHtml("trans_cpu_idle",dlg.DBO_PROCESSOR_ONLY_IDLE);
+        SetHtml("trans_minutes1",dlg.DBO_MINUTES);
+        SetHtml("trans_usage_less",dlg.DBO_PROCESSOR_ONLY_USAGE_LESS);
+        SetHtml("trans_allowed_between1",dlg.DBO_ALLOWED_BETWEEN);
+        SetHtml("trans_every_day1",dlg.DBO_PROCESSOR_EVERY_DAY);
+        SetHtml("tans_hhmm1",dlg.DBO_HHMM);
+        SetHtml("trans_sunday1",dlg.DBO_SUNDAY);
+        SetHtml("trans_monday1",dlg.DBO_MONDAY);
+        SetHtml("trans_tuesday1",dlg.DBO_TUESDAY);
+        SetHtml("trans_wednesday1",dlg.DBO_WEDNESDAY);
+        SetHtml("trans_thursday1",dlg.DBO_THURSDAY);
+        SetHtml("trans_friday1",dlg.DBO_FRIDAY);
+        SetHtml("trans_saturday1",dlg.DBO_SATURDAY);
+        SetHtml("trans_switch",dlg.DBO_PROCESSOR_SWITCH);
+        SetHtml("trans_minutes2",dlg.DBO_MINUTES);
+        SetHtml("trans_use_most1",dlg.DBO_USE_AT_MOST);
+        SetHtml("trans_perc_processors",dlg.DBO_PERC_PROCESSOR);
+        SetHtml("trans_use_most2",dlg.DBO_USE_AT_MOST);
+        SetHtml("trans_perc_cpu",dlg.DBO_PERC_CPU);
+        SetHtml("apply1",dlg.DBO_BUTTON_APPLY);
+        SetHtml("trans_network",dlg.DBO_NETWORK_TITLE);
+        SetHtml("trans_max_down",dlg.DBO_NETWORK_MAX_DOWN);
+        SetHtml("trans_kbytess1",dlg.DBO_KBYTES_S);
+        SetHtml("trans_max_up",dlg.DBO_NETWORK_MAX_UP);
+        SetHtml("trans_kbytess2",dlg.DBO_KBYTES_S);
+        SetHtml("trans_at_most",dlg.DBO_NETWORK_TRANSFER_MOST);
+        SetHtml("trans_mbytes_every",dlg.DBO_MBYTES_EVERY);
+        SetHtml("trans_days1",dlg.DBO_DAYS);
+        SetHtml("trans_work_buffer",dlg.DBO_NETWORK_MIN_BUFFER);
+        SetHtml("trans_days2",dlg.DBO_DAYS);
+        SetHtml("trans_add_buffer",dlg.DBO_NETWORK_ADD_BUFFER);
+        SetHtml("trans_days3",dlg.DBO_DAYS);
+        SetHtml("trans_allowed_between2",dlg.DBO_ALLOWED_BETWEEN);
+        SetHtml("trans_every_day2",dlg.DBO_PROCESSOR_EVERY_DAY);
+        SetHtml("tans_hhmm2",dlg.DBO_HHMM);
+        SetHtml("trans_sunday2",dlg.DBO_SUNDAY);
+        SetHtml("trans_monday2",dlg.DBO_MONDAY);
+        SetHtml("trans_tuesday2",dlg.DBO_TUESDAY);
+        SetHtml("trans_wednesday2",dlg.DBO_WEDNESDAY);
+        SetHtml("trans_thursday2",dlg.DBO_THURSDAY);
+        SetHtml("trans_friday2",dlg.DBO_FRIDAY);
+        SetHtml("trans_saturday2",dlg.DBO_SATURDAY);
+        SetHtml("apply2",dlg.DBO_BUTTON_APPLY);
+        SetHtml("trans_disk",dlg.DBO_DISK_TITLE);
+        SetHtml("trans_use_most3",dlg.DBO_USE_AT_MOST);
+        SetHtml("trans_giga_disk1",dlg.DBO_DISK_GIGABYTE);
+        SetHtml("trans_leave_least1",dlg.DBO_LEAVE_AT_LEAST);
+        SetHtml("trans_giga_disk2",dlg.DBO_DISK_GIGABYTE);
+        SetHtml("trans_use_most4",dlg.DBO_USE_AT_MOST);
+        SetHtml("trans_disk_space",dlg.DBO_DISK_PERS_DISK);
+        SetHtml("trans_write_disk",dlg.DBO_DISK_WRITE);
+        SetHtml("trans_seconds",dlg.DBO_SECONDS);
+        SetHtml("trans_use_most5",dlg.DBO_USE_AT_MOST);
+        SetHtml("trans_swap",dlg.DBO_DISK_PAGE_SWAP);
+        SetHtml("trans_memory",dlg.DBO_MEMORY_TITLE);
+        SetHtml("trans_use_most6",dlg.DBO_USE_AT_MOST);
+        SetHtml("trans_perc_use",dlg.DBO_WHEN_IN_USE);
+        SetHtml("trans_use_most7",dlg.DBO_USE_AT_MOST);
+        SetHtml("trans_perc_idle",dlg.DBO_WHEN_IDLE);
+        SetHtml("trans_leave_mem",dlg.DBO_MEMORY_LEAVE);
+        SetHtml("apply3",dlg.DBO_BUTTON_APPLY);
+        SetHtml("default",dlg.DBO_BUTTON_RESET);
 
     });
 
@@ -136,9 +136,9 @@ function ok()
 
 function disableApply(enable)
 {
-    $('#apply1').attr("disabled", enable);
-    $('#apply2').attr("disabled", enable);
-    $('#apply3').attr("disabled", enable);    
+    document.getElementById('apply1').disabled = enable; 
+    document.getElementById('apply2').disabled = enable; 
+    document.getElementById('apply3').disabled = enable;    
 }
 
 
@@ -162,46 +162,57 @@ function process(obj)
         clearDays()
 
         var id;
-        $("#processor_onbatteries").prop("checked", obj.run_on_batteries[0]==='1');
-        $("#processor_inuse").prop("checked", obj.run_if_user_active[0]==='1');    
-        $("#processor_usegpu").prop("checked", obj.run_gpu_if_user_active[0]==='1');
+        SetCheck("processor_onbatteries",obj.run_on_batteries[0]==='1');
+        SetCheck("processor_inuse",obj.run_if_user_active[0]==='1');
+        SetCheck("processor_usegpu",obj.run_gpu_if_user_active[0]==='1');
 
-        id = '#processor_idle';$(id).val(toDecimalFloat(obj.idle_time_to_run[0]),id);
-        id = '#processor_usage';$(id).val(toDecimalFloat(obj.cpu_usage_limit[0]),id);
+        id = 'processor_idle';SetValue(id,toDecimalFloat(obj.idle_time_to_run[0],id));
+        id = 'processor_usage';SetValue(id,toDecimalFloat(obj.suspend_cpu_usage[0],id));
 
-        $("#processor_everydayb").val(toTime(obj.start_hour[0]));
-        $("#processor_everydaye").val(toTime(obj.end_hour[0]));        
+        SetValue("processor_everydayb",toTime(obj.start_hour[0]));
+        SetValue("processor_everydaye",toTime(obj.end_hour[0]));        
 
-        id = '#processor_switch';$(id).val(toDecimalFloat(obj.cpu_scheduling_period_minutes[0]),id);
-        id = '#processor_usemost';$(id).val(toDecimalFloat(obj.max_ncpus_pct[0]),id);
-        id = '#processor_usemostcpu';$(id).val(toDecimalFloat(obj.cpu_usage_limit[0]),id);
+        id = 'processor_switch'; SetValue(id, toDecimalFloat(obj.cpu_scheduling_period_minutes[0],id));
+        id = 'processor_usemost'; SetValue(id,toDecimalFloat(obj.max_ncpus_pct[0],id));
+        id = 'processor_usemostcpu'; SetValue(id,toDecimalFloat(obj.cpu_usage_limit[0],id));
 
-        id = '#network_dlrate';$(id).val(toDecimalFloat(obj.max_bytes_sec_down[0]),id);
-        id = '#network_uprate';$(id).val(toDecimalFloat(obj.max_bytes_sec_up[0]),id);
-        id = '#network_transfer';$(id).val(toDecimalFloat(obj.daily_xfer_limit_mb[0]),id);
-        id = '#network_transfer_day';$(id).val(toDecimalInt(obj.daily_xfer_period_days[0]),id);
-        id = '#network_buffermin';$(id).val(toDecimalFloat(obj.work_buf_min_days[0]),id);
-        id = '#network_bufferadd';$(id).val(toDecimalFloat(obj.work_buf_additional_days[0]),id);
+        id = 'network_dlrate'; SetValue(id,toDecimalFloat(obj.max_bytes_sec_down[0],id));
+        id = 'network_uprate'; SetValue(id,toDecimalFloat(obj.max_bytes_sec_up[0],id));
+        id = 'network_transfer'; SetValue(id,toDecimalFloat(obj.daily_xfer_limit_mb[0],id));
+        id = 'network_transfer_day'; SetValue(id,toDecimalInt(obj.daily_xfer_period_days[0],id));
+        id = 'network_buffermin'; SetValue(id,toDecimalFloat(obj.work_buf_min_days[0],id));
+        id = 'network_bufferadd'; SetValue(id,toDecimalFloat(obj.work_buf_additional_days[0],id));
 
-        $("#network_everydayb").val(toTime(obj.net_start_hour[0]));
-        $("#network_everydaye").val(toTime(obj.net_end_hour[0]));
+        SetValue("network_everydayb",toTime(obj.net_start_hour[0]));
+        SetValue("network_everydaye",toTime(obj.net_end_hour[0]));
         
-        id = '#disk_usemost';$(id).val(toDecimalFloat(obj.disk_max_used_gb[0]),id);
-        id = '#disk_least';$(id).val(toDecimalFloat(obj.disk_min_free_gb[0]),id);
-        id = '#disk_mostp';$(id).val(toDecimalFloat(obj.disk_max_used_pct[0]),id);
-        id = '#disk_every';$(id).val(toDecimalFloat(obj.disk_interval[0]),id);
-        id = '#disk_swap';$(id).val(toDecimalFloat(obj.vm_max_used_pct[0]),id);
+        id = 'disk_usemost'; SetValue(id,toDecimalFloat(obj.disk_max_used_gb[0],id));
+        id = 'disk_least'; SetValue(id,toDecimalFloat(obj.disk_min_free_gb[0],id));
+        id = 'disk_mostp'; SetValue(id,toDecimalFloat(obj.disk_max_used_pct[0],id));
+        id = 'disk_every'; SetValue(id,toDecimalFloat(obj.disk_interval[0],id));
+        id = 'disk_swap'; SetValue(id, toDecimalFloat(obj.vm_max_used_pct[0],id));
 
-        id='#memory_usebusy';$(id).val(toDecimalFloat(obj.ram_max_used_busy_pct[0]),id);
-        id='#memory_useidle';$(id).val(toDecimalFloat(obj.ram_max_used_idle_pct[0]),id);
+        id='memory_usebusy'; SetValue(id,toDecimalFloat(obj.ram_max_used_busy_pct[0],id));
+        id='memory_useidle'; SetValue(id,toDecimalFloat(obj.ram_max_used_idle_pct[0],id));
 
-        $("#memory_leave").prop("checked", obj.leave_apps_in_memory[0]==='1');
+        SetCheck("memory_leave",obj.leave_apps_in_memory[0]==='1');
     
         id = "processor_use_";processDays(false, id ,obj.day_prefs);
         id = "network_use_"; processDays(true,id,obj.day_prefs);
 
+        var checkboxes = document.querySelectorAll('input[type=checkbox]');
+        for (var checkbox of checkboxes)
+        {
+            checkbox.addEventListener('change', function(event)
+            {
+                // warning fires on every checkbox
+                ShowHideDays('processor_use_');
+                ShowHideDays('network_use_');              
+
+            });
+        }
     } catch (error) {
-        updateError("Processing error (process): " + id + " - " + error);        
+        updateError("Processing error (process id): " + id + " - " + error);        
     }
 }
 
@@ -209,14 +220,14 @@ function clearDays()
 {
     for (let i=0;i<7;i++)
     {
-        let idj = "#processor_use_" + i;        
-        $(idj+'c').prop("checked", false);
-        $(idj+'b').html("");
-        $(idj+'e').html("");   
-        idj = "#network_use_" + i;        
-        $(idj+'c').prop("checked", false);
-        $(idj+'b').html("");
-        $(idj+'e').html("");                
+        let idj = "processor_use_" + i;        
+        SetCheck(idj+'c',false);
+        SetHtml(idj+'b',"");
+        SetHtml(idj+'e', "");   
+        idj = "network_use_" + i;        
+        SetCheck(idj+'c',false);
+        SetHtml(idj+'b',"");
+        SetHtml(idj+'e',"");                
     }
 }
 
@@ -230,27 +241,48 @@ function processDays(net,id,days)
     {
         let item = days[i];
         let dayofweek = parseInt(item.day_of_week);
-        let idj = "#" + id + dayofweek;
+        let idj = id + dayofweek;
 
         if (item.net_end_hour == undefined)
         {
             if (!net)
             {
-                $(idj+'c').prop("checked", true);
-                $(idj+'b').val(toTime(item.start_hour));
-                $(idj+'e').val(toTime(item.end_hour));
+                SetCheck(idj+'c',true);
+                SetValue(idj+'b',toTime(item.start_hour));
+                SetValue(idj+'e',toTime(item.end_hour));
+                HideItem(idj+'b',false);
+                HideItem(idj+'e',false);                
             }
         }
         else
         {
             if (net)
             {           
-                $(idj+'c').prop("checked", true);
-                $(idj+'b').val(toTime(item.net_start_hour));
-                $(idj+'e').val(toTime(item.net_end_hour));
+                SetCheck(idj+'c',true);                
+                SetValue(idj+'b',toTime(item.net_start_hour));
+                SetValue(idj+'e',toTime(item.net_end_hour));
+                HideItem(idj+'b',false);
+                HideItem(idj+'e',false);                
             }
         }
 
+    }
+}
+
+function ShowHideDays(id,days)
+{
+    for (var i=0;i<=6;i++)
+    {
+        if (document.getElementById(id + i +'c').checked)
+        {
+            HideItem(id + i + 'b',false);
+            HideItem(id + i +'e',false);             
+        }
+        else
+        {
+            HideItem(id + i +'b',true);
+            HideItem(id + i +'e',true);             
+        }
     }
 }
 
@@ -259,7 +291,7 @@ function toDecimalFloat(val,id)
     let nr = val;
     try {
         nr = Intl.NumberFormat(gLocale, { minimumFractionDigits: 0 }).format(val);
-        if (isNaN(nr))
+        if (nr == NaN)
         {
             errorFloat(val,id);
             nr = 0;
@@ -271,7 +303,7 @@ function toDecimalFloat(val,id)
 function toDecimalInt(val,id)
 {
     let vali = parseInt(val);
-    if (isNaN(vali))
+    if (vali == NaN)
     {
         errorFloat(vali,id);
         vali = 0;
@@ -297,41 +329,41 @@ function fetch()
     let items = new Object();
 
     try {
-        items.run_on_batteries = getBool($("#processor_onbatteries").is(":checked"));
-        items.run_if_user_active = getBool($("#processor_inuse").is(":checked"));    
-        items.run_gpu_if_user_active = getBool($("#processor_usegpu").is(":checked"));
+        items.run_on_batteries = getBool(document.getElementById("processor_onbatteries").checked);
+        items.run_if_user_active = getBool(document.getElementById("processor_inuse").checked);    
+        items.run_gpu_if_user_active = getBool(document.getElementById("processor_usegpu").checked);
     
         var id;
-        id = 'processor_idle';items.idle_time_to_run = getFloat($("#" + id).val(),id);
-        id = 'processor_usage';items.cpu_usage_limit = getFloat($("#" + id).val(),id);
+        id = 'processor_idle';items.idle_time_to_run = getFloat(document.getElementById(id).value,id);
+        id = 'processor_usage';items.suspend_cpu_usage = getFloat(document.getElementById(id).value,id);
     
-        items.start_hour = getTime($("#processor_everydayb").val());
-        items.end_hour = getTime($("#processor_everydaye").val());
+        items.start_hour = getTime(document.getElementById("processor_everydayb").value);
+        items.end_hour = getTime(document.getElementById("processor_everydaye").value);
     
-        id = 'processor_switch';items.cpu_scheduling_period_minutes = getFloat($("#" + id).val(),id);
-        id = 'processor_usemost';items.max_ncpus_pct = getFloat($("#" + id).val(),id);
-        id = 'processor_usemostcpu';items.cpu_usage_limit = getFloat($("#" + id).val(),id);
+        id = 'processor_switch';items.cpu_scheduling_period_minutes = getFloat(document.getElementById(id).value,id);
+        id = 'processor_usemost';items.max_ncpus_pct = getFloat(document.getElementById(id).value,id);
+        id = 'processor_usemostcpu';items.cpu_usage_limit = getFloat(document.getElementById(id).value,id);
     
-        id = 'network_dlrate';items.max_bytes_sec_down = getFloat($("#" + id).val(),id);
-        id = 'network_uprate';items.max_bytes_sec_up = getFloat($("#" + id).val(),id);
-        id = 'network_transfer';items.daily_xfer_limit_mb = getFloat($("#" + id).val(),id);
-        id = 'network_transfer_day';items.daily_xfer_period_days = getFloat($("#" + id).val(),id);
-        id = 'network_buffermin';items.work_buf_min_days = getFloat($("#" + id).val(),id);
-        id = 'network_bufferadd';items.work_buf_additional_days = getFloat($("#" + id).val(),id);
+        id = 'network_dlrate';items.max_bytes_sec_down = getFloat(document.getElementById(id).value,id);
+        id = 'network_uprate';items.max_bytes_sec_up = getFloat(document.getElementById(id).value,id);
+        id = 'network_transfer';items.daily_xfer_limit_mb = getFloat(document.getElementById(id).value,id);
+        id = 'network_transfer_day';items.daily_xfer_period_days = getFloat(document.getElementById(id).value,id);
+        id = 'network_buffermin';items.work_buf_min_days = getFloat(document.getElementById(id).value,id);
+        id = 'network_bufferadd';items.work_buf_additional_days = getFloat(document.getElementById(id).value,id);
     
-        items.net_start_hour = getTime($("#network_everydayb").val());
-        items.net_end_hour = getTime($("#network_everydaye").val());
+        items.net_start_hour = getTime(document.getElementById("network_everydayb").value);
+        items.net_end_hour = getTime(document.getElementById("network_everydaye").value);
         
-        id = 'disk_usemost';items.disk_max_used_gb = getFloat($("#" + id).val(),id);        
-        id = 'disk_least';items.disk_min_free_gb = getFloat($("#" + id).val(),id);
-        id = 'disk_mostp';items.disk_max_used_pct = getFloat($("#" + id).val(),id);
-        id = 'disk_every';items.disk_interval = getFloat($("#" + id).val(),id);
-        id = 'disk_swap';items.vm_max_used_pct = getFloat($("#" + id).val(),id);
+        id = 'disk_usemost';items.disk_max_used_gb = getFloat(document.getElementById(id).value,id);        
+        id = 'disk_least';items.disk_min_free_gb = getFloat(document.getElementById(id).value,id);
+        id = 'disk_mostp';items.disk_max_used_pct = getFloat(document.getElementById(id).value,id);
+        id = 'disk_every';items.disk_interval = getFloat(document.getElementById(id).value,id);
+        id = 'disk_swap';items.vm_max_used_pct = getFloat(document.getElementById(id).value,id);
     
-        id = 'memory_usebusy';items.ram_max_used_busy_pct = getFloat($("#" + id).val(),id);
-        id = 'memory_useidle';items.ram_max_used_idle_pct =getFloat($("#" + id).val(),id);
+        id = 'memory_usebusy';items.ram_max_used_busy_pct = getFloat(document.getElementById(id).value,id);
+        id = 'memory_useidle';items.ram_max_used_idle_pct =getFloat(document.getElementById(id).value,id);
     
-        items.leave_apps_in_memory = getBool($("#memory_leave").is(":checked"));
+        items.leave_apps_in_memory = getBool( document.getElementById("memory_leave").checked);
         
         items.day_prefs = [];
         getDaysP(items);
@@ -405,14 +437,15 @@ function getDaysP(items)
     try {
         for (let i=0;i<7;i++)
         {
-            let idj = "#processor_use_" + i;     
-            if ($(idj+'c').is(":checked"))      
+            let idj = "processor_use_" + i;
+            let idjc = document.getElementById(idj+'c');
+            if (idjc.checked)      
             {            
                 let item = new Object();         
                 item.net = false;
                 item.day = i;        
-                item.start_hour = getTime($(idj+'b').val());
-                item.end_hour = getTime($(idj+'e').val());
+                item.start_hour = getTime(document.getElementById(idj+'b').value);
+                item.end_hour = getTime(document.getElementById(idj+'e').value);
                 items.day_prefs.push(item);            
             }
         }     
@@ -426,14 +459,15 @@ function getDaysN(items)
     try {     
         for (let i=0;i<7;i++)
         {
-            let idj = "#network_use_" + i;     
-            if ($(idj+'c').is(":checked"))      
+            let idj = "network_use_" + i;
+            let idjc = document.getElementById(idj+'c');
+            if (idjc.checked)
             {
                 let item = new Object();      
                 item.net = true; 
                 item.day = i;       
-                item.net_start_hour = getTime($(idj+'b').val());
-                item.net_end_hour = getTime($(idj+'e').val());
+                item.net_start_hour = getTime(document.getElementById(idj+'b').value);
+                item.net_end_hour = getTime(document.getElementById(idj+'e').value);
                 items.day_prefs.push(item);
             }
         }        
@@ -456,17 +490,17 @@ function errorFloat(msg,id)
 
 function updateError(msg)
 {
-    $("#error_msg1").html(msg);  
-    $("#error_msg2").html(msg);  
-    $("#error_msg3").html(msg);  
+    SetHtml("error_msg1",msg);  
+    SetHtml("error_msg2",msg);  
+    SetHtml("error_msg3",msg);  
     updateOk("");
 }
 
 function updateOk(msg)
 {
-    $("#ok_msg1").html(msg);     
-    $("#ok_msg2").html(msg); 
-    $("#ok_msg3").html(msg);     
+    SetHtml("ok_msg1",msg);     
+    SetHtml("ok_msg2",msg); 
+    SetHtml("ok_msg3",msg);     
 }
 
 function abort(dashboardWindows, selected, connections)
@@ -494,38 +528,74 @@ function abort(dashboardWindows, selected, connections)
 
 function defaultSettings()
 {
-    $("#processor_onbatteries").prop("checked", false);
-    $("#processor_inuse").prop("checked", true);    
-    $("#processor_usegpu").prop("checked", false);
+    SetCheck("processor_onbatteries", false);
+    SetCheck("processor_inuse", true);    
+    SetCheck("processor_usegpu", false);
 
-    $("#processor_idle").val(5);
-    $("#processor_usage").val(25);        
+    SetValue("processor_idle",5);
+    SetValue("processor_usage",25);        
 
-    $("#processor_everydayb").val("00:00");
-    $("#processor_everydaye").val("00:00");        
+    SetValue("processor_everydayb","00:00");
+    SetValue("processor_everydaye","00:00");        
 
-    $("#processor_switch").val(120);
-    $("#processor_usemost").val(50);
-    $("#processor_usemostcpu").val(60);
+    SetValue("processor_switch",120);
+    SetValue("processor_usemost",50);
+    SetValue("processor_usemostcpu",60);
 
-    $("#network_dlrate").val(0);
-    $("#network_uprate").val(0);
-    $("#network_transfer").val(0);
-    $("#network_transfer_day").val(0);
-    $("#network_buffermin").val(0);
-    $("#network_bufferadd").val(0);
+    SetValue("network_dlrate",0);
+    SetValue("network_uprate",0);
+    SetValue("network_transfer",0);
+    SetValue("network_transfer_day",0);
+    SetValue("network_buffermin",0);
+    SetValue("network_bufferadd",0);
 
-    $("#network_everydayb").val("00:00");
-    $("#network_everydaye").val("00:00");
+    SetValue("network_everydayb","00:00");
+    SetValue("network_everydaye","00:00");
     
-    $("#disk_usemost").val(10);        
-    $("#disk_least").val(1);
-    $("#disk_mostp").val(50);
-    $("#disk_every").val(60);
-    $("#disk_swap").val(30);
+    SetValue('disk_usemost',10);
+    SetValue('disk_least',1);
+    SetValue('disk_mostp',50);
+    SetValue('disk_every',60);
+    SetValue('disk_swap',30);
 
-    $("#memory_usebusy").val(40);
-    $("#memory_useidle").val(100);
+    SetValue('memory_usebusy',40);
+    SetValue('memory_useidle',100);
 
-    $("#memory_leave").prop("checked", false);
+    SetCheck("memory_leave",false);
+}
+
+function SetHtml(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.innerHTML = data; 
+    data = null;
+  } catch (error) {
+    let i = 1;
+  }
+}
+
+function SetValue(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.value = data;     
+  } catch (error) {
+    let i = 1;
+  }
+}
+
+function SetCheck(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.checked = data; 
+  } catch (error) {
+    let i = 1;
+  }
+}
+
+function HideItem(tag,show)
+{
+    document.getElementById(tag).hidden = show;
 }

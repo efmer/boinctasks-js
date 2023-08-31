@@ -24,84 +24,105 @@ gPasswordVisible = false;
 
 const { shell,ipcRenderer } = require('electron')
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", () => {
   ipcRenderer.on('add_manager_init', (event, listC, listP, info) => {
-    $("#computer_list").html(listC);
-    $("#manager_list").html(listP);
+    SetHtml('computer_list',listC)
+    SetHtml('manager_list',listP)
     gInfo = info;
-    $("#add_manager_url").val(gInfo.url[0]);    
-   
-    $(".ef_img_input").click(function( event ) {
-      $(".ef_img_input").toggleClass("bt_img_input_eye bt_img_input_eye_not");        
+    document.getElementById('add_manager_url').value = gInfo.url[0]
+ 
+    document.getElementById('password_eye').addEventListener("click", function(event){         
       if (gPasswordVisible)
       {
-        $("#add_manager_password").attr("type", "password");       
+        document.getElementById('password_eye').classList.add("bt_img_input_eye_not");  
+        document.getElementById('password_eye').classList.remove("bt_img_input_eye");          
+        document.getElementById('add_manager_password').setAttribute('type', 'password');   
       }
       else
       {
-        $("#add_manager_password").attr("type", "text");       
+        document.getElementById('password_eye').classList.remove("bt_img_input_eye_not");  
+        document.getElementById('password_eye').classList.add("bt_img_input_eye");           
+        document.getElementById('add_manager_password').setAttribute('type', 'text');              
       }
       gPasswordVisible = !gPasswordVisible;    
     });
 
     try {
-      $("#manager_list").on("change", function(event) {
-//        let sel = $('option:selected', this).text();
-        let sel = $('option:selected', this).val();;
-        $("#add_manager_url").val(gInfo.url[sel]);
+      let sel = -1;
+      document.getElementById('manager_list').addEventListener("click", function(event){ 
+        let i = 0;
+        for (var option of document.getElementById('manager_list').options)
+        {
+            if (option.selected) {              
+                document.getElementById('add_manager_url').value = gInfo.url[i];
+            }
+            i++
+        } 
       }) 
     } catch (error) {
       var ii = 1;
     } 
 
-    $('#add_manager_button').attr("disabled", false);
-    $('#sync_manager_button').attr("disabled", false);    
-    $('#add_manager_detach').attr("disabled", false);    
+    /*
+    try {
+      $("#").on("change", function(event) {
+        let sel = $('option:selected', this).val();
+        document.getElementById('add_manager_url').value;
+        $("#add_manager_url").val(gInfo.url[sel]);
+      }) 
+    } catch (error) {
+      var ii = 1;
+    } 
+    */
+
+    document.getElementById('add_manager_button').disabled = false;  
+    document.getElementById('sync_manager_button').disabled = false;  
+    document.getElementById('add_manager_detach').disabled = false;     
   });
 
   ipcRenderer.on('add_manager_status', (event, msg) => {
-    $("#add_manager_status").html(msg);
+    SetHtml('add_manager_status',msg);
   });
 
   ipcRenderer.on('add_manager_enable', (event) => {
-    $('#add_manager_button').attr("disabled", false);
-    $('#sync_manager_button').attr("disabled", false);    
-    $('#add_manager_detach').attr("disabled", false);    
+    document.getElementById('add_manager_button').disabled = false;  
+    document.getElementById('sync_manager_button').disabled = false;  
+    document.getElementById('add_manager_detach').disabled = false;  
   });
 
   ipcRenderer.send('add_manager','ready');
   
-  $("#add_manager_website").click(function( event ) {
-    let url  = $('#add_manager_url').val();
+  document.getElementById('add_manager_website').addEventListener("click", function(event){ 
+    let url  =  document.getElementById('add_manager_url').value;
     shell.openExternal(url);     
   });
 
-  $("#add_manager_button").click(function( event ) {
+  document.getElementById('add_manager_button').addEventListener("click", function(event){ 
     managerButton(false);
   });
 
-  $("#sync_manager_button").click(function( event ) {
+  document.getElementById('sync_manager_button').addEventListener("click", function(event){ 
     managerButton(true);
   });
 
-  $("#add_manager_detach").click(function( event ) {
-    detachButton()    
+  document.getElementById('add_manager_detach').addEventListener("click", function(event){ 
+    detachButton();
   });
 
   ipcRenderer.on('info_manager_status', (event, msg)=> {
-    $("#info_manager_status").html(msg);
+    SetHtml('info_manager_status',msg)
   });
 
   ipcRenderer.on('translations', (event, dlg) => {
-    $("#trans_selected_computers").html( dlg.DAM_SELECTED_COMPUTERS);
-    $("#trans_add_manager").html( dlg.DAM_ADD_MANAGER);
-    $("#trans_url").html( dlg.DAM_URL);
-    $("#trans_login").html( dlg.DAM_LOGIN);
-    $("#trans_password").html( dlg.DAM_PASSWORD);
-    $("#add_manager_button").html( dlg.DAM_BUTTON_ADD_MANAGER);
-    $("#sync_manager_button").html( dlg.DAM_BUTTON_SYNC);
-    $("#add_manager_website").html( dlg.DAM_BUTTON_WEBSITE);
-    $("#add_manager_detach").html( dlg.DAM_BUTTON_DETACH);    
+    SetHtml('trans_selected_computers',dlg.DAM_SELECTED_COMPUTERS);
+    SetHtml('trans_add_manager',dlg.DAM_ADD_MANAGER);
+    SetHtml('trans_url',dlg.DAM_URL);
+    SetHtml('trans_login',dlg.DAM_LOGIN);
+    SetHtml('trans_password',dlg.DAM_PASSWORD);
+    SetHtml('add_manager_button',dlg.DAM_BUTTON_ADD_MANAGER);
+    SetHtml('sync_manager_button',dlg.DAM_BUTTON_SYNC);
+    SetHtml('add_manager_website',dlg.DAM_BUTTON_WEBSITE);
+    SetHtml('add_manager_detach',dlg.DAM_BUTTON_DETACH);   
   });
 
 });
@@ -110,19 +131,23 @@ function managerButton(sync)
 {
   let item = new Object() ;
   try {
-    $('#add_manager_button').attr("disabled", true);
-    $('#sync_manager_button').attr("disabled", true);
-    $('#add_manager_detach').attr("disabled", true);
+    document.getElementById('add_manager_button').disabled = true;  
+    document.getElementById('sync_manager_button').disabled = true;  
+    document.getElementById('add_manager_detach').disabled = true;       
 
-    item.loginName = $('#add_manager_login_name').val();
-    item.passWord  = $('#add_manager_password').val();
-    item.url  = $('#add_manager_url').val();
+    item.loginName = document.getElementById('add_manager_login_name').value;
+    item.passWord  = document.getElementById('add_manager_password').value;
+    item.url  = document.getElementById('add_manager_url').value;
    
     let selArray = [];
-    $('#computer_list option:selected').each(function() {
-      let sel = $(this).val()
-      selArray.push(sel);
-    });
+    for (var option of document.getElementById('computer_list').options)
+    {
+        if (option.selected) {
+            sel = option.text;
+            selArray.push(sel);
+        }
+    } 
+
     item.sel = selArray;
     let msg;
     if (sync) msg = "sync";
@@ -138,22 +163,36 @@ function detachButton()
 {
   let item = new Object() ;
   try {
-    $('#add_manager_button').attr("disabled", true);
-    $('#sync_manager_button').attr("disabled", true);    
-    $('#add_manager_detach').attr("disabled", true);
+    document.getElementById('add_manager_button').disabled = true;  
+    document.getElementById('sync_manager_button').disabled = true;  
+    document.getElementById('add_manager_detach').disabled = true; 
     
     item.loginName = "";
     item.passWord  = "";
     item.url  = "";
     
     let selArray = [];
-    $('#computer_list option:selected').each(function() {
-      let sel = $(this).val()
-      selArray.push(sel);
-    });
+    for (var option of document.getElementById('computer_list').options)
+    {
+        if (option.selected) {
+            sel = option.text;
+            selArray.push(sel);
+        }
+    } 
     item.sel = selArray;
     ipcRenderer.send('add_manager', 'ok', item);
   } catch (error) {
     var ii = 1;
   }   
+}
+
+function SetHtml(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.innerHTML = data; 
+    data = null;
+  } catch (error) {
+    let i = 1;
+  }
 }

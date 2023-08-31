@@ -22,35 +22,51 @@ const { ipcRenderer } = require('electron')
 
 let gType = null;
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", () => {
     ipcRenderer.on('set', (event, type, items) => {
         gType = type;
         let str = JSON.parse(items)
-        $('#order_list').html(str);
+        SetHtml('order_list',str);
         Sortable.create(sort_items, {
             animation: 150
-            });             
+        });             
     });
 
-    $("#apply").click(function( event ) {
+    document.getElementById('apply').addEventListener("click", function(event){  
         try {
             let selArray = [];
-            $('.list-group-item').each(function() {
-                let idFound = $(this).attr("id");
-                let id = '#check_' + idFound;
-                let checked = $(id).is(":checked")
+            var el = document.getElementsByClassName("list-group-item");
+            for (var i = 0; i < el.length; i++) 
+            {
+                let item = el[i];
+                let idFound = item.id;
+                let id = 'check_' + idFound;
+                let input = document.getElementById(id);
+                let checked = input.checked;
                 selArray.push(idFound);
                 selArray.push(checked);
-              }); 
-              ipcRenderer.send('colomn_order',gType,selArray);
-        } catch (error) {
+            }
+            ipcRenderer.send('colomn_order',gType,selArray);
+        } catch (error)
+        {
             var ii = 1;    
         }        
     });
 
     ipcRenderer.on('translations', (event, dlg) => {
-        $("#trans_info").html( dlg.DCO_INFO);
-        $("#apply").html( dlg.DCO_APPLY);
+        SetHtml('trans_info',dlg.DCO_INFO);
+        SetHtml('apply',dlg.DCO_APPLY);
     });
 
 });
+
+function SetHtml(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.innerHTML = data; 
+    data = null;
+  } catch (error) {
+    let i = 1;
+  }
+}

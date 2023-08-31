@@ -23,10 +23,10 @@ const shell = require('electron').shell
 
 let gLanguageSettingsItem = null;
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", () => {
 
     ipcRenderer.on('translations', (event, dlg) => {
-        $("#trans_GNU").html( dlg.DAB_LICENCE);
+        SetHtml('trans_GNU',dlg.DAB_LICENCE)
 
         const links = document.querySelectorAll('a[href]')
         Array.prototype.forEach.call(links, function (link) {
@@ -44,15 +44,18 @@ $(document).ready(function() {
         gLanguageSettingsItem = item;
     });
 
-    $( "#lang_english" ).on( "click", function(event) {
+    document.getElementById('lang_english').addEventListener("click", function(event){ 
         setLang('lang_english');
     });
-    $( "#lang_dutch" ).on( "click", function(event) {
+    document.getElementById('lang_dutch').addEventListener("click", function(event){     
         setLang('lang_dutch');
     });
-    $( "#lang_french" ).on( "click", function(event) {
+    document.getElementById('lang_french').addEventListener("click", function(event){      
         setLang('lang_french');
     });
+    document.getElementById('lang_german').addEventListener("click", function(event){      
+        setLang('lang_german');
+    });    
 });
 
 function setLang(lang)
@@ -62,4 +65,15 @@ function setLang(lang)
     {
         ipcRenderer.send('settings_language', gLanguageSettingsItem);     
     }
+}
+
+function SetHtml(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.innerHTML = data; 
+    data = null;
+  } catch (error) {
+    let i = 1;
+  }
 }

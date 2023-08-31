@@ -83,30 +83,40 @@ function settings(gb)
               contextIsolation: false,  
               nodeIntegration: true,
               nodeIntegrationInWorker: true,        
-              preload:'${__dirname}/preload/preload.js',
+              //preload:'${__dirname}/preload/preload.js',
             }
           });
           gChildSettingsAllow.loadFile('index/index_settings_allow.html')
           gChildSettingsAllow.once('ready-to-show', () => {    
-//            gChildSettingsAllow.webContents.openDevTools()
+            if (btC.DEBUG_WINDOW)
+            {                    
+              gChildSettingsAllow.webContents.openDevTools();
+            } 
             gChildSettingsAllow.show();  
             gChildSettingsAllow.setTitle(title);
-            gChildSettingsAllow.webContents.send("translations",btC.TL.DIALOG_BOINC_ALLOW);              
-            getData(gb);
           })
+
           gChildSettingsAllow.webContents.on('did-finish-load', () => {
             insertCssDark(gb.theme);
-          })            
+            gChildSettingsAllow.webContents.send("translations",btC.TL.DIALOG_BOINC_ALLOW);              
+            getData(gb);            
+          }) 
+
           gChildSettingsAllow.on('close', () => {
             let bounds = gChildSettingsAllow.getBounds();
             windowsState.set("settings_allow",bounds.x,bounds.y, bounds.width, bounds.height)
-          })     
+          }) 
+              
           gChildSettingsAllow.on('closed', () => {
             gChildSettingsAllow = null
           })    
         }
         else
         {
+          if (btC.DEBUG_WINDOW)
+          {                    
+            gChildSettingsAllow.webContents.openDevTools();
+          } 
           gChildSettingsAllow.setTitle(title); 
           gChildSettingsAllow.hide();
           gChildSettingsAllow.show();

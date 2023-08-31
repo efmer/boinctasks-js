@@ -20,14 +20,13 @@ const { ipcRenderer } = require('electron')
 
 'use strict';
 
-$(document).ready(function() {
-  ipcRenderer.on('log_text', (event, tableData) => {
-    $("#log_insert_text").html(tableData);
+document.addEventListener("DOMContentLoaded", () => {
+  ipcRenderer.on('log_text', (event, tableData) => {    
+    SetHtml('log_insert_text',tableData);
   });
 
-  $("#log_copy").click(function( event ) {
-
-    let txt = $("#log_insert_text").html();
+  document.getElementById('log_copy').addEventListener("click", function(event){ 
+    let txt = GetHtml('log_insert_text')
     /*
     var $temp = $("<input>");
     $("body").append($temp);
@@ -39,41 +38,59 @@ $(document).ready(function() {
     updateClipboard(text)
   });
 
-  $("#log_clear").click(function( event ) {
+  document.getElementById('log_clear').addEventListener("click", function(event){ 
     ipcRenderer.send('log', 'button_clear');
   });
-
-  $("#log_log").click(function( event ) {
+  document.getElementById('log_log').addEventListener("click", function(event){ 
     ipcRenderer.send('log', 'button_log');
   });
-  $("#log_debug").click(function( event ) {
+  document.getElementById('log_debug').addEventListener("click", function(event){  
     ipcRenderer.send('log', 'button_debug');
   });
-  $("#log_rules").click(function( event ) {
+  document.getElementById('log_rules').addEventListener("click", function(event){  
     ipcRenderer.send('log', 'button_rules');
   });
-  $("#log_error").click(function( event ) {
+  document.getElementById('log_error').addEventListener("click", function(event){  
     ipcRenderer.send('log', 'button_error');
   });
 
   ipcRenderer.on('translations', (event, dlg) => {
-    g_trans = dlg;
-    $("#log_copy").html( dlg.DLG_BUTTON_COPY);
-    $("#log_clear").html( dlg.DLG_BUTTON_CLEAR);
-    $("#log_log").html( dlg.DLG_BUTTON_LOG);
-    $("#log_debug").html( dlg.DLG_BUTTON_DEBUG);
-    $("#log_rules").html( dlg.DLG_BUTTON_RULES);
-    $("#log_error").html( dlg.DLG_BUTTON_ERROR);
-
-});
-
-
+    SetHtml('log_copy',dlg.DLG_BUTTON_COPY)
+    SetHtml('log_clear',dlg.DLG_BUTTON_CLEAR)
+    SetHtml('log_log',dlg.DLG_BUTTON_LOG)
+    SetHtml('log_debug',dlg.DLG_BUTTON_DEBUG)
+    SetHtml('log_rules',dlg.DLG_BUTTON_RULES)
+    SetHtml('log_error',dlg.DLG_BUTTON_ERROR)
+  });
 });
 
 function updateClipboard(newClip) {
   navigator.clipboard.writeText(newClip).then(function() {
-    /* clipboard successfully set */
-  }, function() {
-    /* clipboard write failed */
+    let ok = true;
+  }, function(error) {
+    let failed = true;
   });
+}
+
+function SetHtml(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.innerHTML = data; 
+    data = null;
+  } catch (error) {
+    let i = 1;
+  }
+}
+
+function GetHtml(tag)
+{
+  value = -1;
+  try {
+    let el = document.getElementById(tag);
+    value = el.innerHTML; 
+    return value;
+  } catch (error) {
+    let i = 1;
+  }
 }

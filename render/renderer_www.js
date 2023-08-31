@@ -21,9 +21,9 @@ const shell = require('electron').shell
 
 'use strict';
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", () => {
   ipcRenderer.on('www', (event, data) => {
-    $("#www_insert_text").html(data);
+    SetHtml("www_insert_text",data);
 
     const links = document.querySelectorAll('a[href]')
     Array.prototype.forEach.call(links, function (link) {
@@ -37,3 +37,14 @@ $(document).ready(function() {
     })
   });
 });
+
+function SetHtml(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.innerHTML = data; 
+    data = null;
+  } catch (error) {
+    let i = 1;
+  }
+}

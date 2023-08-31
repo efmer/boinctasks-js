@@ -102,33 +102,40 @@ function settings(settings,theme)
               contextIsolation: false,  
               nodeIntegration: true,
               nodeIntegrationInWorker: true,        
-              preload:'${__dirname}/preload/preload.js',
+     //         preload:'${__dirname}/preload/preload.js',
             }
           });
             gChildSettings.loadFile('index/index_settings_boinctasks.html')
             gChildSettings.once('ready-to-show', () => {    
-            if (btC.DEBUG_WINDOW)
+              if (btC.DEBUG_WINDOW)
               {
                 gChildSettings.webContents.openDevTools()
               }
               gChildSettings.show();  
               gChildSettings.setTitle(title);
-              gChildSettings.webContents.send("translations",btC.TL.DIALOG_SETTINGS_BT);                
-              setTimeout(timerSettings,200,settings); // delay to make sure the windows is ready.
           })
+
           gChildSettings.webContents.on('did-finish-load', () => {
             insertCssDark(theme);
-          })            
+            gChildSettings.webContents.send("translations",btC.TL.DIALOG_SETTINGS_BT);                
+            setTimeout(timerSettings,200,settings); // delay to make sure the windows is ready.            
+          })  
+
           gChildSettings.on('close', () => {
             let bounds = gChildSettings.getBounds();
             windowsState.set("settings_boinctasks",bounds.x,bounds.y, bounds.width, bounds.height)
-          })     
+          })  
+             
           gChildSettings.on('closed', () => {
             gChildSettings = null
           })    
         }
         else
         {
+          if (btC.DEBUG_WINDOW)
+          {
+            gChildSettings.webContents.openDevTools()
+          }          
           gChildSettings.setTitle(title); 
           gChildSettings.hide();
           gChildSettings.show();

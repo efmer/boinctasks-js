@@ -507,6 +507,10 @@ textarea {
     font-size: 1.2em
 }
 
+.warning_text {
+    color: rgb(245, 118, 118);
+}
+
 #table_line {
 	border-collapse: collapse;
 }

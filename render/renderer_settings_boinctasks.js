@@ -21,7 +21,7 @@
 const { ipcRenderer } = require('electron')
 const shell = require('electron').shell
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", () => {
     const links = document.querySelectorAll('a[href]')
     Array.prototype.forEach.call(links, function (link) {
        const url = link.getAttribute('href')
@@ -34,56 +34,56 @@ $(document).ready(function() {
     })
 
     ipcRenderer.on('translations', (event, dlg) => {
-        $("#trans_login").html( dlg.DS_BT_LOGIN);
-        $("#trans_hide").html( dlg.DS_BT_HIDE_START);
-        $("#trans_restart_check").html( dlg.DS_BT_RESTART);
+        SetHtml("trans_login",dlg.DS_BT_LOGIN);
+        SetHtml("trans_hide",dlg.DS_BT_HIDE_START);
+        SetHtml("trans_restart_check",dlg.DS_BT_RESTART);
 
-        $("#trans_styling").html( dlg.DS_BT_STYLING);
-        $("#trans_styling_def").html( dlg.DS_BT_STYLING_DEF);
+        SetHtml("trans_styling",dlg.DS_BT_STYLING);
+        SetHtml("trans_styling_def",dlg.DS_BT_STYLING_DEF);
 
-        $("#trans_region").html( dlg.DS_BT_REGION);
-        $("#trans_locale").html( dlg.DS_BT_LOCALE);
+        SetHtml("trans_region",dlg.DS_BT_REGION);
+        SetHtml("trans_locale",dlg.DS_BT_LOCALE);
 
-        $("#trans_timing").html( dlg.DS_BT_TIMING);
-        $("#trans_timing_refresh").html( dlg.DS_BT_TIMING_REFRESH);
-        $("#trans_timing_history_refresh").html( dlg.DS_BT_HISTORY_REFRESH);
-        $("#trans_history").html( dlg.DS_BT_HISTORY);
-        $("#trans_history_delete").html( dlg.DS_BT_HISTORY_DELETE);
-        $("#trans_messages").html( dlg.DS_BT_MESSAGES);
-        $("#trans_messages_exp").html( dlg.DS_BT_MESSAGES_EXP);
+        SetHtml("trans_timing",dlg.DS_BT_TIMING);
+        SetHtml("trans_timing_refresh",dlg.DS_BT_TIMING_REFRESH);
+        SetHtml("trans_timing_history_refresh",dlg.DS_BT_HISTORY_REFRESH);
+        SetHtml("trans_history",dlg.DS_BT_HISTORY);
+        SetHtml("trans_history_delete",dlg.DS_BT_HISTORY_DELETE);
+        SetHtml("trans_messages",dlg.DS_BT_MESSAGES);
+        SetHtml("trans_messages_exp",dlg.DS_BT_MESSAGES_EXP);
 
-        $("#highlight_project0").html( dlg.DS_BT_MESSAGES_PROJECT);
-        $("#highlight_project1").html( dlg.DS_BT_MESSAGES_PROJECT);
-        $("#highlight_project2").html( dlg.DS_BT_MESSAGES_PROJECT);
-        $("#highlight_project3").html( dlg.DS_BT_MESSAGES_PROJECT);
-        $("#highlight_project4").html( dlg.DS_BT_MESSAGES_PROJECT);
-        $("#highlight_project5").html( dlg.DS_BT_MESSAGES_PROJECT);
-        $("#highlight_project6").html( dlg.DS_BT_MESSAGES_PROJECT);
-        $("#highlight_project7").html( dlg.DS_BT_MESSAGES_PROJECT);
-        $("#highlight_project8").html( dlg.DS_BT_MESSAGES_PROJECT);
-        $("#highlight_project9").html( dlg.DS_BT_MESSAGES_PROJECT);        
+        SetHtml("highlight_project0",dlg.DS_BT_MESSAGES_PROJECT);
+        SetHtml("highlight_project1",dlg.DS_BT_MESSAGES_PROJECT);
+        SetHtml("highlight_project2",dlg.DS_BT_MESSAGES_PROJECT);
+        SetHtml("highlight_project3",dlg.DS_BT_MESSAGES_PROJECT);
+        SetHtml("highlight_project4",dlg.DS_BT_MESSAGES_PROJECT);
+        SetHtml("highlight_project5",dlg.DS_BT_MESSAGES_PROJECT);
+        SetHtml("highlight_project6",dlg.DS_BT_MESSAGES_PROJECT);
+        SetHtml("highlight_project7",dlg.DS_BT_MESSAGES_PROJECT);
+        SetHtml("highlight_project8",dlg.DS_BT_MESSAGES_PROJECT);
+        SetHtml("highlight_project9",dlg.DS_BT_MESSAGES_PROJECT);        
 
-        $("#highlight_message0").html( dlg.DS_BT_MESSAGES_MESSAGE);
-        $("#highlight_message1").html( dlg.DS_BT_MESSAGES_MESSAGE);
-        $("#highlight_message2").html( dlg.DS_BT_MESSAGES_MESSAGE);
-        $("#highlight_message3").html( dlg.DS_BT_MESSAGES_MESSAGE);
-        $("#highlight_message4").html( dlg.DS_BT_MESSAGES_MESSAGE);
-        $("#highlight_message5").html( dlg.DS_BT_MESSAGES_MESSAGE);
-        $("#highlight_message6").html( dlg.DS_BT_MESSAGES_MESSAGE);
-        $("#highlight_message7").html( dlg.DS_BT_MESSAGES_MESSAGE);
-        $("#highlight_message8").html( dlg.DS_BT_MESSAGES_MESSAGE);
-        $("#highlight_message9").html( dlg.DS_BT_MESSAGES_MESSAGE);
+        SetHtml("highlight_message0",dlg.DS_BT_MESSAGES_MESSAGE);
+        SetHtml("highlight_message1",dlg.DS_BT_MESSAGES_MESSAGE);
+        SetHtml("highlight_message2",dlg.DS_BT_MESSAGES_MESSAGE);
+        SetHtml("highlight_message3",dlg.DS_BT_MESSAGES_MESSAGE);
+        SetHtml("highlight_message4",dlg.DS_BT_MESSAGES_MESSAGE);
+        SetHtml("highlight_message5",dlg.DS_BT_MESSAGES_MESSAGE);
+        SetHtml("highlight_message6",dlg.DS_BT_MESSAGES_MESSAGE);
+        SetHtml("highlight_message7",dlg.DS_BT_MESSAGES_MESSAGE);
+        SetHtml("highlight_message8",dlg.DS_BT_MESSAGES_MESSAGE);
+        SetHtml("highlight_message9",dlg.DS_BT_MESSAGES_MESSAGE);
  
-        $("#trans_advanced").html( dlg.DS_BT_ADVANCED);
-        $("#trans_socket").html( dlg.DS_BT_SOCKET_TO);
-        $("#apply").html( dlg.DS_BT_BUTTON_APPLY);
+        SetHtml("trans_advanced",dlg.DS_BT_ADVANCED);
+        SetHtml("trans_socket",dlg.DS_BT_SOCKET_TO);
+        SetHtml("apply",dlg.DS_BT_BUTTON_APPLY);
     });
 
     ipcRenderer.on('settings_boinctasks', (event, item) => {
         set(item);
     });
 
-    $( "#apply" ).on( "click", function(event) {
+    document.getElementById('apply').addEventListener("click", function(event){     
         get();
     });
 });
@@ -94,21 +94,18 @@ function set(item)
     item.language;
     document.getElementById(item.language).selected=true;
 
-    //    $("#start_at_login").prop("checked", item.startLogin==='1');
-    $("#hide_at_login").prop("checked", item.hideLogin==='1');
-    $("#restart_time_check").prop("checked", item.restartTimeCheck==='1');
-    $("#restart_time").val( item.restartTime );  
+    SetCheck("hide_at_login",item.hideLogin==='1');
+    SetCheck("restart_time_check",item.restartTimeCheck==='1');
+    SetValue("restart_time",item.restartTime );  
 
-    $("#extra_css").val(item.css);
+    SetValue("extra_css",item.css);
 
-    $("#refresh_rate").val( item.refreshRate );
+    SetValue("refresh_rate",item.refreshRate );
 
-    $("#locale").val( item.locale );
-    $("#history_refresh_rate").val( item.historyRefreshRate );    
-    $("#history_delete").val( item.historyDelete ); 
-    $("#socket_timeout").val( item.socketTimeout ); 
-    socket_timeout
-
+    SetValue("locale",item.locale );
+    SetValue("history_refresh_rate",item.historyRefreshRate );    
+    SetValue("history_delete",item.historyDelete ); 
+    SetValue("socket_timeout",item.socketTimeout ); 
     setMessages(item.messages);
 }
 
@@ -117,63 +114,70 @@ function get()
     let item = new Object();
 
     try {
-        item.language = $('#language_list option:selected').attr('id');        
+        for (var option of document.getElementById('language_list').options)
+        {
+            if (option.selected) {
+                item.language = option.id;
+                //item.language = $('#language_list option:selected').attr('id');  
+            }
+        }     
     } catch (error) {}
 
     try {
-        item.hideLogin = getBool($("#hide_at_login").is(":checked")); 
-        item.css = $("#extra_css").val();     
+        item.hideLogin = getBool(document.getElementById('hide_at_login').checked); 
+        let id = document.getElementById("extra_css");
+        item.css = id.value;     
     } catch (error) {
         item.css = "";
     }
 
     try {
-        item.restartTimeCheck = getBool($("#restart_time_check").is(":checked")); 
-        item.restartTime = $("#restart_time").val();  
+        item.restartTimeCheck = getBool(document.getElementById("restart_time_check").checked); 
+        item.restartTime = document.getElementById("restart_time").value;  
     } catch (error) {
         item.restartTime = "error";
     }
 
     try {
-        let locale = $("#locale").val();
+        let locale = document.getElementById("locale").value;
         item.locale = locale;
     } catch (error) {
         item.locale = "";
     }
 
     try {
-        let refreshRate = $("#refresh_rate").val();
+        let refreshRate = document.getElementById("refresh_rate").value;
         if (isNaN(refreshRate )) refreshRate = 2;
         if (refreshRate < 1) refreshRate = 2;
-        $("#refresh_rate").val(refreshRate);        
+        SetValue("refresh_rate",refreshRate);
         item.refreshRate = refreshRate;        
     } catch (error) {
         item.refreshRate = 2;
     }
 
     try {
-        let historyRefreshRate = $("#history_refresh_rate").val();
+        let historyRefreshRate = document.getElementById("history_refresh_rate").value;
         if (isNaN(historyRefreshRate )) historyRefreshRate = 60;
-        $("#history_refresh_rate").val(historyRefreshRate);        
+        SetValue("history_refresh_rate",historyRefreshRate);        
         item.historyRefreshRate = historyRefreshRate;        
     } catch (error) {
         item.historyRefreshRate = 60;
     }
 
     try {
-        let historyDelete = $("#history_delete").val();
+        let historyDelete = document.getElementById("history_delete").value;
         if (isNaN(historyDelete )) historyDelete = 7;
-        $("#history_delete").val(historyDelete);        
+        SetValue("history_delete",historyDelete);        
         item.historyDelete = historyDelete;        
     } catch (error) {
         item.historyDelete = 7;
     }
 
     try {
-        let socketTimeout = $("#socket_timeout").val();
+        let socketTimeout = document.getElementById("socket_timeout").value;
         if (isNaN(socketTimeout )) socketTimeout = 8;
         if (socketTimeout < 4) socketTimeout = 4;
-        $("#socket_timeout").val(socketTimeout);        
+        SetValue("socket_timeout",socketTimeout);
         item.socketTimeout = socketTimeout;        
     } catch (error) {
         item.socketTimeout = 8 
@@ -192,10 +196,10 @@ function getMessages()
     let msgArray = [];
     for(let i=0;i<10;i++)
     {
-        let id = "#highlight_project_" + i;
-        let project = $(id).val();        
-        id = "#highlight_msg_" + i;        
-        let msg =  $(id).val();
+        let id = "highlight_project_" + i;
+        let project = document.getElementById(id).value;        
+        id = "highlight_msg_" + i;
+        let msg = document.getElementById(id).value;
         let item = []
         item.push(project);
         item.push(msg);
@@ -209,10 +213,10 @@ function setMessages(msgArray)
     try {
         for(let i=0;i<10;i++)
         {
-            let id = "#highlight_project_" + i;
-            $(id).val(msgArray[i][0]);      
-            id = "#highlight_msg_" + i;        
-            $(id).val(msgArray[i][1]); 
+            let id = "highlight_project_" + i;
+            SetValue(id,msgArray[i][0]);      
+            id = "highlight_msg_" + i;        
+            SetValue(id,msgArray[i][1]); 
         }
         return msgArray;        
     } catch (error) {
@@ -224,4 +228,35 @@ function getBool(val)
 {
     if (val) return "1";
     return "0";
+}
+
+function SetHtml(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.innerHTML = data; 
+    data = null;
+  } catch (error) {
+    let i = 1;
+  }
+}
+
+function SetValue(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.value = data;     
+  } catch (error) {
+    let i = 1;
+  }
+}
+
+function SetCheck(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.checked = data; 
+  } catch (error) {
+    let i = 1;
+  }
 }

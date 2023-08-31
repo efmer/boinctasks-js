@@ -17,7 +17,7 @@
         <td><label for="email">Email from:</label></td><td><input class="project_add_input" id="email_email"type="text" id="email" name="email"></td>
       </tr>
       <tr>
-        <td><label for="password">Password:</label></td><td><input class="project_add_input" type="password" id="email_password" name="password"><span class = "ef_img_input bt_img_input_eye_not"></span></td>
+        <td><label for="password">Password:</label></td><td><input class="project_add_input" type="password" id="email_password" name="password"><span id="password_eye" class = "ef_img_input bt_img_input_eye_not"></span></td>
       </tr>
       <tr><td>&nbsp;</td></tr>
       <tr>
@@ -30,9 +30,6 @@
     <button id="email_test">Test</button>
     <br>
     <div id = "email_status"></div>
-    <script>window.$ = window.jQuery = require('../boinctasks/lib/jquery.min');</script>
-    <script type="text/javascript">
-      require('../render/renderer_email')
-    </script>
+    <script type="text/javascript" src = '../render/renderer_email.js'></script>
   </body>
 </html>

@@ -626,16 +626,23 @@ function addProject(theme)
     gChildAddProject.loadFile('index/index_add_project.html')
     gChildAddProject.once('ready-to-show', () => {    
       gChildAddProject.show();  
-      gChildAddProject.setTitle(title);
-      gChildAddProject.webContents.send("translations",btC.TL.DIALOG_ADD_PROJECT);         
+      gChildAddProject.setTitle(title);       
     }) 
+
+    gChildAddProject.webContents.on('did-finish-load', () => {
+        insertCssDark(theme);
+        gChildAddProject.webContents.send("translations",btC.TL.DIALOG_ADD_PROJECT);          
+        if (btC.DEBUG_WINDOW)
+        {                    
+            gChildAddProject.webContents.openDevTools();
+        } 
+    })
+
     gChildAddProject.on('close', () => {
       let bounds = gChildAddProject.getBounds();
       windowsState.set("add_project",bounds.x,bounds.y, bounds.width, bounds.height)
     })
-    gChildAddProject.webContents.on('did-finish-load', () => {
-        insertCssDark(theme);
-    })
+    
     gChildAddProject.on('closed', () => {
       gChildAddProject = null
     })    
@@ -645,9 +652,11 @@ function addProject(theme)
     gChildAddProject.setTitle(title); 
     gChildAddProject.hide();
     gChildAddProject.show();
-//    connections.addProject(gChildAddProject,'ready');    
-  }
-//gChildAddProject.webContents.openDevTools()
+    if (btC.DEBUG_WINDOW)
+    {                    
+        gChildAddProject.webContents.openDevTools();
+    } 
+ }
 }
 
 async function insertCssDark(darkCss)

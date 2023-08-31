@@ -21,13 +21,13 @@
 const { ipcRenderer } = require('electron')
 const shell = require('electron').shell
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", () => {
   try {
     document.getElementById("start_ping").onclick = function(e)
     {
-      let ip = $("#ip_ping").val();       
-      let password = $("#password_ping").val();    
-      let port = $("#port_ping").val(); 
+      let ip = document.getElementById("ip_ping").value; 
+      let password = document.getElementById("password_ping").value;
+      let port = document.getElementById("port_ping").value;
 
       let data = new Object();
       data.ip = ip;
@@ -35,25 +35,47 @@ $(document).ready(function() {
       data.port = port;
 
       ipcRenderer.send('ping_start', data);      
-      $("#start_ping").hide();
+      document.getElementById('start_ping').disabled = true;  
     } 
 
     ipcRenderer.on('init', (event, data) => {
       if (data !== null)
       {
-        $("#ip_ping").val(data.ip);  
-        $("#password_ping").val(data.password);
-        $("#port_ping").val(data.port);
+        SetValue('ip_ping',data.ip)
+        SetValue('password_ping',data.password)
+        SetValue('port_ping',data.port)
       }
     });
 
     ipcRenderer.on('ping_end', (event, status) => {
-      $("#start_ping").show(); 
+      document.getElementById('start_ping').disabled = false;  
     })
 
     ipcRenderer.on('status', (event, status) => {
-      $("#ping_insert_text").html(status);  
+      SetHtml('ping_insert_text',status)
     })
   } catch (error) {    
   }
 });
+
+function SetHtml(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.innerHTML = data; 
+    data = null;
+  } catch (error) {
+    let i = 1;
+  }
+}
+
+function SetValue(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.value = data; 
+    data = null;
+  } catch (error) {
+    let i = 1;
+  }
+}

@@ -333,33 +333,44 @@ function updateWindow(version,theme)
               contextIsolation: false,  
               nodeIntegration: true,
               nodeIntegrationInWorker: true,        
-              preload:'${__dirname}/preload/preload.js',
+   //           preload:'${__dirname}/preload/preload.js',
             }
           });
+
           gChildUpdate.loadFile('index/index_update.html')
           gChildUpdate.once('ready-to-show', () => {    
-//            gChildUpdate.webContents.openDevTools()
+            if (btC.DEBUG_WINDOW)
+            {
+              gChildUpdate.webContents.openDevTools()
+            }
             gChildUpdate.show();  
             gChildUpdate.setTitle(title);
-            updateOs(version);
           })
+
           gChildUpdate.webContents.on('did-finish-load', () => {
             insertCssDark(theme);
+            updateOs(version);            
           })
+
           gChildUpdate.on('close', () => {
             let bounds = gChildUpdate.getBounds();
             windowsState.set("update",bounds.x,bounds.y, bounds.width, bounds.height)
-          })     
+          }) 
+              
           gChildUpdate.on('closed', () => {
             gChildUpdate = null
           })    
         }
         else
         {
+          if (btC.DEBUG_WINDOW)
+          {
+            gChildUpdate.webContents.openDevTools()
+          }
           gChildUpdate.setTitle(title); 
-            gChildUpdate.hide();
-            gChildUpdate.show();  
-            updateOs(version);         
+           gChildUpdate.hide();
+           gChildUpdate.show();  
+           updateOs(version);         
         }
               
     } catch (error) {

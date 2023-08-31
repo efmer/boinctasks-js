@@ -21,16 +21,22 @@ const shell = require('electron').shell
 
 'use strict';
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", () => {
 
   ipcRenderer.on('update_msg', (event, msg) => {
-    $("#update_msg").html(msg);
-    $("#button_release").click(function( event ) {
-      ipcRenderer.send("update", "release");
-    });
-    $("#button_beta").click(function( event ) {
-      ipcRenderer.send("update","beta");
-    });
+    SetHtml("update_msg",msg);
+
+    try{
+      document.getElementById('button_release').addEventListener("click", function(event){       
+        ipcRenderer.send("update", "release");
+      });
+    } catch (error) {}
+
+    try{
+      document.getElementById('button_beta').addEventListener("click", function(event){       
+        ipcRenderer.send("update","beta");
+      });
+    } catch (error) {}
 
     const links = document.querySelectorAll('a[href]')
     Array.prototype.forEach.call(links, function (link) {
@@ -46,6 +52,17 @@ $(document).ready(function() {
   });
 
   ipcRenderer.on('update_download', (event, msg) => {
-    $("#update_download").html(msg);
+    SetHtml("update_download",msg);
   });
 });
+
+function SetHtml(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.innerHTML = data; 
+    data = null;
+  } catch (error) {
+    let i = 1;
+  }
+}

@@ -52,112 +52,174 @@ const RULE_ACTION_SUSPEND_TASK_NR   = 11;
 const { ipcRenderer } = require('electron')
 const shell = require('electron').shell
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", () => {    
     ipcRenderer.on('settings_rules_list', (event,table) => {
-        $("#select_rule_list").html(table);
-     
-        $("#select_rule_info_type").html("");
-        $("#select_rule_info_action").html("");
-        $("#select_rule_info_action2").html("");        
-        $("#select_rule_error").html("");
-        $("#select_rule_edit").html("");
-        $("#select_rule_cancel").html("");
+        SetHtml('select_rule_list',table);
+        SetHtml('select_rule_info_type','');
+        SetHtml('select_rule_info_action','');
+        SetHtml('select_rule_info_action2','');
+        SetHtml('select_rule_error','');
+        SetHtml('select_rule_edit','');
+        SetHtml('select_rule_cancel','');
         
-        $( "#rules_table").on( "click", "tr", function(e) {
-            try {
-                const table = document.getElementById('rules_table');
-                const cols = table.querySelectorAll('tr');
-            
-                [].forEach.call(cols, function(col) {
-                  $(col).removeClass("bt_table_selected");
-                });  
-                let id = this.id;
-                if(id.length > 0)
-                { 
-                    $("#"+id).addClass("bt_table_selected")
-                    gSelectedRow = id*1;
-                    $("#delete_rule").show();
-                    $("#edit_rule").show();
-                }                
-            } catch (error) {
-               var ii = 1;
-            }           
-        });
-        $( "#rules_table").on( "click", "input", function(e) {
-            let id = this.id;
-            if(id.length > 0)
-            {
-                let checked = this.checked;
-                ipcRenderer.send("rules","check",id,checked)
-            }
-        });
+        let rt = document.getElementById('rules_table');
+        if (rt != undefined)
+        {
+            document.getElementById('rules_table').addEventListener("click", function(event){  
+                try {
+                    const table = document.getElementById('rules_table');
+                    const cols = table.querySelectorAll('tr');
+                
+                    [].forEach.call(cols, function(col) {                    
+                        col.classList.remove("bt_table_selected");
+                    });  
+                    let target = event.target;
+                    let id = parseInt(target.id);
+                    if (!isNaN(id))
+                    {
+                        let checked = target.checked;
+                        cols[id+1].classList.add("bt_table_selected");
+                        gSelectedRow = id*1;                
+                        document.getElementById('delete_rule').disabled = false;  
+                        document.getElementById('edit_rule').disabled = false;       
+                        ipcRenderer.send("rules","check",id,checked);
+                    }
+                } catch (error) {
+                var ii = 1;
+                }           
+            });  
+        }
     });    
-
+      
     ipcRenderer.on('settings_rules_buttons', (event,buttons) => {
-        $("#select_rule_buttons").html(buttons);
-        $("#delete_rule").hide();
-        $("#edit_rule").hide();
-        
-        $("#add_rule").click(function( event ) {
-            ipcRenderer.send("rules","add_rule")
-        })
-        $("#edit_rule").click(function( event ) {
-           ipcRenderer.send("rules","edit_rule",gSelectedRow)
-        }) 
-        $("#delete_rule").click(function( event ) {
-            ipcRenderer.send("rules","delete_rule",gSelectedRow)
-        })
-        links();                 
+        SetHtml('select_rule_buttons',buttons);
+        if (buttons.length > 2)
+        {
+            document.getElementById('delete_rule').disabled = true;  
+            document.getElementById('edit_rule').disabled = true;  
+            
+            document.getElementById('add_rule').addEventListener("click", function(event){    
+                ipcRenderer.send("rules","add_rule")
+            })
+
+            document.getElementById('edit_rule').addEventListener("click", function(event){    
+            ipcRenderer.send("rules","edit_rule",gSelectedRow)
+            }) 
+
+            document.getElementById('delete_rule').addEventListener("click", function(event){    
+                ipcRenderer.send("rules","delete_rule",gSelectedRow)
+            })
+            links();
+        }
     });   
-
+ 
     ipcRenderer.on('select_rule_edit', (event,txt) => {
-        $("#select_rule_edit").html(txt);
+        SetHtml('select_rule_edit',txt);
+        SetHtml('select_rule_cancel','<br><button id="cancel_rule"> Cancel</button>');
 
-        $("#select_rule_cancel").html('<br><button id="cancel_rule"> Cancel</button>');
+        var el = document.getElementsByClassName("rules_status");
+        for (var i = 0; i < el.length; i++) 
+        {
+            let item = el[i];
+            gSelectedStatus = item.id;
+        }
+//        $('#rules_status option:selected').each(function() {
+//            let sel = parseInt($(this).attr("id")); 
+//            gSelectedStatus = sel;
+//        });        
 
-        $('#rules_status option:selected').each(function() {
-            let sel = parseInt($(this).attr("id")); 
-            gSelectedStatus = sel;
-        });        
-        $('#rules_type option:selected').each(function() {
-            let sel = parseInt($(this).attr("id")); 
-            gSelectedType = sel;
-            rulesTypeInfo(sel)
-        });
-        $('#rules_action option:selected').each(function() {
-            gSelectedAction = parseInt($(this).attr("id"));
-            rulesActionInfo(gSelectedAction,"#select_rule_info_action")
-        });
-        $('#rules_action2 option:selected').each(function() {
-            gSelectedAction2 = parseInt($(this).attr("id"));
-            rulesActionInfo(gSelectedAction2,"#select_rule_info_action2")
+
+        var el = document.getElementsByClassName("rules_type");
+        for (var i = 0; i < el.length; i++) 
+        {
+            let item = el[i];
+            rulesTypeInfo = item.id;
+        }
+
+        var el = document.getElementsByClassName("rules_action");
+        for (var i = 0; i < el.length; i++) 
+        {
+            let item = el[i];
+            gSelectedAction = item.id;
+            rulesActionInfo(gSelectedAction,"select_rule_info_action")
+        }
+
+        var el = document.getElementsByClassName("rules_action2");
+        for (var i = 0; i < el.length; i++) 
+        {
+            let item = el[i];
+            gSelectedAction = item.id;
+            rulesActionInfo(gSelectedAction,"select_rule_info_action2")
+        }       
+
+        document.getElementById('rules_status').addEventListener("click", function(event){  
+            let id = -1;
+            for (var option of document.getElementById('rules_status').options)
+            {
+                if (option.selected) {
+                    id = option.id;                    
+                }
+            }
+
+            gSelectedStatus = parseInt(id);
         });        
 
-        $("#rules_status").on("change", function(event) {
-            gSelectedStatus = parseInt($('option:selected', this).attr("id"));
-        });        
-        $("#rules_type").on("change", function(event) {
-            gSelectedType = parseInt($('option:selected', this).attr("id"));
+        document.getElementById('rules_type').addEventListener("click", function(event){    
+            let id = -1;
+            for (var option of document.getElementById('rules_type').options)
+            {
+                if (option.selected) {
+                    id = option.id;                    
+                }
+            }
+            gSelectedType = parseInt(id);
             rulesTypeInfo(gSelectedType);
         });
-        $("#rules_action").on("change", function(event) {
-            gSelectedAction = parseInt($('option:selected', this).attr("id"));
-            rulesActionInfo(gSelectedAction,"#select_rule_info_action");
-        });
-        $("#rules_action2").on("change", function(event) {
-            gSelectedAction2 = parseInt($('option:selected', this).attr("id"));
-            rulesActionInfo(gSelectedAction2,"#select_rule_info_action2");
+
+        document.getElementById('rules_action').addEventListener("click", function(event){    
+            let id = -1;
+            for (var option of document.getElementById('rules_action').options)
+            {
+                if (option.selected) {
+                    id = option.id;                    
+                }
+            }
+            gSelectedAction = parseInt(id);
+            rulesActionInfo(gSelectedAction,"select_rule_info_action");
         });
 
-        $("#add_rule_item").click(function( event ) {
-            let data = getData();
-            ipcRenderer.send("rules","add_rule_item",data)
-        }) 
-        $("#edit_rule_item").click(function( event ) {
-            let data = getData();
-            ipcRenderer.send("rules","edit_rule_item",data);
-        })
-        $("#cancel_rule").click(function( event ) {
+        document.getElementById('rules_action2').addEventListener("click", function(event){   
+            let id = -1;
+            for (var option of document.getElementById('rules_action2').options)
+            {
+                if (option.selected) {
+                    id = option.id;                    
+                }
+            }             
+            gSelectedAction2 = parseInt(id);
+            rulesActionInfo(gSelectedAction2,"Fselect_rule_info_action2");
+        });
+
+        
+        try{
+            document.getElementById('add_rule_item').addEventListener("click", function(event){    
+                let data = getData();
+                ipcRenderer.send("rules","add_rule_item",data)
+            })
+        } catch (error) {
+            var ii = 1;
+        }
+        
+        try{
+            document.getElementById('edit_rule_item').addEventListener("click", function(event){    // update rule
+                let data = getData();
+                ipcRenderer.send("rules","edit_rule_item",data);
+            })
+        } catch (error) {
+            var ii = 1;
+        }
+
+        document.getElementById('cancel_rule').addEventListener("click", function(event){    
             let data = getData();
             ipcRenderer.send("rules","cancel_rule",data);
         })
@@ -166,29 +228,29 @@ $(document).ready(function() {
     });
 
     ipcRenderer.on('settings_rules_error', (event,error) => {
-        $("#select_rule_error").html(error);   
+        SetHtml('select_rule_error',error);    
     });
-});
+})
 
 function getData()
 {
     let ruleItem = null;
     try {
         ruleItem = new Object
-        ruleItem.name = $('#edit_rule_name').val();
-        ruleItem.computer = $('#edit_rule_computer').val();
-        ruleItem.project = $('#edit_rule_project').val();
-        ruleItem.version = $('#edit_rule_version').val();        
-        ruleItem.app = $('#edit_rule_app').val();
-        ruleItem.value = $('#edit_value').val();
-        ruleItem.time = $('#edit_time').val();
+        ruleItem.name = document.getElementById('edit_rule_name').value;
+        ruleItem.computer = document.getElementById('edit_rule_computer').value;
+        ruleItem.project = document.getElementById('edit_rule_project').value;
+        ruleItem.version = document.getElementById('edit_rule_version').value;       
+        ruleItem.app = document.getElementById('edit_rule_app').value;
+        ruleItem.value = document.getElementById('edit_value').value;
+        ruleItem.time = document.getElementById('edit_time').value;
 
         ruleItem.ruleStatus = gSelectedStatus;        
         ruleItem.ruleType = gSelectedType;
         ruleItem.ruleAction = gSelectedAction;
         ruleItem.ruleAction2 = gSelectedAction2;
     } catch (error) {
-        
+        var ii = 1;
     }
     return ruleItem;
 }
@@ -226,7 +288,7 @@ function rulesTypeInfo(nr)
             msg += "No action selected";
         break;        
     }
-    $("#select_rule_info_type").html(msg);
+    SetHtml('select_rule_info_type',msg)
 }
 
 function rulesActionInfo(nr,id)
@@ -273,7 +335,7 @@ function rulesActionInfo(nr,id)
         default:
             msg += "No action selected";
     }
-    $(id).html(msg);
+    SetHtml(id,msg);
 }
 
 function links()
@@ -288,4 +350,15 @@ function links()
           })
        }
     })    
+}
+
+function SetHtml(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.innerHTML = data; 
+    data = null;
+  } catch (error) {
+    let i = 1;
+  }
 }

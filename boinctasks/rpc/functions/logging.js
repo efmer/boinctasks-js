@@ -43,7 +43,7 @@ class Logging{
     init()
     {
         try {
-            initPino();           
+            initFileLogging();           
         } catch (error) {
             let ii = 1;
         }      
@@ -56,10 +56,28 @@ class Logging{
             this.logDebug(version); 
             this.logRules(version);
             g_logErrorMsg = version;
-    
+
+            let electron = "Electron: V " + process.versions.electron;
+            this.logDebug(electron);            
+            let node = "Node: V " + process.versions.node;
+            this.logDebug(node);
+
+            let file = __dirname.split('boinctasks\\rpc');
+            
+            try {
+                const json = fs.readFileSync(file[0] + '/package.json', 'utf8');
+                const obj = JSON.parse(json);
+                const dependencies = obj.dependencies;
+                this.logDebug("Highcharts:" + dependencies.highcharts);
+                this.logDebug("Xml2js:" + dependencies.xml2js);
+            } catch (error) {
+                let ii = 1;
+            }            
+
             let sys = btC.TL.DIALOG_LOGGING.DLG_MSG_PLATFORM + " " + os.platform() + " ," + btC.TL.DIALOG_LOGGING.DLG_MSG_ARCH + " " + os.arch();
             this.log(sys);
-            gPinoDebug.info(sys);
+            this.logDebug(sys);
+            gFileOutput.info(sys);
     
             let path = btC.TL.DIALOG_LOGGING.DLG_MSG_FOLDER_APP + " " + app.getPath("home");
             this.logDebug(path);        
@@ -114,7 +132,7 @@ class Logging{
     {
         try {
             let time = getTime();
-            gPinoDebug.info(msg);
+            gFileOutput.info(msg);
             g_logDebugMsg += time + " " + msg + ".</br>";    
         } catch (error) {
             let  ii =1;
@@ -137,8 +155,13 @@ class Logging{
             let time = getTime();
             let msg = error.message;
             msg += "<br>" + error.stack;
-            let errorMsg = btC.TL.DIALOG_LOGGING.DLG_TITLE_ERROR + " [" + from + "] " + msg;
-            gPinoError.error(errorMsg);            
+            let errorMsg = "";
+            try {
+                errorMsg = btC.TL.DIALOG_LOGGING.DLG_TITLE_ERROR + " [" + from + "] " + msg;            
+             } catch (error) {
+                errorMsg = "ERROR [" + from + "] " + msg;     
+            }             
+            gFileOutput.error(errorMsg);            
             g_logErrorMsg += time + " " + errorMsg + ".</br>"; 
         } catch (error) {
             let  ii =1;            
@@ -151,14 +174,14 @@ class Logging{
         msg = msg.replaceAll(">","&#62;")
         let time = getTime();
         let errorMsg = btC.TL.DIALOG_LOGGING.DLG_TITLE_ERROR + " [" + from + "] " + msg;
-        gPinoError.error(errorMsg);          
+        gFileOutput.error(errorMsg);          
         g_logErrorMsg += time + " " + errorMsg + ".</br>";     
     }
 
     logFile(from,msg)
     {
         let txt = "[" + from + "] " + msg;
-        gPinoDebug.info(txt);
+        gFileOutput.info(txt);
     }
 
     setTheme(css)
@@ -169,10 +192,52 @@ class Logging{
 
 module.exports = Logging;
 
-function initPino()
+class LogToFile
+{
+    file = "";
+    fs = require('fs')
+    init()
+    {
+
+    }
+    destination(fileName)
+    {
+        this.file = fileName;
+    }
+    info(txt)
+    {
+        try 
+        {
+            let time = getTime();
+            let msg = time + " [info] " + txt;
+            msg+= "\r\n";
+            this.fs.writeFileSync(this.file,msg, { flag: 'a+'});
+        } catch (error)
+        {
+            var ii = 1;
+        }
+    }
+    error(txt)
+    {   
+        try
+        {
+            let time = getTime();
+            let msg = time + " [info] " + txt;
+            msg+= "\r\n";            
+            this.fs.writeFileSync(this.file,msg, { flag: 'a+'});
+        } catch (error)
+            {
+                var  ii = 1;
+            }
+    }
+}
+
+
+function initFileLogging()
 {
     try {
-        const pino = require("pino");
+ //       const pino = require("pino");
+ //       const pretty = require('pino-pretty');
         const loggingFolder = app.getPath("userData") + "/logging";
         if (!fs.existsSync(loggingFolder))
         {
@@ -181,47 +246,32 @@ function initPino()
         const logFileDebug = loggingFolder + "/boinctasks_js_debug";
         const logFileError = loggingFolder + "/boinctasks_js_error";        
 
+        // legacy remove error files
+        try {
+            fs.unlinkSync(logFileError + '1.log');
+        } catch (error) {}        
+        try {
+            fs.unlinkSync(logFileError + '2.log');
+        } catch (error) {}   
+        try {
+            fs.unlinkSync(logFileError + '3.log');
+        } catch (error) {}   
+
         try {
             fs.unlinkSync(logFileDebug + '2.log');
         } catch (error) {}
-        try {
-            fs.unlinkSync(logFileError + '2.log');
-        } catch (error) {}        
 
         try {
             fs.renameSync(logFileDebug + '1.log',logFileDebug + '2.log');
         } catch (error) {}
-        try {
-            fs.renameSync(logFileError + '1.log',logFileError + '2.log');
-        } catch (error) {}        
-
+   
         try {
             fs.renameSync(logFileDebug + ".log",logFileDebug + '1.log');
         } catch (error) {}
-        try {
-            fs.renameSync(logFileError + ".log" ,logFileError + '1.log');
-        } catch (error) {}        
+   
+        gFileOutput = new LogToFile();
+        gFileOutput.destination(logFileDebug + ".log")        
 
-        gPinoDebug = pino(
-            {
-              prettyPrint: {
-                colorize: true,
-                levelFirst: true,
-                translateTime: "yyyy-dd-mm, h:MM:ss TT",
-              },
-            },
-            pino.destination(logFileDebug + ".log")
-          ); 
-          gPinoError = pino(
-            {
-              prettyPrint: {
-                colorize: true,
-                levelFirst: true,
-                translateTime: "yyyy-dd-mm, h:MM:ss TT",
-              },
-            },
-            pino.destination(logFileError + ".log")
-          );                   
     } catch (error) {
         var ii = 1;
     }
@@ -268,19 +318,22 @@ function showLog(logType,theme)
           contextIsolation: false,  
           nodeIntegration: true,
           nodeIntegrationInWorker: true,
-          preload:'${__dirname}/preload/preload.js',
+    //      preload:'${__dirname}/preload/preload.js',
         }
       });
       gChildWindowLog.loadFile('index/index_log.html')
       gChildWindowLog.once('ready-to-show', () => {    
         gChildWindowLog.show();  
-        gChildWindowLog.webContents.send('log_text', log); 
-        gChildWindowLog.setTitle(title);
-        gChildWindowLog.webContents.send("translations",btC.TL.DIALOG_LOGGING);            
-//        gChildWindowLog.webContents.openDevTools()    
+        gChildWindowLog.setTitle(title);         
+        if (btC.DEBUG_WINDOW)
+        {
+            gChildWindowLog.webContents.openDevTools();
+        }  
       })
       gChildWindowLog.webContents.on('did-finish-load', () => {
         insertCssDark(theme);
+        gChildWindowLog.webContents.send("translations",btC.TL.DIALOG_LOGGING);
+        gChildWindowLog.webContents.send('log_text', log);
       })  
       gChildWindowLog.on('close', () => {
         let bounds = gChildWindowLog.getBounds();

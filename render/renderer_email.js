@@ -22,34 +22,36 @@ const { ipcRenderer } = require('electron')
 
 gPasswordVisible = false;
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", () => {
   ipcRenderer.on('set', (event, item) => {
 
-    $("#email_email").val(item.email);
-    $("#email_password").val(item.passWord);
-    $("#email_send").val(item.send);
-    $("#email_status").html("");
+    SetValue('email_email',item.email);
+    SetValue('email_password',item.passWord);
+    SetValue('email_send',item.send);
+    SetHtml('email_status','');
   });
 
   ipcRenderer.on('status', (event, status) => {
-
-    $("#email_status").html(status)    
+    SetHtml('email_status',status);   
   });
 
-  $(".ef_img_input").click(function( event ) {
-    $(".ef_img_input").toggleClass("bt_img_input_eye bt_img_input_eye_not");        
+  document.getElementById('password_eye').addEventListener("click", function(event){    
     if (gPasswordVisible)
     {
-      $("#email_password").attr("type", "password");       
+      document.getElementById('password_eye').classList.add("bt_img_input_eye_not");  
+      document.getElementById('password_eye').classList.remove("bt_img_input_eye");          
+      document.getElementById('email_password').setAttribute('type', 'password');    
     }
     else
     {
-      $("#email_password").attr("type", "text");       
+      document.getElementById('password_eye').classList.remove("bt_img_input_eye_not");  
+      document.getElementById('password_eye').classList.add("bt_img_input_eye");           
+      document.getElementById('email_password').setAttribute('type', 'text');      
     }
     gPasswordVisible = !gPasswordVisible;    
   });
 
-  $("#email_apply").click(function( event ) {
+  document.getElementById('email_apply').addEventListener("click", function(event){ 
     let item = new Object() ;
     try {
       getValues(item);
@@ -59,7 +61,7 @@ $(document).ready(function() {
     }      
   });
 
-  $("#email_test").click(function( event ) {
+  document.getElementById('email_test').addEventListener("click", function(event){ 
     let item = new Object() ;
     try {
       getValues(item);
@@ -71,8 +73,30 @@ $(document).ready(function() {
 
   function getValues(item)
   {
-    item.email = $('#email_email').val();
-    item.passWord  = $('#email_password').val();
-    item.send  = $('#email_send').val();    
+    item.email = document.getElementById('email_email').value;
+    item.passWord = document.getElementById('email_password').value;
+    item.send = document.getElementById('email_send').value;   
   }
 });
+
+function SetHtml(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.innerHTML = data; 
+    data = null;
+  } catch (error) {
+    let i = 1;
+  }
+}
+
+function SetValue(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.value = data; 
+    data = null;
+  } catch (error) {
+    let i = 1;
+  }
+}

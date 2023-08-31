@@ -11,6 +11,8 @@ npm start
 
 Open terminal
 
+!! same as Windows Node and Npn
+
 cd Users\fred\sb
 npm update --dd
 

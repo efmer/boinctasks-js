@@ -241,7 +241,7 @@ class Connections{
 
     setColumnOrder()
     {
-        settingsColumnOrder.start(gB);
+        settingsColumnOrder.start(gB,gB.theme);
     }
 
     toolbar(id)
@@ -375,7 +375,7 @@ class Connections{
                             con.passWord = password;
                         }
                         con.computerName = item.computerName;
-                        con.check = "1";
+                        con.check = '1'; // must be 1 instead of true;
                         logging.logDebug("Added " + con.ip + "," + con.port);
                         gB.connections.push(con);
                         iAdd++;
@@ -591,7 +591,8 @@ class Connections{
         if (gClassEmail !== null) gClassEmail.setTheme(css);
         if (gClassAcountManager !== null) gClassAcountManager.setTheme(css);
         if (gClassCcConfig !== null) gClassCcConfig.setTheme(css);
-        if (gClassAppConfig !== null) gClassAppConfig.setTheme(css);        
+        if (gClassAppConfig !== null) gClassAppConfig.setTheme(css);
+        if (settingsColumnOrder !== null) settingsColumnOrder.setTheme(css);
         if (!bSingle)
         {
             gClassSettingsColor.setTheme(darkmode,css);
@@ -1141,11 +1142,18 @@ function connectAll()
             {            
                 if (con.sidebar || con.sidebarGrp)
                 {   
-                    if (con.temp.port > 0)
+                    if (con.temp.conTempClass != null)
                     {
-                        const ConTemp  = require('./misc/connections_temperature');
-                        const conTemp = new ConTemp();
-                        conTemp.send(con);
+                        con.temp.conTempClass.send(con);
+                    }
+                    else
+                    {
+                        if (con.temp.port > 0)
+                        {
+                            const ConTemp  = require('./misc/connections_temperature');
+                            con.temp.conTempClass = new ConTemp();                       
+                            con.temp.conTempClass.send(con);
+                        }
                     }
                 }
             }
@@ -1284,18 +1292,24 @@ function connectSingle(con)
     con.selected = gB.selectedTab;
     if (!con.auth)
     {
-        // we must create a socket for every connection
-//        const btSocket = new BtSocket();
-//        if(con.clientClass == null)
-//        {
-//            con.clientClass = btSocket;
-//        }
-//        con.clientClass.socket(con);
-        con.client_socket = new BtSocket();
-        con.client_socket.socket(con);
-        const athenticate = new Authenticate();
-        con.client_callback = connectAuth;
-        athenticate.authorize(con);
+        if (con.authRetry <= 0)
+        {
+            con.authRetry = 4;
+            // we must create a socket for every connection
+
+            if (con.client_socket != null)
+            {
+              con.client_socket.end();                 
+                con.client_socket.destroy(); 
+                con.client_socket = null;
+            }
+            con.client_socket = new BtSocket();
+            con.client_socket.socket(con);
+            const athenticate = new Authenticate();
+            con.client_callback = connectAuth;
+            athenticate.authorize(con);
+        }
+        con.authRetry--;
     }
     else
     {
@@ -1385,7 +1399,23 @@ function getConnections(computers)
             {
                 con.computerName = decodeURI(computer.id_name.toString());            
             }
+
+            let bReadPassword = false;
+            if (con.ip.toLowerCase() === "127.0.0.1")
+            {
+                bReadPassword = true;
+            }
+            if (con.ip.toLowerCase() === "::1")
+            {
+                bReadPassword = true;
+            }
+
             if (con.ip.toLowerCase() === "localhost")
+            {
+                bReadPassword = true;                
+                con.ip = "127.0.0.1"; // otherwise the system uses a not working ::1 on Windows
+            }
+            if (bReadPassword)
             {
                 if ((con.port === "") || (con.port === 31416))
                 {
@@ -1427,6 +1457,7 @@ function newCon()
     con.client_socket = null;
     con.authTimeValid = 0;
     con.auth = false;
+    con.authRetry = 0;
     con.authTimeout = 0;
     con.lostConnection = false;
     con.isShadow = false;
@@ -1454,6 +1485,7 @@ function newCon()
     con.temp = new Object;
     con.temp.port = -1;
     con.temp.clientClass = null;    
+    con.temp.conTempClass = null;
 
     return con;
 }
@@ -1620,8 +1652,8 @@ function processComputers(sort)
  //       if (gB.connections[0].selected != "computers") return;
 
         const ProcessComputers = require('./computers/proces_computers')
-        const pc = new ProcessComputers(); 
-        var cTable =  pc.process(gB.connections,sort);    
+        let pc = new ProcessComputers(); 
+        let cTable =  pc.process(gB.connections,sort);    
         if (cTable.length == 0) return;
         gB.currentTable.name = btC.TAB_COMPUTERS;        
         if (gSwitchedTabCnt-- >0)
@@ -1652,7 +1684,7 @@ function processProjects(sort)
  //       gB.currentTable.projectTable = null;
 
         const ProcessProjects = require('./projects/process_projects')
-        const pp = new ProcessProjects(); 
+        let pp = new ProcessProjects(); 
         var cTable =  pp.process(gB.connections,sort);
         gB.currentTable.name = btC.TAB_PROJECTS;
         if (gSwitchedTabCnt-- >0)
@@ -1696,7 +1728,7 @@ function processResults(sort,project)
         gB.currentTable.table = btTableResults;    
         gB.currentTable.resultTable = ret.cTable;
         tableReady(status, gVersionS, btTableResults.table(gB,ret.cTable))
-        cTable = null;
+        ret.cTable = null;
     } catch (error) {
         logging.logError('Connections,processResults', error);      
     }     
@@ -1761,8 +1793,8 @@ function processMessages(sort)
             if (con.sidebar || con.sidebarGrp)
             {         
                 const ProcessMessages = require('./messages/process_messages')
-                const pm = new ProcessMessages(); 
-                var cTable =  pm.process(con,sort);           
+                let pm = new ProcessMessages(); 
+                let cTable =  pm.process(con,sort);           
                 gB.currentTable.messageTable = cTable;
                 tableReady("", gVersionS, btTableMessages.table(gB, cTable))
                 cTable = null;
@@ -1789,7 +1821,7 @@ function processHistory(sort)
         if ( gB.settings.historyRefreshRate > 0)
         {
             const ProcessHistory = require('./history/process_history')
-            const ph = new ProcessHistory(); 
+            let ph = new ProcessHistory(); 
             let ret =  ph.process(gB.connections,sort);
             let status = btC.TL.FOOTER.FTR_TASKS_HISTORY + " " + ret.resultCount;
             gB.currentTable.name = btC.TAB_HISTORY;
@@ -1804,7 +1836,7 @@ function processHistory(sort)
             gB.currentTable.historyTable = ret.cTable;
             tableReady(status, gVersionS, btTableHistory.table(gB,ret.cTable))
             ph = null;
-            cTable = null;
+            ret.cTable = null;
         }
         else
         {
@@ -1827,8 +1859,8 @@ function processNotices()
         gB.currentTable.projectTable = null;
 
         const ProcessNotices = require('./notices/process_notices')
-        const pn = new ProcessNotices(); 
-        var cTable =  pn.process(gB.connections, btNotices.read());
+        let pn = new ProcessNotices(); 
+        let cTable =  pn.process(gB.connections, btNotices.read());
         gB.currentTable.name = btC.TAB_NOTICES;
         gB.currentTable.table = btTableNotices;    
         gB.currentTable.noticesTable = cTable;

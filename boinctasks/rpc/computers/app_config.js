@@ -106,6 +106,10 @@ function AppConfigStart(gb,url,con)
         })
         gChildAppConfig.webContents.on('did-finish-load', () => {
           insertCssDark(gb.theme);
+          if (btC.DEBUG_WINDOW)
+          {                    
+            gChildAppConfig.webContents.openDevTools();
+          } 
         })
         gChildAppConfig.on('close', () => {
           let bounds = gChildAppConfig.getBounds();
@@ -117,6 +121,10 @@ function AppConfigStart(gb,url,con)
       }
       else
       {
+        if (btC.DEBUG_WINDOW)
+        {                    
+          gChildAppConfig.webContents.openDevTools();
+        } 
         gChildAppConfig.webContents.send('error_text', btC.TL.FOOTER.FTR_BUSY);    
         gChildAppConfig.webContents.send('xml_text', "");        
         gChildAppConfig.show();

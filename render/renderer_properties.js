@@ -20,14 +20,13 @@ const { ipcRenderer } = require('electron')
 
 'use strict';
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", () => {
   ipcRenderer.on('properties_text', (event, tableData) => {
-    $("#properties_insert_text").html(tableData);
+    SetHtml('properties_insert_text',tableData)
   });
 
-  $("#properties_copy").click(function( event ) {
-
-    let txt = $("#properties_insert_text").html();
+  document.getElementById('properties_copy').addEventListener("click", function(event){  
+    let txt = document.getElementById('properties_insert_text').innerHTML;
     txt = txt.replaceAll("<tr>", "");    
     txt = txt.replaceAll("</tr>", "\n");
     txt = txt.replaceAll("<td>", "");
@@ -47,4 +46,15 @@ function updateClipboard(newClip) {
   }, function() {
     /* clipboard write failed */
   });
+}
+
+function SetHtml(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.innerHTML = data; 
+    data = null;
+  } catch (error) {
+    let i = 1;
+  }
 }

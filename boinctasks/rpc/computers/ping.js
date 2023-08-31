@@ -19,6 +19,8 @@
 const Logging = require('../functions/logging');
 const logging = new Logging();
 
+const btC = require('../functions/btconstants');
+
 const ReadWrite  = require('../functions/readwrite');
 const readWrite = new ReadWrite();
 
@@ -217,20 +219,23 @@ function showPing(theme)
         contextIsolation: false,  
         nodeIntegration: true,
         nodeIntegrationInWorker: true,        
-        preload:'${__dirname}/preload/preload.js',
+    //    preload:'${__dirname}/preload/preload.js',
       }
     });
 
     gChildWindowPing.loadFile('index/index_ping.html')
     gChildWindowPing.once('ready-to-show', () => {    
         gChildWindowPing.setTitle(title);
-        let data = JSON.parse(readWrite.read("settings", "ping.json"));     
-        gChildWindowPing.webContents.send('init', data); 
- //     childWindowScan.webContents.openDevTools() // debug only
+        if (btC.DEBUG_WINDOW)
+        {                    
+            gChildWindowPing.webContents.openDevTools();
+        } 
 
     }) 
     gChildWindowPing.webContents.on('did-finish-load', () => {
         insertCssDark(theme);
+        let data = JSON.parse(readWrite.read("settings", "ping.json"));     
+        gChildWindowPing.webContents.send('init', data);         
       })  
       gChildWindowPing.on('close', () => {
         let bounds = gChildWindowPing.getBounds();
@@ -242,6 +247,10 @@ function showPing(theme)
   }
   else
   {
+    if (btC.DEBUG_WINDOW)
+    {                    
+        gChildWindowPing.webContents.openDevTools();
+    } 
     windowReady(title);  
     gChildWindowPing.hide();    
     gChildWindowPing.show();

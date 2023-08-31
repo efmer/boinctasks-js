@@ -22,71 +22,72 @@ const { ipcRenderer } = require('electron')
 
 let gSettingsColor = null;
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", () => {
     ipcRenderer.on('settings_color', (event, color) => {
         gSettingsColor = color;
         setColor();
     });
     ipcRenderer.on('translations', (event, dlg) => {
-        $("#trans_project").html(dlg.DC_BT_PROJECT);        
-        $("#project_running").html(dlg.DC_BT_PROJECT_RUNNING);
-        $("#project_suspended").html(dlg.DC_BT_PROJECT_SUSPENDED);
-        $("#project_nonew").html(dlg.DC_BT_PROJECT_NO_NEW);
+        SetHtml("trans_project",dlg.DC_BT_PROJECT);        
+        SetHtml("project_running",dlg.DC_BT_PROJECT_RUNNING);
+        SetHtml("project_suspended",dlg.DC_BT_TASKS_SUSPENDED);
+        SetHtml("project_nonew",dlg.DC_BT_PROJECT_NO_NEW);
 
-        $("#trans_tasks").html(dlg.DC_BT_TASKS);
-        $("#task_download").html(dlg.DC_BT_TASKS_DOWNLOAD);
-        $("#task_ready_report").html(dlg.DC_BT_TASKS_READY_REPORT);
-        $("#task_running").html(dlg.DC_BT_TASKS_RUNNING);
-        $("#task_running_hp").html(dlg.DC_BT_TASKS_RUNNING_HP);
+        SetHtml("trans_tasks",dlg.DC_BT_TASKS);
+        SetHtml("task_download",dlg.DC_BT_TASKS_DOWNLOAD);
+        SetHtml("task_ready_report",dlg.DC_BT_TASKS_READY_REPORT);
+        SetHtml("task_running",dlg.DC_BT_TASKS_RUNNING);
+        SetHtml("task_running_hp",dlg.DC_BT_TASKS_RUNNING_HP);
 
-        $("#gtask_download").html(dlg.DC_BT_TASKS_DOWNLOAD);
-        $("#gtask_ready_report").html(dlg.DC_BT_TASKS_READY_REPORT);
-        $("#gtask_running").html(dlg.DC_BT_TASKS_RUNNING);
-        $("#gtask_running_hp").html(dlg.DC_BT_TASKS_RUNNING_HP);
+        SetHtml("gtask_download",dlg.DC_BT_TASKS_DOWNLOAD);
+        SetHtml("gtask_ready_report",dlg.DC_BT_TASKS_READY_REPORT);
+        SetHtml("gtask_running",dlg.DC_BT_TASKS_RUNNING);
+        SetHtml("gtask_running_hp",dlg.DC_BT_TASKS_RUNNING_HP);
 
-        $("#task_abort").html(dlg.DC_BT_TASKS_ABORT);
-        $("#task_waiting_run").html(dlg.DC_BT_TASKS_WAITING);
-        $("#task_ready_start").html(dlg.DC_BT_TASKS_READY_START);
-        $("#task_error").html(dlg.DC_BT_TASKS_ERROR);
+        SetHtml("task_abort",dlg.DC_BT_TASKS_ABORT);
+        SetHtml("task_waiting_run",dlg.DC_BT_TASKS_WAITING);
+        SetHtml("task_ready_start",dlg.DC_BT_TASKS_READY_START);
+        SetHtml("task_error",dlg.DC_BT_TASKS_ERROR);
 
-        $("#gtask_abort").html(dlg.DC_BT_TASKS_ABORT);
-        $("#gtask_waiting_run").html(dlg.DC_BT_TASKS_WAITING);
-        $("#gtask_ready_start").html(dlg.DC_BT_TASKS_READY_START);
-        $("#gtask_error").html(dlg.DC_BT_TASKS_ERROR);
+        SetHtml("gtask_abort",dlg.DC_BT_TASKS_ABORT);
+        SetHtml("gtask_waiting_run",dlg.DC_BT_TASKS_WAITING);
+        SetHtml("gtask_ready_start",dlg.DC_BT_TASKS_READY_START);
+        SetHtml("gtask_error",dlg.DC_BT_TASKS_ERROR);
 
-        $("#task_suspended").html(dlg.DC_BT_TASKS_SUSPENDED);
-        $("#task_suspended_user").html(dlg.DC_BT_TASKS_SUSPENDED_USR);
+        SetHtml("task_suspended",dlg.DC_BT_TASKS_SUSPENDED);
+        SetHtml("task_suspended_user",dlg.DC_BT_TASKS_SUSPENDED_USR);
 
-        $("#gask_suspended").html(dlg.DC_BT_TASKS_SUSPENDED);
-        $("#gask_suspended_user").html(dlg.DC_BT_TASKS_SUSPENDED_USR);
+        SetHtml("gask_suspended",dlg.DC_BT_TASKS_SUSPENDED);
+        SetHtml("gask_suspended_user",dlg.DC_BT_TASKS_SUSPENDED_USR);
 
-        $("#trans_messages").html(dlg.DC_BT_MSG);
-        $("#messages_default").html(dlg.DC_BT_MSG_DEFAULT);
-        $("#messages_priority").html(dlg.DC_BT_MSG_PRIORITY);
-        $("#messages_highlight_0").html(dlg.DC_BT_MSG_HIGHLIGHT + ' A');
-        $("#messages_highlight_1").html(dlg.DC_BT_MSG_HIGHLIGHT + ' B');
-        $("#messages_highlight_2").html(dlg.DC_BT_MSG_HIGHLIGHT + ' C');
-        $("#messages_highlight_3").html(dlg.DC_BT_MSG_HIGHLIGHT + ' D');
-        $("#messages_highlight_4").html(dlg.DC_BT_MSG_HIGHLIGHT + ' E');
-        $("#messages_highlight_5").html(dlg.DC_BT_MSG_HIGHLIGHT + ' F');
-        $("#messages_highlight_6").html(dlg.DC_BT_MSG_HIGHLIGHT + ' G');
-        $("#messages_highlight_7").html(dlg.DC_BT_MSG_HIGHLIGHT + ' H');
-        $("#messages_highlight_8").html(dlg.DC_BT_MSG_HIGHLIGHT + ' I');
-        $("#messages_highlight_9").html(dlg.DC_BT_MSG_HIGHLIGHT + ' J');
+        SetHtml("trans_messages",dlg.DC_BT_MSG);
+        SetHtml("messages_default",dlg.DC_BT_MSG_DEFAULT);
+        SetHtml("messages_priority",dlg.DC_BT_MSG_PRIORITY);
+        SetHtml("messages_highlight_0",dlg.DC_BT_MSG_HIGHLIGHT + ' A');
+        SetHtml("messages_highlight_1",dlg.DC_BT_MSG_HIGHLIGHT + ' B');
+        SetHtml("messages_highlight_2",dlg.DC_BT_MSG_HIGHLIGHT + ' C');
+        SetHtml("messages_highlight_3",dlg.DC_BT_MSG_HIGHLIGHT + ' D');
+        SetHtml("messages_highlight_4",dlg.DC_BT_MSG_HIGHLIGHT + ' E');
+        SetHtml("messages_highlight_5",dlg.DC_BT_MSG_HIGHLIGHT + ' F');
+        SetHtml("messages_highlight_6",dlg.DC_BT_MSG_HIGHLIGHT + ' G');
+        SetHtml("messages_highlight_7",dlg.DC_BT_MSG_HIGHLIGHT + ' H');
+        SetHtml("messages_highlight_8",dlg.DC_BT_MSG_HIGHLIGHT + ' I');
+        SetHtml("messages_highlight_9",dlg.DC_BT_MSG_HIGHLIGHT + ' J');
 
-        $("#trans_history").html(dlg.DC_BT_HISTORY);
-        $("#history_ok").html(dlg.DC_BT_HISTORY_OK);
-        $("#history_error").html(dlg.DC_BT_HISTORY_ERROR);
-        $("#trans_system").html(dlg.DC_BT_SYSTEM);
-        $("#select_background").html(dlg.DC_BT_SYSTEM_SEL_BACK);
-        $("#select_text").html(dlg.DC_BT_SYSTEM_SEL_TEXT);
-        $("#progress_bar").html(dlg.DC_BT_SYSTEM_PROGRESS);
+        SetHtml("trans_history",dlg.DC_BT_HISTORY);
+        SetHtml("history_ok",dlg.DC_BT_HISTORY_OK);
+        SetHtml("history_error",dlg.DC_BT_HISTORY_ERROR);
+        SetHtml("trans_system",dlg.DC_BT_SYSTEM);
+        SetHtml("select_background",dlg.DC_BT_SYSTEM_SEL_BACK);
+        SetHtml("select_text",dlg.DC_BT_SYSTEM_SEL_TEXT);
+        SetHtml("progress_bar",dlg.DC_BT_SYSTEM_PROGRESS);
     });
 
 });
 
 function setColor(color)
 {
+    // Warning: Leave the # we no longer use in for compatibility.
     picker('#project_running');
     picker('#project_suspended');    
     picker('#project_nonew');      
@@ -137,31 +138,44 @@ function setColor(color)
 
 function picker(element)
 {
-    let  elP = document.querySelector(element);
-    let el = $(element);
+    let elUse = element.replace("#", "");
+    let  elP = document.querySelector(elUse);
+    let el = document.getElementById(elUse);
+    elP = el;
     let setcolor = "#2222";
    
     try {
         setcolor = gSettingsColor[element];
     } catch (error) {
+        let err = 1;
     }
     if (setcolor === undefined)
     {
         setcolor = "#ffffff"; 
     }
-    el.css("background-color",setcolor);
+    el.style.backgroundColor = setcolor;
     new Picker({
         parent: elP,
         color: setcolor,
         alpha: false,
         onDone: function(color){
             let rgb = color.rgbString;
-            el.css("background-color",rgb);
+            el.style.backgroundColor = rgb;
             gSettingsColor[element] = rgb;
             ipcRenderer.send('settings_color', "element", element, rgb);         
         },
         onChange: function(color){
-            el.css("background-color",color.rgbString);
+            el.style.backgroundColor =color.rgbString;
         },        
     });
+}
+
+function SetHtml(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.innerHTML = data; 
+  } catch (error) {
+    let i = 1;
+  }
 }

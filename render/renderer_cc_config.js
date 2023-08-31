@@ -20,16 +20,27 @@ const { ipcRenderer } = require('electron')
 
 'use strict';
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", () => {
   ipcRenderer.on('xml_text', (event, xml) => {
-    $("#xml_text").html(xml);
+    SetHtml("xml_text",xml);
   });
   ipcRenderer.on('error_text', (event, txt) => {
-    $("#error_text").html(txt);
+    SetHtml("error_text",txt);
   });  
 });
 
-$("#cc_config_update").click(function( event ) {
+document.getElementById('cc_config_update').addEventListener("click", function(event){   
   var xml = document.getElementById("xml_text").value;
   ipcRenderer.send('cc_config', 'update',xml);
 });
+
+function SetHtml(tag,data)
+{
+  try {
+    let el = document.getElementById(tag);
+    el.innerHTML = data; 
+    data = null;
+  } catch (error) {
+    let i = 1;
+  }
+}

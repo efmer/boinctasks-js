@@ -58,19 +58,22 @@ function selectLanguage(settings,theme)
               contextIsolation: false,  
               nodeIntegration: true,
               nodeIntegrationInWorker: true,        
-              preload:'${__dirname}/preload/preload.js',
+     //         preload:'${__dirname}/preload/preload.js',
             }
           });
           gChildLanguage.loadFile('index/index_language.html')
           gChildLanguage.once('ready-to-show', () => {    
-//            gChildLanguage.webContents.openDevTools()
-          gChildLanguage.show();  
-          gChildLanguage.setTitle(title);
-          gChildLanguage.webContents.send("translations",btC.TL.DIALOG_ABOUT);                  
-          gChildLanguage.webContents.send('settings_language', settings); 
+            if (btC.DEBUG_WINDOW)
+            {                    
+              gChildLanguage.webContents.openDevTools();
+            }  
+            gChildLanguage.show();  
+            gChildLanguage.setTitle(title);
           })
           gChildLanguage.webContents.on('did-finish-load', () => {
             insertCssDark(theme);
+            gChildLanguage.webContents.send("translations",btC.TL.DIALOG_ABOUT);                  
+            gChildLanguage.webContents.send('settings_language', settings);             
           })
           gChildLanguage.on('close', () => {
             let bounds = gChildLanguage.getBounds();
@@ -82,6 +85,10 @@ function selectLanguage(settings,theme)
         }
         else
         {
+          if (btC.DEBUG_WINDOW)
+          {                    
+            gChildLanguage.webContents.openDevTools();
+          }  
           gChildLanguage.setTitle(title); 
           gChildLanguage.hide();
           gChildLanguage.show();  

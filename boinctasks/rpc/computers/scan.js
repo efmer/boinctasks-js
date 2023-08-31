@@ -30,7 +30,7 @@ const {BrowserWindow } = require('electron');
 const { networkInterfaces } = require('os');
 const btC = require("../functions/btconstants");
 
-let SCAN_TIMEOUT = 15;
+let SCAN_TIMEOUT = 50;
 let NO_PASSWORD = btC.TL.DIALOG_COMPUTER_SCAN.DSC_NO_PASSWORD;
 
 let gChildWindowScan = null;
@@ -39,10 +39,11 @@ let gCssDarkScan = null;
 let lScanLocalIp = null;
 let lScanCount = 0;
 let lScanFoundAllIp = [];
+let lScanFoundAllIpIndex = 0;
+let lScanCurrentIp = 0;
 let lScanFoundAllInfo = [];
 let lScanTimeout = false;
 let lScanTimeoutCount = SCAN_TIMEOUT;
-let lScanFinished  =false;
 let lScanTimer = null;
 let lScanBusy = false;
 
@@ -51,7 +52,7 @@ let lScanPort = "";
 
 let lScanCon = [];
 
-let lbScanPhase2 = false;
+let lbScanPasswrd = false;
 
 class ScanComputers{
 
@@ -71,19 +72,24 @@ class ScanComputers{
             lScanPort = port;
 
             gChildWindowScan.webContents.send('trans_scan_explain', "");
-            lScanFinished = false;
             if (lScanBusy)
             {
                 if (lScanCount > 0) return;
             }
-            lbScanPhase2 = false;
             lScanFoundAllIp = [];
+            lScanFoundAllIpIndex = 0;
             lScanFoundAllInfo = [];
             logging.logDebug("");      
             logging.logDebug("Scan computers: Begin");
 
-            gChildWindowScan.webContents.send('computer_scan_text', "");    
-            scanAll();
+            scanInit();
+            if (lScanLocalIp.length <= 0)
+            {
+                gChildWindowScan.webContents.send('computer_scan_text', "ERROR: No IP addres found.");
+                return;
+            }
+            lScanBusy = true;
+            scanNext();
         } catch (error) {
             logging.logError('ScanComputers,startScan', error);     
         }
@@ -94,6 +100,8 @@ class ScanComputers{
         clearTimeout(lScanTimer);
         gChildWindowScan.close();
         lScanBusy = false;
+        lScanFoundAllIp = [];
+        lScanFoundAllInfo = [];        
     }
 
     setTheme(theme)
@@ -119,6 +127,7 @@ class BtSocketScan{
             let scanObj = Object();
             let ip = con.ip;
             scanObj.ip = ip;
+            scanObj.port = port;
             scanObj.computerName = ip;
             scanObj.cpid = NO_PASSWORD;
             scanObj.password = "";
@@ -143,7 +152,7 @@ class BtSocketScan{
             }
         })
         con.client_socket.on('close', function() {
-            var ii = 1;                 
+            lScanCount--;  
         });        
         con.client_socket.on('error', (err) => {
 //            con.client_compleData = "";         
@@ -170,8 +179,14 @@ function localIp()
 
     for (const name of Object.keys(nets)) 
     {
-        for (const net of nets[name]) 
+        let nameLc = name.toLowerCase();
+        let ix = nameLc.indexOf("vmware");
+        if (ix >= 0)
         {
+            continue;
+        }
+        for (const net of nets[name]) 
+        {        
             if (net.family === 'IPv4' && !net.internal) {
                 ipArray.push(net.address);
             }
@@ -180,35 +195,44 @@ function localIp()
     return ipArray;
 }
 
-function scanAll()
+function scanInit()
+{
+    lScanLocalIp = localIp();
+    if (lScanLocalIp.length <= 0)
+    {          
+        logging.logDebug("No local IP address found");  
+        return;
+    }
+
+    for (let i=0;i<lScanLocalIp.length;i++)
+    {
+        logging.logDebug("Local Ip: " + lScanLocalIp[i]); 
+    }
+    lScanFoundAllIpIndex = 0;
+    lbScanPasswrd = false;    
+    lScanBusy = false;
+}
+
+function scanNext()
 {
     try {
-        lScanBusy = true;
         lScanCount = 0;
         lScanTimeoutCount = SCAN_TIMEOUT;
         clearTimeout(lScanTimer);
         lScanTimeout = false;
 
-        if (!lbScanPhase2)
-        {
-            if (lScanLocalIp === null)
-            {
-                lScanLocalIp = localIp();
-                if (lScanLocalIp.length <= 0)
-                {          
-                    logging.logDebug("No local IP address found");  
-                    return;
-                }
-            }
-            logging.logDebug("Local Ip: " + lScanLocalIp[0]); 
-        }
-        let ix = lScanLocalIp[0].lastIndexOf(".");
-        let ip = lScanLocalIp[0].substring(0,ix+1);
+        let ix = lScanLocalIp[lScanFoundAllIpIndex].lastIndexOf(".");
+        let ip = lScanLocalIp[lScanFoundAllIpIndex].substring(0,ix+1);
+        lScanCurrentIp = ip;
 
         lScanTimer = setTimeout(function(){ scanTimeout() }, 1000);
 
         let port = lScanPort;
-        if (port.length < 2) port = 31416;
+        if (port.length < 2)
+        {
+            port = 31416;
+            lScanPort = port;
+        }
 
         scan(ip, port, lScanPassword)    
     } catch (error) {
@@ -219,9 +243,12 @@ function scanAll()
 function scan(ip,port,password)
 {
     lScanCon = [];
+    // Add localhost, might not work on the IP scan.
+//    lScanCount++;     // We need one less
+    checkComputer("127.0.0.1", port, lbScanPasswrd, password, scanReady);    
     for(let i=1; i <=255; i++){
         lScanCount++; 
-        checkComputer(ip+i, port, lbScanPhase2, password, scanReady)
+        checkComputer(ip+i, port, lbScanPasswrd, password, scanReady); 
     }  
 }
 
@@ -248,6 +275,7 @@ function scanReady(type)
                 let ip = this.ip;
                 let scanObj = Object();
                 scanObj.ip = ip;
+                scanObj.port = this.port;
                 scanObj.computerName = computerName;
                 scanObj.cpid = cpid;
                 scanObj.password = this.passWord;
@@ -256,12 +284,12 @@ function scanReady(type)
         }
 
         try {
-            con.destroy();        
+            this.client_socket.end();                 
+            this.client_socket.destroy();         
         } catch (error) {
             
         }
 
-        lScanCount--;    
         if (lScanCount <= 0) 
         {
             scanFinished();
@@ -279,6 +307,10 @@ function scanTimeout()
     {
         lScanTimer = setTimeout(function(){ scanTimeout() }, 1000);
         sendList();
+        if (lScanCount <= 0) 
+        {
+            scanFinished();
+        }
         return;
     }
 
@@ -289,16 +321,6 @@ function scanTimeout()
 function scanFinished()
 {
     try {
-        if (!lbScanPhase2)
-        {
-            if (lScanPassword.length > 0)
-            {
-                lbScanPhase2 = true;
-                scanAll()
-                return;
-            }
-        }
-
         for (let i=0; i< lScanCon.length; i++)
         {
             try {
@@ -308,24 +330,48 @@ function scanFinished()
             }
         }
         lScanCon = [];
+        lScanFoundAllIpIndex++;
+
+        if (lScanFoundAllIpIndex >= lScanLocalIp.length)
+        {
+            lScanFoundAllIpIndex = 0;
+            if (!lbScanPasswrd)
+            {
+                if (lScanPassword.length > 0)
+                {
+                    lbScanPasswrd = true;
+                    lScanFoundAllIpIndex = 0;
+                }
+                else
+                {
+                    scanFinishedShow();
+                    return;
+                }                
+            }
+            else
+            {
+                scanFinishedShow()
+                return;
+            }
+        }
+        scanNext();        
     } catch (error) {
         let jj = 1;
     }
+}
 
-    if (lScanFinished) 
-    {
-        clearTimeout(lScanTimer);
-        return;
-    }
-    lScanFinished = true;
+function scanFinishedShow()
+{
     clearTimeout(lScanTimer);
     foundList();
     lScanBusy = false;
+    gChildWindowScan.webContents.send('computer_scan_show');
 }
 
 function foundList()
 {
     try {
+        let localHost = "localhost";
         let txt = btC.TL.DIALOG_COMPUTER_SCAN.DCS_WITH_BOINC;
         txt += "<br><br>"
         txt += "<table>";
@@ -334,26 +380,31 @@ function foundList()
         {
             let sf =  lScanFoundAllInfo[i];            
             let ip = sf.ip;
+            let port = sf.port;
             let cpid = sf.cpid;
             let computerName = sf.computerName;
+            if (ip == "127.0.0.1")
+            {
+                ip = localHost;
+            }
             for (let i=0;i<lScanLocalIp.length;i++)
             {
-                if (lScanLocalIp[i] == ip) ip = "localhost";
-                if (lScanLocalIp[i] == computerName) computerName = "localhost";
+                if (lScanLocalIp[i] == ip) ip = localHost;
+                if (lScanLocalIp[i] == computerName) computerName = localHost;
             }
             if (cpid === NO_PASSWORD)
             {
-                logging.logDebug("Found: " + ip + " Name: " + computerName + " , NOT athenticated");
+                logging.logDebug("Found: " + ip + ":" + port + " Name: " + computerName + " , NOT athenticated");
             }
             else
             {
-                logging.logDebug("Found: " + ip + " Name: " + computerName + " Cpid: " + cpid  + " , OK");
+                logging.logDebug("Found: " + ip + ":" + port + " Name: " + computerName + " Cpid: " + cpid  + " , OK");
             }
 
             txt += "<tr>";
             txt+=  '<td><input type="checkbox" id="scan-check-' + i + '"><td>';
             txt+= "<td><b>" + btC.TL.DIALOG_COMPUTER_SCAN.DCS_IP + "</b>: ";
-            txt+= '<span id="scan-ip-' + i + '">' + ip + '</span></td>';
+            txt+= '<span id="scan-ip-' + i + '">' + ip + '</span>:' + port + '</td>';
             txt+= "<td><b>" + btC.TL.DIALOG_COMPUTER_SCAN.DCS_NAME + "</b>: ";
             txt+= '<span id="scan-name-' + i + '">' + computerName + '</span></td>';            
             txt+= "<td><b>" + btC.TL.DIALOG_COMPUTER_SCAN.DCS_CPID + "</b>: ";
@@ -376,18 +427,15 @@ function foundList()
 function sendList()
 {
     try {
-        let txt = btC.TL.DIALOG_COMPUTER_SCAN.DCS_WITH_BOINC;
+        let txt = "IP: " + lScanCurrentIp + "x:" + lScanPort + " - " ;
+        txt += btC.TL.DIALOG_COMPUTER_SCAN.DCS_WITH_BOINC;
         txt += "<br><br>";
-
+        let count = lScanCount;
+        if (count < 0) count = 0;
         let readyTime = lScanTimeoutCount;        
         let phase = "";
-        if (lbScanPhase2) phase = btC.TL.DIALOG_COMPUTER_SCAN.DSC_NOW_PASSWORD;
-        if (!lbScanPhase2 && lScanPassword.length !== 0)
-        {
-            readyTime += SCAN_TIMEOUT;
-        }
-
-        txt += btC.TL.DIALOG_COMPUTER_SCAN.TO_SCAN + " " +  lScanCount + " " + btC.TL.DIALOG_COMPUTER_SCAN.DCS_READY_IN + " " + readyTime + " " + btC.TL.DIALOG_COMPUTER_SCAN.DCS_SECONDS  + " " + phase;
+        if (lbScanPasswrd) phase = btC.TL.DIALOG_COMPUTER_SCAN.DSC_NOW_PASSWORD;
+        txt += btC.TL.DIALOG_COMPUTER_SCAN.TO_SCAN + " " +  count + " " + btC.TL.DIALOG_COMPUTER_SCAN.DCS_READY_IN + " " + readyTime + " " + btC.TL.DIALOG_COMPUTER_SCAN.DCS_SECONDS  + " " + phase;
         txt += "<br><br>";
         txt += "<table>";
         for (let i=0; i<lScanFoundAllInfo.length; i++)
@@ -429,6 +477,14 @@ function checkComputer(ip,port, bAuth, password,callback)
                     con.client_callback = scanReadyAuthorized;
                     athenticate.authorize(con); 
                 }
+                else
+                {
+                    lScanCount--; // skip ip
+                }
+            }
+            else
+            {
+                lScanCount--; // skip ip
             }
         }
         else
@@ -507,33 +563,42 @@ function showComputerScan(theme)
         contextIsolation: false,  
         nodeIntegration: true,
         nodeIntegrationInWorker: true,        
-        preload:'${__dirname}/preload/preload.js',
+     //   preload:'${__dirname}/preload/preload.js',
       }
     });
 
     gChildWindowScan.loadFile('index/index_scan.html')
     gChildWindowScan.once('ready-to-show', () => {    
-        windowReady(title);
-        gChildWindowScan.webContents.send("translations",btC.TL.DIALOG_COMPUTER_SCAN);         
- //     childWindowScan.webContents.openDevTools() // debug only
+        windowReady(title);    
+        if (btC.DEBUG_WINDOW)
+        {
+            gChildWindowScan.webContents.openDevTools()
+        }
 
     }) 
     gChildWindowScan.webContents.on('did-finish-load', () => {
         insertCssDark(theme);
-      })  
+        gChildWindowScan.webContents.send("translations",btC.TL.DIALOG_COMPUTER_SCAN);             
+    })  
+
     gChildWindowScan.on('close', () => {
         let bounds = gChildWindowScan.getBounds();
-        windowsState.set("scan_computers",bounds.x,bounds.y, bounds.width, bounds.height)
-      })     
-      gChildWindowScan.on('closed', () => {
+        windowsState.set("scan_computers",bounds.x,bounds.y, bounds.width, bounds.height);  
+    })     
+
+    gChildWindowScan.on('closed', () => {
         gChildWindowScan = null
-      })  
+    })  
   }
   else
   {
     windowReady(title);  
     gChildWindowScan.hide();    
     gChildWindowScan.show();
+    if (btC.DEBUG_WINDOW)
+    {
+        gChildWindowScan.webContents.openDevTools()
+    }    
   }
 }
 

@@ -427,18 +427,22 @@ function properties(msg,theme)
               contextIsolation: false,  
               nodeIntegration: true,
               nodeIntegrationInWorker: true,        
-              preload:'${__dirname}/preload/preload.js',
+    //          preload:'${__dirname}/preload/preload.js',
             }
           });
           gChildProperties.loadFile('index/index_properties.html')
           gChildProperties.once('ready-to-show', () => {    
-  //          gChildProperties.webContents.openDevTools()
+            if (btC.DEBUG_WINDOW)
+            {                    
+              gChildProperties.webContents.openDevTools();
+            } 
             gChildProperties.show();  
             gChildProperties.setTitle(title);
-            gChildProperties.send('properties_text',msg); 
+
           })
           gChildProperties.webContents.on('did-finish-load', () => {
             insertCssDark(theme);
+            gChildProperties.send('properties_text',msg);             
           })            
           gChildProperties.on('close', () => {
             let bounds = gChildProperties.getBounds();
@@ -450,6 +454,10 @@ function properties(msg,theme)
         }
         else
         {
+          if (btC.DEBUG_WINDOW)
+          {                    
+            gChildProperties.webContents.openDevTools();
+          }           
           insertCssDark(theme);
           gChildProperties.setTitle(title); 
           gChildProperties.hide();

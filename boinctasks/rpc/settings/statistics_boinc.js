@@ -77,7 +77,7 @@ function statisticsStart(gb)
             contextIsolation: false,  
             nodeIntegration: true,
             nodeIntegrationInWorker: true,        
-            preload:'${__dirname}/preload/preload.js',
+   //         preload:'${__dirname}/preload/preload.js',
           }
         });
         if (state.max)
@@ -87,29 +87,35 @@ function statisticsStart(gb)
         }        
         gChildStatistics.loadFile('index/index_statistics_boinc.html')
         gChildStatistics.once('ready-to-show', () => {    
-//        gChildStatistics.webContents.openDevTools()
+          if (btC.DEBUG_WINDOW)
+          {
+            gChildStatistics.webContents.openDevTools()
+          }
+          gChildStatistics.webContents.send("translations",btC.TL.DIALOG_BOINC_STATISTICS);    // Translations must be this early.
           gChildStatistics.show();  
           gChildStatistics.setTitle(title);
+        })
 
+        gChildStatistics.webContents.on('did-finish-load', () => {
+          insertCssDark(gb.theme); 
           try {
             btC.TL.DIALOG_BOINC_STATISTICS.DBS_MONTH_T = JSON.parse(btC.TL.DIALOG_BOINC_STATISTICS.DBS_MONTH)      
           } catch (error) {
             logging.logError('StatisticsBoinc,statisticsStart,DBS_MONTH', error);     
-          }
-          gChildStatistics.webContents.send("translations",btC.TL.DIALOG_BOINC_STATISTICS);     
-          getStatistics(gb);
+          }          
+          getStatistics(gb);          
         })
-        gChildStatistics.webContents.on('did-finish-load', () => {
-          insertCssDark(gb.theme);
-        })
+
         gChildStatistics.on('maximize', function (event) {
         });
+
         gChildStatistics.on('close', () => {
           let max = gChildStatistics.isMaximized();          
           let bounds = gChildStatistics.getBounds();
           windowsState.set("boinc_statistics",bounds.x,bounds.y, bounds.width, bounds.height,max)
           logging.logFile("StatisticsBoinc, statisticsStart", "close, store window, max:" + max);          
-        })     
+        })  
+           
         gChildStatistics.on('closed', () => {
           gChildStatistics = null
         })    
@@ -119,14 +125,7 @@ function statisticsStart(gb)
         gChildStatistics.setTitle(title); 
         gChildStatistics.hide();
         gChildStatistics.show();  
-/*
-        try {
-          btC.TL.DIALOG_BOINC_STATISTICS.DBS_MONTH_T = JSON.parse(btC.TL.DIALOG_BOINC_STATISTICS.DBS_MONTH)      
-        } catch (error) {
-          logging.logError('StatisticsBoinc,statisticsStart,DBS_MONTH', error);     
-        }
-        gChildStatistics.webContents.send("translations",btC.TL.DIALOG_BOINC_STATISTICS);
-*/
+
         getStatistics(gb);           
       }
     } catch (error) {
@@ -154,7 +153,7 @@ function getStatistics(gb)
     gStatisticsProjectName = [];
     gStatisticsProjectUrl = [];
     gStatisticsProjects = [];
-    setTimeout(getStatisticsDelay, 500,gb) 
+    setTimeout(getStatisticsDelay, 500,gb)  // Keep the delay, better be safe.
   } catch (error) {
     logging.logError('StatisticsBoinc,getStatistics', error);    
   }
