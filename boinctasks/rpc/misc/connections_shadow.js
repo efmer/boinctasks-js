@@ -21,7 +21,10 @@ const logging = new Logging();
 const Functions = require('../functions/functions');
 const functions = new Functions();
 
+// WARNING, connections.js flushes the array by calling flushSendArray, this should be the only place that flushes the array.
 let gSendArrayShadow = [];
+let gSendArrayShadowLock = false;
+let gSendArrayShadowTimeout = 0;
 
 class ConnectionsShadow
 {
@@ -48,7 +51,25 @@ class ConnectionsShadow
 
     flushSendArray()
     {
-        sendArrayNextShadow(null);
+        if (gSendArrayShadow.length == 0)
+        {
+            return;
+        }
+        let time = Date.now();
+        if (gSendArrayShadowLock)
+        {
+            // already in progress
+            if (time < gSendArrayShadowTimeout) 
+            {
+                let dTime = gSendArrayShadowTimeout - time
+                logging.logDebug("ConnectionsShadow,sendArrayNextShadow, locked:" + dTime + " mSec");
+                return; // locked do nothing;
+            }
+            // unlock after timeout.
+        }
+        gSendArrayShadowLock = true;
+        gSendArrayShadowTimeout = time + 5000; // locked for 5 seconds
+        sendArrayNextShadow("flush");
     }
 
 }
@@ -84,8 +105,20 @@ function clone(gb)
 function sendArrayNextShadow(event)
 {
     try {
-        if (event != null)
+        let bFirst;
+        if (event == "flush")  // flush = the first
         {
+            bFirst = true;
+        }
+        else
+        {
+            if (!this.auth)
+            {
+                logging.logDebug("ConnectionsShadow,sendArrayNextShadow, not athenticated " + this.ip);                               
+                gSendArrayShadow = [];
+                return;
+            } 
+
             if (functions.isDefined(this.client_callbackS))
             {
                 this.client_callbackS('data');
@@ -95,63 +128,82 @@ function sendArrayNextShadow(event)
                 let msg = "No success: " + this.client_completeData;
                 logging.logErrorMsg('ConnectionsShadow,sendArrayNextShadow,data', msg);
             }
+            bFirst = false;
         }
 
-        if (gSendArrayShadow.length == 0)
+        let len = gSendArrayShadow.length;
+        if (len == 0)
         {
+            connectSocketReset(this);
             return;            
         }
 
-        sendSingleShadow(gSendArrayShadow[0],gSendArrayShadow[1]);
+        sendSingleShadow(bFirst, gSendArrayShadow[0],gSendArrayShadow[1]);
         gSendArrayShadow.splice(0, 2);        
     } catch (error) {
         logging.logError('ConnectionsShadow,sendArrayNextShadow', error);        
     }
 }
 
-function sendSingleShadow(con, req)
+function sendSingleShadow(bFirst, con, req)
 {
     try {
-        let time = Date.now();
+        con.sendArraytoSend = req;   
+        if (bFirst)
+        {   
+            if(con.clientClass == null)
+            {        
+                // we must create a socket for every connection
+                const BtSocket  = require('./socket');
+                const btSocket = new BtSocket();        
+                con.clientClass = btSocket;
+                con.clientClass.socket(con);            
+            }
 
-        if (con.authTimeValid === void 0)
-        {
-            con.authTimeValid = 0; 
+            const Authenticate = require('./authenticate');
+            const athenticate = new Authenticate();
+            con.client_callback = connectAuthShadow;        
+            athenticate.authorize(con);   
         }
-
-        if (con.authTimeValid < time)
+        else
         {
-            con.auth = false;
-        }
-
-        con.sendArraytoSend = req;        
-        if(con.clientClass == null)
-        {        
-            // we must create a socket for every connection
-            const BtSocket  = require('./socket');
-            const btSocket = new BtSocket();        
-            con.clientClass = btSocket;
-            con.clientClass.socket(con);            
-        }
-        if (con.auth)
-        {
-            connectAuthShadow(con);
-            return;
+            if (con.auth)
+            {
+                connectAuthShadow(con);
+            }
+            else
+            {
+                logging.logDebug("ConnectionsShadow,sendSingleShadow, not athenticated " + con.ip);                               
+                gSendArrayShadow = [];                
+            }            
         }
          
-        const Authenticate = require('./authenticate');
-        const athenticate = new Authenticate();
-        con.client_callback = connectAuthShadow;        
-        athenticate.authorize(con);            
+         
     } catch (error) {
         logging.logError('ConnectionsShadow,sendSingleShadow', error);        
     }
 }
 
-function connectAuthShadow(con)
+function connectSocketReset(con)
 {
     try {
-        con.authTimeValid = Date.now() + 300000; // valid for 5 minutes        
+        con.clientClass = null;
+        gSendArrayShadowLock = false;
+        con.auth = false;
+    } catch (error) {
+        logging.logError('SendArray,connectSocketReset', error);         
+    }
+}
+
+function connectAuthShadow(con,status)
+{
+    try {   
+        if (status == "Failed")
+        {
+            connectSocketReset(con);
+            gSendArrayShadow = [];            
+            return;
+        }
         con.client_callbackI = sendArrayNextShadow;
         con.client_completeData = "";
         functions.sendRequest(con.client_socket, con.sendArraytoSend);            

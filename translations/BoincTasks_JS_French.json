@@ -123,7 +123,8 @@
         "SR_MEM_TOO_LARGE": "mémoire trop grande",
         "SR_MEM_NEED_SHMEM": "memoire a besoin de shmem",
         "SR_MEM_GPU": "mémoire GPU\"",
-        "SR_UNKNOWN": "suspendu pour cause inconnue"
+        "SR_UNKNOWN": "suspendu pour cause inconnue",
+        "SR_PAUSE_CHECKPOINT": "Checkpoint ⏸ Don't close or leave window"
     },
     "MENU": {
         "MN_ABOUT": "A propos de Boinc Tasks Js",
@@ -162,7 +163,10 @@
         "MN_SNOOZE": "Veille",
         "MN_STATISTICS": "Statistiques graphiques",
         "MN_RULES_EDIT": "Editer",
-        "MN_STATISTICS_TRANSFER": "Graphique des transferts de données"
+        "MN_STATISTICS_TRANSFER": "Graphique des transferts de données",
+        "MN_SHOW_CPU": "Show CPU tasks",
+        "MN_SHOW_NONCPUI": "Show non CPU intensive tasks",
+        "MN_SHOW_GPU": "Show GPU tasks"
     },
     "DIALOG_SETTINGS_BT": {
         "DS_BT_TITLE": "Réglages",
@@ -265,7 +269,8 @@
         "FTR_TASKS_HISTORY": "H Tâches",
         "FTR_RETRY_ALL": "Réessayer tout",
         "FTR_CC_CONFIG": "Éditer cc_config.xml",
-        "FTR_APP_CONFIG": "Éditer : app_config.xml"
+        "FTR_APP_CONFIG": "Éditer : app_config.xml",
+        "FTR_SUSPEND_CHECK": "At checkpoint"
     },
     "BOX_DELETE_FILTER": {
         "BX_FILTER_TITLE": "Impossible de supprimer un filtre",

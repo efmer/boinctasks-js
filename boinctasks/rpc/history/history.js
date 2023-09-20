@@ -150,7 +150,8 @@ function historyAdd(con, state, historyArray)
             let projectName = "";
             if (state != null)
             {
-                projectName = conState.getProject(con,projectUrl)
+                let ret = conState.getProject(con,projectUrl)
+                projectName = ret.project;               
                 appNameUF = conState.getAppName(con, appName);
             }  
             newItem.appName = appName;
@@ -195,7 +196,8 @@ function getProjectName(con)
         if (table[i].projectName === "")
         {
             let item = table[i];
-            item.projectName = conState.getProject(con,item.projectUrl)
+            let ret = conState.getProject(con,projectUrl)
+            item.projectName = ret.project;
             item.appNameUF = conState.getAppName(con, item.appName);
         }        
     } catch (error) {
@@ -336,8 +338,8 @@ function validate(con)
             if (item.projectName === btConstants.INITIALIZING)
             {
                 history.changed = true;
-                let projectName = conState.getProject(con,item.projectUrl)
-                item.projectName = projectName;
+                let ret = conState.getProject(con,projectUrl)                            
+                item.projectName = ret.project;
     
             }
         }        

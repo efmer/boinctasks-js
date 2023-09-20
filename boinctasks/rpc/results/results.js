@@ -23,6 +23,8 @@ const logging = new Logging();
 const State = require('../misc/state');
 const conState = new State();
 const btC = require('../functions/btconstants');
+const ConnectionsShadow = require('../misc/connections_shadow');
+const connectionsShadow = new ConnectionsShadow();
 
 class ResultItems
 {
@@ -30,6 +32,11 @@ class ResultItems
     {      
         try 
         {
+            if (con.suspendCheckpoint !== void 0)
+            {
+                CheckpointSuspendReset(con);
+            }
+
             let toReport = new Object;
             toReport.url = [] 
             toReport.count = [];
@@ -52,10 +59,13 @@ class ResultItems
                 let app = "Initializing...";
                 let project = "Initializing...";
                 let projectUrl = item.project_url[0];
+                let bNonCpuIntensive = false;
                 if (state != null)
                 {
                     app = conState.getAppUf(con, wu);
-                    project = conState.getProject(con,projectUrl)
+                    let ret = conState.getProject(con,projectUrl)
+                    project = ret.project;
+                    bNonCpuIntensive = ret.non;
                 }
                 let versionApp = version + " " + app;
                 let computer = con.computerName;
@@ -65,6 +75,7 @@ class ResultItems
                 resultItem.computerName = computer;
                 resultItem.project = project;
                 resultItem.projectUrl = projectUrl;
+                resultItem.bNonCpuIntensive = bNonCpuIntensive;
                 resultItem.version = parseInt(item.version_num) / 100;
                 resultItem.app = versionApp;
                 resultItem.wu = wu;
@@ -114,6 +125,11 @@ class ResultItems
                     resultItem.gpuT = con.temp.gpuT;
                     bActive = true;
                 }
+                if (con.suspendCheckpoint !== void 0)
+                {
+                    CheckpointSuspend(con,resultItem,wuName,projectUrl);
+                }
+
                 let cpu = 0;
                 if (cpuTime == 0 || elapsedTime == 0)
                 {
@@ -219,6 +235,10 @@ class ResultItems
                     filterItem.filtered = false;
                 }
                 this.resultTable.push(filterItem);
+            }
+            if (con.suspendCheckpoint !== void 0)
+            {
+                CheckpointSuspendPresent(con);
             }
             
         } catch (error) {
@@ -331,24 +351,29 @@ function getStatus(resultItem, item, ccStatus, hp, state)
         }
         let sSuspendReason = "";
 
+        if (resultItem.suspend)
+        {
+            sSuspendReason = btC.TL.SUSPEND_REASON.SR_PAUSE_CHECKPOINT;
+        }
+
         if (iSuspendReason)
         {
             bSuspend = true;
-            if (iSuspendReason & SUSPEND_REASON_BATTERIES)				{ sSuspendReason = btC.TL.SUSPEND_REASON.SR_BATTERIES;}
-            if (iSuspendReason & SUSPEND_REASON_USER_ACTIVE)			{ sSuspendReason = btC.TL.SUSPEND_REASON.SR_USER_ACTIVE;}
-            if (iSuspendReason & SUSPEND_REASON_USER_REQ)				{ sSuspendReason = btC.TL.SUSPEND_REASON.SR_USER_REQ;}
-            if (iSuspendReason & SUSPEND_REASON_TIME_OF_DAY)			{ sSuspendReason = btC.TL.SUSPEND_REASON.SR_TIME_OF_DAY;}
-            if (iSuspendReason & SUSPEND_REASON_BENCHMARKS)				{ sSuspendReason = btC.TL.SUSPEND_REASON.SR_BENCHMARKS;}
-            if (iSuspendReason & SUSPEND_REASON_DISK_SIZE)				{ sSuspendReason = btC.TL.SUSPEND_REASON.SR_DISK_SIZE;}
-            if (iSuspendReason & SUSPEND_REASON_CPU_THROTTLE)			{ sSuspendReason = "-";}
-            if (iSuspendReason & SUSPEND_REASON_NO_RECENT_INPUT)		{ sSuspendReason = btC.TL.SUSPEND_REASON.SR_NO_RECENT_INPUT;}
-            if (iSuspendReason & SUSPEND_REASON_INITIAL_DELAY)			{ sSuspendReason = btC.TL.SUSPEND_REASON.SR_INITIAL_DELAY;}
-            if (iSuspendReason & SUSPEND_REASON_EXCLUSIVE_APP_RUNNING)	{ sSuspendReason = btC.TL.SUSPEND_REASON.SR_EXCLUSIVE_APP_RUNNING;}
-            if (iSuspendReason & SUSPEND_REASON_CPU_USAGE)				{ sSuspendReason = btC.TL.SUSPEND_REASON.SR_CPU_USAGE;}     
+            if (iSuspendReason & SUSPEND_REASON_BATTERIES)				{ sSuspendReason += btC.TL.SUSPEND_REASON.SR_BATTERIES;}
+            if (iSuspendReason & SUSPEND_REASON_USER_ACTIVE)			{ sSuspendReason += btC.TL.SUSPEND_REASON.SR_USER_ACTIVE;}
+            if (iSuspendReason & SUSPEND_REASON_USER_REQ)				{ sSuspendReason += btC.TL.SUSPEND_REASON.SR_USER_REQ;}
+            if (iSuspendReason & SUSPEND_REASON_TIME_OF_DAY)			{ sSuspendReason += btC.TL.SUSPEND_REASON.SR_TIME_OF_DAY;}
+            if (iSuspendReason & SUSPEND_REASON_BENCHMARKS)				{ sSuspendReason += btC.TL.SUSPEND_REASON.SR_BENCHMARKS;}
+            if (iSuspendReason & SUSPEND_REASON_DISK_SIZE)				{ sSuspendReason += btC.TL.SUSPEND_REASON.SR_DISK_SIZE;}
+            if (iSuspendReason & SUSPEND_REASON_CPU_THROTTLE)			{ sSuspendReason += "-";}
+            if (iSuspendReason & SUSPEND_REASON_NO_RECENT_INPUT)		{ sSuspendReason += btC.TL.SUSPEND_REASON.SR_NO_RECENT_INPUT;}
+            if (iSuspendReason & SUSPEND_REASON_INITIAL_DELAY)			{ sSuspendReason += btC.TL.SUSPEND_REASON.SR_INITIAL_DELAY;}
+            if (iSuspendReason & SUSPEND_REASON_EXCLUSIVE_APP_RUNNING)	{ sSuspendReason += btC.TL.SUSPEND_REASON.SR_EXCLUSIVE_APP_RUNNING;}
+            if (iSuspendReason & SUSPEND_REASON_CPU_USAGE)				{ sSuspendReason += btC.TL.SUSPEND_REASON.SR_CPU_USAGE;}     
             
             if (sSuspendReason === "")
             {
-                sSuspendReason = btC.TL.SUSPEND_REASON.SR_UNKNOWN + iSuspendReason;
+                sSuspendReason += btC.TL.SUSPEND_REASON.SR_UNKNOWN + iSuspendReason;
             }
         }
 
@@ -474,4 +499,108 @@ function getStatus(resultItem, item, ccStatus, hp, state)
         status += " | " + state;
     }
     resultItem.statusS = status;
+}
+
+function CheckpointSuspend(con,resultItem,wu,url)
+{
+    try{
+        resultItem.suspend = false;
+        let checkpoint = resultItem.checkpoint;
+        if (checkpoint == void 0)
+        {
+            return;
+        }
+        let sc = con.suspendCheckpoint;
+        let len = sc.length
+        for (let i=0;i<len;i++)
+        {
+            let check = sc[i];
+            if (check.task == wu)
+            {
+                if (check.url == url)
+                {
+                    resultItem.suspend = true;
+                    check.present = true;                
+                    if (check.checkPoint == -1)
+                    {
+                        check.checkPoint = checkpoint
+                    }
+                    else
+                    {
+                        if (check.checkPoint > checkpoint || checkpoint < 4)
+                        {
+                            sendCommand(con,'suspend_result',url,wu)
+                            sc.splice(i, 1);
+                            len = sc.length;
+                            if (len == 0)                            
+                            {
+                                con.suspendCheckpoint = void 0; 
+                                return;
+                            }
+                            i = 0;              // restart the for loop
+                        }
+                        else
+                        {
+                            check.checkPoint = checkpoint;  
+                        }
+                    }
+                }
+            }
+        }
+    }
+    catch
+    {
+        logging.logError('Results,CheckpointSuspend', error);    
+    }
+}
+
+function CheckpointSuspendReset(con)
+{
+    try{
+        let sc = con.suspendCheckpoint;
+        let len = sc.length
+        if (len == 0)                            
+        {
+            con.suspendCheckpoint = void 0; 
+            return;
+        }    
+        for (let i=0;i<len;i++)
+        {
+            sc[i].present = false;
+        }   
+    }
+    catch
+    {
+        logging.logError('Results,CheckpointSuspend0', error);    
+    }
+}
+
+function CheckpointSuspendPresent(con)
+{
+    try{
+        let sc = con.suspendCheckpoint;
+        let len = sc.length 
+        for (let i=0;i<len;i++)
+        {
+            if (sc[i].present == false)
+            {
+                let wu = sc.task;
+                let url = sc.url;
+                sendCommand(con,'suspend_result',url,wu)
+                sc.splice(i, 1);
+                return;             // one at a time;
+            }
+        }   
+    }
+    catch
+    {
+        logging.logError('Results,CheckpointSuspendPresent', error);    
+    }
+}
+
+function sendCommand(con,request, url, wu)
+{
+    let req = "<" + request + ">\n<project_url>" + url + "</project_url>\n<name>"+ wu + "</name>\n</" + request + ">";
+    connectionsShadow.addSendArray(con,req);
+    // flush in connections.js
 }

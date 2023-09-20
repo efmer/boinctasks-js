@@ -138,6 +138,11 @@ gB.rules = null;
 
 gB.theme = "";
 
+gB.show = new Object();
+gB.show.SHOW_CPU = true;
+gB.show.SHOW_GPU = true;
+gB.show.SHOW_NONCPUI = true;
+
 let gSettingsBt = null;
 
 let gTimer = null;
@@ -168,6 +173,18 @@ class Connections{
 
     start(mainWindow, menu)
     {
+        const BtMenu = require('./functions/bt_menu');
+        let classBtMenu = new BtMenu(); 
+        try {
+            gB.show.SHOW_CPU = classBtMenu.check(btC.MENU_SHOW_CPU);
+            gB.show.SHOW_GPU = classBtMenu.check(btC.MENU_SHOW_GPU);
+            gB.show.SHOW_NONCPUI = classBtMenu.check(btC.MENU_SHOW_NONCPUI);        
+        } catch (error) {
+            gB.show.SHOW_CPU = true;
+            gB.show.SHOW_GPU = true;
+            gB.show.SHOW_NONCPUI = true;
+        }
+
  //       setTimeout(test, 1000); // testing test debug
         gB.mainWindow = mainWindow;
         gB.menu = menu;
@@ -574,6 +591,23 @@ class Connections{
             return;
         }
         gClassAppConfig.update(gB,xml);
+    }
+
+    showCpuGPU(bShow,type)
+    {
+        switch (type)
+        {
+            case btC.SHOW_CPU:
+                gB.show.SHOW_CPU = bShow;
+            break;
+            case btC.SHOW_GPU:
+                gB.show.SHOW_GPU = bShow;
+            break;
+            case btC.SHOW_NONCPUI:
+                gB.show.SHOW_NONCPUI = bShow;
+            break;
+        }
+        gIntervalFastCnt = 0;
     }
 
     setTheme(css,darkmode,bSingle)
@@ -2127,7 +2161,10 @@ function btTimer() {
                         return;
                 }                
             }
-        }      
+        }
+
+        connectionsShadow.flushSendArray();
+
         let restartTime = false
         if (gB.settings.restartTimeCheck == true)   // might be a string so use ==
         {
@@ -2154,13 +2191,26 @@ function btTimer() {
         }
 
         if (gPauze)
-        {
+        {            
+
             if (gB.mainWindow.isVisible())  // once in a while gPause is true while the window is visible.
             {
-                gPauze = false;
+                gPauze = false;            
             }
             else
             {
+                /*
+                if (gB.fetchMode == MODE_NORMAL)
+                {
+                    for (var i=0;i< gB.connections.length;i++)
+                    {
+                        if (gB.connections[i].suspendCheckpoint !== void 0)
+                        {
+
+                        }
+                    }
+                }
+                */
                 return;
             }
         }        

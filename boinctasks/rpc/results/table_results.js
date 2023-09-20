@@ -124,18 +124,30 @@ function tableResultsArray(gb, resultTable, color)
           if (app === filter[f])
           {
             bFoundF = true;
-            tableArray.push(tableResultItem(selRows, i, order, resultTable[i],true, color));
+            let res = tableResultItem(selRows, i, order, resultTable[i],true, color,gb.show);
+            if (res !== null) 
+            {
+              tableArray.push(res);
+            }
             let rtf = rt.resultTable;
             for (let rt=0;rt<rtf.length;rt++)
             { 
-              tableArray.push(tableResultItem(selRows, i+rt, order, rtf[rt],false, color));
+              let res = tableResultItem(selRows, i+rt, order, rtf[rt],false, color,gb.show);
+              if (res !== null) 
+              {
+                tableArray.push(res);
+              }              
             }
           }
         }
       }
       if (!bFoundF)
       {
-          tableArray.push(tableResultItem(selRows, i, order, rt,false, color));
+          let res = tableResultItem(selRows, i, order, rt,false, color,gb.show);
+          if (res !== null) 
+          {
+            tableArray.push(res);
+          }      
       }
     }
 
@@ -212,12 +224,21 @@ function tableResultsHeader(gb, addText)
   return header;
 }
 
-function tableResultItem(selRows, i, order, result, filter, colorObj)
+function tableResultItem(selRows, i, order, result, filter, colorObj, show)
 {
   var sel = "";
   let table = "";
   let items = [];
   try {
+    if (result.bNonCpuIntensive)
+    {
+      if (!show.SHOW_NONCPUI)
+      {
+        return null;
+      } 
+    }
+
+
     let computer =  result.computerName;
     let projectUrl = result.projectUrl;
     let wu = result.wu;
@@ -245,6 +266,31 @@ function tableResultItem(selRows, i, order, result, filter, colorObj)
       use = getCpuGpu(use, cpuGpu);
     }
     else use = "";
+    
+    if (use.length > 0)
+    {
+      if (!show.SHOW_GPU)
+      {
+        return null;
+      }
+    }
+    else
+    {
+      if (!show.SHOW_CPU)
+      {
+        if (show.SHOW_NONCPUI)
+        {        
+          if (!result.bNonCpuIntensive)
+          {
+            return null;
+          } 
+        }
+        else
+        {
+          return null;
+        }
+      }      
+    }
 
     color = getColor(i, colorObj, result, cpuGpu);
     table = "<tr " + sel + color + ">";
@@ -623,7 +669,7 @@ function getColor(i, color, result, cpuGpu)
     style = 'style="background-color:' + color + ';' + even + '"'
 
   } catch (error) {
-    logging.logError('BtTableResults,tableResultItem', error);    
+    logging.logError('BtTableResults,getColor', error);    
   }    
   
   return style;

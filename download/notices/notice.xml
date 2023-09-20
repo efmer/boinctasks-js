@@ -1,21 +1,24 @@
 <notices>
 	<notice>
 		<title>
-			SendSensor Version 1.10.
+			Welcome
 		</title>
 		<description>
-			SendSensor is now available for ARM, like Rasberry PI.
+			We are trying to perfect BoincTasks, so if you encounter a problem or want to add a feature, please contact us on the forum (the preferred way)
+			Or email us at boinc@efmer.com.
+
+			It costs money to keep things running, so please consider donating.
 		</description>
-		<link>https://efmer.com/boinctasks-js/send-sensor-download/</link>
+		<link>https://efmer.com/support-us/</link>
 	</notice>
 	<notice2>
 		<title>
-			Version 1.23.
+			Version 2.0
 		</title>
 		<description>
-			BoincTasks Js now supports Windows WSL
-			Probably the best way to run Linux tasks in Windows.
+			A new version that fixes a lot of issues both big and small.
+			Available for Mac, Linux and Windows.
 		</description>
-		<link>https://efmer.com/boinctasks/wsl/</link>
-	</notice2>
+		<link>https://efmer.com/boinctasks-js/boinctasks-js-download/</link>
+	</notice2>	
 </notices>

@@ -11,11 +11,17 @@ npm start
 
 Open terminal
 
-!! same as Windows Node and Npn
+// Update node and npm
+
+download Node 18.17.1
+!! same as Windows
+Npn 9.6.7
+npm install -g npm@9.6.7    
 
 cd Users\fred\sb
 npm update --dd
 
+!! add notarize to package.json
 x64
 npm run make
 arm64

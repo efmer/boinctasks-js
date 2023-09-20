@@ -82,13 +82,13 @@ function tableMessages(gb,cTable, color, settings)
 
       if (bProject)
       {
-        if (cTable[i].project.length > 0)
-        {
+//        if (cTable[i].project.length > 0)
+//        {
           if (gb.projectSelected !== cTable[i].project)
           {
             continue;
           }
-        }
+//        }
       }
 
       table += tableMessagesItem(selRows, i, order, cTable[i], color, settings);

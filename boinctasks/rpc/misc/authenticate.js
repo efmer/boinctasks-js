@@ -44,11 +44,16 @@ class Authenticate{
             switch(event)
             {
                 case "data":
-                    const nonce = parseAuth1(this.client_completeData);
+                    let nonce = parseAuth1(this.client_completeData);
                     if (nonce.length == 0)
                     {
                         this.auth = false;
                         this.mode = 'failed_auth1';
+                        if (this.isShadow)
+                        {
+                            logging.logDebug("Authenticated (shadow) auth1 FAILED: " + this.ip);
+                            this.client_callback(this,"Failed");
+                        }                        
                         return;
                     } 
                     const crypto = require('crypto')
@@ -76,11 +81,16 @@ function auth2(event)
         switch(event)
         {
             case "data":        
-                const reply = parseAuth2(this.client_completeData);                 
+                let reply = parseAuth2(this.client_completeData);                 
                 this.auth = reply;
                 if (!reply)
                 {
                     this.mode = 'failed_auth2';
+                    if (this.isShadow)
+                    {
+                        logging.logDebug("Authenticated (shadow) auth2 FAILED: " + this.ip);
+                        this.client_callback(this,"Failed");
+                    }
                 }
                 else
                 {
@@ -88,12 +98,13 @@ function auth2(event)
                     if (this.isShadow)
                     {
                         logging.logDebug("Authenticated (shadow): " + ipc);
+                        this.client_callback(this,"OK");
                     }
                     else
                     {
                         logging.log(btconstants.TL.MSG_GENERAL.MSG_COMPUTER_CONNECTED + " " + ipc);
+                        this.client_callback(this);
                     }
-                    this.client_callback(this);
                 }
             break;        
         }

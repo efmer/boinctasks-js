@@ -79,25 +79,20 @@ class State{
         try {         
             if (con.cacheProject !== null)
             {
-                let pos = con.cacheProject.url.indexOf(url);
-                pos = -1;
-                if (pos >= 0)
+                let pos = -1;
+                // backup if the project mixes https and http, this might never happen....
+                let urlS = url.split("//"); 
+                if (urlS.length === 2)
                 {
-                    return con.cacheProject.project[pos];
-                }
-                else
-                {
-                    // backup if the project mixes https and http, this might never happen....
-                    let urlS = url.split("//"); 
-                    if (urlS.length === 2)
+                    let url2 = urlS[1];
+                    const ismatch = (element) => element.includes(url2);
+                    pos = con.cacheProject.url.findIndex(ismatch)
+                    if (pos >= 0)
                     {
-                        let url2 = urlS[1];
-                        const ismatch = (element) => element.includes(url2);
-                        pos = con.cacheProject.url.findIndex(ismatch)
-                        if (pos >= 0)
-                        {
-                            return con.cacheProject.project[pos];
-                        }
+                        let ret = new Object();
+                        ret.project = con.cacheProject.project[pos];
+                        ret.non = con.cacheProject.non[pos]
+                        return ret;
                     }
                 }
             }
@@ -105,7 +100,10 @@ class State{
             logging.logError('State,getProject', error);              
         }
         con.needState = true;      
-        return project;
+        let ret = new Object();
+        ret.project = project;
+        ret.non = false;
+        return ret;
     }
 
     getProjectUrl(con,project)
@@ -208,19 +206,27 @@ function buildCache(con)
                 con.cacheProject = new Object
                 con.cacheProject.url = [];
                 con.cacheProject.project = [];
+                con.cacheProject.non= [];
             }
 
             for (var i =0; i< projectState.length; i++)
             {
-                let url = projectState[i].master_url[0];
+                let pState = projectState[i]
+                let url = pState.master_url[0];
                 let pos = con.cacheProject.url.indexOf(url);
                 if (pos < 0)
                 {
-                    let pName = projectState[i].project_name[0];                    
+                    let pNon = false;
+                    if (pState.non_cpu_intensive != void 0)
+                    {
+                        pNon = true;
+                    }
+                    let pName = pState.project_name[0];                    
                     if (pName.length > 1)
                     {
                         con.cacheProject.url.push(url);
                         con.cacheProject.project.push(pName); 
+                        con.cacheProject.non.push(pNon);
                         logging.logDebug('buildCache add: ' + con.computerName + " URL: " + url + " -> " + pName);                                              
                     }
                     else

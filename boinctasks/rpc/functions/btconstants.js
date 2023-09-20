@@ -64,6 +64,13 @@ module.exports = {
     MENU_SIDEBAR_COMPUTERS      : "sidebar_computers",
     MENU_DEBUG_WINDOW           : "debug_window",
     MENU_DEBUG_TRANSLATIONS     : "debug_translation",
+    MENU_SHOW_CPU               : "showCPU",
+    MENU_SHOW_GPU               : "showGPU",
+    MENU_SHOW_NONCPUI           : "ShowNONCPUI",
+
+    SHOW_CPU                    : "CPU",
+    SHOW_GPU                    : "GPU",
+    SHOW_NONCPUI                : "NONCPUI",
 
     SEPERATOR_ITEM  	        : "¼",
     SEPERATOR_SELECT            : "½",

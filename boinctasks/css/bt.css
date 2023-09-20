@@ -255,6 +255,17 @@ img {
 	color: white;
 }
 
+.ef_btn_toolbar_hidden
+{
+	visibility: hidden;	
+}
+
+.bt_img_toolbar_none {
+	background: url(./img/toolbar/none.png) no-repeat;
+	background-size: 24px 24px;
+	background-position: top 1px left 1px;		
+}
+
 .bt_img_toolbar_pause {
 	background: url(./img/toolbar/pause.png) no-repeat;
 	background-size: 24px 24px;

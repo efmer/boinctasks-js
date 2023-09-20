@@ -162,10 +162,16 @@ class Toolbar{
                 // results
                 case "toolbar_suspend":
                     selected = gb.rowSelect.results.rowSelected;
+                    suspendAtCheckpointResume(gb,selected);
                     task(gb,selected,"suspend_result",SEND_TASKS);
-                break;              
+                break;
+                case "toolbar_suspend_check":
+                    selected = gb.rowSelect.results.rowSelected;
+                    suspendAtCheckpoint(gb,selected);
+                break;                  
                 case "toolbar_resume":
-                    selected = gb.rowSelect.results.rowSelected;                    
+                    selected = gb.rowSelect.results.rowSelected;
+                    suspendAtCheckpointResume(gb,selected);
                     task(gb,selected,"resume_result",SEND_TASKS);
                 break;
                 case "toolbar_update":
@@ -284,7 +290,9 @@ function sendToolbar(window, toolbar)
 function getToolbarResultsSel(gb)
 {
     var toolbar =   '<span id="toolbar_abort" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;' + btC.TL.FOOTER.FTR_ABORT  + '</span>' +
+                    '<span                    class="ef_btn_toolbar bt_img_toolbar_none ef_btn_toolbar_hidden">&nbsp;</span>' +
                     '<span id="toolbar_suspend" class="ef_btn_toolbar bt_img_toolbar_pause">&nbsp;' + btC.TL.FOOTER.FTR_SUSPEND + '</span>' +
+                    '<span id="toolbar_suspend_check" class="ef_btn_toolbar bt_img_toolbar_pause">&nbsp;' + btC.TL.FOOTER.FTR_SUSPEND_CHECK + '</span>' +
                     '<span id="toolbar_resume" class="ef_btn_toolbar bt_img_toolbar_resume">&nbsp;' + btC.TL.FOOTER.FTR_RESUME + '</span>' +
                     '<span id="toolbar_update" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_UPDATE + '</span>' +
                     '<span id="toolbar_info" class="ef_btn_toolbar bt_img_toolbar_info">&nbsp;'+ btC.TL.FOOTER.FTR_INFO + '</span>' +                      
@@ -294,6 +302,10 @@ function getToolbarResultsSel(gb)
     {
         toolbar +=   '<span id="toolbar_completed" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_READY_TO_REPORT  +  iReady + '</span>';
     }                    
+    else
+    {
+        toolbar +=   '<span id="toolbar_completed" class="ef_btn_toolbar bt_img_toolbar_none ef_btn_toolbar_hidden">&nbsp;' + btC.TL.FOOTER.FTR_READY_TO_REPORT  +  iReady + '</span>';        
+    }
     return toolbar;
 }
 
@@ -465,7 +477,7 @@ function resetProject(window,selected,connections)
 function resetDetachProjectYes(selected,connections,detach)
 {
     try {
-        connectionsShadow.init();        
+//        connectionsShadow.init();        
         for (let s=0;s<selected.length;s++)  
         {
             let res = selected[s].split(btC.SEPERATOR_SELECT);
@@ -476,7 +488,7 @@ function resetDetachProjectYes(selected,connections,detach)
                 computerName = res[1];
                 url = res[2];
             }
-            connectionsShadow.init();
+//            connectionsShadow.init();
             for (let i=0;i<connections.length;i++)
             {
                 let con = connections[i]
@@ -488,7 +500,7 @@ function resetDetachProjectYes(selected,connections,detach)
                 }
             }
         }
-        connectionsShadow.flushSendArray();
+//        connectionsShadow.flushSendArray();
     } catch (error) {
         logging.logError('Toolbar,detachProjectYes', error);        
     }
@@ -560,7 +572,7 @@ function wwwShow(gb)
 function task(gb,selected,request,what)
 {
     try {
-        connectionsShadow.init();
+//        connectionsShadow.init();
         let connections = gb.connections;
         for (var i=0; i<selected.length;i++)
         {
@@ -589,7 +601,7 @@ function task(gb,selected,request,what)
                 }
             }
         }
-        connectionsShadow.flushSendArray();
+//        connectionsShadow.flushSendArray();
     } catch (error) {
         logging.logError('Toolbar,Task', error);       
     }    
@@ -616,25 +628,28 @@ function sendCommand(con,request, url, wu)
 {
     let req = "<" + request + ">\n<project_url>" + url + "</project_url>\n<name>"+ wu + "</name>\n</" + request + ">";
     connectionsShadow.addSendArray(con,req);
+    // flush in connections.js
 }
 
 function sendCommandTransfer(con,request, url, wu)
 {
     let req = "<" + request + ">\n<project_url>" + url + "</project_url>\n<filename>"+ wu + "</filename>\n</" + request + ">";
-    connectionsShadow.addSendArray(con,req);
+    connectionsShadow.addSendArray(con,req); 
+    // flush in connections.js    
 }
 
 function sendCommandProject(con,request, url)
 {
     let req = "<" + request + ">\n<project_url>" + url + "</project_url>\n</" + request + ">";
     connectionsShadow.addSendArray(con,req);
+    // flush in connections.js    
 }
 
 function reportCompleted(gb)
 {
     let url = "";
     try {
-        connectionsShadow.init();
+//        connectionsShadow.init();
         for (var i=0;i<gb.connections.length;i++)          
         {
             let con = connections[i];
@@ -645,10 +660,11 @@ function reportCompleted(gb)
                 { 
                     url = toReport.url[tr];                
                     sendCommandProject(con,"project_update",url)
+                    // flush in connections.js
                 }
             }
         }
-        connectionsShadow.flushSendArray();    
+//        connectionsShadow.flushSendArray();    
     } catch (error) {
         logging.logError('Toolbar,reportCompleted', error);    
     }   
@@ -657,7 +673,7 @@ function reportCompleted(gb)
 function transferAll(gb)
 {
     try {
-        connectionsShadow.init();
+//        connectionsShadow.init();
         for (var i=0;i<gb.connections.length;i++)          
         {
             let con = connections[i];
@@ -672,11 +688,12 @@ function transferAll(gb)
                         url = ft[t].project_url;
                         wu = ft[t].name;
                         sendCommandTransfer(con,"retry_file_transfer", url[0], wu[0]);
+                        // flush in connections.js
                     }
                 }
             }
         }
-        connectionsShadow.flushSendArray();         
+//        connectionsShadow.flushSendArray();         
     } catch (error) {
         logging.logError('Toolbar,transferAll', error);           
     }
@@ -784,4 +801,113 @@ function clipboardHistory(selected, gb)
     } catch (error) {
         logging.logError('Toolbar,clipboardHistory', error);    
     }
+}
+
+function suspendAtCheckpoint(gb,selected)
+{
+    try{
+        for (let s=0;s<selected.length;s++) 
+        {
+            let res = selected[s].split(btC.SEPERATOR_SELECT);
+            if (res.length !== 3) return;
+            let computer = res[1];
+            let connections = gb.connections;
+            for (let c=0; c<connections.length;c++)
+            {
+                if (connections[c].computerName === computer)
+                {
+                    suspendAtCheckpointAdd(connections[c],res[0],res[2])
+                }
+            }   
+        }
+    } catch (error) {
+        logging.logError('Toolbar,suspendAtCheckpoint', error);    
+    }
+}
+
+
+function suspendAtCheckpointResume(gb,selected)
+{
+    try{
+        for (let s=0;s<selected.length;s++) 
+        {
+            let res = selected[s].split(btC.SEPERATOR_SELECT);
+            if (res.length !== 3) return;
+            let computer = res[1];
+            let connections = gb.connections;
+            for (let c=0; c<connections.length;c++)
+            {
+                let con = connections[c];
+                if (con.computerName === computer)
+                {
+                    let sc = con.suspendCheckpoint;
+                    if (sc == void 0)
+                    {
+                        return;
+                    }
+                    let len = sc.length
+                    for (let i=0;i<len;i++)
+                    {
+                        let check = sc[i];
+                        if (check.task == res[0])
+                        {
+                            if (check.url == res[2])
+                            {
+                                sc.splice(i, 1);
+                                len = sc.length;
+                                if (len == 0)                            
+                                {
+                                    con.suspendCheckpoint = void 0; 
+                                    return;
+                                }
+                                i = 0;              // restart the for loop
+                            }
+                        }
+                    }
+                }
+            }   
+        }
+    } catch (error) {
+        logging.logError('Toolbar,suspendAtCheckpointResume', error);    
+    }    
+}
+
+function suspendAtCheckpointAdd(con,task,url)
+{
+    try
+    {
+        let sc = null;
+        if (con.suspendCheckpoint == void 0)
+        {
+            sc = [];
+        }
+        else
+        {
+            sc = con.suspendCheckpoint;
+            // double?
+            let len = sc.length
+            for (let i=0;i<len;i++)
+            {
+                let check = sc[i];
+                if (check.task == task)
+                {
+                    if (check.url == url)
+                    {
+                        // is double
+                        return;
+                    }
+                }
+            }
+        }
+
+        let check = new Object;
+        check.task = task;
+        check.url = url;
+        check.present = false;
+        check.checkPoint = -1;
+        sc.push(check);
+        con.suspendCheckpoint = sc;  
+    } catch (error) {
+        logging.logError('Toolbar,suspendAtCheckpointAdd', error);    
+    } 
 }

@@ -123,7 +123,8 @@
         "SR_MEM_TOO_LARGE": "geh. te groot",
         "SR_MEM_NEED_SHMEM": "geh. heeft shmem nodig",
         "SR_MEM_GPU": "geh. GPU",
-        "SR_UNKNOWN": "Onbekende reden"
+        "SR_UNKNOWN": "Onbekende reden",
+        "SR_PAUSE_CHECKPOINT": "Checkpoint ⏸ Sluit of verander venster niet"
     },
     "MENU": {
         "MN_ABOUT": "Over BoincTasks Js",
@@ -162,7 +163,10 @@
         "MN_SNOOZE": "Sluimer",
         "MN_STATISTICS": "Statistieken grafiek",
         "MN_RULES_EDIT": "Bewerken",
-        "MN_STATISTICS_TRANSFER": "Gegevensoverdracht grafiek"
+        "MN_STATISTICS_TRANSFER": "Gegevensoverdracht grafiek",
+        "MN_SHOW_CPU": "Toon CPU taken",
+        "MN_SHOW_NONCPUI": "Toon niet CPU intensieve taken",
+        "MN_SHOW_GPU": "Toon GPU taken"
     },
     "DIALOG_SETTINGS_BT": {
         "DS_BT_TITLE": "Instellingen",
@@ -265,7 +269,8 @@
         "FTR_TASKS_HISTORY": "G Taken:",
         "FTR_RETRY_ALL": "Alles opnieuw proberen:",
         "FTR_CC_CONFIG": "Edit cc_config.xml",
-        "FTR_APP_CONFIG": "Edit: app_config.xml"
+        "FTR_APP_CONFIG": "Edit: app_config.xml",
+        "FTR_SUSPEND_CHECK": "Op checkpoint"
     },
     "BOX_DELETE_FILTER": {
         "BX_FILTER_TITLE": "Kan een filter niet verwijderen",

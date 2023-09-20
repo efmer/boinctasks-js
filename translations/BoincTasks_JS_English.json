@@ -123,7 +123,8 @@
         "SR_MEM_TOO_LARGE": "mem too large",
         "SR_MEM_NEED_SHMEM": "mem need shmem",
         "SR_MEM_GPU": "mem GPU",
-        "SR_UNKNOWN": "Unknown suspend reason"
+        "SR_UNKNOWN": "Unknown suspend reason",
+        "SR_PAUSE_CHECKPOINT": "Checkpoint ⏸ Don't close or leave window"
     },
     "MENU": {
         "MN_ABOUT": "About BoincTasks Js",
@@ -162,7 +163,10 @@
         "MN_SNOOZE": "Snooze",
         "MN_STATISTICS": "Statistics graph",
         "MN_RULES_EDIT": "Edit",
-        "MN_STATISTICS_TRANSFER": "Data transfer graph"
+        "MN_STATISTICS_TRANSFER": "Data transfer graph",
+        "MN_SHOW_CPU": "Show CPU tasks",
+        "MN_SHOW_NONCPUI": "Show non CPU intensive tasks",
+        "MN_SHOW_GPU": "Show GPU tasks"
     },
     "DIALOG_SETTINGS_BT": {
         "DS_BT_TITLE": "Settings",
@@ -265,7 +269,8 @@
         "FTR_TASKS_HISTORY": "H Tasks:",
         "FTR_RETRY_ALL": "Retry all:",
         "FTR_CC_CONFIG": "Edit cc_config.xml",
-        "FTR_APP_CONFIG": "Edit: app_config.xml"
+        "FTR_APP_CONFIG": "Edit: app_config.xml",
+        "FTR_SUSPEND_CHECK": "At checkpoint"
     },
     "BOX_DELETE_FILTER": {
         "BX_FILTER_TITLE": "Unable to delete a Filter",

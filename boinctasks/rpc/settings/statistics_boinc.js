@@ -198,7 +198,8 @@ function dataReady(data)
         let project = url;
         if (this.conIn.state !== null)
         {
-          project = conState.getProject(this.conIn,url);
+          let ret = conState.getProject(this.conIn,url);
+          project = ret.project; 
           let indexPN = gStatisticsProjectName.indexOf(project);
           if (indexPN < 0)
           {

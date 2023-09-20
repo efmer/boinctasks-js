@@ -107,8 +107,8 @@ function compare(a,b)
                 else if (a.computerName < b.computerName) return -1;
                 return 0;
             case 1: // project
-                if (a.project > b.project) return 1;
-                if (a.project < b.project) return -1;
+                if (a.project.toLowerCase() > b.project.toLowerCase()) return 1;
+                if (a.project.toLowerCase() < b.project.toLowerCase()) return -1;
                 return 0;            
             case 2: // account
                 if (a.account > b.account) return 1;

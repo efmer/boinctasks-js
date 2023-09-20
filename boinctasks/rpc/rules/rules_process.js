@@ -63,7 +63,7 @@ class RulesProcess{
     {   
       con.client_callbackI = rulesData;
       con.client_completeData = "";
-      functions.sendRequest(con.client_socket, "<get_results><active_only></active_only></get_results>"); // many machine don't support <active_only></active_only>
+      functions.sendRequest(con.client_socket, "<get_results><active_only></active_only></get_results>"); // many machines don't support <active_only></active_only>
     } catch (error) {
       logging.logError('RulesProcess,getRules', error);
       this.mode = 'errorc';

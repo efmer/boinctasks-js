@@ -52,7 +52,8 @@ class ProjectItems
                 var projectUrl = item.master_url[0];                
                 if (state != null)
                 {
-                    projectName = conState.getProject(con,projectUrl)
+                    let ret = conState.getProject(con,projectUrl)
+                    projectName = ret.project;                    
                 }
                 var projectItem = new Object();
                 projectItem.computerName = con.computerName;

@@ -105,10 +105,28 @@ function initDockMenu()
 function initMenu()
 {
   var sidebar = true;
+  var showCPU = true;
+  var showGPU = true;
+  var showNONCPUI = true;
   try {
     sidebar =  gMenuSettings[btC.MENU_SIDEBAR_COMPUTERS];
   } catch (error) {
     gClassBtMenu.set(btC.MENU_SIDEBAR_COMPUTERS, true);  // initially enabled
+  }
+  try {
+    showCPU =  gMenuSettings[btC.MENU_SHOW_CPU];
+  } catch (error) {
+    gClassBtMenu.set(btC.MENU_SHOW_CPU, true);  // initially enabled     
+  }
+  try {
+    showGPU =  gMenuSettings[btC.MENU_SHOW_GPU];
+  } catch (error) {
+    gClassBtMenu.set(btC.MENU_SHOW_GPU, true);  // initially enabled        
+  }
+  try {
+    showNONCPUI =  gMenuSettings[btC.MENU_SHOW_NONCPUI];
+  } catch (error) {
+    gClassBtMenu.set(btC.MENU_SHOW_NONCPUI, true);  // initially enabled        
   }
 
 //https://www.electronjs.org/docs/api/menu
@@ -263,7 +281,44 @@ function initMenu()
             click(e) { 
               connections.boincStatisticsTransfer("menu");
           }
-        },          
+        },
+          { type: 'separator' },
+          {
+            label: btC.TL.MENU.MN_SHOW_CPU,
+            type: "checkbox",
+            checked: showCPU,
+            click(e) {               
+              let set = gClassBtMenu.check(btC.MENU_SHOW_CPU);
+              set = !set;
+              gClassBtMenu.set(btC.MENU_SHOW_CPU,set);
+              gClassBtMenu.write();
+              connections.showCpuGPU(set,btC.SHOW_CPU);
+            }
+          },
+          {
+            label: btC.TL.MENU.MN_SHOW_GPU,
+            type: "checkbox",
+            checked: showGPU,
+            click(e) { 
+              let set = gClassBtMenu.check(btC.MENU_SHOW_GPU);
+              set = !set;
+              gClassBtMenu.set(btC.MENU_SHOW_GPU,set);
+              gClassBtMenu.write();              
+              connections.showCpuGPU(e.checked,btC.SHOW_GPU);
+            }
+          },
+          {
+            label: btC.TL.MENU.MN_SHOW_NONCPUI,
+            type: "checkbox",
+            checked: showNONCPUI,
+            click(e) { 
+              let set = gClassBtMenu.check(btC.MENU_SHOW_NONCPUI);
+              set = !set;
+              gClassBtMenu.set(btC.MENU_SHOW_NONCPUI,set);
+              gClassBtMenu.write();                
+              connections.showCpuGPU(e.checked,btC.SHOW_NONCPUI);
+            }
+          },          
           { type: 'separator' },
           {
             label: btC.TL.MENU.MN_LOG,
@@ -383,9 +438,6 @@ function initMenu()
                     showLanguageSelector(gSettings);
                   }
                 },
-                
-            
-
             ] 
           },
       ] 
@@ -474,6 +526,10 @@ function initialize () {
       bShow = false;
       logging.logDebug("main, showApp BoincTasks settings: hideLogin: yes");   
     }
+    else
+    {
+      bShow = true;
+    }
 
     if (showArg == "yes")  //--show=yes
     {
@@ -521,7 +577,7 @@ function initialize () {
       logging.logError('main, createWindow', error); 
     }
  
-    const gMainMenu = Menu.buildFromTemplate(gMenuTemplate);
+    gMainMenu = Menu.buildFromTemplate(gMenuTemplate);
 
     if (process.platform == 'darwin') {
       logging.logFile("main, createWindow", "darwin setApplicationMenu");      
@@ -953,6 +1009,10 @@ function rendererRequests()
 
     var set = gClassBtMenu.check(btC.MENU_SIDEBAR_COMPUTERS);
     sidebarComputers(set,false);
+
+
+
+
   })
 
   ipcMain.on("table_click_header", (renderer, id, ex, shift, alt,ctrl) => {
