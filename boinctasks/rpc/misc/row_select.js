@@ -163,7 +163,7 @@ function clickShiftProject(gb,id)
     table = gb.currentTable.projectTable
     sel.rowSelected = [];
     sel.present = [];
-    for (let i = 1; i< table.length;i++)
+    for (let i = 0; i< table.length;i++)
     {
         let project = table[i];
         let selId = btConstants.SEPERATOR_SELECT +  project.computerName + btConstants.SEPERATOR_SELECT + project.projectUrl;
@@ -206,7 +206,7 @@ function clickShiftResults(gb,id)
     let filter = table[0];
     sel.rowSelected = [];
     sel.present = [];
-    for (let i = 1; i< table.length;i++)
+    for (let i = 0; i< table.length;i++)
     {
         let result = table[i];
         let selId = result.wuName + btConstants.SEPERATOR_SELECT + result.computerName + btConstants.SEPERATOR_SELECT + result.projectUrl;

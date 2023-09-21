@@ -267,7 +267,7 @@ function tableResultItem(selRows, i, order, result, filter, colorObj, show)
     }
     else use = "";
     
-    if (use.length > 0)
+    if (cpuGpu.cuda)
     {
       if (!show.SHOW_GPU)
       {
