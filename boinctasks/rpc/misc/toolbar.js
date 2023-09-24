@@ -197,6 +197,10 @@ class Toolbar{
                 case "toolbar_completed":
                     reportCompleted(gb);
                 break;
+                case "toolbar_clipboard_tasks":
+                    selected = gb.rowSelect.results.rowSelected;                      
+                    clipboardTasks(selected,gb);
+                break;
                 // project
                 case "toolbar_resume_p":
                     selected = gb.rowSelect.projects.rowSelected;                    
@@ -292,11 +296,11 @@ function getToolbarResultsSel(gb)
     var toolbar =   '<span id="toolbar_abort" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;' + btC.TL.FOOTER.FTR_ABORT  + '</span>' +
                     '<span                    class="ef_btn_toolbar bt_img_toolbar_none ef_btn_toolbar_hidden">&nbsp;</span>' +
                     '<span id="toolbar_suspend" class="ef_btn_toolbar bt_img_toolbar_pause">&nbsp;' + btC.TL.FOOTER.FTR_SUSPEND + '</span>' +
-                    '<span id="toolbar_suspend_check" class="ef_btn_toolbar bt_img_toolbar_pause">&nbsp;' + btC.TL.FOOTER.FTR_SUSPEND_CHECK + '</span>' +
+ //                 '<span id="toolbar_suspend_check" class="ef_btn_toolbar bt_img_toolbar_pause">&nbsp;' + btC.TL.FOOTER.FTR_SUSPEND_CHECK + '</span>' + moved to context
                     '<span id="toolbar_resume" class="ef_btn_toolbar bt_img_toolbar_resume">&nbsp;' + btC.TL.FOOTER.FTR_RESUME + '</span>' +
-                    '<span id="toolbar_update" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_UPDATE + '</span>' +
-                    '<span id="toolbar_info" class="ef_btn_toolbar bt_img_toolbar_info">&nbsp;'+ btC.TL.FOOTER.FTR_INFO + '</span>' +                      
-                    '<span id="toolbar_rules" class="ef_btn_toolbar bt_img_toolbar_list">&nbsp;'+ btC.TL.FOOTER.FTR_RULE + '</span>';
+                    '<span id="toolbar_update" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_UPDATE + '</span>';
+ //                   '<span id="toolbar_info" class="ef_btn_toolbar bt_img_toolbar_info">&nbsp;'+ btC.TL.FOOTER.FTR_INFO + '</span>' + moved to context
+ //                   '<span id="toolbar_rules" class="ef_btn_toolbar bt_img_toolbar_list">&nbsp;'+ btC.TL.FOOTER.FTR_RULE + '</span>'; moved to context
     let iReady = gb.readyToReport;
     if (iReady > 0)
     {
@@ -335,16 +339,16 @@ function getToolbarTransfersSelect()
 
 function getToolbarProjects()
 {
-    var toolbar =   '<span id="toolbar_app_config_p" class="ef_btn_toolbar bt_img_toolbar_list">&nbsp;' + btC.TL.FOOTER.FTR_APP_CONFIG + '</span>' +
-                    '<span id="toolbar_detach_p" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;' + btC.TL.FOOTER.FTR__DETACH + '</span>' +
+                    //'<span id="toolbar_app_config_p" class="ef_btn_toolbar bt_img_toolbar_list">&nbsp;' + btC.TL.FOOTER.FTR_APP_CONFIG + '</span>' +
+      var toolbar = '<span id="toolbar_detach_p" class="ef_btn_toolbar bt_img_toolbar_cancel">&nbsp;' + btC.TL.FOOTER.FTR__DETACH + '</span>' +
                     '<span id="toolbar_reset_p" class="ef_btn_toolbar bt_img_toolbar_back">&nbsp;' + btC.TL.FOOTER.FTR_RESET + '</span>' +
                     '<span id="toolbar_suspend_p" class="ef_btn_toolbar bt_img_toolbar_pause">&nbsp;' + btC.TL.FOOTER.FTR_SUSPEND + '</span>' +
                     '<span id="toolbar_resume_p" class="ef_btn_toolbar bt_img_toolbar_resume">&nbsp;' + btC.TL.FOOTER.FTR_RESUME + '</span>' +
                     '<span id="toolbar_nomore_p" class="ef_btn_toolbar bt_img_toolbar_download_not">&nbsp;' + btC.TL.FOOTER.FTR_NO_MORE_WORK  + '</span>' +
                     '<span id="toolbar_allow_p" class="ef_btn_toolbar bt_img_toolbar_download">&nbsp;' + btC.TL.FOOTER.FTR_ALLOW_WORK + '</span>' +
-                    '<span id="toolbar_update_p" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_UPDATE + '</span>' +
-                    '<span id="toolbar_info_p" class="ef_btn_toolbar bt_img_toolbar_info">&nbsp;'+ btC.TL.FOOTER.FTR_INFO + '</span>' +
-                    '<span id="toolbar_www" class="ef_btn_toolbar bt_img_toolbar_www">&nbsp;' + 'WWW' + '</span>';
+                    '<span id="toolbar_update_p" class="ef_btn_toolbar bt_img_toolbar_retry">&nbsp;' + btC.TL.FOOTER.FTR_UPDATE + '</span>';
+//                    '<span id="toolbar_info_p" class="ef_btn_toolbar bt_img_toolbar_info">&nbsp;'+ btC.TL.FOOTER.FTR_INFO + '</span>' +
+//                    '<span id="toolbar_www" class="ef_btn_toolbar bt_img_toolbar_www">&nbsp;' + 'WWW' + '</span>';
     return toolbar;
 }
 
@@ -410,11 +414,20 @@ function abort(gb,mainWindow, selected, what)
             return;
     }
 
+    let txtDetail = "";
+    let len = selected.length;
+    for (i=0;i<len;i++)
+    {
+        txtDetail += selected[i] + "\r\n";        
+    }
+    txtDetail += "\r\n";
+    txtDetail += btC.TL.BOX_ABORT_TASK.BX_ABORT_DETAIL;
+    txtDetail = txtDetail.replaceAll(btC.SEPERATOR_SELECT,", ")
     dialog.showMessageBox(mainWindow,
     {
       title: btC.TL.BOX_ABORT_TASK.BX_ABORT_TITLE,
       message: btC.TL.BOX_ABORT_TASK.BX_ABORT_MESSAGE,
-      detail: btC.TL.BOX_ABORT_TASK.BX_ABORT_DETAIL,
+      detail: txtDetail,
       buttons: [btC.TL.BOX_GENERAL.BX_CANCEL, btC.TL.BOX_GENERAL.BX_YES],
       defaultId: 0, // bound to buttons array
       cancelId: 1 // bound to buttons array
@@ -478,7 +491,7 @@ function resetDetachProjectYes(selected,connections,detach)
 {
     try {
 //        connectionsShadow.init();        
-        for (let s=0;s<selected.length;s++)  
+        for (let s=0;s<selected.len.length;s++)  
         {
             let res = selected[s].split(btC.SEPERATOR_SELECT);
             let computerName = "";
@@ -747,13 +760,93 @@ function clipboardMessages(selected,connections)
     }
 }
 
-function clipboardHistory(selected, gb)
+function clipboardTasks(selected, gb)
 {
     try {
-        let hTxt = "";
+        let selId = "";
         let len = selected.lenght;
         if (len === 0) return;
 
+        let hTxt = "<table><tr>"
+        hTxt += "<th>" + btC.TL.TAB.T_GENERAL_COMPUTER + "</th><th>" + btC.TL.TAB.T_GENERAL_PROJECT + "</th><th>" + btC.TL.TAB.T_GENERAL_APPLICATION + "</th>";
+        hTxt += "<th>" + btC.TL.TAB.T_GENERAL_NAME + "</th><th>" + btC.TL.TAB.T_GENERAL_ELAPSED + "</th><th>" + btC.TL.TAB.T_GENERAL_PROGRESS + "</th>";
+        hTxt += "<th>" + btC.TL.TAB.T_TASK_TIMELEFT + "</th><th>" + btC.TL.TAB.T_TASK_DEADLINE + "</th><th>" + btC.TL.TAB.T_GENERAL_STATUS + "</th>";
+        hTxt += "<th>" + btC.TL.STATUS.S_FILTER_TASKS + "</th></tr>";
+        let table = gb.currentTable.resultTable                                
+        for (let t=0;t<table.length;t++)
+        {
+            let item = table[t];
+            { 
+                if (item.filtered)
+                {
+                    let rTable = item.resultTable;
+                    selId = item.wuName + btC.SEPERATOR_SELECT + item.computerName + btC.SEPERATOR_SELECT + item.projectUrl + item.app + btC.SEPERATOR_FILTER + item.computerName; // filter itself
+                    hTxt += clipboardTasksAdd(item,selected,selId,true)
+
+                    for (let tf=0;tf<rTable.length;tf++) // items in the filter
+                    {
+                        let item = rTable[tf];
+                        selId = item.wuName + btC.SEPERATOR_SELECT + item.computerName + btC.SEPERATOR_SELECT + item.projectUrl;
+                        hTxt += clipboardTasksAdd(item,selected,selId)
+                    }
+                    continue;
+                }
+                selId = item.wuName + btC.SEPERATOR_SELECT + item.computerName + btC.SEPERATOR_SELECT + item.projectUrl;
+                hTxt += clipboardTasksAdd(item,selected,selId)
+            }
+        }
+        hTxt += "</table>"
+        let txt = stripHtml(hTxt);
+        clipboard.write({
+            text: txt,
+            html: hTxt
+        })
+    } catch (error) {
+        logging.logError('Toolbar,clipboardMessages', error);    
+    }
+}
+
+function clipboardTasksAdd(item, selected, selId, filter)
+{
+    let hTxt = "";
+    for (let s=0;s<selected.length;s++ )                            
+    {
+        if (selected[s] == selId)
+        {
+            hTxt += "<tr><td>";
+            hTxt += item.computerName + "</td><td>";
+            hTxt += item.project + "</td><td>";
+            hTxt += item.app + "</td><td>";
+            hTxt += item.wuName + "</td><td>";
+            let elapsedS = functions.getFormattedTimeInterval(item.elapsed);
+            hTxt += elapsedS + "</td><td>";
+            let cpuS = item.fraction.toFixed(2) + "%";
+            hTxt += cpuS + "</td><td>";  
+            let timeLeftS = functions.getFormattedTimeInterval(item.remaining);
+            hTxt += timeLeftS + "</td><td>";  
+            let deadlineS = functions.getFormattedTime(item.deadline);
+            hTxt += deadlineS + "</td><td>";                                                         
+            hTxt += item.statusS;
+            if (filter)
+            {
+                hTxt +=  "</td><td>" + item.wu;
+            }
+            hTxt += "</td></tr>";
+        }
+    }
+    return hTxt;
+}
+
+function clipboardHistory(selected, gb)
+{
+    try {
+        let len = selected.lenght;
+        if (len === 0) return;
+
+        let hTxt = "<table><tr>"
+        hTxt += "<th>" + btC.TL.TAB.T_GENERAL_COMPUTER + "</th><th>" + btC.TL.TAB.T_GENERAL_PROJECT + "</th><th>" + btC.TL.TAB.T_GENERAL_APPLICATION + "</th>";
+        hTxt += "<th>" + btC.TL.TAB.T_GENERAL_NAME + "</th><th>" + btC.TL.TAB.T_GENERAL_ELAPSED + "</th><th>" + btC.TL.TAB.T_GENERAL_CPU + "</th><th>";
+        hTxt += btC.TL.TAB.T_HISTORY_COMPLETED + "</th><th>" + btC.TL.TAB.T_GENERAL_STATUS + "</th></tr>";
         let table = gb.currentTable.historyTable
                                             
         for (let t=0;t<table.length;t++)
@@ -765,21 +858,22 @@ function clipboardHistory(selected, gb)
                 {
                     if (selected[s] == selId)
                     {
-                        hTxt += item.computerName + "\t";
-                        hTxt += item.projectName + "\t";
-                        hTxt += item.appNameUF + "\t";
-                        hTxt += item.result + "\t";
+                        hTxt += "<tr><td>";
+                        hTxt += item.computerName + "</td><td>";
+                        hTxt += item.projectName + "</td><td>";
+                        hTxt += item.appNameUF + "</td><td>";
+                        hTxt += item.result + "</td><td>";
                         let elapsedS = functions.getFormattedTimeInterval(item.elapsed);
-                        hTxt += elapsedS + "\t";
+                        hTxt += elapsedS + "</td><td>";
                         let cpu = (item.cpuTime/item.elapsed) * 100;
                         if (cpu > 100) cpu = 100;
                         let cpuS = cpu.toFixed(2) + "%";
-                        hTxt += cpuS + "\t";
+                        hTxt += cpuS + "</td><td>";
                         let d = new Date(item.completedTime*1000);
                         d.setTime( d.getTime() + d.getTimezoneOffset()*60*1000 );
                         let options = { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
                         let timeS = d.toLocaleDateString("en-US", options);
-                        hTxt += timeS + "\t";   
+                        hTxt += timeS + "</td><td>";
                         let status = "";
                         switch (item.exit)
                         {
@@ -792,12 +886,18 @@ function clipboardHistory(selected, gb)
                             default:
                             status = "Exit code: " + item.exit;
                         }                   
-                        hTxt += status + "\n";
+                        hTxt += status + "</td>";
+                        hTxt += "</td></tr>";
                     }
                 }
-            }            
+            }          
         }
-        clipboard.writeText(hTxt);
+        hTxt += "</table>"
+        let txt = stripHtml(hTxt);
+        clipboard.write({
+            text: txt,
+            html: hTxt
+        })
     } catch (error) {
         logging.logError('Toolbar,clipboardHistory', error);    
     }
@@ -910,4 +1010,17 @@ function suspendAtCheckpointAdd(con,task,url)
     } catch (error) {
         logging.logError('Toolbar,suspendAtCheckpointAdd', error);    
     } 
+}
+
+function stripHtml(txt)
+{
+    txt = txt.replaceAll("<table>","");
+    txt = txt.replaceAll("</table>","");
+    txt = txt.replaceAll("<tr>","");
+    txt = txt.replaceAll("</tr>","\n");
+    txt = txt.replaceAll("<th>","");    
+    txt = txt.replaceAll("</th>","\t");    
+    txt = txt.replaceAll("<td>","");    
+    txt = txt.replaceAll("</td>","\t");    
+    return txt;
 }

@@ -634,6 +634,44 @@ class Connections{
         }
         gIntervalFastCnt = 0;
     }
+
+    getTab()
+    {
+        return gB.selectedTab;
+    }
+
+    getSelected()
+    {
+        switch(gB.selectedTab)
+        {
+            case btC.TAB_COMPUTERS:
+                return gB.rowSelect.computers.rowSelected;
+            break;        
+            case btC.TAB_PROJECTS:
+                return gB.rowSelect.projects.rowSelected;
+            break;        
+            case btC.TAB_TASKS:
+                return gB.rowSelect.results.rowSelected;
+            break;
+            case btC.TAB_TRANSFERS:
+                return gB.rowSelect.transfers.rowSelected;
+            break;        
+            case btC.TAB_MESSAGES:
+                return gB.rowSelect.messages.rowSelected;
+            break; 
+            case btC.TAB_HISTORY:
+                return gB.rowSelect.history.rowSelected;
+            break;             
+        }
+
+        return null;
+    }
+
+    getReadyToReport()
+    {
+        return gB.readyToReport;
+    }
+
 }
 
 module.exports = Connections;

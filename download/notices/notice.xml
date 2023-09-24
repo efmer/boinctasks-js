@@ -1,7 +1,7 @@
 <notices>
 	<notice>
 		<title>
-			Welcome
+			Welcome!
 		</title>
 		<description>
 			We are trying to perfect BoincTasks, so if you encounter a problem or want to add a feature, please contact us on the forum (the preferred way)
@@ -13,10 +13,11 @@
 	</notice>
 	<notice2>
 		<title>
-			Version 2.0
+			Version 2.2
 		</title>
 		<description>
-			A new version that fixes a lot of issues both big and small.
+			New context menu.
+			Bug fixes.
 			Available for Mac, Linux and Windows.
 		</description>
 		<link>https://efmer.com/boinctasks-js/boinctasks-js-download/</link>

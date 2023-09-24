@@ -94,6 +94,12 @@ document.addEventListener("DOMContentLoaded", () => {
 //    let table1 = document.getElementById("bt_table_insert1"); 
     table.addEventListener("click", clickTable);
 //    table1.addEventListener("click", clickTable);
+
+    table.addEventListener('contextmenu', function(event) {
+      clickTable(event,true);
+//      alert("You've tried to open context menu"); //here you draw your own menu
+      event.preventDefault();
+    }, false);
   });
 
   ipcRenderer.on('set_tab', (event, tab) => {
@@ -225,7 +231,7 @@ function SwapTable(tableData)
   tableData = null;
 }
 
-function clickTable(event)
+function clickTable(event,context=false)
 {  
   var id = event.target.id;
   let bMissed = false;
@@ -240,15 +246,23 @@ function clickTable(event)
   if (bMissed)
   {
     // Clicked while the tables were swapping.
-    setTimeout(clickTable2(event), 200);    
+    setTimeout(clickTable2(event,context), 200);    
   }
-  var shift = event.shiftKey;
-  var alt = event.altKey;
-  var ctrl = event.ctrlKey;     
-  ipcRenderer.send('table_click', id,shift,alt,ctrl); 
+
+  if (context)
+  {
+    ipcRenderer.send('table_click_context', id, event.x, event.y);   
+  }
+  else
+  {
+    let shift = event.shiftKey;
+    let alt = event.altKey;
+    let ctrl = event.ctrlKey;       
+    ipcRenderer.send('table_click', id,shift,alt,ctrl); 
+  }
 }
 
-function clickTable2(event)
+function clickTable2(event,context)
 {
   let x = event.clientX;
   let y = event.clientY;
@@ -271,12 +285,19 @@ function clickTable2(event)
       id = el;
     }
   }
-  var shift = event.shiftKey;
-  var alt = event.altKey;
-  var ctrl = event.ctrlKey;     
-  ipcRenderer.send('table_click', id,shift,alt,ctrl); 
-}
 
+  if (context)
+  {
+    ipcRenderer.send('table_click_context', id, event.x, event.y);   
+  }
+  else
+  {
+    let shift = event.shiftKey;
+    let alt = event.altKey;
+    let ctrl = event.ctrlKey;      
+    ipcRenderer.send('table_click', id,shift,alt,ctrl); 
+  }
+}
 
 function changeTab(name,send)
 {
@@ -581,3 +602,6 @@ function SetHtml(tag,data)
     let i = 1;
   }
 }
+
+// Context menu
+

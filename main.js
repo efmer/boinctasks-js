@@ -44,6 +44,8 @@ const btC = require('./boinctasks/rpc/functions/btconstants');
 
 const path = require('path');
 const Functions = require('./boinctasks/rpc/functions/functions');
+const Properties = require('./boinctasks/rpc/misc/properties');
+const Www = require('./boinctasks/rpc/misc/www');
 const functions = new Functions();
 
 let gMenuSettings = null;
@@ -100,6 +102,179 @@ function initDockMenu()
   ];
   gDockMenu = Menu.buildFromTemplate(gMenuDockTemplate);
 
+}
+
+function initTasksContextMenu()
+{
+  let iReady = connections.getReadyToReport();
+  let menuTaskTemplate = [
+    {
+      label: btC.TL.FOOTER.FTR_SUSPEND,
+      click(e) {               
+        connections.toolbar("toolbar_suspend")
+      }
+    },
+    {
+      label: '⏸' + btC.TL.FOOTER.FTR_SUSPEND_CHECK,
+      click(e) {               
+        connections.toolbar("toolbar_suspend_check")
+      }
+    },    
+    {
+      label: btC.TL.FOOTER.FTR_RESUME,
+      click(e) {               
+        connections.toolbar("toolbar_resume")
+      }
+    }, 
+    {
+      label: btC.TL.FOOTER.FTR_UPDATE,
+      click(e) {               
+        connections.toolbar("toolbar_update")
+      }
+    },  
+    {
+      label: btC.TL.FOOTER.FTR_READY_TO_REPORT + " " +  iReady,
+      click(e) {               
+        connections.toolbar("toolbar_completed")
+      }
+    },        
+    { type: 'separator' },
+    {
+      label: btC.TL.FOOTER.FTR_ABORT,
+      click(e) {               
+        connections.toolbar("toolbar_abort")
+      }
+    }, 
+    { type: 'separator' },
+    {
+      label: btC.TL.FOOTER.FTR_INFO,
+      click(e) {               
+        connections.toolbar("toolbar_info")
+      }
+    },
+    {
+      label: btC.TL.FOOTER.FTR_CLIPBOARD,
+      click(e) {               
+        connections.toolbar("toolbar_clipboard_tasks")
+      }
+    },    
+    { type: 'separator' },
+    {
+      label: btC.TL.MENU.MN_SHOW_CPU,
+      type: "checkbox",
+      checked: gClassBtMenu.check(btC.MENU_SHOW_CPU),
+      click(e) {               
+        let set = gClassBtMenu.check(btC.MENU_SHOW_CPU);
+        set = !set;
+        gClassBtMenu.set(btC.MENU_SHOW_CPU,set);
+        gClassBtMenu.write();
+        connections.showCpuGPU(set,btC.SHOW_CPU);
+      }
+    },
+    {
+      label: btC.TL.MENU.MN_SHOW_GPU,
+      type: "checkbox",
+      checked: gClassBtMenu.check(btC.MENU_SHOW_GPU),
+      click(e) { 
+        let set = gClassBtMenu.check(btC.MENU_SHOW_GPU);
+        set = !set;
+        gClassBtMenu.set(btC.MENU_SHOW_GPU,set);
+        gClassBtMenu.write();              
+        connections.showCpuGPU(e.checked,btC.SHOW_GPU);
+      }
+    },
+    {
+      label: btC.TL.MENU.MN_SHOW_NONCPUI,
+      type: "checkbox",
+      checked: gClassBtMenu.check(btC.MENU_SHOW_NONCPUI),
+      click(e) { 
+        let set = gClassBtMenu.check(btC.MENU_SHOW_NONCPUI);
+        set = !set;
+        gClassBtMenu.set(btC.MENU_SHOW_NONCPUI,set);
+        gClassBtMenu.write();                
+        connections.showCpuGPU(e.checked,btC.SHOW_NONCPUI);
+      }
+    },          
+    { type: 'separator' },
+    {
+      label: btC.TL.FOOTER.FTR_RULE,
+      click(e) {               
+        connections.toolbar("toolbar_rules")
+      }
+    },    
+  ];
+  return Menu.buildFromTemplate(menuTaskTemplate);
+
+}
+
+function initProjectContextMenu()
+{
+  let menuProjectTemplate = [
+    {
+      label: btC.TL.FOOTER.FTR_UPDATE,
+      click(e) {               
+        connections.toolbar("toolbar_update_p")
+      }
+    },
+    {
+      label: btC.TL.FOOTER.FTR_SUSPEND,
+      click(e) {               
+        connections.toolbar("toolbar_suspend_p")
+      }
+    },
+    {
+      label: btC.TL.FOOTER.FTR_RESUME,
+      click(e) {               
+        connections.toolbar("toolbar_resume_p")
+      }
+    },
+    {
+      label: btC.TL.FOOTER.FTR_NO_MORE_WORK,
+      click(e) {               
+        connections.toolbar("toolbar_nomore_p")
+      }
+    },
+    {
+      label: btC.TL.FOOTER.FTR_ALLOW_WORK,
+      click(e) {               
+        connections.toolbar("toolbar_allow_p")
+      }
+    },
+    { type: 'separator' },
+    {
+      label: btC.TL.FOOTER.FTR_INFO,
+      click(e) {               
+        connections.toolbar("toolbar_info_p")
+      }
+    }, 
+    {
+      label: 'WWW',
+      click(e) {               
+        connections.toolbar("toolbar_www")
+      }
+    },        
+    { type: 'separator' },
+    {
+      label: btC.TL.FOOTER.FTR_APP_CONFIG,
+      click(e) {               
+        connections.toolbar("toolbar_app_config_p")
+      }
+    },     
+  ];
+  return Menu.buildFromTemplate(menuProjectTemplate);
+}
+
+function initHistoryContextMenu()
+{
+  let menuHistoryTemplate = [
+    {
+      label: btC.TL.FOOTER.FTR_CLIPBOARD,
+      click(e) {               
+        connections.toolbar("toolbar_clipboard_h")
+      }
+    },
+  ];
+  return Menu.buildFromTemplate(menuHistoryTemplate);
 }
 
 function initMenu()
@@ -1009,10 +1184,6 @@ function rendererRequests()
 
     var set = gClassBtMenu.check(btC.MENU_SIDEBAR_COMPUTERS);
     sidebarComputers(set,false);
-
-
-
-
   })
 
   ipcMain.on("table_click_header", (renderer, id, ex, shift, alt,ctrl) => {
@@ -1020,7 +1191,31 @@ function rendererRequests()
   })
 
   ipcMain.on("table_click", (renderer, id, shift,alt,ctrl) => {
-    connections.click(id,shift,alt,ctrl)
+    connections.click(id,shift,alt,ctrl)   
+  })
+
+  ipcMain.on("table_click_context", (renderer, id, ex,ey) => {
+    let menu;
+    let selected = connections.getSelected()
+    if (selected.length <= 1)
+    {
+      connections.click(id,false,false,false) 
+    }
+
+    switch (connections.getTab())
+    {
+      case btC.TAB_TASKS:
+        menu = initTasksContextMenu();
+        menu.popup({ gMainWindow, x: ex, y: ey } );   
+      break
+      case btC.TAB_PROJECTS:
+        menu = initProjectContextMenu();
+        menu.popup({ gMainWindow, x: ex, y: ey } );         
+      break;
+      case btC.TAB_HISTORY:
+        menu = initHistoryContextMenu();
+        menu.popup({ gMainWindow, x: ex, y: ey } );
+    }
   })
 
   ipcMain.on("header_width", (renderer, type, id, data, total) => {
