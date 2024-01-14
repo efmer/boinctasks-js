@@ -527,14 +527,18 @@ function CheckpointSuspend(con,resultItem,wu,url)
                     }
                     else
                     {
-                        if (check.checkPoint > checkpoint || checkpoint < 4)
+                        if (check.checkPoint > checkpoint || checkpoint < 10)
                         {
-                            sendCommand(con,'suspend_result',url,wu)
+                            sendCommand(con,'suspend_result',url,wu);
+                            let debugTxt = "suspend: " + url + " , " + wu + " last check: " + check.checkPoint + " check: " + checkpoint 
+                            logging.logDebug("CheckpointSuspend, " + debugTxt);   
+
                             sc.splice(i, 1);
                             len = sc.length;
                             if (len == 0)                            
                             {
-                                con.suspendCheckpoint = void 0; 
+                                // no suspend at checkpoint left on the con
+                                con.suspendCheckpoint = void 0;
                                 return;
                             }
                             i = 0;              // restart the for loop
@@ -548,7 +552,7 @@ function CheckpointSuspend(con,resultItem,wu,url)
             }
         }
     }
-    catch
+    catch (error)
     {
         logging.logError('Results,CheckpointSuspend', error);    
     }
@@ -569,7 +573,7 @@ function CheckpointSuspendReset(con)
             sc[i].present = false;
         }   
     }
-    catch
+    catch (error)
     {
         logging.logError('Results,CheckpointSuspend0', error);    
     }
@@ -586,13 +590,14 @@ function CheckpointSuspendPresent(con)
             {
                 let wu = sc.task;
                 let url = sc.url;
-                sendCommand(con,'suspend_result',url,wu)
+                let debugTxt = "suspend: " + url + " , " + wu + " present == false"; 
+                logging.logDebug("CheckpointSuspendPresent, " + debugTxt);   
+                sendCommand(con,'suspend_result',url,wu);
                 sc.splice(i, 1);
-                return;             // one at a time;
             }
         }   
     }
-    catch
+    catch (error)
     {
         logging.logError('Results,CheckpointSuspendPresent', error);    
     }

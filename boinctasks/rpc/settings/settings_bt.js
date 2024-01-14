@@ -238,6 +238,11 @@ function isValid()
       gSettingsBt.historyRefreshRate = 0;
     }
 
+    if (gSettingsBt.historyDelete == 0)
+    {
+      gSettingsBt.historyRefreshRate = 0; // disable
+    }
+
     if (gSettingsBt.historyRefreshRate != 0)  // 0 is disabled.
     {
       if (isNaN(gSettingsBt.historyRefreshRate) || gSettingsBt.historyRefreshRate < 20) 
@@ -245,7 +250,7 @@ function isValid()
         gSettingsBt.historyRefreshRate = 60;
       }
     }  
-    if (isNaN(gSettingsBt.historyDelete) || gSettingsBt.historyDelete < 1 || gSettingsBt.historyDelete > 30 || gSettingsBt.historyDelete.length === 0) 
+    if (isNaN(gSettingsBt.historyDelete) || gSettingsBt.historyDelete > 30 || gSettingsBt.historyDelete.length === 0) 
     {
       gSettingsBt.historyDelete = 7;
     }

@@ -46,8 +46,9 @@ class History{
         }  
     }
 
-    read(con)
+    read(con, btSetting)
     {
+        con.historyDelete = btSetting.historyDelete;   
         readHistory(con);
     }
 }
@@ -295,6 +296,10 @@ function readHistory(con)
                 }
             }
         }
+
+        deleteOld(con); // remove old stuff and computers that are no longer connected.
+        historyWrite(con,con.history.table);
+
     } catch (error) {
         logging.logError('History,readHistory', error);         
     }
@@ -303,6 +308,10 @@ function readHistory(con)
 // oldest are on top of the table.
 function deleteOld(con)
 {
+    if(con.computerName == "linux")
+    {
+        let xx = 1;
+    }
     if (con.history === null)  return;
     let last = -1;
     try {
@@ -316,6 +325,15 @@ function deleteOld(con)
             {
                 last = i;
             }
+        }
+        if (last == 0)
+        {
+            if (table.length == 1)  // the very last delete it
+            {
+                table.splice(0,1);
+                con.history.hash.splice(0,1);
+            }
+
         }
         if (last > 0)   
         {

@@ -175,6 +175,11 @@ class Connections{
     {
         const BtMenu = require('./functions/bt_menu');
         let classBtMenu = new BtMenu(); 
+        gB.show.SHOW_CPU = true;
+        gB.show.SHOW_GPU = true;
+        gB.show.SHOW_NONCPUI = true;
+
+        /*
         try {
             gB.show.SHOW_CPU = classBtMenu.check(btC.MENU_SHOW_CPU);
             gB.show.SHOW_GPU = classBtMenu.check(btC.MENU_SHOW_GPU);
@@ -184,6 +189,7 @@ class Connections{
             gB.show.SHOW_GPU = true;
             gB.show.SHOW_NONCPUI = true;
         }
+        */
 
  //       setTimeout(test, 1000); // testing test debug
         gB.mainWindow = mainWindow;
@@ -1487,13 +1493,16 @@ function getConnections(computers)
                 bReadPassword = true;                
                 con.ip = "127.0.0.1"; // otherwise the system uses a not working ::1 on Windows
             }
-            if (bReadPassword)
+            if (con.check == '1')
             {
-                if ((con.port === "") || (con.port === 31416))
+                if (bReadPassword)
                 {
-                    if (con.passWord === "")
+                    if ((con.port === "") || (con.port === 31416))
                     {
-                        con.passWord = boinc.getPassword().toString()
+                        if (con.passWord === "")
+                        {
+                            con.passWord = boinc.getPassword().toString()
+                        }
                     }
                 }
             }
@@ -1503,7 +1512,7 @@ function getConnections(computers)
                 con.group = decodeURI(computer.id_group.toString());            
             }
 
-            history.read(con);
+            history.read(con, gB.settings);
 
             connections.push(con);
         }

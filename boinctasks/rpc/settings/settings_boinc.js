@@ -53,44 +53,49 @@ class SettingsBoinc{
 
 function settingsOk(gb)
 {
+  try {
   let authCount = 0;
-  let selCount = 0;  
-  let selected = null;
-  let len = gb.connections.length;
-  for (let i=0; i<len;i++ )
-  {
-    let con = gb.connections[i];
-    if (con.auth)
+    let selCount = 0;  
+    let selected = null;
+    let len = gb.connections.length;
+    let localhost = "127.0.0.1";
+    for (let i=0; i<len;i++ )
     {
-      authCount++;      
-      if (con.sidebar)
+      let con = gb.connections[i];
+      if (con.auth)
       {
-        selCount++;
-        selected = con;
-      }
-      if (con.ip.toLowerCase() === 'localhost')
-      {
-        localhost = con;
+        authCount++;      
+        if (con.sidebar)
+        {
+          selCount++;
+          selected = con;
+        }
+        if (con.ip.toLowerCase() === 'localhost')
+        {
+          localhost = con;
+        }
       }
     }
-  }
-  let one =  btC.TL.DIALOG_BOINC_SETTINGS.DBO_BOX_SELECT_ONE;
-  if (selected === null)
-  {
-    if (authCount === 1) selected = localhost;
-    else
+    let one =  btC.TL.DIALOG_BOINC_SETTINGS.DBO_BOX_SELECT_ONE;
+    if (selected === null)
     {
-      showDialog(gb.mainWindow,one);
-      return;
+      if (authCount === 1) selected = localhost;
+      else
+      {
+        showDialog(gb.mainWindow,one);
+        return;
+      }
     }
-  }
-  if (selCount > 1)
-  {
-    showDialog(gb.mainWindow, btC.TL.DIALOG_BOINC_SETTINGS.DBO_BOX_SELECTED_MORE_ONE + "\n\n" + one);
-    return;   
-  }
-  gSettingsBoincCon = selected;
-  settingsStart(gb,selected);
+    if (selCount > 1)
+    {
+      showDialog(gb.mainWindow, btC.TL.DIALOG_BOINC_SETTINGS.DBO_BOX_SELECTED_MORE_ONE + "\n\n" + one);
+      return;   
+    }
+    gSettingsBoincCon = selected;
+    settingsStart(gb,selected);
+  } catch (error) {
+    logging.logError('SettingsBoinc,settingsOk', error);        
+  }  
 }
 
 function showDialog(mainWindow,msg)

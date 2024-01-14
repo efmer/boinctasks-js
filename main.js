@@ -167,8 +167,10 @@ function initTasksContextMenu()
         let set = gClassBtMenu.check(btC.MENU_SHOW_CPU);
         set = !set;
         gClassBtMenu.set(btC.MENU_SHOW_CPU,set);
-        gClassBtMenu.write();
-        connections.showCpuGPU(set,btC.SHOW_CPU);
+        gClassBtMenu.write(); 
+        connections.showCpuGPU(set,btC.SHOW_CPU);        
+        let item = gMainMenu.getMenuItemById(btC.MENU_SHOW_CPU);
+        item.checked = set;
       }
     },
     {
@@ -180,7 +182,9 @@ function initTasksContextMenu()
         set = !set;
         gClassBtMenu.set(btC.MENU_SHOW_GPU,set);
         gClassBtMenu.write();              
-        connections.showCpuGPU(e.checked,btC.SHOW_GPU);
+        connections.showCpuGPU(e.checked,btC.SHOW_GPU);  
+        let item = gMainMenu.getMenuItemById(btC.MENU_SHOW_GPU);
+        item.checked = set;              
       }
     },
     {
@@ -193,6 +197,8 @@ function initTasksContextMenu()
         gClassBtMenu.set(btC.MENU_SHOW_NONCPUI,set);
         gClassBtMenu.write();                
         connections.showCpuGPU(e.checked,btC.SHOW_NONCPUI);
+        let item = gMainMenu.getMenuItemById(btC.MENU_SHOW_NONCPUI);
+        item.checked = set;
       }
     },          
     { type: 'separator' },
@@ -277,17 +283,35 @@ function initHistoryContextMenu()
   return Menu.buildFromTemplate(menuHistoryTemplate);
 }
 
+function addMenu()
+{
+  gMainMenu = Menu.buildFromTemplate(gMenuTemplate);
+
+  if (process.platform == 'darwin') {
+    logging.logFile("main, createWindow", "darwin setApplicationMenu");      
+    Menu.setApplicationMenu(gMainMenu); 
+  }
+  else
+  {
+    logging.logFile("main, createWindow", "win,linux setMenu");        
+    Menu.setApplicationMenu(null);
+    gMainWindow.setMenu(gMainMenu);
+  }
+}
+
 function initMenu()
 {
   var sidebar = true;
   var showCPU = true;
   var showGPU = true;
   var showNONCPUI = true;
+
   try {
     sidebar =  gMenuSettings[btC.MENU_SIDEBAR_COMPUTERS];
   } catch (error) {
     gClassBtMenu.set(btC.MENU_SIDEBAR_COMPUTERS, true);  // initially enabled
   }
+
   try {
     showCPU =  gMenuSettings[btC.MENU_SHOW_CPU];
   } catch (error) {
@@ -460,18 +484,20 @@ function initMenu()
           { type: 'separator' },
           {
             label: btC.TL.MENU.MN_SHOW_CPU,
+            id : btC.MENU_SHOW_CPU,
             type: "checkbox",
             checked: showCPU,
-            click(e) {               
+            click(e) {              
               let set = gClassBtMenu.check(btC.MENU_SHOW_CPU);
               set = !set;
               gClassBtMenu.set(btC.MENU_SHOW_CPU,set);
-              gClassBtMenu.write();
-              connections.showCpuGPU(set,btC.SHOW_CPU);
+              gClassBtMenu.write();   
+              connections.showCpuGPU(set,btC.SHOW_CPU);              
             }
           },
           {
             label: btC.TL.MENU.MN_SHOW_GPU,
+            id : btC.MENU_SHOW_GPU,            
             type: "checkbox",
             checked: showGPU,
             click(e) { 
@@ -484,6 +510,7 @@ function initMenu()
           },
           {
             label: btC.TL.MENU.MN_SHOW_NONCPUI,
+            id : btC.MENU_SHOW_NONCPUI,            
             type: "checkbox",
             checked: showNONCPUI,
             click(e) { 
@@ -747,23 +774,16 @@ function initialize () {
     });
 
     try {
+      // default all visible
+      gClassBtMenu.set(btC.MENU_SHOW_CPU,true);
+      gClassBtMenu.set(btC.MENU_SHOW_GPU,true);
+      gClassBtMenu.set(btC.MENU_SHOW_NONCPUI,true);      
       initMenu();
     } catch (error) {
       logging.logError('main, createWindow', error); 
     }
  
-    gMainMenu = Menu.buildFromTemplate(gMenuTemplate);
-
-    if (process.platform == 'darwin') {
-      logging.logFile("main, createWindow", "darwin setApplicationMenu");      
-      Menu.setApplicationMenu(gMainMenu); 
-    }
-    else
-    {
-      logging.logFile("main, createWindow", "win,linux setMenu");        
-      Menu.setApplicationMenu(null);
-      gMainWindow.setMenu(gMainMenu);
-    }
+    addMenu();
 
     // and load the index.html of the app.
     gMainWindow.loadFile('index/index.html')

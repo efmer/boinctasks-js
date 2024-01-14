@@ -38,7 +38,7 @@ class TempSocket{
         con.temp.client_socket.on('connect',function(){
             con.temp.connected = true;
             let msg = btconstants.TL.MSG_GENERAL.MSG_COMPUTER_CONNECTED + " °C " + ip + ':' + port + "," + con.computerName;
-            logging.logDebug(msg);
+            logging.log(msg);
         });
 
         con.temp.client_socket.on('data', function(data) {
