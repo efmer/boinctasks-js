@@ -20,8 +20,6 @@ const Functions = require('../functions/functions');
 const functions = new Functions();
 const Logging = require('../functions/logging');
 const logging = new Logging();
-const State = require('../misc/state');
-const conState = new State();
 const btC = require('../functions/btconstants');
 
 const statusSuspendedGui = btC.TL.STATUS.S_PROJECT_SUSPENDED;
@@ -42,6 +40,9 @@ class ProjectItems
     {      
         try 
         {
+            const State = require('../misc/state');
+            const conState = new State();
+
             this.project = projects.project;
             this.projectTable = [];
 

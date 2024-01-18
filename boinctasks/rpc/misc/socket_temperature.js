@@ -16,7 +16,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-var net = require("net");
 const Logging = require('../functions/logging');
 const logging = new Logging();
 const btconstants = require('../functions/btconstants');
@@ -26,11 +25,12 @@ class TempSocket{
     {
     try {
         con.temp.connected = false;
-        var ip = con.ip;
-        var port = con.temp.port;
+        let ip = con.ip;
+        let port = con.temp.port;
 
         con.temp.client_completeData = "";
 
+        let net = require("net");
         con.temp.client_socket = new net.Socket();
 
         con.temp.client_socket.connect(port, ip);       // connect adds listeners that HAVE to be removed.

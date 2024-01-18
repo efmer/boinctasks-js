@@ -251,7 +251,7 @@ function showPing(theme)
     {                    
         gChildWindowPing.webContents.openDevTools();
     } 
-    windowReady(title);  
+    windowReady(title);   //????
     gChildWindowPing.hide();    
     gChildWindowPing.show();
   }
@@ -262,9 +262,9 @@ async function insertCssDark(darkCss)
   try {
     if (gCssDarkPing !== null)
     {
-        gChildWindowScan.webContents.removeInsertedCSS(gCssDarkPing) 
+        gChildWindowPing.webContents.removeInsertedCSS(gCssDarkPing) 
     }    
-    gCssDarkPing = await gChildWindowScan.webContents.insertCSS(darkCss);  
+    gCssDarkPing = await gChildWindowPing.webContents.insertCSS(darkCss);  
   } catch (error) {
     gCssDarkPing = null;
   }

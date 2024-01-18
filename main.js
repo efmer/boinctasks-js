@@ -21,6 +21,7 @@ const {ipcMain, app, powerMonitor, BrowserWindow, dialog, Menu, Tray, nativeThem
 app.commandLine.appendSwitch('no-sandbox');
 app.commandLine.appendSwitch('disable-seccomp-filter-sandbox');
 app.commandLine.appendSwitch('disable-gpu');
+app.commandLine.appendSwitch('js-flags', '--max-old-space-size=4096');
 
 const Logging = require('./boinctasks/rpc/functions/logging');
 const logging = new Logging();
@@ -53,6 +54,7 @@ let gClassUpdate = null;
 let gClassCredits = null;
 let gClassScanComputers = null;
 let gClassPing = null;
+let gClassMemory = null;
 
 const gotTheLock = app.requestSingleInstanceLock()
 
@@ -632,7 +634,13 @@ function initMenu()
                   click() {
                     ping();
                   }
-                },  
+                }, 
+                {
+                  label:'Memory usage',
+                  click() {
+                    memoryUsage();
+                  }
+                },                  
                 {
                   label:'Test language',       
                   click() {
@@ -768,7 +776,7 @@ function initialize () {
         sandbox : false,
         contextIsolation: false,  
         nodeIntegration: true,
-        nodeIntegrationInWorker: true,        
+        nodeIntegrationInWorker: false,
 //        : path.join(__dirname, './preload/preload.js')
       },
     });
@@ -1403,6 +1411,11 @@ function rendererRequests()
   ipcMain.on("app_config", (renderer, type, xml) => {
     connections.app_config(xml);
   }) 
+
+  ipcMain.on("memory", (renderer, data) => {
+    connections.memoryUsage(data);
+  }) 
+
 }
 
 function setCss()
@@ -1447,6 +1460,17 @@ function ping()
   }  
   gClassPing.showPing(gTheme);
 }
+
+function memoryUsage()
+{
+  if (gClassMemory === null)
+  {
+    const memory = require('./boinctasks/rpc/misc/memory');    
+    gClassMemory = new memory();    
+  }  
+  gClassMemory.showMemory(gTheme); 
+}
+
 
 function sidebarComputers(set,write)
 {

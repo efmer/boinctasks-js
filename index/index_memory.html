@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->    
+    <!-- No styly css, it blocks copy --> 
+    
+  <title>Memory usage</title>
+  </head>
+  <body>
+    <br>
+    <table>   
+      <tr><td>V8</td><td></td></tr>      
+      <tr><td>Limit heap size:</td><td id="limitHeapSize"></td></tr>
+      <tr><td>Total heap size exec:</td><td id="totalHeapSize"></td> </tr> 
+      <tr><td>Used heap size:</td><td id="usedHeapSize"></td></tr>      
+      <tr><td>Heap size:</td><td id="heapSize"></td></tr>
+      <tr><td>Total available size:</td><td id="totalAvailSize"></td></tr>      
+      <tr><td>Total physical size:</td><td id="totalPhysicalSize"></td></tr>
+      <tr><td>Malloc size:</td><td id="mallocSize"></td></tr>      
+      <tr><td>Malloc peak size:</td><td id="mallocPeakSize"></td></tr>
+      <tr><td>Zap garbage:</td><td id="zapGarbage"></td></tr>
+      <tr><td></td><td></td></tr>
+      <tr><td>Chrome</td><td></td></tr>      
+      <tr><td>Limit heap size:</td><td id="chromeHeapSizeLimit"></td></tr>
+      <tr><td>Total heap size:</td><td id="chromeHeapSize"></td></tr>
+      <tr><td>Used heap size:</td><td id="chromeHeapSizeUsed"></td></tr>      
+    </table>
+    <br>
+    Logging to file: <span id="memoryFile"></span>
+    <script type="text/javascript" src = '../render/renderer_memory.js'></script>
+  </body>
+</html>

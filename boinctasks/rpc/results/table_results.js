@@ -18,8 +18,6 @@
 
 const Logging = require('../functions/logging');
 const logging = new Logging();
-const Functions = require('../functions/functions');
-const functions = new Functions();
 
 const btC = require('../functions/btconstants');
 
@@ -230,6 +228,10 @@ function tableResultItem(selRows, i, order, result, filter, colorObj, show)
   let table = "";
   let items = [];
   try {
+
+    const Functions = require('../functions/functions');
+    const functions = new Functions();
+
     if (result.bNonCpuIntensive)
     {
       if (!show.SHOW_NONCPUI)
@@ -237,7 +239,6 @@ function tableResultItem(selRows, i, order, result, filter, colorObj, show)
         return null;
       } 
     }
-
 
     let computer =  result.computerName;
     let projectUrl = result.projectUrl;

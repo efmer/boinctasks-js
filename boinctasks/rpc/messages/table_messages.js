@@ -19,9 +19,9 @@
 const btC = require('../functions/btconstants');
 
 const Logging = require('../functions/logging');
+const logging = new Logging();
 const Functions = require('../functions/functions');
 const functions = new Functions();
-const logging = new Logging();
 
 class BtTableMessages{
   tableHeader(gb,sidebar)

@@ -13,8 +13,6 @@ move package from Windows machine to Linux folder DO NOT include the node_module
 cd /home/fred/sb/boinctasks-js/
 npm update --dd
 
-WARNING Electron 26.0 and 26.1 crash on Linux machine 25.5/7 OK
-
 // deb (preferred)
 // forge
 npm run make
@@ -24,7 +22,7 @@ npm run make
 cd /home/fred/sb/boinctasks-js/out/make/deb/x64
 snap remove boinctasks-js
 sudo dpkg --remove boinctasks-js
-sudo dpkg -i ./boinctasks-js_2.3.0_amd64.deb
+sudo dpkg -i ./boinctasks-js_2.4.0_amd64.deb
 boinctasks-js
 sudo dpkg --remove boinctasks-js
 
@@ -58,8 +56,8 @@ cd /home/fred/sb/boinctasks-js/dist
 snapcraft logout
 snapcraft login
 
-snapcraft upload --release=candidate boinctasks-js_2.3.0_amd64.snap
-snapcraft upload --release=candidate boinctasks-js_2.3.0_armhf.snap
+snapcraft upload --release=candidate boinctasks-js_2.4.0_amd64.snap
+snapcraft upload --release=candidate boinctasks-js_2.4.0_armhf.snap
 
 // testing
 cd /home/fred/sb/boinctasks-js/dist/

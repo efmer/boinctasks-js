@@ -16,12 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const Functions = require('../functions/functions');
-const functions = new Functions();
 const Logging = require('../functions/logging');
 const logging = new Logging();
-const State = require('../misc/state');
-const conState = new State();
 const btC = require('../functions/btconstants');
 const ConnectionsShadow = require('../misc/connections_shadow');
 const connectionsShadow = new ConnectionsShadow();
@@ -32,6 +28,9 @@ class ResultItems
     {      
         try 
         {
+            const State = require('../misc/state');
+            const conState = new State(); 
+
             if (con.suspendCheckpoint !== void 0)
             {
                 CheckpointSuspendReset(con);
@@ -61,7 +60,7 @@ class ResultItems
                 let projectUrl = item.project_url[0];
                 let bNonCpuIntensive = false;
                 if (state != null)
-                {
+                {                  
                     app = conState.getAppUf(con, wu);
                     let ret = conState.getProject(con,projectUrl)
                     project = ret.project;
@@ -260,6 +259,9 @@ class Results{
         {  
             con.client_callbackI = resultData;
             con.client_completeData = "";
+
+            const Functions = require('../functions/functions');
+            const functions = new Functions();
             functions.sendRequest(con.client_socket, "<get_results/>\n");            
         } catch (error) {
             logging.logError('Results,getResults', error);           

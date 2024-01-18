@@ -16,8 +16,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const Functions = require('../functions/functions');
-const functions = new Functions();
 const Logging = require('../functions/logging');
 const logging = new Logging();
 
@@ -78,6 +76,9 @@ function combine(connections, obj)
     obj.resultCount = 0;
     try 
     {   
+        const Functions = require('../functions/functions');
+        const functions = new Functions();
+                
         for (var i=0;i<connections.length;i++)          
         {
             var con = connections[i];

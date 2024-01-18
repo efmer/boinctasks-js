@@ -93,6 +93,7 @@ let gClassHistory = null;
 let gClassRulesList = null;
 let gClassRulesProcess = null;
 let gClassEmail = null;
+//let gClassMemoryUsage = null;
 
 gClassCcConfig = null;
 gClassAppConfig = null;
@@ -676,6 +677,16 @@ class Connections{
     getReadyToReport()
     {
         return gB.readyToReport;
+    }
+
+    memoryUsage(data)
+    {
+        //if (gClassMemoryUsage === null)
+        //{
+            const memory = require('./misc/memory');  
+            let classMemoryUsage = new memory();
+        //}
+        classMemoryUsage.logging(data);
     }
 
 }
@@ -1787,7 +1798,7 @@ function processResults(sort,project)
 {
     try {
         gB.currentTable.computerTable = null;
-//        gB.currentTable.resultTable = null;
+        gB.currentTable.resultTable = null;
         gB.currentTable.transfersTable = null;
         gB.currentTable.messageTable = null;
         gB.currentTable.historyTable = null;
@@ -1795,7 +1806,7 @@ function processResults(sort,project)
         gB.currentTable.projectTable = null;
 
         const ProcessResults = require('./results/process_results')
-        const pr = new ProcessResults(); 
+        let pr = new ProcessResults(); 
         let ret =  pr.process(gB.connections, gB.filterExclude,sort,project);
         gB.readyToReport = pr.readyToReport();
         let status = btC.TL.FOOTER.FTR_TASKS + " " + ret.resultCount;
@@ -1810,6 +1821,7 @@ function processResults(sort,project)
         gB.currentTable.resultTable = ret.cTable;
         tableReady(status, gVersionS, btTableResults.table(gB,ret.cTable))
         ret.cTable = null;
+        pr = null
     } catch (error) {
         logging.logError('Connections,processResults', error);      
     }     
@@ -1964,6 +1976,7 @@ function tableReady(status, gVersionS,table)
 }
 
 // quickly updates the data from the latest recording.
+// probably no longer working after making a lot of var null
 function quickLoad(bHeader = true)
 {
     try {

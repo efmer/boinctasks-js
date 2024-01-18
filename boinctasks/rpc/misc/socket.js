@@ -16,7 +16,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-var net = require("net");
 const Logging = require('../functions/logging');
 const logging = new Logging();
 
@@ -27,11 +26,12 @@ class BtSocket{
     {
     try {
         this.connected = false;
-        var ip = con.ip;
-        var port = con.port;
+        let ip = con.ip;
+        let port = con.port;
 
         con.client_completeData = "";
 
+        let net = require("net");
         con.client_socket = new net.Socket();
 
         con.client_socket.connect(port, ip);       // connect adds listeners that HAVE to be removed.

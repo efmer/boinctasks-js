@@ -298,7 +298,10 @@ function readHistory(con)
         }
 
         deleteOld(con); // remove old stuff and computers that are no longer connected.
-        historyWrite(con,con.history.table);
+        if (con.history != null)
+        {
+            historyWrite(con,con.history.table);
+        }
 
     } catch (error) {
         logging.logError('History,readHistory', error);         
@@ -308,10 +311,6 @@ function readHistory(con)
 // oldest are on top of the table.
 function deleteOld(con)
 {
-    if(con.computerName == "linux")
-    {
-        let xx = 1;
-    }
     if (con.history === null)  return;
     let last = -1;
     try {
