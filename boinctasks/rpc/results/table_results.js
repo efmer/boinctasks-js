@@ -32,6 +32,7 @@ class BtTableResults{
     table += '</table>';
     return table;    
   }
+
   table(gb,cTable)
   {
     if (cTable.length === 1)
@@ -46,6 +47,7 @@ class BtTableResults{
     var table = tableResults(gb,tableArray);
     return table;    
   }
+  
   tableArray(con)
   {
     return tableResultsArray(con);

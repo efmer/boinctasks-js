@@ -22,6 +22,7 @@ app.commandLine.appendSwitch('no-sandbox');
 app.commandLine.appendSwitch('disable-seccomp-filter-sandbox');
 app.commandLine.appendSwitch('disable-gpu');
 app.commandLine.appendSwitch('js-flags', '--max-old-space-size=4096');
+//app.commandLine.appendSwitch('js-flags', '--max-old-space-size=18');
 
 const Logging = require('./boinctasks/rpc/functions/logging');
 const logging = new Logging();
@@ -638,7 +639,7 @@ function initMenu()
                 {
                   label:'Memory usage',
                   click() {
-                    memoryUsage();
+                    memoryUsageStart();
                   }
                 },                  
                 {
@@ -995,7 +996,10 @@ function getTranslation()
                 break;
                 case btC.LANG_GERMAN:
                     translation = readWrite.readResource(__dirname,"translations/BoincTasks_JS_German.json");
-                break;                                
+                break; 
+                case btC.LANG_SPANISH:
+                    translation = readWrite.readResource(__dirname,"translations/BoincTasks_JS_Spanish.json");
+                break;                                                
                 default:
                     translation = readWrite.readResource(__dirname,"translations/BoincTasks_JS_English.json");            
             }
@@ -1416,6 +1420,10 @@ function rendererRequests()
     connections.memoryUsage(data);
   }) 
 
+  ipcMain.on("memory_heap", (renderer, data) => {
+    connections.memoryHeap();
+  }) 
+
 }
 
 function setCss()
@@ -1461,14 +1469,9 @@ function ping()
   gClassPing.showPing(gTheme);
 }
 
-function memoryUsage()
-{
-  if (gClassMemory === null)
-  {
-    const memory = require('./boinctasks/rpc/misc/memory');    
-    gClassMemory = new memory();    
-  }  
-  gClassMemory.showMemory(gTheme); 
+function memoryUsageStart()
+{  
+  connections.memoryUsageStart(gTheme);
 }
 
 

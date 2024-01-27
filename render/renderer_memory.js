@@ -24,6 +24,9 @@ document.addEventListener("DOMContentLoaded", () => {
   try {
     ipcRenderer.on('memory_first', (event, data) => {
       process(true,data);
+      document.getElementById('heapSnapShot').addEventListener("click", function(event){     
+        ipcRenderer.send('memory_heap');
+      });
     })
 
     ipcRenderer.on('memory', (event, data) => {

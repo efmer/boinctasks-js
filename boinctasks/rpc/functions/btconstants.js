@@ -34,11 +34,12 @@ module.exports = {
     TAB_HISTORY                 : "history",
     TAB_NOTICES                 : "notices",
 
-    LANG_NUMBER                 : '4',
+    LANG_NUMBER                 : '5',
     LANG_ENGLISH                : "lang_english",
     LANG_DUTCH                  : "lang_dutch",
     LANG_FRENCH                 : "lang_french",
     LANG_GERMAN                 : "lang_german",
+    LANG_SPANISH                : "lang_spanish",
 
     COMPUTERS_COLOMN_COUNT      : 10,
     PROJECTS_COLOMN_COUNT       : 12,

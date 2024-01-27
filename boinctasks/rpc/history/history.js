@@ -197,7 +197,7 @@ function getProjectName(con)
         if (table[i].projectName === "")
         {
             let item = table[i];
-            let ret = conState.getProject(con,projectUrl)
+            let ret = conState.getProject(con,item.projectUrl)
             item.projectName = ret.project;
             item.appNameUF = conState.getAppName(con, item.appName);
         }        

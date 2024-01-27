@@ -22,6 +22,28 @@ const btC = require('../functions/btconstants');
 const ConnectionsShadow = require('../misc/connections_shadow');
 const connectionsShadow = new ConnectionsShadow();
 
+let parseString = require('xml2js').parseString;
+
+class Results{
+    getResults(con)
+    {
+        try 
+        {  
+            con.client_callbackI = resultData;
+            con.client_completeData = "";
+
+            const Functions = require('../functions/functions');
+            const functions = new Functions();
+            functions.sendRequest(con.client_socket, "<get_results/>\n");            
+        } catch (error) {
+            logging.logError('Results,getResults', error);           
+            this.mode = 'errorc';
+            this.error = error;
+        }  
+    }       
+}
+module.exports = Results;
+
 class ResultItems
 {
     add(con, state, results)
@@ -29,7 +51,7 @@ class ResultItems
         try 
         {
             const State = require('../misc/state');
-            const conState = new State(); 
+            let conState = new State(); 
 
             if (con.suspendCheckpoint !== void 0)
             {
@@ -65,6 +87,7 @@ class ResultItems
                     let ret = conState.getProject(con,projectUrl)
                     project = ret.project;
                     bNonCpuIntensive = ret.non;
+                    ret = null;
                 }
                 let versionApp = version + " " + app;
                 let computer = con.computerName;
@@ -239,6 +262,7 @@ class ResultItems
             {
                 CheckpointSuspendPresent(con);
             }
+            conState = null;
             
         } catch (error) {
             logging.logError('ResultItems,add', error);            
@@ -252,30 +276,11 @@ class ResultItems
     }  
 }
 
-class Results{
-    getResults(con)
-    {
-        try 
-        {  
-            con.client_callbackI = resultData;
-            con.client_completeData = "";
-
-            const Functions = require('../functions/functions');
-            const functions = new Functions();
-            functions.sendRequest(con.client_socket, "<get_results/>\n");            
-        } catch (error) {
-            logging.logError('Results,getResults', error);           
-            this.mode = 'errorc';
-            this.error = error;
-        }  
-    }       
-}
-module.exports = Results;
-
 function resultData()
 {
     try 
     {
+        this.client_callbackI = null;
         if (this.client_completeData.indexOf('unauthorized') >=0)
         {
             this.con.auth = false;
@@ -291,7 +296,10 @@ function resultData()
                 return;
             }
             let resultItems = new ResultItems();
-            resultItems.add(this, this.state, results)
+            let state = this.state;
+            let con = this;
+            this.results = null;
+            resultItems.add(con, state, results)
 
             this.results = resultItems;  
             resultItems = null;
@@ -308,7 +316,7 @@ function parseResults(xml)
 {
     let resultReturn = null;
     try {
-        let parseString = require('xml2js').parseString;
+        //let parseString = require('xml2js').parseString;
         parseString(xml, function (err, result) {
             if (result !== void 0)
             {
@@ -318,6 +326,9 @@ function parseResults(xml)
                     resultReturn = resultArray[0];
                 }
             }
+            xml = null;
+            result = null;
+            resultArray = null;
         });
         } catch (error) {
             logging.logError('Results,parseResults', error);

@@ -11,7 +11,7 @@
   </head>
   <body>
     <br>
-    <table>   
+    <table>    
       <tr><td>V8</td><td></td></tr>      
       <tr><td>Limit heap size:</td><td id="limitHeapSize"></td></tr>
       <tr><td>Total heap size exec:</td><td id="totalHeapSize"></td> </tr> 
@@ -30,6 +30,9 @@
     </table>
     <br>
     Logging to file: <span id="memoryFile"></span>
+    <br>
+    <br>
+    <button id="heapSnapShot">Write Heap Snapshot to file</button>    
     <script type="text/javascript" src = '../render/renderer_memory.js'></script>
   </body>
 </html>

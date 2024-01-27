@@ -23,8 +23,6 @@ const functions = new Functions();
 const Logging = require('./functions/logging');
 const logging = new Logging();
 
-const State = require('./misc/state');
-
 const SidebarComputers = require('./misc/sidebar_computers');
 const sidebarComputers = new SidebarComputers(); 
 
@@ -36,6 +34,12 @@ const btTableProjects = new BtTableProjects();
 
 const BtTableResults = require('./results/table_results');
 const btTableResults = new BtTableResults(); 
+
+const State = require('./misc/state');
+const classState = new State();
+
+const Results = require('./results/results');
+const classResults = new Results();
 
 const BtTableTransfers = require('./transfers/table_transfers');
 const btTableTransfers = new BtTableTransfers(); 
@@ -82,6 +86,8 @@ const connectionsShadow = new ConnectionsShadow();
 const btC = require('./functions/btconstants');
 const btconstants = require('./functions/btconstants');
 
+const v8 = require('node:v8');
+
 let gClassAcountManager = null;
 let gClassAddProject = null;
 let gClassSettingsBoinc = null;
@@ -93,7 +99,7 @@ let gClassHistory = null;
 let gClassRulesList = null;
 let gClassRulesProcess = null;
 let gClassEmail = null;
-//let gClassMemoryUsage = null;
+let gClassMemoryUsage = null;
 
 gClassCcConfig = null;
 gClassAppConfig = null;
@@ -153,6 +159,10 @@ let gPauze = false;
 let gRestartAllowed = false;    // prevent a restart loop
 //let gIntervalTime = 9; // 0.2 sec
 let gIntervalFastCnt = 0;   // fast after startup and after a tab switch
+
+const HEAP_SIZE_MAX = 1500000;          // in KB = 1.5GB
+const HEAP_CHECK_COUNTER = 2500;        // timer 0.2 sec
+let gIntervalHeapCheck = HEAP_CHECK_COUNTER-10;
 
 let gSwitchedTabCnt = 2;
 
@@ -309,7 +319,7 @@ class Connections{
         }
         toolbar.hide(gB.mainWindow);
         gB.selectedTab = selected;           
-        quickLoad(); // in case there is data, show it quickly
+ //       quickLoad(); // in case there is data, show it quickly
         gSwitchedTabCnt = 2;   // update the header twice, just in case we missed the first
         gIntervalFastCnt = 0;
         menuEnableAll();
@@ -679,16 +689,25 @@ class Connections{
         return gB.readyToReport;
     }
 
-    memoryUsage(data)
+    memoryUsageStart(theme)
     {
-        //if (gClassMemoryUsage === null)
-        //{
+        if (gClassMemoryUsage === null)
+        {
             const memory = require('./misc/memory');  
-            let classMemoryUsage = new memory();
-        //}
-        classMemoryUsage.logging(data);
+            gClassMemoryUsage = new memory();
+        }
+        gClassMemoryUsage.showMemory(theme);
     }
 
+    memoryUsage(data)
+    {
+        gClassMemoryUsage.logging(data);
+    }
+
+    memoryHeap()
+    {
+        gClassMemoryUsage.getHeap();
+    }
 }
 
 module.exports = Connections;
@@ -722,7 +741,8 @@ function clickHeaderProcess(id, ex, shift, alt,ctrl)
         let idR = id.split(",");
         if (idR.length > 1)
         {
-            gB.mainWindow.webContents.send('header_resize_width', ex, idR[1],gB.currentTable.name)         
+            let currentTable = gB.currentTable.name
+            gB.mainWindow.webContents.send('header_resize_width', ex, idR[1],currentTable);
         }
 //        setHeaderResize(true);
         return;
@@ -1559,9 +1579,14 @@ function newCon()
 
     con.sidebarGrp = true;
     con.mode = '';
-    con.state = null;
-    con.cacheProject = null;
-    con.cacheApp = null;    
+
+    con.state = null;    
+    con.cacheProjectUrl = [];
+    con.cacheProjectProject = [];
+    con.cacheProjectNon = [];
+    con.cacheAppWu = []; 
+    con.cacheAppApp = [];    
+    con.cacheAppAppUf = [];
     con.needState = true;
     con.from = -1;
 
@@ -1640,10 +1665,10 @@ function connectAuth(con)
             return
 
             case MODE_STATE:
-                const state = new State();
-                state.getState(con);               
+                getState(con);
             return            
         }
+
 
 
         switch (con.selected)
@@ -1688,11 +1713,14 @@ function connectAuth(con)
     }    
 }
 
+function getState(con)
+{
+    classState.getState(con);    
+}
+
 function getResults(con)
 {
-    const Results = require('./results/results');
-    const results = new Results();
-    results.getResults(con);
+    classResults.getResults(con);
 }
 
 function process()
@@ -1702,28 +1730,36 @@ function process()
         return;
     }
 
+    let sort;
+
     switch (gB.selectedTab)
     {
         case btC.TAB_COMPUTERS:
-            processComputers(gB.sortComputers);
+            sort = gB.sortComputers
+            processComputers(sort);
         break;        
         case btC.TAB_PROJECTS:
-            processProjects(gB.sortProjects);
+            sort = gB.sortProjects;
+            processProjects(sort);
         break;        
         case btC.TAB_TASKS:
-            processResults(gB.sortResults);
+            sort = gB.sortResults;
+            processResults(sort);
         break;
         case btC.TAB_TRANSFERS:
-            processTransfers(gB.sortTransfers);
+            sort = gB.sortTransfers;
+            processTransfers(sort);
         break;        
         case btC.TAB_MESSAGES:
-            processMessages(gB.sortMessages);
+            sort = gB.sortMessages;
+            processMessages(sort);
         break; 
         case btC.TAB_NOTICES:
             processNotices();
         break; 
         case btC.TAB_HISTORY:
-            processHistory(gB.sortHistory);
+            sort = gB.sortHistory
+            processHistory(sort);
         break;                        
     }
 }
@@ -1813,14 +1849,17 @@ function processResults(sort,project)
         gB.currentTable.name = btC.TAB_TASKS;
         if (gSwitchedTabCnt-- >0)
         {
-            gB.mainWindow.webContents.send('table_data_header', btTableResults.tableHeader(gB, gSidebar), gB.currentTable.name, gB.headerAction);
-            gB.currentTable.resultsHeaderHtml = btTableResults.tableHeader(gB, gSidebar);
+            let name = gB.currentTable.name;
+            let headerAction = gB.headerAction;
+            let header = btTableResults.tableHeader(gB, gSidebar)
+            gB.mainWindow.webContents.send('table_data_header', header, name , headerAction);
+            gB.currentTable.resultsHeaderHtml = header;
         }
 
         gB.currentTable.table = btTableResults;    
         gB.currentTable.resultTable = ret.cTable;
         tableReady(status, gVersionS, btTableResults.table(gB,ret.cTable))
-        ret.cTable = null;
+        ret = null;
         pr = null
     } catch (error) {
         logging.logError('Connections,processResults', error);      
@@ -1971,12 +2010,15 @@ function processNotices()
 function tableReady(status, gVersionS,table)
 {
     gB.mainWindow.webContents.send('table_data', table, status) 
+    table = null;
+    status = null;
     toolbar.show(gB, gB.editComputers);
     gBusy = false;  
 }
 
 // quickly updates the data from the latest recording.
-// probably no longer working after making a lot of var null
+// DO NOT DISABLE, needed selection.
+
 function quickLoad(bHeader = true)
 {
     try {
@@ -2132,6 +2174,7 @@ function updateSideBar()
     sidebarComputers.build(gB)    
 }
 
+// 0.2 sec timer
 function btTimer() { 
     try {
         let status = "";
@@ -2162,6 +2205,36 @@ function btTimer() {
                 process();
                 updateSideBar();
             }          
+        }
+        else
+        {
+            // check if the heap gets too large, if so restart
+            gIntervalHeapCheck += 1;
+            if (gIntervalHeapCheck > HEAP_CHECK_COUNTER)
+            {
+                gIntervalHeapCheck = 0;
+                let heap = v8.getHeapStatistics();
+                let heapUsage = parseInt(heap.used_heap_size/1024);
+                let heapSize = parseInt(heap.total_heap_size/1024);
+                let msgTotalAllowed = " KB, Total allowed heap size: " ;
+                logging.logDebug("Heap usage: " + heapUsage + " KB, Total heap size: " + heapSize + msgTotalAllowed + HEAP_SIZE_MAX + " KB");
+
+                if (heapSize > HEAP_SIZE_MAX)
+                {
+                    if (gRestartAllowed)
+                    {                  
+                        logging.logDebug("Restarting: Heap usage: " + heapUsage + " KB, Total heap size: " + heapSize + msgTotalAllowed + HEAP_SIZE_MAX + " KB");
+                        gRestartAllowed = false;  
+                        app.relaunch();
+                        app.exit();
+                    }
+                    else
+                    {
+                        logging.logDebug("Restarting DELAYED: Heap usage: " + heapUsage + " KB, Total heap size: " + heapSize + msgTotalAllowed + HEAP_SIZE_MAX + " KB");
+                        gIntervalHeapCheck = MAX_HEAP_COUNTER-4;
+                    }
+                }
+            }
         }
 
         gB.fetchMode = MODE_NORMAL;
@@ -2225,10 +2298,11 @@ function btTimer() {
 
         connectionsShadow.flushSendArray();
 
+        let currentDate = null;
         let restartTime = false
         if (gB.settings.restartTimeCheck == true)   // might be a string so use ==
         {
-            let currentDate = new Date();
+            currentDate = new Date();
             let minutes = currentDate.getMinutes();
             if (gB.settings.restartTimeMinutes == minutes)
             {                    

@@ -1,0 +1,12 @@
+
+npm run start -- --inspect-electron
+
+edge://inspect chrome://inspect
+
+Open dedicated DevTools for Node
+
+Open the source folder of BoincTasks Js
+
+Allocation instrumentation on timeline
+
+

@@ -36,6 +36,10 @@ let gCssDarkMemory = null;
 
 let gMemoryTimer = null;
 
+require("v8").setFlagsFromString("--expose_gc");
+global.gc = require("vm").runInNewContext("gc");
+const v8 = require('node:v8');
+
 class MemoryUsage{
     file = "";
     fs = require('fs')
@@ -89,12 +93,33 @@ class MemoryUsage{
     {
         try 
             {
-                this.fs.writeFileSync(this.file,msg, { flag: 'a+'});
+                this.fs.writeFileSync(this.file,msg, { flag: 'a+', flush:true});
             } catch (error)
             {
                 var ii = 1;
             }
     }
+
+    getCallBack()
+    {
+        return this.callback();
+    }
+
+    getHeap()
+    {
+        try 
+            {
+                const folder = app.getPath("userData") + "/heap"
+                if (!fs.existsSync(folder)){
+                  fs.mkdirSync(folder);
+                }
+                v8.writeHeapSnapshot(folder+'/btjs_heap');
+            } catch (error)
+            {
+                var ii = 1;
+            }        
+    }
+
 
 }
 module.exports = MemoryUsage;
@@ -178,12 +203,13 @@ function memoryTimer()
     getMemory(false);
 }
 
+// npm run start -- --inspect-electron
+
 function getMemory(bFirst)
 {
     try {
         // note  process.memoryUsage() gives the same data as getHeapStatistics()
         let heap = process.getHeapStatistics();
-
         if (bFirst)
         {
             gChildWindowMemory.webContents.send('memory_first', heap);
@@ -191,7 +217,6 @@ function getMemory(bFirst)
         }
 
         gChildWindowMemory.webContents.send('memory', heap);
-
     } catch (error) {
         logging.logError('MemoryUsage,memoryTimer', error);            
     } 

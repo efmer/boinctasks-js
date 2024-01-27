@@ -49,6 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 //    document.getElementById('body').classList.remove("app-no-scrollbar");  $$$$$
 // 
+    tableData=null;
   });
 
   ipcRenderer.on('header_resize_width', (event, ex, name, tab) => {
@@ -57,11 +58,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   ipcRenderer.on('table_data', (event, tableData, nr) => {
     SwapTable(tableData);
-//    SetHtml('bt_table_insert',tableData)
     if(nr != undefined)
     {
       SetHtml('footer_number',nr)
     }
+    tableData = null;
+    nr = null;
 });
 
   ipcRenderer.on('notices', (event, msg) => {
@@ -79,6 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
           })
        }
     })
+    msg = null;
   });
 
   ipcRenderer.on('translations', (event, sel) => {
@@ -100,14 +103,17 @@ document.addEventListener("DOMContentLoaded", () => {
 //      alert("You've tried to open context menu"); //here you draw your own menu
       event.preventDefault();
     }, false);
+    sel = null;
   });
 
   ipcRenderer.on('set_tab', (event, tab) => {
     changeTab(tab,false);
+    tab = null;
   });
 
   ipcRenderer.on('set_status', (event, status) => {
     SetHtml('footer_status',status);
+    status = null;
   });
 
   ipcRenderer.on('set_dark_mode', (event, mode) => {
@@ -115,18 +121,22 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('dark_mode_select').addEventListener("click", function(event){
       ipcRenderer.send('dark_mode_select');
     });    
+    mode = null;
   });
 
   ipcRenderer.on('toolbar', (event, toolbar) => {
     SetHtml('bt_toolbar_insert',toolbar);
+    toolbar = null;
   });
 
   ipcRenderer.on('sidebar_computers', (event, sidebar) => {
     SetHtml('_sidebar_computers_',sidebar);
+    sidebar = null;
   });
 
   ipcRenderer.on('sidebar_computers_status', (event, conStatus) => {
     setConnectionStatus(conStatus);
+    conStatus = null;
   }); 
 
   ipcRenderer.on('sidebar_computers_active', (event, set) => {
@@ -146,6 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   ipcRenderer.on('sidebar_projects', (event, sidebar) => {
     SetHtml('_add_projects_',sidebar);
+    sidebar = null;
   }); 
 
   ipcRenderer.on('get_computers', (event, connections) => {
