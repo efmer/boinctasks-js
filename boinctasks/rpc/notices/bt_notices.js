@@ -23,6 +23,8 @@ const logging = new Logging();
 
 gBoincTasksNotice = null;
 
+let TESTREAD = false;
+
 class BtNotices{
     init()
     {
@@ -42,11 +44,17 @@ function readNotice()
     try {
         setTimeout(readNotice, 3600000)     // every hour
         // test begin
-    //    let xml = testRead();
-    //    gBoincTasksNotice = parseNotices(xml.toString()); 
+        if (TESTREAD)
+        {
+            let xml = testRead();
+            gBoincTasksNotice = parseNotices(xml.toString()); 
+            let ii = 1;
         // test end
-    
-        readNoticesUrl();         
+        }
+        else
+        {
+            readNoticesUrl();
+        }
     } catch (error) {
         logging.logError('BtNotices,readNotice', error);       
     }
@@ -118,15 +126,13 @@ function readNoticesUrl()
     }
 }
 
-/*
 function testRead()
 {
     try {
         const fs = require('fs');        
-        return fs.readFileSync("D:\\Programma\\BoincTasks\\Javascript BoincTasks\\download\\notices\\notice.xml");
+        return fs.readFileSync("D:\\Programma\\BoincTasks\\BoincTasks-Js\\download\\notices\\notice.xml");
         
     } catch (error) {
         return null;    
     }        
 }
-*/

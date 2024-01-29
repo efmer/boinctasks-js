@@ -291,16 +291,13 @@ function getProjects(gb)
         {
           if (con.state != null)
           {
-            let cache = con.cacheProject
-            if (cache !== void 0)
+            let cache = con.cacheProjectProject;
+            for (let c=0;c<cache.length;c++)
             {
-              for (let c=0;c<cache.project.length;c++)
+              let project = cache[c];
+              if (projects.indexOf(project) < 0)
               {
-                let project = cache.project[c];
-                  if (projects.indexOf(project) < 0)
-                  {
-                    projects.push(project);
-                  }
+                projects.push(project);
               }
             }
           }

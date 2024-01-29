@@ -1,7 +1,7 @@
 [Setup]
 AppName=BoincTasks Js
-AppVerName=BoincTasks Js by eFMer V 2.4.1
-AppVersion=2.4.1
+AppVerName=BoincTasks Js by eFMer V 2.4.2
+AppVersion=2.4.2
 WizardStyle=modern
 AppPublisher=eFMer
 AppPublisherURL=https://efmer.com/

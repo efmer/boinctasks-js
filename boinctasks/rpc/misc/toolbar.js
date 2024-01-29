@@ -416,9 +416,19 @@ function abort(gb,mainWindow, selected, what)
 
     let txtDetail = "";
     let len = selected.length;
+    let bLong = false;
+    if (len > 20)
+    {
+        bLong = true;
+        len = 20;
+    }
     for (i=0;i<len;i++)
     {
         txtDetail += selected[i] + "\r\n";        
+    }
+    if (bLong)
+    {
+        txtDetail += "......\r\n";  
     }
     txtDetail += "\r\n";
     txtDetail += btC.TL.BOX_ABORT_TASK.BX_ABORT_DETAIL;

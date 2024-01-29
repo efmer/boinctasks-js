@@ -85,7 +85,7 @@ function combine(connections, obj)
             if (con.mode == "OK")
             {
                 if (functions.isDefined(con['results']))                
-                {                
+                {
                     let lenR = con.toReport.url.length 
                     if (lenR > 0)
                     {

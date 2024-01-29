@@ -41,30 +41,32 @@ class State{
     getAppUf(con, name)
     {
         con.stateClass = null;        
-        var appUf = btC.INITIALIZING;
+        let appUf = "???"
         try {
             let pos = con.cacheAppWu.indexOf(name);
             if (pos >= 0)
             {
-                return con.cacheAppAppUf[pos];
+                appUf = con.cacheAppAppUf[pos];                
+                return appUf;
         }                
         } catch (error) {  
             logging.logError('State,getApp', error);              
         }
         con.needState = true;
         con.stateClass = null;
-        return appUf;
+        return btC.INITIALIZING;
     }
 
     getApp(con, name)
     {
         con.stateClass = null;        
-        var appNf = "";
+        let appNf = "??";
         try {
             let pos = con.cacheAppWu.indexOf(name);
             if (pos >= 0)
             {
-                return con.cacheAppApp[pos];
+                appNf = con.cacheAppApp[pos];
+                return appNf;
             }    
         } catch (error) {  
             logging.logError('State,getAppRule', error);              
@@ -77,7 +79,7 @@ class State{
     getProject(con, url)
     {
         //con.needState = true; //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< testing only 
-        var project = "";
+        var project = "??";
         try {         
             con.stateClass = null;
             let pos = -1;
@@ -266,10 +268,7 @@ class ProcessState
                         else
                         {
                             logging.logDebug('buildCache poject name short: ' + con.computerName + " URL: " + url + " -> " + pName); 
-                        }
-                        pState = null;
-                        pName = null;
-                        pNon = null;                        
+                        }                      
                     }
                 }
   
@@ -283,24 +282,24 @@ class ProcessState
                     let pos = con.cacheAppWu.indexOf(wuName);
                     if (pos < 0)
                     {                        
-                        con.cacheAppWu.push(wuName);
                         let appWu = con.state.workunit[w].app_name[0];
                         let app = con.state.app;
-                        let appUf = "";
-                        let appNf = "";
+                        let appUf = "??";
+                        let appNf = "??";
     
                         for (let i =0; i< app.length; i++)
                         {
                             let aName = app[i].name[0];
                             if (appWu === aName)
                             {
+                                con.cacheAppWu.push(wuName);                                
                                 appUf = app[i].user_friendly_name[0];
                                 appNf = app[i].name[0];
+                                con.cacheAppApp.push(appNf);
+                                con.cacheAppAppUf.push(appUf);                                
                                 break;
                             }                        
                         }
-                        con.cacheAppApp.push(appNf);
-                        con.cacheAppAppUf.push(appUf);
                     }
                 }
                 // check for cache wu that are no longer in state
@@ -319,6 +318,7 @@ class ProcessState
                     }
                     if (!bFound)
                     {
+                        con.cacheAppWu.splice(c, 1)
                         con.cacheAppApp.splice(c, 1)
                         con.cacheAppAppUf.splice(c, 1)
                     }
