@@ -21,7 +21,7 @@ const {ipcMain, app, powerMonitor, BrowserWindow, dialog, Menu, Tray, nativeThem
 app.commandLine.appendSwitch('no-sandbox');
 app.commandLine.appendSwitch('disable-seccomp-filter-sandbox');
 app.commandLine.appendSwitch('disable-gpu');
-app.commandLine.appendSwitch('js-flags', '--max-old-space-size=4096');
+//app.commandLine.appendSwitch('js-flags', '--max-old-space-size=4096');  // Removed V 2.4.3 adding this and the 32 bit version fails to work as well as the Microsoft Store version
 //app.commandLine.appendSwitch('js-flags', '--max-old-space-size=18');
 
 const Logging = require('./boinctasks/rpc/functions/logging');
