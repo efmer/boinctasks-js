@@ -18,6 +18,10 @@
 */
 
 const btC = require('../functions/btconstants');
+const Logging = require('../functions/logging');
+const logging = new Logging();
+
+let timeError = true;
 
 class Functions{
     sendRequest(client, request)
@@ -84,7 +88,7 @@ class Functions{
             if (bNeg) time ="-" + time;
             return time
         } catch (error) {
-            this.logError('Functions,getFormattedTimeInterval', error);            
+            logging.logError('Functions,getFormattedTimeInterval', error);            
             return "";
         }
         return str
@@ -92,13 +96,29 @@ class Functions{
 
     getFormattedTime(time)
     {
-        let timeS = "Invalid";
+        let inval = "Invalid";
+        let timeS = inval;
+        let d = new Date(time*1000);
+        let options = { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };        
         try {
-            let d = new Date(time*1000);
-            let options = { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-            timeS = d.toLocaleDateString(btC.LOCALE, options);            
-        } catch (error) {   
+            timeS = d.toLocaleDateString(btC.LOCALE, options);
+        } catch (error) {      
+            timeS = d.toLocaleDateString();
+            if (timeError)
+            {
+                logging.logError('Functions,getFormattedTime (fallback on toDateString', error);
+                timeError = false; // only once
+            }
         }
+        if (timeS == inval)
+            {
+                timeS = d.toLocaleDateString();
+                if (timeError)
+                {
+                    logging.logErrorMsg("Functions,getFormattedTime","toLocaleDateString with options not supported Locale: "+btC.LOCALE);
+                    timeError = false; // only once
+                }              
+            }
         return timeS;
     }
 
@@ -108,7 +128,7 @@ class Functions{
             let loc = app.getLocale();
             btC.LOCALE = loc;    
         } catch (error) {
-            this.logError('Functions,getLocale', error);            
+            logging.logError('Functions,getLocale', error);              
         }           
     }
 

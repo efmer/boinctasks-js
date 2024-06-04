@@ -324,7 +324,7 @@ function addRowHeader(check,showSort, gb, cell, item, forceWidth)
   if (forceWidth === 0)
   {
     let width = gb.widthComputers[cell];
-    widthS = ' style="width:' + width + 'px" ';
+    widthS = ' style="width:' + width + '%" ';//'px" ';
   }
   else
   {

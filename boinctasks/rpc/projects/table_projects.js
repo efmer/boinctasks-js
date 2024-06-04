@@ -271,7 +271,7 @@ function addRowHeader(check,showSort,gb, cell, item)
     }
   }
   let width = gb.widthProjects[cell];
-  let widthS = ' style="width:' + width + 'px" ';
+  let widthS = ' style="width:' + width + '%" '; //'px" ';
 
   let id = ' id="' + cell +'"';
   let idR = ' id="resize,' + cell +'"';
