@@ -2160,11 +2160,11 @@ function clickFilter(val)
     {
         if ( gB.filterExclude[i] == val)
         {
-            gB.filterExclude.splice(i, 1);
+            gB.filterExclude.splice(i, 1); // remove = add filter
             return;
         }
     }
-    gB.filterExclude.push(val);
+    gB.filterExclude.push(val); // add = remove filter
 }
 
 function updateSideBar()

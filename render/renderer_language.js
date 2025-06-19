@@ -56,6 +56,9 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('lang_german').addEventListener("click", function(event){      
         setLang('lang_german');
     });
+    document.getElementById('lang_italian').addEventListener("click", function(event){      
+        setLang('lang_italian');
+    });    
     document.getElementById('lang_spanish').addEventListener("click", function(event){      
         setLang('lang_spanish');
     });      

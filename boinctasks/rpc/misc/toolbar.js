@@ -501,7 +501,7 @@ function resetDetachProjectYes(selected,connections,detach)
 {
     try {
 //        connectionsShadow.init();        
-        for (let s=0;s<selected.len.length;s++)  
+        for (let s=0;s<selected.length;s++)  
         {
             let res = selected[s].split(btC.SEPERATOR_SELECT);
             let computerName = "";

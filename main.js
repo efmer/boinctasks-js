@@ -997,6 +997,9 @@ function getTranslation()
                 case btC.LANG_GERMAN:
                     translation = readWrite.readResource(__dirname,"translations/BoincTasks_JS_German.json");
                 break; 
+                case btC.LANG_ITALIAN:
+                    translation = readWrite.readResource(__dirname,"translations/BoincTasks_JS_Italian.json");
+                break;                 
                 case btC.LANG_SPANISH:
                     translation = readWrite.readResource(__dirname,"translations/BoincTasks_JS_Spanish.json");
                 break;                                                

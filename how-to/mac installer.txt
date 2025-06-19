@@ -1,3 +1,5 @@
+
+
 // share folder
 https://support.apple.com/en-gb/guide/mac-help/mchlp1657/mac
 
@@ -13,19 +15,40 @@ Open terminal
 
 // Update node and npm
 
-download Node 18.17.1
+download latest Node (22.16.0)
 !! same as Windows
-Npn 9.6.7
-npm install -g npm@9.6.7    
+Npm shows version (10.9.2) 
 
-cd Users\fred\sb
+cd Users\fred\development\boinctasks-js
 npm update --dd
 
-!! add notarize to package.json
-x64
-npm run make
+If you copy files from another computer you may encounter access denied in this case use:
+sudo chmod -R 777 *
+
+==============================================
+Open xCode and add Add to keychain and add
+developerID_application
+developerID_installer.cer
+DO NOT DOWNLOAD the certificates xCode does that for you.
+
+Create an App specific password and use this below,
+your apple ID and the generated app passord the apple account Password
+
+
+Store it in the keychain.
+xcrun notarytool store-credentials --apple-id "" --password "xxxx-xxxx-yyyy-yyyy" --team-id "" 
+
+https://www.electronforge.io/guides/code-signing/code-signing-macos
+https://developer.apple.com/documentation/security/customizing-the-notarization-workflow
+==============================================
+
+x64 access problems for now use sudo
+sudo npm run make
 arm64
 npm run makeA64
+--------------------------
+Universal is possible but is large
+sudo npm run makeU
 
 local testing ./out/BoincTasks Js-darwin-x64
 result in ./out/make/zip/darwin

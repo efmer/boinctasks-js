@@ -27,7 +27,7 @@ const Authenticate = require('./authenticate');
 const athenticate = new Authenticate();
 const btC = require('../functions/btconstants');
 
-const { BrowserWindow } = require('electron')
+const {dialog,BrowserWindow} = require('electron');
 
 let gTimer = null;
 
@@ -38,6 +38,7 @@ gAddProject.addproject = null;
 let gChildAddProject = null;
 let gCssDarkProject = null;
 
+
 class AddProject
 {
     addProject(theme)
@@ -47,7 +48,6 @@ class AddProject
     process(gb,event,data)
     {
         try {
-
             switch(event)
             {
                 case 'ready':
@@ -192,7 +192,7 @@ function authenticatedAdd(event)
 {
     try {
         let item = gAddProject.addItem;
-        lookUpAccount(item.url, item.loginName, item.passWord);   
+        ProjectConfig(item.url);
     } catch (error) {
         logging.logError('AddProject,authenticatedAdd', error);        
         gAddProject.auth = false;
@@ -329,6 +329,195 @@ function getSelectedProjectDescription(project)
     description += project.description[0];
     gAddProject.addproject.description = description;
 }
+
+function ProjectConfig(url)
+{
+    try {
+        let toSend =   "<get_project_config>\n<url>" + url + "</url>\n</get_project_config>\n";
+        gAddProject.client_completeData = "";
+        gAddProject.client_callbackI = ProjectConfigReady;
+        functions.sendRequest(gAddProject.client_socket, toSend);      
+    } catch (error) {
+        logging.logError('AddProject,ProjectConfig', error);         
+    }      
+}
+
+function ProjectConfigReady(event)
+{
+    try {
+        switch(event)
+        {
+            case "data":        
+                let reply = parseLookupAcount(gAddProject.client_completeData);                
+                if (functions.isDefined(reply.error))
+                {                       
+                    logging.logDebug("ProjectConfigReady: error " + reply.error); 
+                    sendError(reply.error); 
+                    gChildAddProject.webContents.send('add_project_enable');
+                    return;
+                }
+                if (functions.isDefined(reply.success))
+                {                 
+                    logging.logDebug("ProjectConfigReady: success");
+                    let toSend =   "<get_project_config_poll/>\n";
+                    gAddProject.client_completeData = "";
+                    gAddProject.client_callbackI = ProjectConfigPoll;
+                    functions.sendRequest(gAddProject.client_socket, toSend);  
+                }
+                else
+                {
+                    logging.logDebug("ProjectConfigReady: failed");
+                }
+            break;        
+        }
+    } catch (error) {
+        logging.logError('AddProject,ProjectConfigReady', error);
+    } 
+}
+
+
+function ProjectConfigPoll(event)
+{
+    try {
+        var url = "";
+
+        switch(event)
+        {
+            case "data":        
+                const item = parseConfigPoll(gAddProject.client_completeData);
+                if (functions.isDefined(item.error_num))
+                {
+                    if (item.error_num != '')
+                    {
+                        let error = parseInt(item.error_num );
+                        if (error == -204) // not ready
+                        {
+                            setTimeout(function(){
+                                let toSend =   "<get_project_config_poll/>\n";
+                                gAddProject.client_completeData = "";
+                                gAddProject.client_callbackI = ProjectConfigPoll;
+                                functions.sendRequest(gAddProject.client_socket, toSend);  
+                                }, 500);    // 0.5 sec
+                            return;
+                        }
+                    }
+                }
+
+                let itemProject = gAddProject.addItem;
+                let url = itemProject.url;
+                let loginName = itemProject.loginName;
+                let passWord = itemProject.passWord;
+                let urlRpc = url;
+                if (functions.isDefined(item.web_rpc_url_base))
+                {
+                    if (item.web_rpc_url_base[0].length > 4)
+                    {                    
+                        urlRpc = item.web_rpc_url_base[0];
+                    }
+                }
+                gAddProject.addItem.urlRpc = urlRpc;
+
+                // terms of use is not xml 
+                let dataRaw = gAddProject.client_completeData;
+                let tagb = "<terms_of_use>";
+                let tagbLen = tagb.length;
+                let tage = "</terms_of_use>";
+
+                let touBegin = dataRaw.search(tagb) + tagbLen;
+                let touEnd = dataRaw.search(tage);
+                if (touBegin >= 0 && touEnd >= 0)
+                {
+                    let tou = dataRaw.substring(touBegin,touEnd);
+                    if (tou.length > 4)
+                    {
+                        acceptDlg(tou);
+                        return;
+                    }
+                }
+                lookUpAccount(urlRpc,loginName,passWord)
+
+            break;        
+        }
+    } catch (error) {
+        logging.logError('AddProject,lookUpAccountPoll', error);
+    }         
+}
+
+function parseConfigPoll(xml)
+{    
+    reply = null;  
+    try {
+        var parseString = require('xml2js').parseString;
+        parseString(xml, function (err, result) {
+            reply = result['boinc_gui_rpc_reply']['project_config'][0];
+            return reply;
+        });      
+    } catch (error) {
+        logging.logError('AddProject,parseConfigPoll', error);        
+    }
+
+    return reply;
+}
+
+function acceptDlg(terms)
+{
+    try {    
+        txt = terms.replaceAll('&lt;', '<');
+        txt = txt.replaceAll('&gt;', '>');
+        txt = txt.replaceAll('&#xD;', '\r');
+        txt = txt.replaceAll('<ul>', '');        
+        txt = txt.replaceAll('</ul>', '');            
+        txt = txt.replaceAll('<li>', '');
+        txt = txt.replaceAll('</li>', '');
+        txt = txt.replaceAll('<a href=', '');
+        txt = txt.replaceAll('</a>', '');        
+        txt = txt.replaceAll('<b>', '');
+        txt = txt.replaceAll('</b>', '');        
+        txt = txt.replaceAll('<i>', '');
+        txt = txt.replaceAll('</i>', '');  
+        txt = txt.replaceAll('<![CDATA[', '');
+        txt = txt.replaceAll(']]>', '');   
+        txt = txt.replaceAll('<p>', ''); 
+        txt = txt.replaceAll('</p>', '');
+        txt = txt.replaceAll('<ol>', ''); 
+        txt = txt.replaceAll('</ol>', '');         
+        txt = txt.replaceAll('<ol type="a">', '');          
+
+        dialog.showMessageBox(gChildAddProject,
+        {
+            title: "License agreement",
+            message: txt,
+            buttons: [btC.TL.BOX_GENERAL.BX_CANCEL, "Accept"],
+            defaultId: 0, // bound to buttons array
+            cancelId: 1 // bound to buttons array
+        })
+        .then(result => {
+            if (result.response === 0) {
+            // accept
+                if (gChildAddProject !== null) gChildAddProject.webContents.send('add_project_enable');             
+            } else if (result.response === 1) {
+            // yes
+            acceptYes();
+            }
+        });
+    } catch (error) {
+        logging.logError('AddProject,acceptDlg', error);        
+    }    
+}
+
+function acceptYes()
+{
+    try {       
+        let itemProject = gAddProject.addItem;
+        let urlRpc = itemProject.urlRpc;
+        let loginName = itemProject.loginName;
+        let passWord = itemProject.passWord;    
+        lookUpAccount(urlRpc,loginName,passWord);
+    } catch (error) {
+        logging.logError('AddProject,acceptYes', error);        
+    }     
+}
+
 
 function lookUpAccount(url,login,password)
 {

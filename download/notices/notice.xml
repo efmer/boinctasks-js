@@ -7,24 +7,25 @@
 			Welcome to BoincTasks Js, we hope you enjoy using it.
 				
 			BoincTasks Js is free and <![CDATA[<a href="https://github.com/efmer/boinctasks-js">open source</a></html>]]>, written in Javascript.
-			It runs on Linux, Mac and Windows.
+			It runs natively on Linux, Mac and Windows.
 			
 			If you encounter a problem, submit a request or report a problem or bug on our <![CDATA[<a href="https://github.com/efmer/boinctasks-js/issues">GitHub</a></html>]]> page.
 			Or visit our <![CDATA[<a href="https://forum.efmer.com/">forum</a></html>]]> .
 						
 			Although BoincTasks Js is free, it costs money to keep things running, so please consider <![CDATA[<a href="https://efmer.com/support-us/">donating</a></html>]]>.
+			You can donate using crypto, debit or credit card.
 		</description>
 		<link>https://efmer.com/support-us/</link>
 	</notice>
 		
 	<notice2>
 		<title>
-			Version 2.4.2
+			Version 2.5.0
 		</title>
 		<description>
-			Add: Spanish language.
-			Fixed: Tasks window displayed nothing.
-			Fixed: Memory leaks, that resulted in a crash.
+			Add: Italian language.
+			Fixed: Unable to add some projects.
+			Fixed: Did not show license agreement when adding a project.
 		</description>
 		<link>https://efmer.com/boinctasks-js/boinctasks-js-download/</link>
 	</notice2>	
