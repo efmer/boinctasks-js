@@ -75,6 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
         SetHtml("highlight_message9",dlg.DS_BT_MESSAGES_MESSAGE);
  
         SetHtml("trans_advanced",dlg.DS_BT_ADVANCED);
+        SetHtml("trans_deadline",dlg.DS_BT_DEADLINED);        
         SetHtml("trans_socket",dlg.DS_BT_SOCKET_TO);
         SetHtml("apply",dlg.DS_BT_BUTTON_APPLY);
     });
@@ -104,7 +105,9 @@ function set(item)
 
     SetValue("locale",item.locale );
     SetValue("history_refresh_rate",item.historyRefreshRate );    
-    SetValue("history_delete",item.historyDelete ); 
+    SetValue("history_delete",item.historyDelete );
+    
+    SetCheck("deadline_day",item.deadlineDay==='1');
     SetValue("socket_timeout",item.socketTimeout ); 
     setMessages(item.messages);
 }
@@ -181,6 +184,12 @@ function get()
         item.socketTimeout = socketTimeout;        
     } catch (error) {
         item.socketTimeout = 8 
+    }
+
+    try {
+        item.deadlineDay = getBool(document.getElementById('deadline_day').checked);      
+    } catch (error) {
+        item.deadlineDay = false 
     }
 
     try {

@@ -17,16 +17,15 @@
 		</description>
 		<link>https://efmer.com/support-us/</link>
 	</notice>
-		
+			
 	<notice2>
 		<title>
-			Version 2.5.0
+			App for Android and iOS.
 		</title>
 		<description>
-			Add: Italian language.
-			Fixed: Unable to add some projects.
-			Fixed: Did not show license agreement when adding a project.
+			We developed a new app for Android and iOS that allows you to connect to your computers from anywhere.
+			Check out BoincTasks-M
 		</description>
-		<link>https://efmer.com/boinctasks-js/boinctasks-js-download/</link>
+		<link>https://efmer.com/boinctasks-m-for-android-and-ios/</link>
 	</notice2>	
 </notices>

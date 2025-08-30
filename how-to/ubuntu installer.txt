@@ -22,7 +22,7 @@ npm run make
 cd /home/fred/sb/boinctasks-js/out/make/deb/x64
 snap remove boinctasks-js
 sudo dpkg --remove boinctasks-js
-sudo dpkg -i ./boinctasks-js_2.5.1_amd64.deb
+sudo dpkg -i ./boinctasks-js_2.6.1_amd64.deb
 boinctasks-js
 sudo dpkg --remove boinctasks-js
 
@@ -56,8 +56,8 @@ snapcraft login
 
 cd /home/fred/sb/boinctasks-js/dist/
 
-snapcraft upload --release=candidate boinctasks-js_2.5.1_amd64.snap
-snapcraft upload --release=candidate boinctasks-js_2.5.1_armhf.snap
+snapcraft upload --release=candidate boinctasks-js_2.6.1_amd64.snap
+snapcraft upload --release=candidate boinctasks-js_2.6.1_armhf.snap
 
 // testing
 cd /home/fred/sb/boinctasks-js/dist/

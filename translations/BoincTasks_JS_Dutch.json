@@ -189,7 +189,8 @@
         "DC_BT_PROJECT_SUSPENDED": "Onderbroken",
         "DS_BT_REGION": "Regio",
         "DS_BT_LOCALE": "Locale (standaard = leeg, en-US, nl-NL)",
-        "DS_BT_RESTART": "Opnieuw opstarten om"
+        "DS_BT_RESTART": "Opnieuw opstarten om",
+        "DS_BT_DEADLINED": "Toon einddatum als dag"
     },
     "DIALOG_COLORS_BT": {
         "DC_BT_TITLE": "Instellingen Kleur",

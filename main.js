@@ -857,7 +857,7 @@ function initialize () {
         gMainWindow.hide();
       }
 
-      let title = "BoincTasks Js " + gVersion;
+      let title = "BoincTasks Js V:" + gVersion;
       gMainWindow.setTitle(title);
       gMainWindow.webContents.send("translations",btC.TL.SEL);   
       insertCss();    

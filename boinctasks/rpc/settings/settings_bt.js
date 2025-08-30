@@ -259,6 +259,7 @@ function isValid()
     {
       gSettingsBt.socketTimeout = 4;
     }
+
     btC.CONNECTION_TIMEOUT = parseInt(gSettingsBt.socketTimeout);
   } catch (error) {
     logging.logError('SettingsBt,isValid', error);  

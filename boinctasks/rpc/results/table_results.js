@@ -16,6 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+const requireSettingsBt = require('../settings/settings_bt'); 
+
 const Logging = require('../functions/logging');
 const logging = new Logging();
 
@@ -344,7 +346,19 @@ function tableResultItem(selRows, i, order, result, filter, colorObj, show)
 
     let remainingS = functions.getFormattedTimeInterval(result.remaining); 
     items[order.order[7]] = addRow(order.check[7],selId, 7, remainingS);
-    let deadlineS = functions.getFormattedTimeDiff(result.deadline)    
+
+    let deadlineS = "";
+    let settingsBt = new requireSettingsBt();
+    gSettings = settingsBt.get();
+
+    if (gSettings.deadlineDay == '1')
+    {
+      deadlineS = functions.getFormattedTime(result.deadline)  
+    }
+    else
+    {
+      deadlineS = functions.getFormattedTimeDiff(result.deadline)    
+    }
     items[order.order[8]] = addRow(order.check[8], selId, 8, deadlineS);  
     items[order.order[9]] = addRow(order.check[9], selId, 9, use);     
     items[order.order[10]] = addRow(order.check[10], selId, 10, status);
