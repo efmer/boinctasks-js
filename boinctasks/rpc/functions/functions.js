@@ -99,15 +99,21 @@ class Functions{
         let inval = "Invalid";
         let timeS = inval;
         let d = new Date(time*1000);
-        let options = { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };        
+        let options = {year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };        
         try {
-            timeS = d.toLocaleDateString(btC.LOCALE, options);
-        } catch (error) {      
-            timeS = d.toLocaleDateString();
-            if (timeError)
-            {
-                logging.logError('Functions,getFormattedTime (fallback on toDateString', error);
-                timeError = false; // only once
+            let loc = btC.LOCALE;
+            timeS = d.toLocaleDateString(loc, options);
+        } catch (error)
+        {      
+            try {
+                timeS = d.toLocaleDateString('en-US',options);
+                if (timeError)
+                {
+                    logging.logError('Functions,getFormattedTime (fallback on toDateString', error);
+                    timeError = false; // only once
+                }
+            } catch (error)
+            {             
             }
         }
         if (timeS == inval)

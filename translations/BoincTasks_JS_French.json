@@ -77,7 +77,7 @@
         "S_EXIT_202": "Abandonné par le projet",
         "S_EXIT_203": "Abandonné par l'utilisateur",
         "S_EXIT_204": "Inconnu [204]",
-        "S_EXIT_205": "Mémoire épuisée [205]",
+        "S_EXIT_205": "Mémoire insuffisante [205]",
         "S_EXIT_206": "Erreur d'initialisation [206]",
         "S_EXIT_207": "Pas de sous tâche [207]",
         "S_EXIT_208": "Échec des sous tâches  [208]",
@@ -122,9 +122,9 @@
         "SR_CPU_USAGE": "utilisation CPU",
         "SR_MEM_TOO_LARGE": "mémoire trop grande",
         "SR_MEM_NEED_SHMEM": "memoire a besoin de shmem",
-        "SR_MEM_GPU": "mémoire GPU\"",
+        "SR_MEM_GPU": "mémoire GPU",
         "SR_UNKNOWN": "suspendu pour cause inconnue",
-        "SR_PAUSE_CHECKPOINT": "Checkpoint ⏸ Don't close or leave window"
+        "SR_PAUSE_CHECKPOINT": "Point de contrôle ⏸ Ne fermez pas et ne quittez pas la fenêtre"
     },
     "MENU": {
         "MN_ABOUT": "A propos de Boinc Tasks Js",
@@ -164,9 +164,9 @@
         "MN_STATISTICS": "Statistiques graphiques",
         "MN_RULES_EDIT": "Editer",
         "MN_STATISTICS_TRANSFER": "Graphique des transferts de données",
-        "MN_SHOW_CPU": "Show CPU tasks",
-        "MN_SHOW_NONCPUI": "Show non CPU intensive tasks",
-        "MN_SHOW_GPU": "Show GPU tasks"
+        "MN_SHOW_CPU": "Afficher les tâches CPU",
+        "MN_SHOW_NONCPUI": "Afficher les tâches CPU non intensives",
+        "MN_SHOW_GPU": "Afficher les tâches GPU"
     },
     "DIALOG_SETTINGS_BT": {
         "DS_BT_TITLE": "Réglages",
@@ -189,8 +189,8 @@
         "DC_BT_PROJECT_SUSPENDED": "Suspendu",
         "DS_BT_REGION": "Région",
         "DS_BT_LOCALE": "Locale (par défaut = vide, en-US, nl-NL)",
-        "DS_BT_RESTART": "Restart at",
-        "DS_BT_DEADLINED": "Show the deadline as a day"
+        "DS_BT_RESTART": "Redémarrer à",
+        "DS_BT_DEADLINED": "Afficher la date limite en jours"
     },
     "DIALOG_COLORS_BT": {
         "DC_BT_TITLE": "Réglages couleur",
@@ -264,14 +264,14 @@
         "FTR_INFO": "Infos",
         "FTR_RULE": "+Règle",
         "FTR_CLIPBOARD": "Presse-papiers",
-        "FTR_UPDATE_CHANGES": "Changements de la mise à jour",
+        "FTR_UPDATE_CHANGES": "Mettre à jour les modifications",
         "FTR_RETRY": "Réessayer",
         "FTR_TASKS": "Tâches",
         "FTR_TASKS_HISTORY": "H Tâches",
         "FTR_RETRY_ALL": "Réessayer tout",
         "FTR_CC_CONFIG": "Éditer cc_config.xml",
         "FTR_APP_CONFIG": "Éditer : app_config.xml",
-        "FTR_SUSPEND_CHECK": "At checkpoint"
+        "FTR_SUSPEND_CHECK": "Au point de contrôle "
     },
     "BOX_DELETE_FILTER": {
         "BX_FILTER_TITLE": "Impossible de supprimer un filtre",

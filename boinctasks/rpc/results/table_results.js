@@ -23,6 +23,9 @@ const logging = new Logging();
 
 const btC = require('../functions/btconstants');
 
+const settingsBt = new requireSettingsBt();
+let gSettingsBt = null;
+
 class BtTableResults{
   tableHeader(gb, sidebar)
   {
@@ -44,6 +47,7 @@ class BtTableResults{
         return btC.TL.TAB_MSG.TM_EMPTY_TABLE;
       }
     }
+    gSettingsBt = settingsBt.get();
     let color = gb.color;
     var tableArray = tableResultsArray(gb, cTable, color);
     var table = tableResults(gb,tableArray);
@@ -348,10 +352,7 @@ function tableResultItem(selRows, i, order, result, filter, colorObj, show)
     items[order.order[7]] = addRow(order.check[7],selId, 7, remainingS);
 
     let deadlineS = "";
-    let settingsBt = new requireSettingsBt();
-    gSettings = settingsBt.get();
-
-    if (gSettings.deadlineDay == '1')
+    if (gSettingsBt.deadlineDay == '1')
     {
       deadlineS = functions.getFormattedTime(result.deadline)  
     }

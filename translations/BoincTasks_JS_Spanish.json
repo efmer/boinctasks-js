@@ -190,7 +190,7 @@
         "DS_BT_REGION": "Región",
         "DS_BT_LOCALE": "Local (por defecto = en blanco, en-US, nl-NL)",
         "DS_BT_RESTART": "Reiniciar en",
-        "DS_BT_DEADLINED": "Show the deadline as a day"
+        "DS_BT_DEADLINED": "Muestra fecha límite como un día"
     },
     "DIALOG_COLORS_BT": {
         "DC_BT_TITLE": "Ajustes de color",

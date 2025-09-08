@@ -891,12 +891,17 @@ function initialize () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
   app.whenReady().then(() => {
-    let userDc = false;
+    let bUserDc = false;
     if (functions.isDefined(gSettings.locale))
     {
-      userDc = gSettings.locale.length > 0;
+      let loc = gSettings.locale;
+      if (loc == "undefined")
+      {
+        loc = "";
+      }
+      bUserDc = loc.length > 0;
     }
-    if (userDc)
+    if (bUserDc)
     {
       btC.LOCALE = gSettings.locale;
     }
