@@ -47,6 +47,10 @@ document.addEventListener("DOMContentLoaded", () => {
         SetHtml("trans_timing",dlg.DS_BT_TIMING);
         SetHtml("trans_timing_refresh",dlg.DS_BT_TIMING_REFRESH);
         SetHtml("trans_timing_history_refresh",dlg.DS_BT_HISTORY_REFRESH);
+
+        SetHtml("trans_tasks",dlg.DS_BT_TASKS);
+        SetHtml("trans_tasks_short_time_cpu_perc",dlg.DS_BT_SHORT_TIME_CPU_PERC);
+
         SetHtml("trans_history",dlg.DS_BT_HISTORY);
         SetHtml("trans_history_delete",dlg.DS_BT_HISTORY_DELETE);
         SetHtml("trans_messages",dlg.DS_BT_MESSAGES);
@@ -102,6 +106,8 @@ function set(item)
     SetValue("extra_css",item.css);
 
     SetValue("refresh_rate",item.refreshRate );
+
+    SetCheck("tasks_short_time_cpu_perc",item.bTasksShortTimeCpu==='1');
 
     SetValue("locale",item.locale );
     SetValue("history_refresh_rate",item.historyRefreshRate );    
@@ -165,6 +171,12 @@ function get()
         item.historyRefreshRate = historyRefreshRate;        
     } catch (error) {
         item.historyRefreshRate = 60;
+    }
+
+    try {
+        item.bTasksShortTimeCpu = getBool(document.getElementById('tasks_short_time_cpu_perc').checked);      
+    } catch (error) {
+        item.bTasksShortTimeCpu = false 
     }
 
     try {

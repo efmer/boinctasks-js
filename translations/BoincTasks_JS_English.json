@@ -153,7 +153,7 @@
         "MN_BT_COLOR": "BoincTasks color settings",
         "MN_BOINC_SET": "Boinc settings",
         "MN_BOINC_ALLOW": "Boinc allow",
-        "MN_BOINC_BENCH": "Boinc run benchmark'",
+        "MN_BOINC_BENCH": "Boinc run benchmark",
         "MN_BOINC_READ_CF": "Boinc read config files",
         "MN_RULES": "Rules",
         "MN_RULES_EMAIL": "Email",
@@ -166,7 +166,8 @@
         "MN_STATISTICS_TRANSFER": "Data transfer graph",
         "MN_SHOW_CPU": "Show CPU tasks",
         "MN_SHOW_NONCPUI": "Show non CPU intensive tasks",
-        "MN_SHOW_GPU": "Show GPU tasks"
+        "MN_SHOW_GPU": "Show GPU tasks",
+        "MN_STATISTICS_TASKS": "Tasks graph"
     },
     "DIALOG_SETTINGS_BT": {
         "DS_BT_TITLE": "Settings",
@@ -190,7 +191,9 @@
         "DS_BT_REGION": "Region",
         "DS_BT_LOCALE": "Locale (default = empty, en-US, nl-NL)",
         "DS_BT_RESTART": "Restart at",
-        "DS_BT_DEADLINED": "Show the deadline as a day"
+        "DS_BT_DEADLINED": "Show the deadline as a day",
+        "DS_BT_TASKS": "Tasks",
+        "DS_BT_SHORT_TIME_CPU_PERC": "Short-time CPU percentage"
     },
     "DIALOG_COLORS_BT": {
         "DC_BT_TITLE": "Settings Color",
@@ -504,5 +507,9 @@
     },
     "DIALOG_EDIT_APP_CONFIG": {
         "DEA_TITLE": "Edit: app_config.xml"
+    },
+    "DIALOG_BOINC_STATISTICS_TASKS": {
+        "DBS_TITLE": "Boinc Tasks Statistics",
+        "DBS_STAT_TASKS": "Tasks"
     }
 }

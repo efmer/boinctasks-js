@@ -44,7 +44,7 @@ module.exports = {
 
     COMPUTERS_COLOMN_COUNT      : 10,
     PROJECTS_COLOMN_COUNT       : 12,
-    TASKS_COLOMN_COUNT          : 17,
+    TASKS_COLOMN_COUNT          : 18,
     TRANSFERS_COLOMN_COUNT      : 8,
     MESSAGES_COLUMN_COUNT       : 5,
     HISTORY_COLUMN_COUNT        : 8,

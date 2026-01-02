@@ -293,7 +293,14 @@ function clickTable2(event,context)
     }
     else
     {
-      id = el;
+      if (el.localName == 'div') // filter
+      {
+        id = el.id;
+      }    
+      else
+      {
+        id = el;
+      }
     }
   }
 

@@ -62,14 +62,16 @@ class Logging{
             let node = "Node: V " + process.versions.node;
             this.logDebug(node);
 
-            let file = __dirname.split('boinctasks\\rpc');
+            let file = app.getAppPath();
             
             try {
-                const json = fs.readFileSync(file[0] + '/package.json', 'utf8');
+                const json = fs.readFileSync(file + '/package.json', 'utf8');
                 const obj = JSON.parse(json);
                 const dependencies = obj.dependencies;
                 this.logDebug("Highcharts:" + dependencies.highcharts);
                 this.logDebug("Xml2js:" + dependencies.xml2js);
+                this.logDebug("Sortablejs:" + dependencies.sortablejs);  
+                this.logDebug("Nodemailer:" + dependencies.nodemailer);                 
             } catch (error) {
                 let ii = 1;
             }            
@@ -247,6 +249,7 @@ function initFileLogging()
         const logFileError = loggingFolder + "/boinctasks_js_error";        
 
         // legacy remove error files
+        // all loggging is now in one file boinctasks_js_debug.log
         try {
             fs.unlinkSync(logFileError + '1.log');
         } catch (error) {}        
@@ -347,7 +350,6 @@ function showLog(logType,theme)
     {
       gChildWindowLog.setTitle(title); 
       gChildWindowLog.webContents.send('log_text', log); 
-      gChildWindowLog.hide()
       gChildWindowLog.show()    
     }
   } catch (error) {

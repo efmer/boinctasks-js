@@ -1,7 +1,7 @@
 [Setup]
 AppName=BoincTasks Js
-AppVerName=BoincTasks Js by eFMer V 2.6.2
-AppVersion=2.6.2
+AppVerName=BoincTasks Js by eFMer V 2.7.1
+AppVersion=2.7.1
 WizardStyle=modern
 AppPublisher=eFMer
 AppPublisherURL=https://efmer.com/
@@ -12,7 +12,7 @@ DefaultDirName={commonpf}\eFMer\BoincTasks-Js
 DefaultGroupName=EFMER BoincTasks Js
 UninstallDisplayIcon= {app}\boinctasksjs.exe
 LicenseFile=boinctasks_licence.txt
-AppCopyright=Copyright 2021-2025 eFMer
+AppCopyright=Copyright 2021-2026 eFMer
 DisableDirPage=false
 ShowLanguageDialog=yes
 Encryption=false

@@ -166,7 +166,8 @@
         "MN_STATISTICS_TRANSFER": "Gegevensoverdracht grafiek",
         "MN_SHOW_CPU": "Toon CPU taken",
         "MN_SHOW_NONCPUI": "Toon niet CPU intensieve taken",
-        "MN_SHOW_GPU": "Toon GPU taken"
+        "MN_SHOW_GPU": "Toon GPU taken",
+        "MN_STATISTICS_TASKS": "Werk grafiek"
     },
     "DIALOG_SETTINGS_BT": {
         "DS_BT_TITLE": "Instellingen",
@@ -190,7 +191,9 @@
         "DS_BT_REGION": "Regio",
         "DS_BT_LOCALE": "Locale (standaard = leeg, en-US, nl-NL)",
         "DS_BT_RESTART": "Opnieuw opstarten om",
-        "DS_BT_DEADLINED": "Toon einddatum als dag"
+        "DS_BT_DEADLINED": "Toon einddatum als dag",
+        "DS_BT_TASKS": "Werk",
+        "DS_BT_SHORT_TIME_CPU_PERC": "Korte termijn CPU gebruik percentage"
     },
     "DIALOG_COLORS_BT": {
         "DC_BT_TITLE": "Instellingen Kleur",
@@ -504,5 +507,9 @@
     },
     "DIALOG_EDIT_APP_CONFIG": {
         "DEA_TITLE": "Edit: app_config.xml"
+    },
+    "DIALOG_BOINC_STATISTICS_TASKS": {
+        "DBS_TITLE": "BOINC werk grafiek",
+        "DBS_STAT_TASKS": "Werk"
     }
 }

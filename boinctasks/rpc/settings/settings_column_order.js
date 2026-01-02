@@ -563,7 +563,8 @@ function setWindowsTasks(gb, type)
   itemsArray[order.order[13]] = addItem(btC.TL.TAB.T_TASK_MEMORYV,13,order);
   itemsArray[order.order[14]] = addItem(btC.TL.TAB.T_TASK_MEMORY,14,order);
   itemsArray[order.order[15]] = addItem(btC.TL.TAB.T_TASK_TEMP,15,order);
-  itemsArray[order.order[16]] = addItem(btC.TL.TAB.T_TASK_TTHROTTLE,16,order);
+  itemsArray[order.order[16]] = addItem(btC.TL.TAB.T_TASK_TTHROTTLE,16,order); // = Run %
+  itemsArray[order.order[17]] = addItem(btC.TL.TAB.T_PROJECTS_SHARE,17,order);  
 
   for (let i=0;i<itemsArray.length;i++)
   {

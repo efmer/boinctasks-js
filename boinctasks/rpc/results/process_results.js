@@ -130,8 +130,8 @@ function compare(a,b)
                 if (a.computerName < b.computerName) return -1;
                 return 0;
             case 1: // project
-                if (a.project > b.project) return 1;
-                if (a.project < b.project) return -1;
+                if (a.project.toLowerCase() > b.project.toLowerCase()) return 1;
+                if (a.project.toLowerCase() < b.project.toLowerCase()) return -1;
                 return 0;            
             case 2: // application
                 if (a.app > b.app) return 1;
@@ -184,7 +184,11 @@ function compare(a,b)
             case 14: // mem
                 if (a.memory > b.memory) return 1;
                 if (a.memory < b.memory) return -1;
-                return 0;                
+                return 0;   
+            case 17: // Share
+                if (a.projectShare > b.projectShare) return 1;
+                if (a.projectShare < b.projectShare) return -1;
+                return 0;                                                                
             default:             
                 return 0;                                         
         }

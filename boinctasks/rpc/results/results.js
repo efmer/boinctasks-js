@@ -24,7 +24,18 @@ const connectionsShadow = new ConnectionsShadow();
 
 let parseString = require('xml2js').parseString;
 
+let CPU_CHECK_INTERVAL = 8;
+let CPU_CHECK_INTERVAL_TIME = 4000;
+
+let gCpuPercCheck = CPU_CHECK_INTERVAL;
+let gCpuPerc = [];
+
 class Results{
+    init() // Tasks tab selected
+    {
+        gCpuPercCheck = CPU_CHECK_INTERVAL;
+        gCpuPerc = []; 
+    }
     getResults(con)
     {
         try 
@@ -50,6 +61,23 @@ class ResultItems
     {      
         try 
         {
+            let present = Date.now() 
+            let MOVING_AVERAGE = 5;
+
+            // remove old no longer present CPU %
+            if (gCpuPercCheck-- < 0)
+            {
+                for (let cp=0;cp < gCpuPerc.length; cp++)
+                {
+                    let dPresent = present - gCpuPerc[cp].present;
+                    if (dPresent > CPU_CHECK_INTERVAL_TIME)
+                    {
+                        gCpuPerc.splice(cp,1);
+                    }
+                }
+                gCpuPercCheck = CPU_CHECK_INTERVAL;
+            }
+
             const State = require('../misc/state');
             let conState = new State(); 
 
@@ -81,14 +109,17 @@ class ResultItems
                 let project = "Initializing...";
                 let projectUrl = item.project_url[0];
                 let bNonCpuIntensive = false;
+                let projectShare = 0;
                 if (state != null)
                 {                  
                     app = conState.getAppUf(con, wu);
                     let ret = conState.getProject(con,projectUrl)
                     project = ret.project;
                     bNonCpuIntensive = ret.non;
+                    projectShare = ret.projectShare;
                     ret = null;
                 }
+
                 let versionApp = version + " " + app;
                 let computer = con.computerName;
                 let resultItem = new Object();
@@ -96,8 +127,9 @@ class ResultItems
                 resultItem.filtered = false;
                 resultItem.computerName = computer;
                 resultItem.project = project;
-                resultItem.projectUrl = projectUrl;
+                resultItem.projectUrl = projectUrl;             
                 resultItem.bNonCpuIntensive = bNonCpuIntensive;
+                resultItem.projectShare = projectShare;
                 resultItem.version = parseInt(item.version_num) / 100;
                 resultItem.app = versionApp;
                 resultItem.wu = wu;
@@ -128,12 +160,15 @@ class ResultItems
                 resultItem.swap = 0;
                 resultItem.memory = 0;
                 resultItem.received = parseInt(item.received_time[0]);
-                resultItem.checkpoint = 0;
+                resultItem.checkpoint = 0;               
+                let bCpuPerc = false;
+                resultItem.shortCpu = false;                
+                let cpu = 0;
                 if (active !== void 0)
                 {
                     active = active[0];               
                     resultItem.fraction = parseFloat(active.fraction_done)*100;
-                    cpuTime = active.current_cpu_time[0];
+                    cpuTime = parseFloat(active.current_cpu_time[0]);
                     elapsedTime = parseFloat(active.elapsed_time); 
                     sState =  active.scheduler_state[0];
                     aState =  active.active_task_state[0];
@@ -146,25 +181,122 @@ class ResultItems
                     resultItem.cpuT = con.temp.cpuT;
                     resultItem.gpuT = con.temp.gpuT;
                     bActive = true;
+
+                    if (btC.bTasksShortTimeCpu)
+                    {                       
+                        try 
+                        {
+                            let cpFound = false;
+                            for (let cp=0;cp < gCpuPerc.length; cp++)
+                            {
+                                if (gCpuPerc[cp].wuName == wuName)
+                                {
+                                    // A moving avarage of MOVING_AVERAGE cpu%
+                                    cpFound = true;
+                                    let item = gCpuPerc[cp];                        
+                                    item.present = present;                             
+
+                                    let deltaCpuTime = cpuTime - item.cpuTime;
+                                    let deltaElapsedTime =  elapsedTime - item.elapsedTime;
+
+                                    let cpu = 0;
+                                    if (deltaCpuTime == 0 || deltaElapsedTime == 0)
+                                    {
+                                        cpu = 0;
+                                    }
+                                    else
+                                    {
+                                        cpu = (deltaCpuTime/deltaElapsedTime) * 100;
+                                    }
+                                    let cpuArray = item.cpuArray;                                
+                                    cpuArray.push(cpu);
+                                    item.count += 1;
+
+                                    let cpuTotal = 0;
+                                    let bFirst = true;
+                                    let bChanged = false;
+                                    let cpuFirst = 0;
+                                    for (let cc=0;cc < cpuArray.length; cc++)
+                                    {
+                                        if (bFirst)
+                                        {
+                                            cpuFirst = cpuArray[cc];
+                                            bFirst = false;
+                                        }
+                                        else
+                                        {
+                                            if (cpuFirst != cpuArray[cc])  // when supended there still is an cpu%, now check for changes.
+                                            {
+                                                bChanged = true;
+                                            }
+
+                                        }
+                                        cpuTotal += cpuArray[cc];
+                                    }
+                                    if (!bChanged)
+                                    {
+                                        cpuTotal = 0; // no change in all the samples = not running
+                                    }
+                                    else
+                                    {
+                                        cpuTotal /= item.count;
+                                        if (cpuTotal > 100)
+                                        { 
+                                            cpuTotal = 100;
+                                        }
+                                    }
+
+                                    if (item.count > MOVING_AVERAGE)
+                                    {                                    
+                                        item.count  -= 1;
+                                        cpuArray.shift();
+                                    }
+                                    if (cpuTotal != 0)  // if 0 fall back on boinc cpu%
+                                    {
+                                        resultItem.cpu = cpuTotal;
+                                        bCpuPerc = true;
+                                        resultItem.shortCpu = true;
+                                    }
+                                }                        
+                            }
+                            if (cpFound == false)
+                            {
+                                let cpNew = new Object();                        
+                                cpNew.wuName = wuName;
+                                cpNew.present = present;
+                                cpNew.cpuTime = cpuTime;
+                                cpNew.elapsedTime = elapsedTime;
+                                cpNew.count = 0;
+                                cpNew.cpuArray = [];
+                                gCpuPerc.push(cpNew);
+                            } 
+                        } catch (error) {
+                            logging.logError('ResultItems,add, bTasksShortTimeCpu', error);   
+                        }
+                    }
                 }
+                if (!bCpuPerc)
+                {
+                    resultItem.shortCpu = false;
+                    if (cpuTime == 0 || elapsedTime == 0)
+                    {
+                        resultItem.cpu = 0;
+                    }   
+                    else 
+                    {             
+                        cpu = (cpuTime/elapsedTime) * 100;
+                        if (cpu > 100) cpu = 100;
+                        resultItem.cpu = cpu;                  
+                    }
+                }
+                
                 if (con.suspendCheckpoint !== void 0)
                 {
                     CheckpointSuspend(con,resultItem,wuName,projectUrl);
                 }
 
-                let cpu = 0;
-                if (cpuTime == 0 || elapsedTime == 0)
-                {
-                    resultItem.cpu = 0;
-                }   
-                else 
-                {             
-                    cpu = (cpuTime/elapsedTime) * 100;
-                    if (cpu > 100) cpu = 100;
-                    resultItem.cpu = cpu;                  
-                }
-
-                resultItem.elapsed = elapsedTime;               
+                resultItem.elapsed = elapsedTime;
+                resultItem.cpuTime = cpuTime;
               
                 let remaining = parseInt(item.estimated_cpu_time_remaining);
                 resultItem.remaining = remaining;                   
@@ -217,6 +349,7 @@ class ResultItems
                         filterItem.computerName = computer;
                         filterItem.project = project;
                         filterItem.projectUrl = projectUrl;
+                        filterItem.projectShare = projectShare;
                         filterItem.app = versionApp;
                         filterItem.version = resultItem.version;
                         filterItem.remaining = resultItem.remaining;

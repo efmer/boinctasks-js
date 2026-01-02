@@ -246,8 +246,11 @@ class Toolbar{
                     properties.project(selected,gb);
                 break;
                 case "toolbar_www":
-                    wwwShow(gb);
+                    wwwShow(gb,true);
                 break;
+                case "toolbar_tasks_www":
+                    wwwShow(gb,false);
+                break;                
                 // transfers
                 case "toolbar_update_t":
                     selected = gb.rowSelect.transfers.rowSelected;                       
@@ -529,10 +532,18 @@ function resetDetachProjectYes(selected,connections,detach)
     }
 }
 
-function wwwShow(gb)
+function wwwShow(gb, bProject)
 {
     try {      
-        let selected = gb.rowSelect.projects.rowSelected;
+        let selected = "";
+        if (bProject)
+        {
+            selected = gb.rowSelect.projects.rowSelected;        
+        }
+        else
+        {
+            selected = gb.rowSelect.results.rowSelected; 
+        }
         for (let s=0;s<selected.length;s++)  
         {
             let res = selected[s].split(btC.SEPERATOR_SELECT);
@@ -542,6 +553,11 @@ function wwwShow(gb)
             {
                 computerName = res[1];
                 url = res[2];
+                let resFilter = url.split(btC.SEPERATOR_FILTER);
+                if (resFilter.length > 1) // we have a filter
+                {
+                   url = resFilter[0];
+                }
                 for (var c=0; c<connections.length;c++)
                 {
                     let con = connections[c];
@@ -549,7 +565,15 @@ function wwwShow(gb)
                     {
                         if (con.auth === true)
                         {
-                            let project = con.projects.project;
+                            let poject = void 0;
+                            if (bProject)
+                            {
+                                project = con.projects.project;
+                            }
+                            else
+                            {
+                                project = con.state.project;
+                            }
                             if (project !== void 0)
                             {
                                 let len = project.length;

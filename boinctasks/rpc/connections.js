@@ -93,6 +93,7 @@ let gClassAddProject = null;
 let gClassSettingsBoinc = null;
 let gClassStatisticsBoinc = null;
 let gClassStatisticsTransferBoinc = null;
+let gClassStatisticsTasksBoinc = null;
 let gClassSettingsAllow = null;
 let gRequireSettingsBt = null;
 let gClassHistory = null;
@@ -202,7 +203,8 @@ class Connections{
         }
         */
 
- //       setTimeout(test, 1000); // testing test debug
+       // setTimeout(test, 1000); // testing test debug
+     
         gB.mainWindow = mainWindow;
         gB.menu = menu;
         rowSelect.init(gB);
@@ -318,7 +320,11 @@ class Connections{
             gB.editComputers = false;       
         }
         toolbar.hide(gB.mainWindow);
-        gB.selectedTab = selected;           
+        gB.selectedTab = selected;     
+        if (selected == btC.TAB_TASKS)
+        {
+            classResults.init();
+        }
  //       quickLoad(); // in case there is data, show it quickly
         gSwitchedTabCnt = 2;   // update the header twice, just in case we missed the first
         gIntervalFastCnt = 0;
@@ -568,6 +574,16 @@ class Connections{
         gClassStatisticsTransferBoinc.start(type,gB);
     }
 
+    boincStatisticsTasks(type,data)
+    {
+        if (gClassStatisticsTasksBoinc === null)
+        {
+            const StatisticsTasksBoinc = require('./settings/statistics_tasks');            
+            gClassStatisticsTasksBoinc = new StatisticsTasksBoinc();
+        }
+        gClassStatisticsTasksBoinc.start(type,gB);
+    }
+
     colomnOrder(type,data)
     {
         settingsColumnOrder.apply(type,gB,data);
@@ -635,6 +651,7 @@ class Connections{
         if (gClassAddProject !== null) gClassAddProject.setTheme(css);
         if (gClassStatisticsBoinc !== null) gClassStatisticsBoinc.setTheme(css);
         if (gClassStatisticsTransferBoinc !== null) gClassStatisticsTransferBoinc.setTheme(css);        
+        if (gClassStatisticsTasksBoinc !== null) gClassStatisticsTasksBoinc.setTheme(css);          
         if (gSettingsBt !== null) gSettingsBt.setTheme(css);
         if (gClassSettingsBoinc !== null) gClassSettingsBoinc.setTheme(css);
         if (gClassSettingsAllow !== null) gClassSettingsAllow.setTheme(css);
@@ -714,6 +731,9 @@ module.exports = Connections;
 
 function test()
 {
+
+    
+
 /*    
     if (gClassAcountManager === null)
     {
@@ -1584,6 +1604,7 @@ function newCon()
     con.cacheProjectUrl = [];
     con.cacheProjectProject = [];
     con.cacheProjectNon = [];
+    con.cacheProjectShare = [];    
     con.cacheAppWu = []; 
     con.cacheAppApp = [];    
     con.cacheAppAppUf = [];

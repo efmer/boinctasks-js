@@ -166,7 +166,8 @@
         "MN_STATISTICS_TRANSFER": "Datenübertragungsgrafik",
         "MN_SHOW_CPU": "Zeige CPU Aufgaben",
         "MN_SHOW_NONCPUI": "Zeige nicht CPU intensive Aufgaben",
-        "MN_SHOW_GPU": "Zeige GPU Aufgaben"
+        "MN_SHOW_GPU": "Zeige GPU Aufgaben",
+        "MN_STATISTICS_TASKS": "Tasks graph"
     },
     "DIALOG_SETTINGS_BT": {
         "DS_BT_TITLE": "Einstellungen",
@@ -190,7 +191,9 @@
         "DS_BT_REGION": "Region",
         "DS_BT_LOCALE": "Sprache (Standard = leer, en-US, nl-NL, de-DE ...)",
         "DS_BT_RESTART": "Neustart um",
-        "DS_BT_DEADLINED": "Show the deadline as a day"
+        "DS_BT_DEADLINED": "Show the deadline as a day",
+        "DS_BT_TASKS": "Tasks",
+        "DS_BT_SHORT_TIME_CPU_PERC": "Short-time CPU percentage"
     },
     "DIALOG_COLORS_BT": {
         "DC_BT_TITLE": "Farbeinstellungen",
@@ -504,5 +507,9 @@
     },
     "DIALOG_EDIT_APP_CONFIG": {
         "DEA_TITLE": "Bearbeite: app_config.xml"
+    },
+    "DIALOG_BOINC_STATISTICS_TASKS": {
+        "DBS_TITLE": "Boinc Tasks Statistics",
+        "DBS_STAT_TASKS": "Tasks"
     }
 }

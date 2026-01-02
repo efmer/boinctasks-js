@@ -1,3 +1,6 @@
+Extra -> Debug Window and restart
+
+// not needed.
 
 npm run start -- --inspect-electron
 

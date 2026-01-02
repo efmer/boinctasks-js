@@ -195,11 +195,12 @@ function tableResultsHeader(gb, addText)
     items[order.order[9]] = addRowHeader(order.check[9],true, gb, 9, btC.TL.TAB.T_TASK_USE); 
     items[order.order[10]] = addRowHeader(order.check[10],true, gb, 10, btC.TL.TAB.T_GENERAL_STATUS);
     items[order.order[11]] = addRowHeader(order.check[11],true, gb, 11, btC.TL.TAB.T_TASK_CHECKPOINT);
-    items[order.order[12]] = addRowHeader(order.check[12],true, gb, 12, btC.TL.TAB.T_T_TASK_RECEIVED);
+    items[order.order[12]] = addRowHeader(order.check[12],true, gb, 12, btC.TL.TAB.T_TASK_RECEIVED);
     items[order.order[13]] = addRowHeader(order.check[13],true, gb, 13, btC.TL.TAB.T_TASK_MEMORYV);
     items[order.order[14]] = addRowHeader(order.check[14],true, gb, 14, btC.TL.TAB.T_TASK_MEMORY);
     items[order.order[15]] = addRowHeader(order.check[15],true, gb, 15, btC.TL.TAB.T_TASK_TEMP);
     items[order.order[16]] = addRowHeader(order.check[16],true, gb, 16, btC.TL.TAB.T_TASK_TTHROTTLE);        
+    items[order.order[17]] = addRowHeader(order.check[17],true, gb, 17, btC.TL.TAB.T_PROJECTS_SHARE);     
   }
   else
   {
@@ -220,6 +221,7 @@ function tableResultsHeader(gb, addText)
     items[order.order[14]] = addRowHeader(order.check[14],false, gb, 14, "");
     items[order.order[15]] = addRowHeader(order.check[15],false, gb, 15, "");
     items[order.order[16]] = addRowHeader(order.check[16],false, gb, 16, "");
+    items[order.order[17]] = addRowHeader(order.check[17],false, gb, 17, "");    
   }
   for (let i=0;i<items.length;i++)
   {
@@ -257,7 +259,7 @@ function tableResultItem(selRows, i, order, result, filter, colorObj, show)
     let selId = wuName + btC.SEPERATOR_SELECT + computer + btC.SEPERATOR_SELECT + projectUrl;
     if (result.filtered)
     {
-      selId += app + btC.SEPERATOR_FILTER + computer;
+      selId += btC.SEPERATOR_FILTER + app + btC.SEPERATOR_FILTER + computer;
     }
     let iSel = selRows.rowSelected.indexOf(selId)
     if (iSel >= 0)
@@ -326,15 +328,27 @@ function tableResultItem(selRows, i, order, result, filter, colorObj, show)
     }
     else  items[order.order[3]] = addRow(order.check[3],selId, 3, wuName);  
 
-    let elapsedS = functions.getFormattedTimeInterval(result.elapsed); 
+    let elapsedS = functions.getFormattedTimeInterval(result.elapsed)
+    if (result.cpuTime > 0)
+    {
+       elapsedS += " (" + functions.getFormattedTimeInterval(result.cpuTime) + ")"; 
+    }
     items[order.order[4]] = addRow(order.check[4],selId, 4, elapsedS); 
 
+    let shortCpu = result.shortCpu;
     let cpu = parseFloat(result.cpu);
     let style = 'style="background-color:' + colorObj['#progress_bar'] + '!important;' + 'width:'+ cpu + '%;">';
     let cpuS = "";
     if (cpu > 0)
     {             
-        cpuS = cpu.toFixed(2) + "%";                     
+        if (shortCpu)
+        {
+          cpuS = cpu.toFixed(2) + " %";
+        }
+        else
+        {
+          cpuS = cpu.toFixed(2) + "%";          
+        }
     }
 
     item = '<div ' + style + cpuS + '</div>'
@@ -434,7 +448,7 @@ function tableResultItem(selRows, i, order, result, filter, colorObj, show)
       }
       items[order.order[15]] = addRow(order.check[15], selId, 15, temp);      
     }
-    if (order.check[16]) // TThrottle
+    if (order.check[16]) // TThrottle = Run%
     {
       let item = "";
       let tthrottle = -1;
@@ -466,6 +480,11 @@ function tableResultItem(selRows, i, order, result, filter, colorObj, show)
         item = '<div></div>'
       }
       items[order.order[16]] = addRow(order.check[16], selId, 16, item);
+    }
+    if (order.check[17]) // Project share
+    {      
+      temp = result.projectShare;
+      items[order.order[17]] = addRow(order.check[17],selId, 17, temp);   
     }
   } catch (error) {
     logging.logError('BtTableResults,tableResultItem', error);    
@@ -564,7 +583,6 @@ function getCpuGpu(res, cpuGpu)
     cpuGpu.cuda = true;
     res = res.replace(" CPUs","C");
     res = res.replace(" CPU", "C");
-    res = res.replace(".00","");
     res = res.replace(" NVIDIA GPUs","NV");
     res = res.replace(" NVIDIA GPU","NV");
     res = res.replace(" Nvidia GPU", "NV");

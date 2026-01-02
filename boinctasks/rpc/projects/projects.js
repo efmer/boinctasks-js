@@ -71,8 +71,7 @@ class ProjectItems
                 projectItem.venue = item.host_venue;
                 getStatus(item, projectItem);
                 this.projectTable.push(projectItem);
-            }
-            
+            }         
         } catch (error) {
             logging.logError('ProjectItems,add', error);                  
             return null;

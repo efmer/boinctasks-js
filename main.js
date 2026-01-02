@@ -46,8 +46,6 @@ const btC = require('./boinctasks/rpc/functions/btconstants');
 
 const path = require('path');
 const Functions = require('./boinctasks/rpc/functions/functions');
-const Properties = require('./boinctasks/rpc/misc/properties');
-const Www = require('./boinctasks/rpc/misc/www');
 const functions = new Functions();
 
 let gMenuSettings = null;
@@ -155,6 +153,12 @@ function initTasksContextMenu()
         connections.toolbar("toolbar_info")
       }
     },
+    {
+      label: 'WWW',
+      click(e) {               
+        connections.toolbar("toolbar_tasks_www")
+      }
+    },        
     {
       label: btC.TL.FOOTER.FTR_CLIPBOARD,
       click(e) {               
@@ -482,8 +486,15 @@ function initMenu()
             label: btC.TL.MENU.MN_STATISTICS_TRANSFER,
             click(e) { 
               connections.boincStatisticsTransfer("menu");
-          }
-        },
+            }
+          },
+          {
+            label: "Tasks graph", //btC.TL.MENU.MN_STATISTICS_TASKS,
+            click(e) { 
+              connections.boincStatisticsTasks("menu");
+            }
+          },
+
           { type: 'separator' },
           {
             label: btC.TL.MENU.MN_SHOW_CPU,
@@ -705,6 +716,11 @@ function initMenu()
       ] 
     },       
   ]
+}
+
+function test()
+{
+  connections.boincStatisticsTasks("menu");
 }
 
 function initialize () {
@@ -1135,6 +1151,8 @@ btC.DEBUG_WINDOW = gClassBtMenu.check(btC.MENU_DEBUG_WINDOW);
 getTranslation();
 initialize()
 
+// setTimeout(test, 4000); // testing test debug
+
 function createTray() {
   let appIcon = null;
   try {
@@ -1397,7 +1415,11 @@ function rendererRequests()
 
   ipcMain.on("statistics_transfer_boinc", (renderer, type, data) => {
     connections.boincStatisticsTransfer(type, data);
-  })  
+  }) 
+
+  ipcMain.on("statistics_tasks_boinc", (renderer, type, data) => {
+    connections.boincStatisticsTasks(type, data);
+  }) 
 
   ipcMain.on("update", (renderer, type) => {
     gClassUpdate.button(type);    

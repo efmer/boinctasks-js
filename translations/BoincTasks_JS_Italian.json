@@ -166,7 +166,8 @@
         "MN_STATISTICS_TRANSFER": "Grafico del trasferimento dai dati",
         "MN_SHOW_CPU": "Visualizza attività intensive per la CPU",
         "MN_SHOW_NONCPUI": "Visualizza attività non intensive per la CPU",
-        "MN_SHOW_GPU": "Visualizza attività intensive per la GPU"
+        "MN_SHOW_GPU": "Visualizza attività intensive per la GPU",
+        "MN_STATISTICS_TASKS": "Grafico dei Task"
     },
     "DIALOG_SETTINGS_BT": {
         "DS_BT_TITLE": "Impostazioni",
@@ -190,7 +191,9 @@
         "DS_BT_REGION": "Regione",
         "DS_BT_LOCALE": "Nazionalizzazione (default = vuoto, en-US, it-IT)",
         "DS_BT_RESTART": "Riavvia a",
-        "DS_BT_DEADLINED": "Mostra scadenza come giorno"
+        "DS_BT_DEADLINED": "Mostra scadenza come giorno",
+        "DS_BT_TASKS": "Tasks",
+        "DS_BT_SHORT_TIME_CPU_PERC": "Short-time CPU percentage"
     },
     "DIALOG_COLORS_BT": {
         "DC_BT_TITLE": "Impostazioni colore",
@@ -260,7 +263,7 @@
         "FTR_ALLOW_WORK": "Accetta nuove attività",
         "FTR_UPDATE": "Aggiorna",
         "FTR_READY_TO_REPORT": "Pronti per l'invio: ",
-        "FTR_ABORT": "Abortito",
+        "FTR_ABORT": "Abortisci",
         "FTR_INFO": "Informazioni",
         "FTR_RULE": "+ Regola",
         "FTR_CLIPBOARD": "Appunti",
@@ -504,5 +507,9 @@
     },
     "DIALOG_EDIT_APP_CONFIG": {
         "DEA_TITLE": "Modifica: app_config.xml"
+    },
+    "DIALOG_BOINC_STATISTICS_TASKS": {
+        "DBS_TITLE": "Statistiche di Boinc Tasks",
+        "DBS_STAT_TASKS": "Tasks"
     }
 }

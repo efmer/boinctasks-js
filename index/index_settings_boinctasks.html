@@ -49,8 +49,9 @@
     <input id="history_refresh_rate" name="history_refresh_rate" type="text"> <label id="trans_timing_history_refresh" for="history_refresh_rate"> History refresh rate (default 60 seconds, minimum 20 seconds, 0 to disable)</label>
 
     <br><br><hr>
-    <b><div id="trans_history">History</div></b><br>    
-    <input id="history_delete" name="history_delete" type="text"> <label id="trans_history_delete" for="history_delete"> Days to keep history (default 7)</label>
+    <b><div id="trans_tasks">Tasks</div></b><br>
+    <input id="tasks_short_time_cpu_perc" name="tasks_short_time_cpu_perc" type="checkbox"> <label id="trans_tasks_short_time_cpu_perc" for="tasks_short_time_cpu_perc"> Short time CPU %</label><br>
+    <input id="deadline_day" name="deadline_day" type="checkbox"> <label id="trans_deadline" for="deadline_day"> Deadline show day</label><br>
 
     <br><br><hr>
     <b><div id="trans_messages">Messages</div></b><br>
@@ -67,10 +68,12 @@
     <label id="highlight_project9" for="highlight_project_9">project </label> <input id="highlight_project_9" name="highlight_project_9" type="text">  <label id="highlight_message9" for="highlight_msg_9"> message </label> <input id="highlight_msg_9" name="highlight_msg_9" type="text"> J<br>
 
     <br><br><hr>
+    <b><div id="trans_history">History</div></b><br>    
+    <input id="history_delete" name="history_delete" type="text"> <label id="trans_history_delete" for="history_delete"> Days to keep history (default 7)</label>
+
+    <br><br><hr>
     <b><div id="trans_advanced">Advanced</div></b><br>
 
-    <input id="deadline_day" name="deadline_day" type="checkbox"> <label id="trans_deadline" for="deadline_day"> Deadline show day</label><br>
-    <br>
     <input id="socket_timeout" name="socket_timeout" type="text"> <label id="trans_socket" for="socket_timeout"> Socket timeout (default 8 seconds, minimum 4 seconds)</label> 
 
     <br><br><button id="apply">Apply changes</button>

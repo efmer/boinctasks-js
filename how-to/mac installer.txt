@@ -3,8 +3,8 @@
 // share folder
 https://support.apple.com/en-gb/guide/mac-help/mchlp1657/mac
 
-access:
-//ip/sb
+File access with explorer on Windows 11:
+\\mac-fred (local ip)
 
 copy all files except node_modules
 
@@ -45,19 +45,19 @@ https://developer.apple.com/documentation/security/customizing-the-notarization-
 x64 access problems for now use sudo
 sudo npm run make
 arm64
-npm run makeA64
+sudo npm run makeA64
 --------------------------
 Universal is possible but is large
 sudo npm run makeU
 
-local testing ./out/BoincTasks Js-darwin-x64
+local testing ./out/BoincTasks
 result in ./out/make/zip/darwin
 
 -----------------------------------------------
 Missing icon
 npm run macm 
 
-to test run file in ./dist/mac/BoincTasks Js.app/boinctasks Js-darwin-x64
+to test run file in ./dist/mac/BoincTasks 
 result in ./dist
 
 

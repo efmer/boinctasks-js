@@ -238,6 +238,15 @@ function isValid()
       gSettingsBt.historyRefreshRate = 0;
     }
 
+    if (gSettingsBt.bTasksShortTimeCpu == '1')
+    {
+      btC.bTasksShortTimeCpu = true;
+    }  
+    else
+    {  
+      btC.bTasksShortTimeCpu = false;
+    }
+
     if (gSettingsBt.historyDelete == 0)
     {
       gSettingsBt.historyRefreshRate = 0; // disable
@@ -264,72 +273,4 @@ function isValid()
   } catch (error) {
     logging.logError('SettingsBt,isValid', error);  
   }
-  
-
-  /* Doesn't work in Windows Store
-  if (gSettingsBt.startLogin === '1')
-  {
-    startAtLogin(true);
-  }
-  else
-  {
-    startAtLogin(false);
-  }
-  */
 }
-
-/* Doesn't work in Windows Store
-
-function startAtLogin(bRun)
-{
-  try {
-    const isDevelopment = process.env.NODE_ENV !== "production";
-    if (isDevelopment)
-    {
-      bRun = false;
-    }
-    let pathExe =  app.getPath('exe');
-
-    if (bRun)
-    {
-      app.setLoginItemSettings({openAtLogin: bRun, path: pathExe})
-    }
-    else
-    {
-      app.setLoginItemSettings({openAtLogin: false}); 
-    }
-    let state = app.getLoginItemSettings({
-      //..xx: bRun,
-      //path: pathExe
-    })
-    let login = "NO";
-    if (state.executableWillLaunchAtLogin)
-    {
-      login = "Yes";
-    }
-    if (isDevelopment)
-    {
-      login += " ,development";
-    }
-
-    let enabledFound = "?";
-    let nameFound = "?";
-    let exeFound = "?";
-
-    let li = state.launchItems;
-    if (li.length > 0)
-    {
-      nameFound = li[0].name;
-      exeFound = li[0].path;
-      if (li[0].enabled)
-      {
-        enabledFound = "Yes";
-      }
-    }
-
-    logging.logDebug("Start at login: " + login + " exe: " + exeFound + " key: " + nameFound + " Enabled: " + enabledFound);    
-  } catch (error) {
-    logging.logError('SettingsBt,startAtLogin', error);      
-  }
-}
-  */

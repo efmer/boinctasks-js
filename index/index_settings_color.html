@@ -6,7 +6,6 @@
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->    
     <link rel="stylesheet" href="../boinctasks/css/bt.css">
-    
   <title>BoincTasks Colors</title>
   </head>
   <body>
@@ -103,8 +102,11 @@
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
     <script type="text/javascript">
-      let Picker = require('../boinctasks/lib/vanilla-picker.min');     
+      let Picker = require('../boinctasks/lib/vanilla-picker.min');     <!-- Do not use a node module -->
     </script>
     <script type="text/javascript" src ='../render/renderer_settings_color.js'></script>
+    <style>
+      :root {color-scheme: light;};       <!-- We need this to keep the OK button visible in dark mode-->
+    </style>
   </body>
 </html>

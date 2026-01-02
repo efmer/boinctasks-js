@@ -327,13 +327,10 @@ function deleteOld(con)
         }
         if (last == 0)
         {
-            if (table.length == 1)  // the very last delete it
-            {
-                table.splice(0,1);
-                con.history.hash.splice(0,1);
-            }
-
+            table.splice(0,1);  // remove the first
+            con.history.hash.splice(0,1);
         }
+        
         if (last > 0)   
         {
             table.splice(0,last);

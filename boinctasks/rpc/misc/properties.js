@@ -68,7 +68,7 @@ function taskInfo(selected,gb)
       let url = res[2];
       let wu = "";
 
-      if (i>0) prop += addLine();
+      if (i>0) prop += addLineDouble();
 
       for (let c=0; c<connections.length;c++)
       {
@@ -140,8 +140,29 @@ function taskInfo(selected,gb)
                     {
                         prop += addInfo("Exit status",stateResult.exit_status[0]);
                         prop += addInfo("Platform", stateResult.platform[0]);
+                        prop += addInfo("Plan class", stateResult.plan_class[0]);
+
+                        let slot = "";
+                        let pid = "";
+                        prop += addLine();
+                        if (stateResult.active_task !== void 0)
+                        {
+                          let active = stateResult.active_task[0];
+                          slot = active.slot[0];
+                          pid =  active.pid[0];
+                          prop += addInfo("Active", "Yes");                          
+                          prop += addInfo("Slot", "slots/" + slot);
+                          prop += addInfo("Pid", pid);
+                        }
+                        else
+                        {
+                          prop += addInfo("Active", "No");    
+                        }
+                        prop += addLine();
+
+
                         let receivedS =  functions.getFormattedTime(stateResult.received_time[0]);
-                        prop += addInfo("Recieved", receivedS);
+                        prop += addInfo("Received", receivedS);
                     }
                 }
                 let stateWorkunits =  con.state.workunit;
@@ -183,7 +204,6 @@ function taskInfo(selected,gb)
 function projectInfo(selected,gb)
 {
   try {
-    let temp;
     let connections = gb.connections;
     let prop = "<table>";
     for (let i=0;i<selected.length;i++ )
@@ -192,7 +212,7 @@ function projectInfo(selected,gb)
       if (res.length !== 3) break;
       let computer = res[1];
 
-      if (i>0) prop += addLine();
+      if (i>0) prop += addLineDouble();
       for (let c=0; c<connections.length;c++)
       {
         if (connections[c].computerName === computer)
@@ -215,7 +235,7 @@ function projectInfo(selected,gb)
               {             
                 prop += addInfo("Project name", project.project_name);
                 prop += addInfo("Master Url", project.master_url);
-                prop += addInfo("Directory", project.project_dir);                
+                prop += addInfo("Directory", project.project_dir);               
                 prop += addInfo("Cross project ID", project.cross_project_id);
                 prop += addInfo("User name", project.user_name);
                 prop += addInfo("Team", project.team_name);
@@ -246,17 +266,17 @@ function projectInfo(selected,gb)
             }
           }        
         }
-      }
-      prop += "</table>";
-      if (prop.length > 100)
-      {
-        properties(prop,gb.theme);
-      }
-      else
-      {
-        properties("Nothing found".gb.theme);
-      }      
+      }     
     }
+    prop += "</table>";
+    if (prop.length > 100)
+    {
+      properties(prop,gb.theme);
+    }
+    else
+    {
+      properties("Nothing found".gb.theme);
+    }     
   } catch (error) {
     logging.logError('Properties,computerInfo', error);    
   }
@@ -407,6 +427,11 @@ function addInfo(cat, msg)
 function addLine()
 {
     return "<tr><td><hr></td><td><hr></td></tr>";
+}
+
+function addLineDouble()
+{
+    return "<tr><td><hr style='height:4px;border-width:0;color:gray;background-color:gray'></td><td><hr style='height:4px;border-width:0;color:gray;background-color:gray'></td></tr>";
 }
 
 function properties(msg,theme)

@@ -107,7 +107,7 @@
         "SEL_TRANSFERS": "Transferts",
         "SEL_MESSAGES": "Messages",
         "SEL_HISTORY": "Historique",
-        "SEL_NOTICES": "Avis"
+        "SEL_NOTICES": "Notifications"
     },
     "SUSPEND_REASON": {
         "SR_BATTERIES": "sur batteries",
@@ -166,7 +166,8 @@
         "MN_STATISTICS_TRANSFER": "Graphique des transferts de données",
         "MN_SHOW_CPU": "Afficher les tâches CPU",
         "MN_SHOW_NONCPUI": "Afficher les tâches CPU non intensives",
-        "MN_SHOW_GPU": "Afficher les tâches GPU"
+        "MN_SHOW_GPU": "Afficher les tâches GPU",
+        "MN_STATISTICS_TASKS": "Graphique des tâches"
     },
     "DIALOG_SETTINGS_BT": {
         "DS_BT_TITLE": "Réglages",
@@ -190,7 +191,9 @@
         "DS_BT_REGION": "Région",
         "DS_BT_LOCALE": "Locale (par défaut = vide, en-US, nl-NL)",
         "DS_BT_RESTART": "Redémarrer à",
-        "DS_BT_DEADLINED": "Afficher la date limite en jours"
+        "DS_BT_DEADLINED": "Afficher la date limite en jours",
+        "DS_BT_TASKS": "Tâches",
+        "DS_BT_SHORT_TIME_CPU_PERC": "Pourcentage d’utilisation du CPU à court terme"
     },
     "DIALOG_COLORS_BT": {
         "DC_BT_TITLE": "Réglages couleur",
@@ -504,5 +507,9 @@
     },
     "DIALOG_EDIT_APP_CONFIG": {
         "DEA_TITLE": "Éditer : app_config.xml"
+    },
+    "DIALOG_BOINC_STATISTICS_TASKS": {
+        "DBS_TITLE": "Statistiques des tâches BOINC",
+        "DBS_STAT_TASKS": "Tâches"
     }
 }

@@ -229,7 +229,7 @@ function dataSendReady(even)
   if (data.indexOf("success") < 0)
   {
     let msg = this.computerName + ": " + data;
-    logging.logErrorMsg("CcConfig,dataSendReady",msg);
+    logging.logDebug("CcConfig,dataSendReady",msg);
     return;
   }
     // finally read the changed cc_config.xml & app_config.xml
@@ -250,7 +250,7 @@ function dataReadConfigReady(even)
         message: btC.TL.BOX_CONFIG.BX_CC_CONFIG_INVALID_TAG_MESSAGE,
         detail: msg
     })
-    logging.logErrorMsg("CcConfig,dataReadConfigReady",msg);
+    logging.logDebug("CcConfig,dataReadConfigReady",msg);
     return;
   }
   else

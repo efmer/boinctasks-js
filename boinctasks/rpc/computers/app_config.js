@@ -272,7 +272,7 @@ function dataSendReady(even)
         message: btC.TL.BOX_CONFIG.BX_APP_CONFIG_INVALID_TAG_MESSAGE,
         detail: data
       })
-      logging.logErrorMsg("AppConfig,dataSendReady",data);
+      logging.logDebug("AppConfig,dataSendReady",data);
       return;        
   }
   else
@@ -296,7 +296,7 @@ function dataReadConfigReady(even)
         message: btC.TL.BOX_CONFIG.BX_APP_CONFIG_INVALID_TAG_MESSAGE,
         detail: msg
     })
-    logging.logErrorMsg("AppConfig,dataReadConfigReady",msg);
+    logging.logDebug("AppConfig,dataReadConfigReady",msg);
     return;
   }
   else

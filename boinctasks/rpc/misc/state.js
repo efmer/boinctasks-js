@@ -95,6 +95,7 @@ class State{
                     let ret = new Object();
                     ret.project = con.cacheProjectProject[pos];
                     ret.non = con.cacheProjectNon[pos]
+                    ret.projectShare = con.cacheProjectShare[pos]                    
                     return ret;
                 }
                 else
@@ -249,6 +250,11 @@ class ProcessState
                 {
                     let pState = projectState[i]
                     let url = pState.master_url[0];
+                    let projectShare = pState.resource_share[0];
+                    projectShare = projectShare * 100; // max 2 digits
+                    projectShare = parseInt(projectShare);
+                    projectShare /= 100;
+                    
                     let pos = con.cacheProjectUrl.indexOf(url);
                     if (pos < 0)
                     {
@@ -263,6 +269,7 @@ class ProcessState
                             con.cacheProjectUrl.push(url);
                             con.cacheProjectProject.push(pName); 
                             con.cacheProjectNon.push(pNon);
+                            con.cacheProjectShare.push(projectShare);                            
                             logging.logDebug('buildCache add: ' + con.computerName + " URL: " + url + " -> " + pName);                                              
                         }
                         else

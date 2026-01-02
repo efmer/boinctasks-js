@@ -227,7 +227,7 @@ function parse(xml)
 
 function getStatistics()
 {
-  statsArray = [];
+  let statsArray = [];
   try {
     for (let s=0;s<gStatisticsTransfer.length;s++)
     {
