@@ -1,0 +1,2 @@
+Electron
+npm install electron@latest
