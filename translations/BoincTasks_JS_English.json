@@ -39,7 +39,8 @@
         "T_MESSAGES_TIME": "Time",
         "T_MESSAGES_MESSAGE": "Message",
         "T_HISTORY_COMPLETED": "Completed",
-        "T_PROJECTS_VENUE": "Venue"
+        "T_PROJECTS_VENUE": "Venue",
+        "T_PROJECTS_TASKS": "Tasks"
     },
     "STATUS": {
         "S_TASK_DOWNLOADING": "Downloading",
@@ -191,7 +192,7 @@
         "DS_BT_REGION": "Region",
         "DS_BT_LOCALE": "Locale (default = empty, en-US, nl-NL)",
         "DS_BT_RESTART": "Restart at",
-        "DS_BT_DEADLINED": "Show the deadline as a day",
+        "DS_BT_DEADLINED": "Show deadline as day month year",
         "DS_BT_TASKS": "Tasks",
         "DS_BT_SHORT_TIME_CPU_PERC": "Short-time CPU percentage"
     },

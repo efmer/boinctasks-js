@@ -39,7 +39,8 @@
         "T_MESSAGES_TIME": "Tijd",
         "T_MESSAGES_MESSAGE": "Bericht",
         "T_HISTORY_COMPLETED": "Klaar",
-        "T_PROJECTS_VENUE": "Plaats"
+        "T_PROJECTS_VENUE": "Plaats",
+        "T_PROJECTS_TASKS": "Werk"
     },
     "STATUS": {
         "S_TASK_DOWNLOADING": "Laden",
@@ -191,7 +192,7 @@
         "DS_BT_REGION": "Regio",
         "DS_BT_LOCALE": "Locale (standaard = leeg, en-US, nl-NL)",
         "DS_BT_RESTART": "Opnieuw opstarten om",
-        "DS_BT_DEADLINED": "Toon einddatum als dag",
+        "DS_BT_DEADLINED": "Toon einddatum als dag maand jaar",
         "DS_BT_TASKS": "Werk",
         "DS_BT_SHORT_TIME_CPU_PERC": "Korte termijn CPU gebruik percentage"
     },

@@ -22,9 +22,9 @@ const Logging = require('../functions/logging');
 const logging = new Logging();
 const WindowsState = require('../functions/window_state');
 const windowsState = new WindowsState();
-const SendArray = require('../misc/send_array');
-const State = require('../misc/state');
-const conState = new State();
+//const SendArray = require('../misc/send_array');
+const AddTasks = require('../statistics/add_tasks');
+const addTasks = new AddTasks();
 
 const {BrowserWindow} = require('electron');
 const btC = require('../functions/btconstants');
@@ -160,8 +160,8 @@ function getTasksStatistics(gb)
     for (let i=0;i<gb.connections.length;i++)
     {
       let con = gb.connections[i];
-      let graphItem = addTaskCount(con);
-      addTaskHistoryCount(con,graphItem);      
+      let graphItem = addTasks.addTaskCount(con);
+      addTasks.addTaskHistoryCount(con,graphItem);      
       if (graphItem != null)
       {
        // let computer = con.computerName;
@@ -223,8 +223,6 @@ function getTasksStatistics(gb)
         if (receivedArray != null)
         {
           receivedArray.sort();
-
-
           let whenArray = [];
           let tasksArray = [];
 
@@ -289,156 +287,7 @@ function getTasksStatistics(gb)
   }
 }
 
-function addTaskCount(con)
-{
-  try {
-      let computer = con.computerName;
-      var graphItem = []; 
 
-      let results = con.results;
-      if (results == null)
-      {
-        return null;
-      }
-      let table = results.resultTable;
-      for (var i=0; i< table.length; i++)
-      {
-        if (table[i].filtered)
-        {
-            let tablef = table[i].resultTable;                
-            for (var tf=0; tf< tablef.length; tf++)
-            {
-                processTable(con,graphItem,computer,tablef[tf]);
-            }
-        }
-        else
-        {
-            processTable(con,graphItem,computer,table[i]);
-        }
-      }
-      return graphItem;
-  } catch (error) {
-      logging.logError('StatisticsTasksBoinc,addTaskCount', error);    
-  }  
-}
-
-function processTable(con,graphItem,computer,tableItem)
-{
-  try {
-    let projectUrl = tableItem.projectUrl;
-    let ret = conState.getProject(con,projectUrl)
-    let project = ret.project;   
-          
-    let recToDay = tableItem.received;  
-    let receivedDate = new Date(recToDay*1000);
-    receivedDate.setHours(0);
-    receivedDate.setMinutes(0);
-    receivedDate.setSeconds(0);
-    receivedDate.setMilliseconds(0);
-    let received = new Date(receivedDate).getTime()
-
-    // check if we already have the project
-    let iFound = -1;
-    for (var gi=0; gi< graphItem.length; gi++)
-    {
-      if (graphItem[gi].project == project)
-      {
-        iFound = gi;
-        break;
-      }
-    }
-    if (iFound >=0)
-    {
-      graphItem[gi].received.push(received);
-    }
-    else
-    {        
-      newItem = new Object(); 
-      newItem.computer = computer;        
-      newItem.project = project;        
-      newItem.received = [];
-      newItem.received.push(received);        
-      graphItem.push(newItem);
-    } 
-
-    let ii = 1;
-  } catch (error) {
-      logging.logError('StatisticsTasksBoinc,processTable', error);    
-  }   
-}
-
-function addTaskHistoryCount(con,graphItem)
-{
-  try {
-    let computer = con.computerName;
-    if (graphItem == null)
-    {
-      graphItem = []; 
-    }
-    let history = con.history;
-    if (history == null)
-    {
-      return null;
-    }
-    let historyTable = history.table;
-    if (historyTable == null)
-    {
-      return null;
-    }
-
-    for (var i=0; i< historyTable.length; i++)
-    {
-      processHistoryTable(con,graphItem,computer,historyTable[i]);
-    }
-    
-    return graphItem;
-    } catch (error) {
-        logging.logError('StatisticsTasksBoinc,addTaskHistoryCount', error);    
-  }  
-}
-
-function processHistoryTable(con,graphItem,computer,tableItem)
-{
-  try {
-    let project = tableItem.projectName
-          
-    let recToDay = tableItem.createTime;  
-    let receivedDate = new Date(recToDay*1000);
-    receivedDate.setHours(0);
-    receivedDate.setMinutes(0);
-    receivedDate.setSeconds(0);
-    receivedDate.setMilliseconds(0);
-    let received = new Date(receivedDate).getTime()
-
-    // check if we already have the project
-    let iFound = -1;
-    for (var gi=0; gi< graphItem.length; gi++)
-    {
-      if (graphItem[gi].project == project)
-      {
-        iFound = gi;
-        break;
-      }
-    }
-    if (iFound >=0)
-    {
-      graphItem[gi].received.push(received);
-    }
-    else
-    {        
-      newItem = new Object(); 
-      newItem.computer = computer;        
-      newItem.project = project;        
-      newItem.received = [];
-      newItem.received.push(received);        
-      graphItem.push(newItem);
-    } 
-
-    let ii = 1;
-  } catch (error) {
-      logging.logError('StatisticsTasksBoinc,processHistoryTable', error);    
-  }   
-}
 
 function sort(table, table2)
 {

@@ -39,7 +39,8 @@
         "T_MESSAGES_TIME": "Temps",
         "T_MESSAGES_MESSAGE": "Message",
         "T_HISTORY_COMPLETED": "Terminé",
-        "T_PROJECTS_VENUE": "Localisation"
+        "T_PROJECTS_VENUE": "Localisation",
+        "T_PROJECTS_TASKS": "Tâches"
     },
     "STATUS": {
         "S_TASK_DOWNLOADING": "Téléchargement",
@@ -191,7 +192,7 @@
         "DS_BT_REGION": "Région",
         "DS_BT_LOCALE": "Locale (par défaut = vide, en-US, nl-NL)",
         "DS_BT_RESTART": "Redémarrer à",
-        "DS_BT_DEADLINED": "Afficher la date limite en jours",
+        "DS_BT_DEADLINED": "Afficher la date limite en jour mois année",
         "DS_BT_TASKS": "Tâches",
         "DS_BT_SHORT_TIME_CPU_PERC": "Pourcentage d’utilisation du CPU à court terme"
     },

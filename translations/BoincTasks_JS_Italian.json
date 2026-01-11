@@ -39,7 +39,8 @@
         "T_MESSAGES_TIME": "Data",
         "T_MESSAGES_MESSAGE": "Messaggio",
         "T_HISTORY_COMPLETED": "Completato",
-        "T_PROJECTS_VENUE": "Luogo"
+        "T_PROJECTS_VENUE": "Luogo",
+        "T_PROJECTS_TASKS": "Attività"
     },
     "STATUS": {
         "S_TASK_DOWNLOADING": "Scaricamento",
@@ -191,9 +192,9 @@
         "DS_BT_REGION": "Regione",
         "DS_BT_LOCALE": "Nazionalizzazione (default = vuoto, en-US, it-IT)",
         "DS_BT_RESTART": "Riavvia a",
-        "DS_BT_DEADLINED": "Mostra scadenza come giorno",
-        "DS_BT_TASKS": "Tasks",
-        "DS_BT_SHORT_TIME_CPU_PERC": "Short-time CPU percentage"
+        "DS_BT_DEADLINED": "Mostra scadenza come giorno mese anno",
+        "DS_BT_TASKS": "Attività",
+        "DS_BT_SHORT_TIME_CPU_PERC": "Percentuale CPU a breve termine"
     },
     "DIALOG_COLORS_BT": {
         "DC_BT_TITLE": "Impostazioni colore",

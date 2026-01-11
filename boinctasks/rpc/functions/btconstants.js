@@ -43,7 +43,7 @@ module.exports = {
     LANG_SPANISH                : "lang_spanish",
 
     COMPUTERS_COLOMN_COUNT      : 10,
-    PROJECTS_COLOMN_COUNT       : 12,
+    PROJECTS_COLOMN_COUNT       : 13,
     TASKS_COLOMN_COUNT          : 18,
     TRANSFERS_COLOMN_COUNT      : 8,
     MESSAGES_COLUMN_COUNT       : 5,
@@ -51,6 +51,7 @@ module.exports = {
 
     PROJECT_NO_MORE_WORK_N      : 1,
     PROJECT_RUNNING_N           : 2,
+    PROJECT_SHOW_TASKS_COLUMN   : false,
 
     TASK_STATUS_DOWNLOADING_N   : 1,    
     TASK_STATUS_RUNNING_N       : 2,    

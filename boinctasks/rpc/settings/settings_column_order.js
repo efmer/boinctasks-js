@@ -122,7 +122,7 @@ function getOrder()
     logging.logError('SettingsColumnOrder,getOrder,orderProjects', error);      
   }
 
-  let orderTasks = new Object();
+  let orderTasks = null;
   try {   
     orderTasks = JSON.parse(readWrite.read("settings\\order", "tasks.json"));
     if (orderTasks === null)
@@ -138,7 +138,7 @@ function getOrder()
     logging.logError('SettingsColumnOrder,getOrder,orderTasks', error);      
   }
 
-  let orderTransfers = new Object();
+  let orderTransfers = null;
   try {   
     orderTransfers = JSON.parse(readWrite.read("settings\\order", "transfers.json"));
     if (orderTransfers === null)
@@ -154,7 +154,7 @@ function getOrder()
     logging.logError('SettingsColumnOrder,getOrder,orderTransfers', error);      
   }
 
-  let orderMessages = new Object();
+  let orderMessages = null;
   try {   
     orderMessages = JSON.parse(readWrite.read("settings\\order", "messages.json"));
     if (orderMessages === null)
@@ -170,7 +170,7 @@ function getOrder()
     logging.logError('SettingsColumnOrder,getOrder,orderMessages', error);      
   }
 
-  let orderHistory = new Object();
+  let orderHistory = null;
   try {   
     orderHistory = JSON.parse(readWrite.read("settings\\order", "history.json"));
     if (orderHistory === null)
@@ -228,6 +228,9 @@ function defaultProjects()
   {
     projects.check[i] = false;
   }
+  projects.check[11] = false;
+  projects.check[12] = false;  
+
   return projects;
 }
 
@@ -325,10 +328,6 @@ function valid(order, count)
   {
     checkA[order.order[i]]++ ;
   }
-  for (i=0;i<count;i++)
-  {
-    checkA[order.order[i]]++ ;
-  }
   return valid1(checkA)
 }
 
@@ -355,7 +354,7 @@ function validClear(checkA,max)
 
 function valid1(checkA)
 {
-  for (let i=0;i<checkA.lenght;i++)
+  for (let i=0;i<checkA.length;i++)
   {
     if (checkA[i] !== 1)
     {
@@ -382,17 +381,22 @@ function setComputers(gb, data)
 
 function setProjects(gb, data)
 {
-  if (data.length != btC.PROJECTS_COLOMN_COUNT*2) return;
-  let fetch = 0;
-  for (let i=0;i<btC.PROJECTS_COLOMN_COUNT;i++)
-  {
-    let pos =  data[fetch++];
-    let check =  data[fetch++];
-    gb.order.projects.order[pos] = i;
-    gb.order.projects.check[pos] = check;
-  }
-  json = JSON.stringify(gb.order.projects);
-  readWrite.write("settings\\order", "projects.json",json);
+  try {
+    if (data.length != btC.PROJECTS_COLOMN_COUNT*2) return;
+    let fetch = 0;
+    for (let i=0;i<btC.PROJECTS_COLOMN_COUNT;i++)
+    {
+      let pos =  data[fetch++];
+      let check =  data[fetch++];
+      gb.order.projects.order[pos] = i;
+      gb.order.projects.check[pos] = check;
+    }
+    json = JSON.stringify(gb.order.projects);
+    readWrite.write("settings\\order", "projects.json",json);
+  } catch (error) {
+    logging.logError('SettingsColumnOrder,setProjects', error);      
+    return tableArray;
+  }  
 }
 
 function setTasks(gb, data)
@@ -513,31 +517,37 @@ function setWindowsComputers(gb, type)
 
 function setWindowsProjects(gb, type)
 {
-  let items = '<b>' + btC.TL.SEL.SEL_PROJECTS + '</b><br><br><div id="sort_items" class="list-group">';
+  try {
+    let items = '<b>' + btC.TL.SEL.SEL_PROJECTS + '</b><br><br><div id="sort_items" class="list-group">';
 
-  let order = gb.order.projects;
+    let order = gb.order.projects;
 
-  itemsArray = [];
-  itemsArray[order.order[0]] = addItem(btC.TL.TAB.T_GENERAL_COMPUTER,0,order);
-  itemsArray[order.order[1]] = addItem(btC.TL.TAB.T_GENERAL_PROJECT,1,order);
-  itemsArray[order.order[2]] = addItem(btC.TL.TAB.T_PROJECTS_ACCOUNT,2,order);
-  itemsArray[order.order[3]] = addItem(btC.TL.TAB.T_PROJECTS_TEAM,3,order);
-  itemsArray[order.order[4]] = addItem(btC.TL.TAB.T_PROJECTS_CREDITS,4,order);
-  itemsArray[order.order[5]] = addItem(btC.TL.TAB.T_PROJECTS_CREDITS_AVG,5,order);
-  itemsArray[order.order[6]] = addItem(btC.TL.TAB.T_PROJECTS_CREDITS_HOST,6,order);
-  itemsArray[order.order[7]] = addItem(btC.TL.TAB.T_PROJECTS_CREDITS_HOST_AVG,7,order);
-  itemsArray[order.order[8]] = addItem(btC.TL.TAB.T_PROJECTS_SHARE,8,order);
-  itemsArray[order.order[9]] = addItem(btC.TL.TAB.T_GENERAL_STATUS,9,order);
-  itemsArray[order.order[10]] = addItem(btC.TL.TAB.T_PROJECTS_REC,10,order);  
-  itemsArray[order.order[11]] = addItem(btC.TL.TAB.T_PROJECTS_VENUE,11,order);
+    itemsArray = [];
+    itemsArray[order.order[0]] = addItem(btC.TL.TAB.T_GENERAL_COMPUTER,0,order);
+    itemsArray[order.order[1]] = addItem(btC.TL.TAB.T_GENERAL_PROJECT,1,order);
+    itemsArray[order.order[2]] = addItem(btC.TL.TAB.T_PROJECTS_ACCOUNT,2,order);
+    itemsArray[order.order[3]] = addItem(btC.TL.TAB.T_PROJECTS_TEAM,3,order);
+    itemsArray[order.order[4]] = addItem(btC.TL.TAB.T_PROJECTS_CREDITS,4,order);
+    itemsArray[order.order[5]] = addItem(btC.TL.TAB.T_PROJECTS_CREDITS_AVG,5,order);
+    itemsArray[order.order[6]] = addItem(btC.TL.TAB.T_PROJECTS_CREDITS_HOST,6,order);
+    itemsArray[order.order[7]] = addItem(btC.TL.TAB.T_PROJECTS_CREDITS_HOST_AVG,7,order);
+    itemsArray[order.order[8]] = addItem(btC.TL.TAB.T_PROJECTS_SHARE,8,order);
+    itemsArray[order.order[9]] = addItem(btC.TL.TAB.T_GENERAL_STATUS,9,order);
+    itemsArray[order.order[10]] = addItem(btC.TL.TAB.T_PROJECTS_REC,10,order);  
+    itemsArray[order.order[11]] = addItem(btC.TL.TAB.T_PROJECTS_VENUE,11,order);
+    itemsArray[order.order[12]] = addItem(btC.TL.TAB.T_PROJECTS_TASKS,12,order);
 
-  for (let i=0;i<itemsArray.length;i++)
+    for (let i=0;i<itemsArray.length;i++)
+    {
+      items += itemsArray[i];
+    }
+    items += '</div>'
+    let str = JSON.stringify(items);
+    gChildColumn.webContents.send('set', type, str);
+  } catch (error) 
   {
-    items += itemsArray[i];
-  }
-  items += '</div>'
-  let str = JSON.stringify(items);
-  gChildColumn.webContents.send('set', type, str);
+    logging.logError('SettingsColumnOrder,setWindowsProjects', error);    
+  }   
 }
 
 function setWindowsTasks(gb, type)

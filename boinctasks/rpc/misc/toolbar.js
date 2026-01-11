@@ -42,8 +42,11 @@ class Toolbar{
         try {
             let sel = 0;
             if (gb.selectedTab != gb.currentTable.name)
-            {
-                this.hide(mainwindow);
+            {            
+                if (gb.mainwindow != void 0) // not sure why this is here...
+                {
+                    this.hide(gb.mainwindow);
+                }
                 return;
             }
 

@@ -558,7 +558,7 @@ class Connections{
     {
         if (gClassStatisticsBoinc === null)
         {
-            const StatisticsBoinc = require('./settings/statistics_boinc');            
+            const StatisticsBoinc = require('./statistics/statistics_boinc');            
             gClassStatisticsBoinc = new StatisticsBoinc();
         }
         gClassStatisticsBoinc.start(type,gB);
@@ -568,7 +568,7 @@ class Connections{
     {
         if (gClassStatisticsTransferBoinc === null)
         {
-            const StatisticsTransferBoinc = require('./settings/statistics_transfer_boinc');            
+            const StatisticsTransferBoinc = require('./statistics/statistics_transfer_boinc');            
             gClassStatisticsTransferBoinc = new StatisticsTransferBoinc();
         }
         gClassStatisticsTransferBoinc.start(type,gB);
@@ -578,7 +578,7 @@ class Connections{
     {
         if (gClassStatisticsTasksBoinc === null)
         {
-            const StatisticsTasksBoinc = require('./settings/statistics_tasks');            
+            const StatisticsTasksBoinc = require('./statistics/statistics_tasks');            
             gClassStatisticsTasksBoinc = new StatisticsTasksBoinc();
         }
         gClassStatisticsTasksBoinc.start(type,gB);

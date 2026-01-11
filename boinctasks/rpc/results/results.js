@@ -105,8 +105,8 @@ class ResultItems
                 let version = parseInt(item.version_num) / 100;
                 let wu = item.wu_name[0];
                 let wuName = item.name[0];
-                let app = "Initializing...";
-                let project = "Initializing...";
+                let app = btC.INITIALIZING;
+                let project = btC.INITIALIZING;
                 let projectUrl = item.project_url[0];
                 let bNonCpuIntensive = false;
                 let projectShare = 0;
@@ -134,12 +134,19 @@ class ResultItems
                 resultItem.app = versionApp;
                 resultItem.wu = wu;
                 resultItem.wuName = wuName;
+                let nrOfCpu = 1;
                 let resources = item.resources;
                 if (resources === void 0) resources = "";
-
+                else
+                {
+                    let cpuResources = resources[0].toLowerCase();
+                    let nrCpuResources = cpuResources.split('cpu');
+                    if (nrCpuResources.length > 0)
+                    {
+                        nrOfCpu = nrCpuResources[0];
+                    }
+                }
                 resultItem.resources = resources;
-
-//                let elapsed = 0;
 
                 let iState = item.state[0];
                 if (iState > 2)
@@ -180,6 +187,7 @@ class ResultItems
                     resultItem.gpuPerc = con.temp.gpuP;
                     resultItem.cpuT = con.temp.cpuT;
                     resultItem.gpuT = con.temp.gpuT;
+
                     bActive = true;
 
                     if (btC.bTasksShortTimeCpu)
@@ -207,6 +215,7 @@ class ResultItems
                                     else
                                     {
                                         cpu = (deltaCpuTime/deltaElapsedTime) * 100;
+                                        cpu /= nrOfCpu;
                                     }
                                     let cpuArray = item.cpuArray;                                
                                     cpuArray.push(cpu);
@@ -239,11 +248,11 @@ class ResultItems
                                     }
                                     else
                                     {
-                                        cpuTotal /= item.count;
-                                        if (cpuTotal > 100)
-                                        { 
-                                            cpuTotal = 100;
-                                        }
+                                        cpuTotal /= item.count;                                        
+                                        //if (cpuTotal > 100)
+                                        //{ 
+                                        //    cpuTotal = 100;
+                                        // }
                                     }
 
                                     if (item.count > MOVING_AVERAGE)
@@ -285,7 +294,11 @@ class ResultItems
                     else 
                     {             
                         cpu = (cpuTime/elapsedTime) * 100;
-                        if (cpu > 100) cpu = 100;
+                        cpu /= nrOfCpu;
+                //        if (cpu > 100)
+                //        {
+                //            cpu = 100;
+                //        }
                         resultItem.cpu = cpu;                  
                     }
                 }

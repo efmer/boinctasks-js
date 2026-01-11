@@ -39,7 +39,8 @@
         "T_MESSAGES_TIME": "Tiempo",
         "T_MESSAGES_MESSAGE": "Mensaje",
         "T_HISTORY_COMPLETED": "Finalizado",
-        "T_PROJECTS_VENUE": "Perfil"
+        "T_PROJECTS_VENUE": "Perfil",
+        "T_PROJECTS_TASKS": "Tareas"
     },
     "STATUS": {
         "S_TASK_DOWNLOADING": "Descargando",
@@ -153,7 +154,7 @@
         "MN_BT_COLOR": "Ajustes color BoincTasks",
         "MN_BOINC_SET": "Ajustes Boinc",
         "MN_BOINC_ALLOW": "Permitir Boinc",
-        "MN_BOINC_BENCH": "Ejecutar pruebas rendimiento Boinc'",
+        "MN_BOINC_BENCH": "Ejecutar pruebas rendimiento Boinc",
         "MN_BOINC_READ_CF": "Leer archivos configuración Boinc",
         "MN_RULES": "Reglas",
         "MN_RULES_EMAIL": "Email",
@@ -191,7 +192,7 @@
         "DS_BT_REGION": "Región",
         "DS_BT_LOCALE": "Local (por defecto = en blanco, en-US, nl-NL)",
         "DS_BT_RESTART": "Reiniciar en",
-        "DS_BT_DEADLINED": "Muestra fecha límite como un día",
+        "DS_BT_DEADLINED": "Mostrar fecha límite como día mes año",
         "DS_BT_TASKS": "Tareas",
         "DS_BT_SHORT_TIME_CPU_PERC": "% CPU en periodo corto"
     },

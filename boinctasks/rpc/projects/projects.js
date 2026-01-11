@@ -16,6 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+const AddTasks = require('../statistics/add_tasks');
+const addTasks = new AddTasks();
 const Functions = require('../functions/functions');
 const functions = new Functions();
 const Logging = require('../functions/logging');
@@ -49,7 +51,7 @@ class ProjectItems
             for (var i=0; i< this.project.length; i++)
             {
                 var item = this.project[i];
-                var projectName = "Initializing...";
+                var projectName = btC.INITIALIZING;
                 var projectUrl = item.master_url[0];                
                 if (state != null)
                 {
@@ -70,10 +72,11 @@ class ProjectItems
                 projectItem.rec = parseFloat(item.rec);              
                 projectItem.venue = item.host_venue;
                 getStatus(item, projectItem);
+                getTasks(con,projectItem);               
                 this.projectTable.push(projectItem);
             }         
         } catch (error) {
-            logging.logError('ProjectItems,add', error);                  
+            logging.logError('Projects,ProjectItems,add', error);                  
             return null;
         }        
     }
@@ -234,5 +237,17 @@ function getStatus(item, projectItem)
         projectItem.status = status
     } catch (error) {
         logging.logError('Projects,getStatus', error);    
-    }    
+    }       
 }
+
+function getTasks(con,projectItem)
+{
+    try 
+    {
+        let result = addTasks.getTasksComputer(con,projectItem);
+        projectItem.tasks = result;
+    } catch (error) {
+        logging.logError('Projects,getTasks', error);    
+    }        
+} 
+
