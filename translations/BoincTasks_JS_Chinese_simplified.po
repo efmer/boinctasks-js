@@ -1,0 +1,2273 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: BoincTasks JS\n"
+"Language: zh-Hans\n"
+
+#: 
+msgctxt "TAB"
+msgid "T_COMPUTERS_GROUP"
+msgstr "分组"
+
+#: 
+msgctxt "TAB"
+msgid "T_COMPUTERS_IP"
+msgstr "地址"
+
+#: 
+msgctxt "TAB"
+msgid "T_COMPUTERS_CPID"
+msgstr "跨项目标识符"
+
+#: 
+msgctxt "TAB"
+msgid "T_COMPUTERS_PORT"
+msgstr "端口"
+
+#: 
+msgctxt "TAB"
+msgid "T_COMPUTERS_PASSWORD"
+msgstr "密码"
+
+#: 
+msgctxt "TAB"
+msgid "T_COMPUTERS_BOINC"
+msgstr "版本"
+
+#: 
+msgctxt "TAB"
+msgid "T_COMPUTERS_PLATFORM"
+msgstr "平台"
+
+#: 
+msgctxt "TAB"
+msgid "T_PROJECTS_ACCOUNT"
+msgstr "账户"
+
+#: 
+msgctxt "TAB"
+msgid "T_PROJECTS_TEAM"
+msgstr "团队"
+
+#: 
+msgctxt "TAB"
+msgid "T_PROJECTS_CREDITS"
+msgstr "总积分"
+
+#: 
+msgctxt "TAB"
+msgid "T_PROJECTS_CREDITS_AVG"
+msgstr "平均积分"
+
+#: 
+msgctxt "TAB"
+msgid "T_PROJECTS_CREDITS_HOST"
+msgstr "主机积分"
+
+#: 
+msgctxt "TAB"
+msgid "T_PROJECTS_CREDITS_HOST_AVG"
+msgstr "主机平均积分"
+
+#: 
+msgctxt "TAB"
+msgid "T_PROJECTS_SHARE"
+msgstr "资源分享"
+
+#: 
+msgctxt "TAB"
+msgid "T_PROJECTS_REC"
+msgstr "REC"
+
+#: 
+msgctxt "TAB"
+msgid "T_GENERAL_COMPUTER"
+msgstr "计算机"
+
+#: 
+msgctxt "TAB"
+msgid "T_GENERAL_PROJECT"
+msgstr "项目"
+
+#: 
+msgctxt "TAB"
+msgid "T_GENERAL_APPLICATION"
+msgstr "计算程序"
+
+#: 
+msgctxt "TAB"
+msgid "T_GENERAL_NAME"
+msgstr "任务名称"
+
+#: 
+msgctxt "TAB"
+msgid "T_GENERAL_ELAPSED"
+msgstr "已用时间"
+
+#: 
+msgctxt "TAB"
+msgid "T_GENERAL_CPU"
+msgstr "CPU"
+
+#: 
+msgctxt "TAB"
+msgid "T_GENERAL_PROGRESS"
+msgstr "进度"
+
+#: 
+msgctxt "TAB"
+msgid "T_GENERAL_STATUS"
+msgstr "状态"
+
+#: 
+msgctxt "TAB"
+msgid "T_TASK_TIMELEFT"
+msgstr "剩余时间"
+
+#: 
+msgctxt "TAB"
+msgid "T_TASK_DEADLINE"
+msgstr "上报期限"
+
+#: 
+msgctxt "TAB"
+msgid "T_TASK_USE"
+msgstr "计算资源"
+
+#: 
+msgctxt "TAB"
+msgid "T_TASK_CHECKPOINT"
+msgstr "Checkpoint"
+
+#: 
+msgctxt "TAB"
+msgid "T_TASK_RECEIVED"
+msgstr "接收日期"
+
+#: 
+msgctxt "TAB"
+msgid "T_TASK_MEMORYV"
+msgstr "虚拟内存"
+
+#: 
+msgctxt "TAB"
+msgid "T_TASK_MEMORY"
+msgstr "内存"
+
+#: 
+msgctxt "TAB"
+msgid "T_TASK_TEMP"
+msgstr "温度"
+
+#: 
+msgctxt "TAB"
+msgid "T_TASK_TTHROTTLE"
+msgstr "Run %"
+
+#: 
+msgctxt "TAB"
+msgid "T_TRANSFERS_FILE"
+msgstr "文件"
+
+#: 
+msgctxt "TAB"
+msgid "T_TRANSFERS_SIZE"
+msgstr "大小"
+
+#: 
+msgctxt "TAB"
+msgid "T_TRANSFERS_SPEED"
+msgstr "速度"
+
+#: 
+msgctxt "TAB"
+msgid "T_MESSAGES_NR"
+msgstr "Nr"
+
+#: 
+msgctxt "TAB"
+msgid "T_MESSAGES_TIME"
+msgstr "Time"
+
+#: 
+msgctxt "TAB"
+msgid "T_MESSAGES_MESSAGE"
+msgstr "Message"
+
+#: 
+msgctxt "TAB"
+msgid "T_HISTORY_COMPLETED"
+msgstr "Completed"
+
+#: 
+msgctxt "STATUS"
+msgid "S_TASK_DOWNLOADING"
+msgstr "Downloading"
+
+#: 
+msgctxt "STATUS"
+msgid "S_TASK_RUNNING"
+msgstr "Running"
+
+#: 
+msgctxt "STATUS"
+msgid "S_TASK_READY_START"
+msgstr "Ready to start"
+
+#: 
+msgctxt "STATUS"
+msgid "S_TASK_WAITING"
+msgstr "Waiting to run"
+
+#: 
+msgctxt "STATUS"
+msgid "S_TASK_SUSPENDED"
+msgstr "Suspended"
+
+#: 
+msgctxt "STATUS"
+msgid "S_TASK_SUSPENDED_USER"
+msgstr "Suspended by user"
+
+#: 
+msgctxt "STATUS"
+msgid "S_TASK_UPLOADING"
+msgstr "Uploading"
+
+#: 
+msgctxt "STATUS"
+msgid "S_TASK_READY_REPORT"
+msgstr "Ready to report"
+
+#: 
+msgctxt "STATUS"
+msgid "S_TASK_COMPUTATION"
+msgstr "Computation error"
+
+#: 
+msgctxt "STATUS"
+msgid "S_TASK_ABORT"
+msgstr "Aborted"
+
+#: 
+msgctxt "STATUS"
+msgid "S_TASK_HP"
+msgstr ",Hp"
+
+#: 
+msgctxt "TAB_MSG"
+msgid "TM_EMPTY_TABLE"
+msgstr "<br><br><br><br><b>Empty, select connected computer(s)."
+
+#: 
+msgctxt "TAB_MSG"
+msgid "TM_EMPTY_MESSAGES"
+msgstr "<br><br><br><br><b>Empty, select a connected computer."
+
+#: 
+msgctxt "SEL"
+msgid "SEL_COMPUTERS"
+msgstr "Computers"
+
+#: 
+msgctxt "SEL"
+msgid "SEL_PROJECTS"
+msgstr "Projects"
+
+#: 
+msgctxt "SEL"
+msgid "SEL_TASKS"
+msgstr "Tasks"
+
+#: 
+msgctxt "SEL"
+msgid "SEL_TRANSFERS"
+msgstr "Transfers"
+
+#: 
+msgctxt "SEL"
+msgid "SEL_MESSAGES"
+msgstr "Messages"
+
+#: 
+msgctxt "SEL"
+msgid "SEL_HISTORY"
+msgstr "History"
+
+#: 
+msgctxt "SEL"
+msgid "SEL_NOTICES"
+msgstr "Notices"
+
+#: 
+msgctxt "SUSPEND_REASON"
+msgid "SR_BATTERIES"
+msgstr "on batteries"
+
+#: 
+msgctxt "SUSPEND_REASON"
+msgid "SR_USER_ACTIVE"
+msgstr "user active"
+
+#: 
+msgctxt "SUSPEND_REASON"
+msgid "SR_USER_REQ"
+msgstr "user request"
+
+#: 
+msgctxt "SUSPEND_REASON"
+msgid "SR_TIME_OF_DAY"
+msgstr "time of day"
+
+#: 
+msgctxt "SUSPEND_REASON"
+msgid "SR_BENCHMARKS"
+msgstr "benchmarks"
+
+#: 
+msgctxt "SUSPEND_REASON"
+msgid "SR_DISK_SIZE"
+msgstr "disk size"
+
+#: 
+msgctxt "SUSPEND_REASON"
+msgid "SR_NO_RECENT_INPUT"
+msgstr "no recent input"
+
+#: 
+msgctxt "SUSPEND_REASON"
+msgid "SR_INITIAL_DELAY"
+msgstr "initial delay"
+
+#: 
+msgctxt "SUSPEND_REASON"
+msgid "SR_EXCLUSIVE_APP_RUNNING"
+msgstr "exclusive app running"
+
+#: 
+msgctxt "SUSPEND_REASON"
+msgid "SR_CPU_USAGE"
+msgstr "CPU usage"
+
+#: 
+msgctxt "SUSPEND_REASON"
+msgid "SR_MEM_TOO_LARGE"
+msgstr "mem too large"
+
+#: 
+msgctxt "SUSPEND_REASON"
+msgid "SR_MEM_NEED_SHMEM"
+msgstr "mem need shmem"
+
+#: 
+msgctxt "SUSPEND_REASON"
+msgid "SR_MEM_GPU"
+msgstr "mem GPU"
+
+#: 
+msgctxt "SUSPEND_REASON"
+msgid "SR_UNKNOWN"
+msgstr "Unknown suspend reason"
+
+#: 
+msgctxt "STATUS"
+msgid "S_FILTER_TASKS"
+msgstr "[Tasks]"
+
+#: 
+msgctxt "MENU"
+msgid "MN_ABOUT"
+msgstr "About BoincTasks Js"
+
+#: 
+msgctxt "MENU"
+msgid "MN_MAC_CLOSE"
+msgstr "Close"
+
+#: 
+msgctxt "MENU"
+msgid "MN_RESTART"
+msgstr "Restart"
+
+#: 
+msgctxt "MENU"
+msgid "MN_FILE"
+msgstr "File"
+
+#: 
+msgctxt "MENU"
+msgid "MN_EXIT"
+msgstr "Exit"
+
+#: 
+msgctxt "MENU"
+msgid "MN_VIEW"
+msgstr "View"
+
+#: 
+msgctxt "MENU"
+msgid "MN_SIDEBAR_COMPUTER"
+msgstr "Sidebar Computers"
+
+#: 
+msgctxt "MENU"
+msgid "MN_COLUMN_WIDTH"
+msgstr "Adjust column width"
+
+#: 
+msgctxt "MENU"
+msgid "MN_COLUMN_ORDER"
+msgstr "Hide or change column order"
+
+#: 
+msgctxt "MENU"
+msgid "MN_COMPUTERS"
+msgstr "Computers"
+
+#: 
+msgctxt "MENU"
+msgid "MN_FIND"
+msgstr "Find"
+
+#: 
+msgctxt "MENU"
+msgid "MN_EDIT"
+msgstr "Edit"
+
+#: 
+msgctxt "MENU"
+msgid "MN_ADD_COMPUTER"
+msgstr "Add"
+
+#: 
+msgctxt "MENU"
+msgid "MN_PROJECTS"
+msgstr "Projects"
+
+#: 
+msgctxt "MENU"
+msgid "MN_ADD_PROJECT"
+msgstr "Add a new project"
+
+#: 
+msgctxt "MENU"
+msgid "MN_ACCOUNT"
+msgstr "Account manager"
+
+#: 
+msgctxt "MENU"
+msgid "MN_SHOW"
+msgstr "Show"
+
+#: 
+msgctxt "MENU"
+msgid "MN_LOG"
+msgstr "Log"
+
+#: 
+msgctxt "MENU"
+msgid "MN_LOG_DEBUG"
+msgstr "Debug Log"
+
+#: 
+msgctxt "MENU"
+msgid "MN_LOG_RULES"
+msgstr "Rules Log"
+
+#: 
+msgctxt "MENU"
+msgid "MN_LOG_ERROR"
+msgstr "Error Log"
+
+#: 
+msgctxt "MENU"
+msgid "MN_EXTRA"
+msgstr "Extra"
+
+#: 
+msgctxt "MENU"
+msgid "MN_BT_SET"
+msgstr "BoincTasks settings"
+
+#: 
+msgctxt "MENU"
+msgid "MN_BT_COLOR"
+msgstr "BoincTasks color settings"
+
+#: 
+msgctxt "MENU"
+msgid "MN_BOINC_SET"
+msgstr "Boinc settings"
+
+#: 
+msgctxt "MENU"
+msgid "MN_BOINC_ALLOW"
+msgstr "Boinc allow"
+
+#: 
+msgctxt "MENU"
+msgid "MN_BOINC_BENCH"
+msgstr "Boinc run benchmark"
+
+#: 
+msgctxt "MENU"
+msgid "MN_BOINC_READ_CF"
+msgstr "Boinc read config files"
+
+#: 
+msgctxt "MENU"
+msgid "MN_RULES"
+msgstr "Rules"
+
+#: 
+msgctxt "MENU"
+msgid "MN_RULES_EMAIL"
+msgstr "Email"
+
+#: 
+msgctxt "MENU"
+msgid "MN_HELP"
+msgstr "Help"
+
+#: 
+msgctxt "MENU"
+msgid "MN_UPDATES"
+msgstr "Check for updates"
+
+#: 
+msgctxt "MENU"
+msgid "MN_OPEN"
+msgstr "Open"
+
+#: 
+msgctxt "MENU"
+msgid "MN_SNOOZE"
+msgstr "Snooze"
+
+#: 
+msgctxt "MENU"
+msgid "MN_STATISTICS"
+msgstr "Statistics graph"
+
+#: 
+msgctxt "MENU"
+msgid "MN_RULES_EDIT"
+msgstr "Edit"
+
+#: 
+msgctxt "DIALOG_SETTINGS_BT"
+msgid "DS_BT_TITLE"
+msgstr "Settings"
+
+#: 
+msgctxt "DIALOG_SETTINGS_BT"
+msgid "DS_BT_LOGIN"
+msgstr "Startup"
+
+#: 
+msgctxt "DIALOG_SETTINGS_BT"
+msgid "DS_BT_HIDE_START"
+msgstr "Start BoincTasks Js hidden"
+
+#: 
+msgctxt "DIALOG_SETTINGS_BT"
+msgid "DS_BT_STYLING"
+msgstr "Styling"
+
+#: 
+msgctxt "DIALOG_SETTINGS_BT"
+msgid "DS_BT_STYLING_DEF"
+msgstr "Default = empty, more info"
+
+#: 
+msgctxt "DIALOG_SETTINGS_BT"
+msgid "DS_BT_TIMING"
+msgstr "Timing"
+
+#: 
+msgctxt "DIALOG_SETTINGS_BT"
+msgid "DS_BT_TIMING_REFRESH"
+msgstr "Refresh rate (Default 2 seconds, minimum 1 second)"
+
+#: 
+msgctxt "DIALOG_SETTINGS_BT"
+msgid "DS_BT_HISTORY_REFRESH"
+msgstr "History refresh rate (default 60 seconds, minimum 20 seconds, 0 to disable)"
+
+#: 
+msgctxt "DIALOG_SETTINGS_BT"
+msgid "DS_BT_HISTORY_DELETE"
+msgstr "Days to keep history (default 7)"
+
+#: 
+msgctxt "DIALOG_SETTINGS_BT"
+msgid "DS_BT_MESSAGES"
+msgstr "Messages"
+
+#: 
+msgctxt "DIALOG_SETTINGS_BT"
+msgid "DS_BT_MESSAGES_EXP"
+msgstr "Highlighted lines, that match the project and/or part of the message"
+
+#: 
+msgctxt "DIALOG_SETTINGS_BT"
+msgid "DS_BT_MESSAGES_PROJECT"
+msgstr "Project"
+
+#: 
+msgctxt "DIALOG_SETTINGS_BT"
+msgid "DS_BT_MESSAGES_MESSAGE"
+msgstr "Message"
+
+#: 
+msgctxt "DIALOG_SETTINGS_BT"
+msgid "DS_BT_ADVANCED"
+msgstr "Advanced"
+
+#: 
+msgctxt "DIALOG_SETTINGS_BT"
+msgid "DS_BT_SOCKET_TO"
+msgstr "Socket timeout (default 8 seconds, minimum 4 seconds)"
+
+#: 
+msgctxt "DIALOG_SETTINGS_BT"
+msgid "DS_BT_BUTTON_APPLY"
+msgstr "Apply changes"
+
+#: 
+msgctxt "DIALOG_SETTINGS_BT"
+msgid "DS_BT_HISTORY"
+msgstr "History"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_TITLE"
+msgstr "Settings Color"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_PROJECT"
+msgstr "Project"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_PROJECT_RUNNING"
+msgstr "Running"
+
+#: 
+msgctxt "DIALOG_SETTINGS_BT"
+msgid "DC_BT_PROJECT_SUSPENDED"
+msgstr "Suspended"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_PROJECT_NO_NEW"
+msgstr "No new work"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_TASKS"
+msgstr "Task"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_TASKS_DOWNLOAD"
+msgstr "Up-Download"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_TASKS_READY_REPORT"
+msgstr "Ready to report"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_TASKS_RUNNING"
+msgstr "Running"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_TASKS_RUNNING_HP"
+msgstr "Running High priority"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_TASKS_ABORT"
+msgstr "Aborted"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_TASKS_WAITING"
+msgstr "Waiting to run"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_TASKS_READY_START"
+msgstr "Ready to start"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_TASKS_ERROR"
+msgstr "Error"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_TASKS_SUSPENDED"
+msgstr "Suspended"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_TASKS_SUSPENDED_USR"
+msgstr "Suspended by user"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_MSG"
+msgstr "Messages"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_MSG_DEFAULT"
+msgstr "Normal"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_MSG_PRIORITY"
+msgstr "Priority"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_MSG_HIGHLIGHT"
+msgstr "Highlight"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_HISTORY"
+msgstr "History"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_HISTORY_OK"
+msgstr "History OK"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_HISTORY_ERROR"
+msgstr "History Error"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_SYSTEM"
+msgstr "System"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_SYSTEM_SEL_BACK"
+msgstr "Selection"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_SYSTEM_SEL_TEXT"
+msgstr "Selection text"
+
+#: 
+msgctxt "DIALOG_COLORS_BT"
+msgid "DC_BT_SYSTEM_PROGRESS"
+msgstr "Progress bar"
+
+#: 
+msgctxt "DIALOG_COLUMN_ORDER"
+msgid "DCO_TITLE"
+msgstr "Column order"
+
+#: 
+msgctxt "DIALOG_COLUMN_ORDER"
+msgid "DCO_INFO"
+msgstr "Check the columns you want to show.<br>\n"
+"The rearrange, drag the items up or down.<br>"
+
+#: 
+msgctxt "DIALOG_COLUMN_ORDER"
+msgid "DCO_APPLY"
+msgstr "Apply changes"
+
+#: 
+msgctxt "DIALOG_COMPUTER_SCAN"
+msgid "DCS_TITLE"
+msgstr "Computer Scan"
+
+#: 
+msgctxt "DIALOG_COMPUTER_SCAN"
+msgid "DCS_PASSWORD"
+msgstr "Password"
+
+#: 
+msgctxt "DIALOG_COMPUTER_SCAN"
+msgid "DCS_PORT"
+msgstr "Port"
+
+#: 
+msgctxt "DIALOG_COMPUTER_SCAN"
+msgid "DCS_EXPLAIN"
+msgstr "The password can be found in the BOINC data folder, in a file called gui_rpc_auth.cfg.<br>\n"
+"If you didn't already, make sure BOINC connections are allowed by editing remote_host.cfg on the remote computer.<br><br>\n"
+"<a href=\"https://efmer.com/boinctasks-js-find-computers/\">Before proceeding. Click here to read the BoincTasks manual</a>.<br><br><br>\n"
+"Fill in the password, or leave it empty (you won't get a computer name if you leave it empty)<br>\n"
+"You may leave the port empty, for the default port 31416.<br><br>"
+
+#: 
+msgctxt "DIALOG_COMPUTER_SCAN"
+msgid "DCS_START"
+msgstr "Start"
+
+#: 
+msgctxt "DIALOG_COMPUTER_SCAN"
+msgid "DCS_WITH_BOINC"
+msgstr "Computers with BOINC:"
+
+#: 
+msgctxt "DIALOG_COMPUTER_SCAN"
+msgid "DCS_IP"
+msgstr "Ip"
+
+#: 
+msgctxt "DIALOG_COMPUTER_SCAN"
+msgid "DCS_NAME"
+msgstr "Name"
+
+#: 
+msgctxt "DIALOG_COMPUTER_SCAN"
+msgid "DCS_CPID"
+msgstr "Cpid"
+
+#: 
+msgctxt "DIALOG_COMPUTER_SCAN"
+msgid "TO_SCAN"
+msgstr "To scan:"
+
+#: 
+msgctxt "DIALOG_COMPUTER_SCAN"
+msgid "DCS_READY_IN"
+msgstr ", ready in:"
+
+#: 
+msgctxt "DIALOG_COMPUTER_SCAN"
+msgid "DCS_SECONDS"
+msgstr "seconds"
+
+#: 
+msgctxt "DIALOG_COMPUTER_SCAN"
+msgid "DCS_ADD_SELECTED"
+msgstr "Add selected computers"
+
+#: 
+msgctxt "DIALOG_COMPUTER_SCAN"
+msgid "DSC_EXPLAIN_FINISH"
+msgstr "If you see:"
+
+#: 
+msgctxt "DIALOG_COMPUTER_SCAN"
+msgid "DSC_NO_PASSWORD"
+msgstr "Unable to connect"
+
+#: 
+msgctxt "DIALOG_COMPUTER_SCAN"
+msgid "DSC_EXPLAIN_FINISH2"
+msgstr ", you found a BOINC client, with a wrong password or a allow to connect problem."
+
+#: 
+msgctxt "DIALOG_COMPUTER_SCAN"
+msgid "DSC_NOW_PASSWORD"
+msgstr "now scanning using the password"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_LIGHT"
+msgstr "Light"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_DARK"
+msgstr "Dark"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_BUSY"
+msgstr "Busy"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_STATE"
+msgstr "Get state"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_HISTORY"
+msgstr "Get history"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_RULES"
+msgstr "Check rules"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_DELETE"
+msgstr "Delete"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR__DETACH"
+msgstr "Detach"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_RESET"
+msgstr "Reset"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_SUSPEND"
+msgstr "Suspend"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_RESUME"
+msgstr "Resume"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_NO_MORE_WORK"
+msgstr "No more work"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_ALLOW_WORK"
+msgstr "Allow work"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_UPDATE"
+msgstr "Update"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_READY_TO_REPORT"
+msgstr "Ready to report:"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_ABORT"
+msgstr "Abort"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_INFO"
+msgstr "Info"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_RULE"
+msgstr "+ Rule"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_CLIPBOARD"
+msgstr "Clipboard"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_UPDATE_CHANGES"
+msgstr "Update changes"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_RETRY"
+msgstr "Retry"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_TASKS"
+msgstr "Tasks:"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_TASKS_HISTORY"
+msgstr "H Tasks:"
+
+#: 
+msgctxt "TAB_MSG"
+msgid "TM_HISTORY_DISABLED1"
+msgstr "Disabled"
+
+#: 
+msgctxt "TAB_MSG"
+msgid "TM_HISTORY_DISABLED2"
+msgstr "To enable: Extra->BoincTasks settings"
+
+#: 
+msgctxt "STATUS"
+msgid "S_PROJECT_SUSPENDED"
+msgstr "Suspended"
+
+#: 
+msgctxt "STATUS"
+msgid "S_PROJECT_NO_NEW_WORK"
+msgstr "No new work"
+
+#: 
+msgctxt "STATUS"
+msgid "S_PROJECT_IN_PROGRESS"
+msgstr "In progress"
+
+#: 
+msgctxt "STATUS"
+msgid "S_PROJECT_UPDATING"
+msgstr "Updating"
+
+#: 
+msgctxt "STATUS"
+msgid "S_PROJECT_REPORT_COMP"
+msgstr "Report completed tasks"
+
+#: 
+msgctxt "STATUS"
+msgid "S_PROJECT_FETCH"
+msgstr "Fetch work"
+
+#: 
+msgctxt "STATUS"
+msgid "S_PROJECT_TRICKLE"
+msgstr "Send trickle-up"
+
+#: 
+msgctxt "STATUS"
+msgid "S_PROJECT_ACCOUNT"
+msgstr "Updating account manager"
+
+#: 
+msgctxt "STATUS"
+msgid "S_PROJECT_INIT"
+msgstr "Initializing"
+
+#: 
+msgctxt "STATUS"
+msgid "S_PROJECT_ATTACH"
+msgstr "Attaching to project"
+
+#: 
+msgctxt "STATUS"
+msgid "S_PROJECT_REQ"
+msgstr "Request by project"
+
+#: 
+msgctxt "STATUS"
+msgid "S_PROJECT_DEFERRED"
+msgstr "Deferred for:"
+
+#: 
+msgctxt "BOX_DELETE_FILTER"
+msgid "BX_FILTER_TITLE"
+msgstr "Unable to delete a Filter"
+
+#: 
+msgctxt "BOX_DELETE_FILTER"
+msgid "BX_FILTER_MESSAGE"
+msgstr "You cannot delete a filter this way"
+
+#: 
+msgctxt "BOX_DELETE_FILTER"
+msgid "BX_FILTER_DETAIL"
+msgstr "Open the filter, click on a task. Next press Shift and select another one. Now you can delete the selected filtered tasks."
+
+#: 
+msgctxt "BOX_ABORT_TASK"
+msgid "BX_ABORT_TITLE"
+msgstr "Abort?"
+
+#: 
+msgctxt "BOX_ABORT_TASK"
+msgid "BX_ABORT_MESSAGE"
+msgstr "You are about to abort/delete tasks'"
+
+#: 
+msgctxt "BOX_ABORT_TASK"
+msgid "BX_ABORT_DETAIL"
+msgstr "Do you want to delete the selected tasks?"
+
+#: 
+msgctxt "BOX_GENERAL"
+msgid "BX_CANCEL"
+msgstr "Cancel"
+
+#: 
+msgctxt "BOX_GENERAL"
+msgid "BX_YES"
+msgstr "Yes"
+
+#: 
+msgctxt "BOX_DETACH_PROJECT"
+msgid "BX_DETACH_TITLE"
+msgstr "Detach/remove projects?"
+
+#: 
+msgctxt "BOX_DETACH_PROJECT"
+msgid "BX_DETACH_MESSAGE"
+msgstr "You are about to detach/remove projects"
+
+#: 
+msgctxt "BOX_DETACH_PROJECT"
+msgid "BX_DETACH_DETAIL"
+msgstr "Do you want to delete the selected projects?"
+
+#: 
+msgctxt "BOX_RESET_PROJECT"
+msgid "BX_RESET_TITLE"
+msgstr "Reset projects?"
+
+#: 
+msgctxt "BOX_RESET_PROJECT"
+msgid "BX_RESET_MESSAGE"
+msgstr "You are about to reset projects"
+
+#: 
+msgctxt "BOX_RESET_PROJECT"
+msgid "BX_RESET_DETAIL"
+msgstr "Do you want to reset the selected projects?"
+
+#: 
+msgctxt "DIALOG_ADD_PROJECT"
+msgid "DAP_ADD_TO_COMPUTERS"
+msgstr "Add project to these computers:"
+
+#: 
+msgctxt "DIALOG_ADD_PROJECT"
+msgid "DAP_ADD_PROJECT"
+msgstr "Add this project:"
+
+#: 
+msgctxt "DIALOG_ADD_PROJECT"
+msgid "DAP_PROJECT_URL"
+msgstr "Project url:"
+
+#: 
+msgctxt "DIALOG_ADD_PROJECT"
+msgid "DAP_LOGIN"
+msgstr "Login name:"
+
+#: 
+msgctxt "DIALOG_ADD_PROJECT"
+msgid "DAP_PASSWORD"
+msgstr "Password:"
+
+#: 
+msgctxt "DIALOG_ADD_PROJECT"
+msgid "DAP_WEBSITE"
+msgstr "Website"
+
+#: 
+msgctxt "DIALOG_ADD_PROJECT"
+msgid "DAB_ADDING_COMPUTER"
+msgstr "Adding to:"
+
+#: 
+msgctxt "DIALOG_ADD_PROJECT"
+msgid "DAB_SELECT_COMPUTER"
+msgstr "Select a computer"
+
+#: 
+msgctxt "DIALOG_ADD_PROJECT"
+msgid "DAB_ATTACHED"
+msgstr "attached:"
+
+#: 
+msgctxt "DIALOG_ADD_PROJECT"
+msgid "DAB_TITLE"
+msgstr "Add a new project"
+
+#: 
+msgctxt "DIALOG_ADD_PROJECT"
+msgid "DAP_ADD_PROJECT_BUTTON"
+msgstr "Add project"
+
+#: 
+msgctxt "DIALOG_ADD_PROJECT"
+msgid "DAP_ERROR"
+msgstr "Error:"
+
+#: 
+msgctxt "DIALOG_ADD_PROJECT"
+msgid "DAP_ERROR_URL"
+msgstr "Url name not valid"
+
+#: 
+msgctxt "DIALOG_ADD_PROJECT"
+msgid "DAP_ERROR_CONTACT"
+msgstr "Failed to contact the project server"
+
+#: 
+msgctxt "DIALOG_ADD_PROJECT"
+msgid "DAP_ERROR_PASSWORD"
+msgstr "Bad password"
+
+#: 
+msgctxt "DIALOG_ADD_PROJECT"
+msgid "DAP_ERROR_ALREADY"
+msgstr "Already attached to this project"
+
+#: 
+msgctxt "DIALOG_ADD_PROJECT"
+msgid "DAP_ERROR_DATABASE"
+msgstr "Not found in the database"
+
+#: 
+msgctxt "DIALOG_ADD_PROJECT"
+msgid "DAP_ERROR_CONNECT"
+msgstr "Unable to connect"
+
+#: 
+msgctxt "DIALOG_ADD_PROJECT"
+msgid "DAP_ERROR_FOUND"
+msgstr "Not found"
+
+#: 
+msgctxt "DIALOG_ADD_PROJECT"
+msgid "DAP_ERROR_LOGGING"
+msgstr "Problem logging in"
+
+#: 
+msgctxt "DIALOG_ADD_MANAGER"
+msgid "DAM_TITLE"
+msgstr "Account Manager"
+
+#: 
+msgctxt "DIALOG_ADD_MANAGER"
+msgid "DAM_SELECTED_COMPUTERS"
+msgstr "Selected computers:"
+
+#: 
+msgctxt "DIALOG_ADD_MANAGER"
+msgid "DAM_ADD_MANAGER"
+msgstr "Add this manager:"
+
+#: 
+msgctxt "DIALOG_ADD_MANAGER"
+msgid "DAM_URL"
+msgstr "Manager url:"
+
+#: 
+msgctxt "DIALOG_ADD_MANAGER"
+msgid "DAM_LOGIN"
+msgstr "Login name:"
+
+#: 
+msgctxt "DIALOG_ADD_MANAGER"
+msgid "DAM_PASSWORD"
+msgstr "Password:"
+
+#: 
+msgctxt "DIALOG_ADD_MANAGER"
+msgid "DAM_BUTTON_ADD_MANAGER"
+msgstr "Add to Manager"
+
+#: 
+msgctxt "DIALOG_ADD_MANAGER"
+msgid "DAM_BUTTON_SYNC"
+msgstr "Synchronize with Manager"
+
+#: 
+msgctxt "DIALOG_ADD_MANAGER"
+msgid "DAM_BUTTON_WEBSITE"
+msgstr "Website"
+
+#: 
+msgctxt "DIALOG_ADD_MANAGER"
+msgid "DAM_BUTTON_DETACH"
+msgstr "Detach Manager"
+
+#: 
+msgctxt "DIALOG_ADD_MANAGER"
+msgid "DAM_INFO_COMPUTER"
+msgstr "Computer"
+
+#: 
+msgctxt "DIALOG_ADD_MANAGER"
+msgid "DAM_INFO_MANAGER"
+msgstr "Manager"
+
+#: 
+msgctxt "DIALOG_ADD_MANAGER"
+msgid "DAM_INFO_CREDENTIALS"
+msgstr "Credentials"
+
+#: 
+msgctxt "DIALOG_ADD_MANAGER"
+msgid "DAM_STATUS_NO"
+msgstr "NO"
+
+#: 
+msgctxt "DIALOG_ADD_MANAGER"
+msgid "DAM_STATUS_YES"
+msgstr "Yes"
+
+#: 
+msgctxt "DIALOG_ADD_MANAGER"
+msgid "DAM_ERROR"
+msgstr "Error:"
+
+#: 
+msgctxt "DIALOG_ADD_MANAGER"
+msgid "DAM_ERROR_URL"
+msgstr "Url name not valid"
+
+#: 
+msgctxt "DIALOG_ADD_MANAGER"
+msgid "DAM_ERROR_SELECT_COMPUTER"
+msgstr "Select a computer"
+
+#: 
+msgctxt "DIALOG_ADD_MANAGER"
+msgid "DAM_STATUS_SYNCHRONIZE"
+msgstr "Synchronizing:"
+
+#: 
+msgctxt "DIALOG_ADD_MANAGER"
+msgid "DAM_STATUS_DETACHING"
+msgstr "Detaching:"
+
+#: 
+msgctxt "DIALOG_ADD_MANAGER"
+msgid "DAM_STATUS_ADDING"
+msgstr "Adding to:"
+
+#: 
+msgctxt "DIALOG_ADD_MANAGER"
+msgid "DAM_STATUS_READY"
+msgstr "Ready"
+
+#: 
+msgctxt "DIALOG_ADD_MANAGER"
+msgid "DAM_INFO_URL"
+msgstr "Url"
+
+#: 
+msgctxt "DIALOG_BOINC_STATISTICS"
+msgid "DBS_TITLE"
+msgstr "Boinc Statistics"
+
+#: 
+msgctxt "DIALOG_BOINC_STATISTICS"
+msgid "DBS_HOST_AVERAGE"
+msgstr "Host average"
+
+#: 
+msgctxt "DIALOG_BOINC_STATISTICS"
+msgid "DBS_HOST_TOTAL"
+msgstr "Host total"
+
+#: 
+msgctxt "DIALOG_BOINC_STATISTICS"
+msgid "DBS_USER_AVERAGE"
+msgstr "User average"
+
+#: 
+msgctxt "DIALOG_BOINC_STATISTICS"
+msgid "DBS_USER_TOTAL"
+msgstr "User total"
+
+#: 
+msgctxt "DIALOG_BOINC_STATISTICS"
+msgid "DBS_PROJECTS"
+msgstr "Show these projects:"
+
+#: 
+msgctxt "DIALOG_BOINC_STATISTICS"
+msgid "DBS_COMPUTERS"
+msgstr "Show these computers:"
+
+#: 
+msgctxt "DIALOG_BOINC_STATISTICS"
+msgid "DBS_BUTTON_HIDE"
+msgstr "Hide"
+
+#: 
+msgctxt "DIALOG_BOINC_STATISTICS"
+msgid "DBS_STAT_CREDITS"
+msgstr "Credits"
+
+#: 
+msgctxt "DIALOG_BOINC_STATISTICS"
+msgid "DBS_STAT_PROJECT"
+msgstr "Project"
+
+#: 
+msgctxt "DIALOG_BOINC_STATISTICS"
+msgid "DBS_STAT_COMPUTER"
+msgstr "Computer"
+
+#: 
+msgctxt "DIALOG_BOINC_STATISTICS"
+msgid "DBS_MONTH"
+msgstr "[\"Jan\",\"Feb\",\"Mar\",\"Apr\",\"May\",\"Jun\",\"Jul\",\"Aug\",\"Sep\",\"Oct\",\"Nov\",\"Dec\"]"
+
+#: 
+msgctxt "DIALOG_LOGGING"
+msgid "DLG_TITLE"
+msgstr "Logging"
+
+#: 
+msgctxt "DIALOG_LOGGING"
+msgid "DLG_BUTTON_CLEAR"
+msgstr "Clear"
+
+#: 
+msgctxt "DIALOG_LOGGING"
+msgid "DLG_BUTTON_LOG"
+msgstr "Log"
+
+#: 
+msgctxt "DIALOG_LOGGING"
+msgid "DLG_BUTTON_DEBUG"
+msgstr "Debug"
+
+#: 
+msgctxt "DIALOG_LOGGING"
+msgid "DLG_BUTTON_RULES"
+msgstr "Rules"
+
+#: 
+msgctxt "DIALOG_LOGGING"
+msgid "DLG_BUTTON_ERROR"
+msgstr "Error"
+
+#: 
+msgctxt "DIALOG_LOGGING"
+msgid "DLG_MSG_PLATFORM"
+msgstr "System running on platform:"
+
+#: 
+msgctxt "DIALOG_LOGGING"
+msgid "DLG_MSG_ARCH"
+msgstr "architecture:"
+
+#: 
+msgctxt "DIALOG_LOGGING"
+msgid "DLG_MSG_FOLDER_APP"
+msgstr "Folder app:"
+
+#: 
+msgctxt "DIALOG_LOGGING"
+msgid "DLG_MSG_FOLDER_DATA"
+msgstr "Folder data:"
+
+#: 
+msgctxt "DIALOG_LOGGING"
+msgid "DLG_MSG_LOCALE"
+msgstr "Locale:"
+
+#: 
+msgctxt "DIALOG_LOGGING"
+msgid "DLG_TITLE_DEBUG"
+msgstr "Debug Logging"
+
+#: 
+msgctxt "DIALOG_LOGGING"
+msgid "DLG_TITLE_RULES"
+msgstr "Rules Logging"
+
+#: 
+msgctxt "DIALOG_LOGGING"
+msgid "DLG_TITLE_ERROR"
+msgstr "Error Logging"
+
+#: 
+msgctxt "DIALOG_LOGGING"
+msgid "DLG_MSG_ERROR"
+msgstr "Error"
+
+#: 
+msgctxt "DIALOG_LOGGING"
+msgid "DLG_BUTTON_COPY"
+msgstr "Copy"
+
+#: 
+msgctxt "MSG_GENERAL"
+msgid "MSG_COMPUTERS_FOUND"
+msgstr "Computers:"
+
+#: 
+msgctxt "MSG_GENERAL"
+msgid "MSG_COMPUTER_CONNECTED"
+msgstr "Connected to:"
+
+#: 
+msgctxt "MSG_GENERAL"
+msgid "MSG_COMPUTER_LOST"
+msgstr "Lost connection (busy):"
+
+#: 
+msgctxt "MSG_GENERAL"
+msgid "MSG_READ_STATE"
+msgstr "Read state:"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_TITLE"
+msgstr "Boinc Settings:"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_PROCESSOR_TITLE"
+msgstr "Processor"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_PROCESSOR_COMPUTERING_ALLOWED"
+msgstr "Computing allowed:"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_PROCESSOR_WHILE_BATTERIES"
+msgstr "While computer is on batteries"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_PROCESSOR_WHILE_IN_USE"
+msgstr "While computer is in use"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_PROCESSOR_GPU_WHILE_IN_USE"
+msgstr "Use GPU while computer is in use"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_PROCESSOR_ONLY_IDLE"
+msgstr "Only after the computer has been idle"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_MINUTES"
+msgstr "Minutes"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_PROCESSOR_ONLY_USAGE_LESS"
+msgstr "Only while usage is less than"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_ALLOWED_BETWEEN"
+msgstr "Allowed between. 01:00 - 22:00 (run between 1 AM and 10 PM) disable: empty both"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_PROCESSOR_EVERY_DAY"
+msgstr "Every day"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_HHMM"
+msgstr "HH:MM"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_SUNDAY"
+msgstr "Sunday"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_MONDAY"
+msgstr "Monday"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_TUESDAY"
+msgstr "Tuesday"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_WEDNESDAY"
+msgstr "Wednesday"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_THURSDAY"
+msgstr "Thursday"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_FRIDAY"
+msgstr "Friday"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_SATURDAY"
+msgstr "Saturday"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_PROCESSOR_SWITCH"
+msgstr "Switch between applications every"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_USE_AT_MOST"
+msgstr "Use at most"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_PERC_PROCESSOR"
+msgstr "% of processors"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_PERC_CPU"
+msgstr "% of CPU"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_BUTTON_APPLY"
+msgstr "Apply changes"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_NETWORK_TITLE"
+msgstr "Network"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_NETWORK_MAX_DOWN"
+msgstr "Maximum download rate"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_NETWORK_MAX_UP"
+msgstr "Maximum upload rate"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_NETWORK_TRANSFER_MOST"
+msgstr "Transfer at most"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_NETWORK_MIN_BUFFER"
+msgstr "Minimum work buffer"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_NETWORK_ADD_BUFFER"
+msgstr "Additional work buffer"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_KBYTES_S"
+msgstr "kBytes/sec"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_MBYTES_EVERY"
+msgstr "Mbytes, every"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_DAYS"
+msgstr "Days"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_DISK_TITLE"
+msgstr "Disk"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_LEAVE_AT_LEAST"
+msgstr "Leave at least"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_DISK_WRITE"
+msgstr "Write to disk a most every"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_DISK_GIGABYTE"
+msgstr "Gigabyte disk space"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_DISK_PERS_DISK"
+msgstr "% of disk space"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_SECONDS"
+msgstr "Seconds"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_DISK_PAGE_SWAP"
+msgstr "% of page swap space"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_MEMORY_TITLE"
+msgstr "Memory"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_MEMORY_LEAVE"
+msgstr "Leave applications in memory when suspended"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_WHEN_IN_USE"
+msgstr "% When computer is in use"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_WHEN_IDLE"
+msgstr "% When computer is idle"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_BUTTON_RESET"
+msgstr "Reset to Default"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_BOX_SELECT_ONE"
+msgstr "Please select ONE connected computer"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_BOX_SELECTED_MORE_ONE"
+msgstr "You selected more than one computer"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_BOX_UNABLE_SHOW"
+msgstr "Unable to show"
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_BOX_INVALID"
+msgstr "Invalid selection"
+
+#: 
+msgctxt "DIALOG_BOINC_ALLOW"
+msgid "DSA_TITLE"
+msgstr "Allow to run"
+
+#: 
+msgctxt "DIALOG_BOINC_ALLOW"
+msgid "DSA_ALLOW_TO_RUN_CPU"
+msgstr "CPU Allow to run"
+
+#: 
+msgctxt "DIALOG_BOINC_ALLOW"
+msgid "DSA_ALLOW_TO_RUN_GPU"
+msgstr "GPU Allow to run"
+
+#: 
+msgctxt "DIALOG_BOINC_ALLOW"
+msgid "DSA_ALLOW_NETWORK"
+msgstr "Allow networkwork communication"
+
+#: 
+msgctxt "DIALOG_BOINC_ALLOW"
+msgid "DSA_BUTTON_APPLY"
+msgstr "Apply changes"
+
+#: 
+msgctxt "DIALOG_BOINC_ALLOW"
+msgid "DSA_RUN_AUTO"
+msgstr "Based on preference"
+
+#: 
+msgctxt "DIALOG_BOINC_ALLOW"
+msgid "DSA_RUN_ALWAYS"
+msgstr "Always"
+
+#: 
+msgctxt "DIALOG_BOINC_ALLOW"
+msgid "DSA_RUN_SNOOZE"
+msgstr "Never/snooze"
+
+#: 
+msgctxt "DIALOG_BOINC_ALLOW"
+msgid "DSA_SNOOZE_MIN"
+msgstr "snooze (min)"
+
+#: 
+msgctxt "DIALOG_ABOUT"
+msgid "DAB_TITLE"
+msgstr "About"
+
+#: 
+msgctxt "DIALOG_ABOUT"
+msgid "DAB_THE_EASY_WAY"
+msgstr "BoincTasks Js the easy way to show and control BOINC"
+
+#: 
+msgctxt "DIALOG_ABOUT"
+msgid "DAB_LICENCE"
+msgstr "This program is free software: you can redistribute it and/or modify<br>\n"
+"it under the terms of the GNU General Public License as published by<br>\n"
+"the Free Software Foundation, version 3 of the License.<br><br>\n"
+"This program is distributed in the hope that it will be useful,<br>\n"
+"but WITHOUT ANY WARRANTY; without even the implied warranty of<br>\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the<br>\n"
+"GNU General Public License for more details.<br>\n"
+"You should have received a copy of the GNU General Public License<br>\n"
+"along with this program.<br>\n"
+"If not, see <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">GPLv3</a>."
+
+#: 
+msgctxt "DIALOG_ABOUT"
+msgid "DAB_BOINC"
+msgstr "BoincTasks Js uses the <a href=\"https://boinc.berkeley.edu/\">BOINC</a> protocol to communicate with BOINC clients."
+
+#: 
+msgctxt "DIALOG_ABOUT"
+msgid "DAB_FOLLOWING_SOFTWARE"
+msgstr "The following software was used to create BoincTasks Js:"
+
+#: 
+msgctxt "DIALOG_ABOUT"
+msgid "DAB_VERSION"
+msgstr "Version:"
+
+#: 
+msgctxt "DIALOG_ABOUT"
+msgid "DAB_SYSTEM_RUNNING"
+msgstr "System running on platform:"
+
+#: 
+msgctxt "DIALOG_ABOUT"
+msgid "DAB_ARCH"
+msgstr "architecture:"
+
+#: 
+msgctxt "DIALOG_ABOUT"
+msgid "DAB_LOCALE"
+msgstr "Locale:"
+
+#: 
+msgctxt "DIALOG_UPDATE"
+msgid "DUD_TITLE"
+msgstr "Check for update"
+
+#: 
+msgctxt "DIALOG_UPDATE"
+msgid "DUD_PLATFORM"
+msgstr "Platform:"
+
+#: 
+msgctxt "DIALOG_UPDATE"
+msgid "DUD_ARCH"
+msgstr "architecture:"
+
+#: 
+msgctxt "DIALOG_UPDATE"
+msgid "DUD_CURRENT"
+msgstr "Current version:"
+
+#: 
+msgctxt "DIALOG_UPDATE"
+msgid "DUD_UP_TO_DATE_BETA"
+msgstr "Beta:"
+
+#: 
+msgctxt "DIALOG_UPDATE"
+msgid "DUD_UP_TO_DATE_RELEASE"
+msgstr "Release:"
+
+#: 
+msgctxt "DIALOG_UPDATE"
+msgid "DUD_FOUND_NEW_RELEASE"
+msgstr "Found new release version:"
+
+#: 
+msgctxt "DIALOG_UPDATE"
+msgid "DUD_FOUND_NEW_BETA"
+msgstr "Found new beta version:"
+
+#: 
+msgctxt "DIALOG_UPDATE"
+msgid "DUD_DOWNLOAD_RELEASE"
+msgstr "Download release version"
+
+#: 
+msgctxt "DIALOG_UPDATE"
+msgid "DUD_DOWNLOAD_BETA"
+msgstr "Download beta version"
+
+#: 
+msgctxt "DIALOG_UPDATE"
+msgid "DUD_UP_TO_DATE"
+msgstr "BoincTasks Js is up-to-date."
+
+#: 
+msgctxt "DIALOG_UPDATE"
+msgid "DUB_NEW_VERSION_READY"
+msgstr "<b><h3 style=\"color:green;\"> New version ready to install.</h3><b><br>Closing down....... soon"
+
+#: 
+msgctxt "DIALOG_UPDATE"
+msgid "DUB_VERSION_WEBSITE"
+msgstr "Version information can be found on our <a href=\"https://efmer.com/boinctasks-js/boinctasks-js-download/\">website</a>."
+
+#: 
+msgctxt "DIALOG_UPDATE"
+msgid "DUB_DOWNLOADING"
+msgstr "Downloading:"
+
+#: 
+msgctxt "STATUS"
+msgid "S_EXIT_194"
+msgstr "Aborted by client [194]"
+
+#: 
+msgctxt "STATUS"
+msgid "S_EXIT_195"
+msgstr "Failed to run [195]"
+
+#: 
+msgctxt "STATUS"
+msgid "S_EXIT_196"
+msgstr "Disk limit exceeded [196]"
+
+#: 
+msgctxt "STATUS"
+msgid "S_EXIT_197"
+msgstr "Time limit exceeded [197]"
+
+#: 
+msgctxt "STATUS"
+msgid "S_EXIT_198"
+msgstr "Memory limit exceeded [198]"
+
+#: 
+msgctxt "STATUS"
+msgid "S_EXIT_199"
+msgstr "Client exited [199]"
+
+#: 
+msgctxt "STATUS"
+msgid "S_EXIT_200"
+msgstr "Aborted past deadline [200]"
+
+#: 
+msgctxt "STATUS"
+msgid "S_EXIT_201"
+msgstr "Missing coprocessor [201]"
+
+#: 
+msgctxt "STATUS"
+msgid "S_EXIT_202"
+msgstr "Aborted by project [202]"
+
+#: 
+msgctxt "STATUS"
+msgid "S_EXIT_203"
+msgstr "Aborted by user [203]"
+
+#: 
+msgctxt "STATUS"
+msgid "S_EXIT_204"
+msgstr "Unknown [204]"
+
+#: 
+msgctxt "STATUS"
+msgid "S_EXIT_205"
+msgstr "Out of memory [205]"
+
+#: 
+msgctxt "STATUS"
+msgid "S_EXIT_206"
+msgstr "Initialize error [206]"
+
+#: 
+msgctxt "STATUS"
+msgid "S_EXIT_207"
+msgstr "No sub task [207]"
+
+#: 
+msgctxt "STATUS"
+msgid "S_EXIT_208"
+msgstr "Sub tasks failure [208]"
+
+#: 
+msgctxt "STATUS"
+msgid "S_EXIT_0"
+msgstr "OK"
+
+#: 
+msgctxt "STATUS"
+msgid "S_EXIT_CODE"
+msgstr "Exit code:"
+
+#: 
+msgctxt "STATUS"
+msgid "S_EXIT_192"
+msgstr "Can't write statefile [192]"
+
+#: 
+msgctxt "STATUS"
+msgid "S_EXIT_193"
+msgstr "App was killed by signal [193]"
+
+#: 
+msgctxt "STATUS"
+msgid "S_EXIT_128"
+msgstr "No child processes to wait for [128]"
+
+#: 
+msgctxt "SIDEBAR_COMPUTERS"
+msgid "SBC_COMPUTERS"
+msgstr "Computers"
+
+#: 
+msgctxt "SIDEBAR_COMPUTERS"
+msgid "SBC_PROJECTS"
+msgstr "Projects"
+
+#: 
+msgctxt "SIDEBAR_COMPUTERS"
+msgid "SBC_NO_COMPUTERS"
+msgstr "No computers...."
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_RETRY_ALL"
+msgstr "Retry all:"
+
+#: 
+msgctxt "STATUS"
+msgid "S_NOTICE_MORE"
+msgstr "More....."
+
+#: 
+msgctxt "STATUS"
+msgid "S_NOTICE_HIDDEN"
+msgstr "Archive"
+
+#: 
+msgctxt "STATUS"
+msgid "S_NOTICES_TRANS_0"
+msgstr "A new version of BOINC is available."
+
+#: 
+msgctxt "STATUS"
+msgid "S_NOTICES_TRANS_1"
+msgstr "Download"
+
+#: 
+msgctxt "STATUS"
+msgid "S_NOTICES_TRANS_2"
+msgstr "Your settings do not allow fetching tasks for"
+
+#: 
+msgctxt "STATUS"
+msgid "S_NOTICES_TRANS_3"
+msgstr "To fix this, you can "
+
+#: 
+msgctxt "STATUS"
+msgid "S_NOTICES_TRANS_4"
+msgstr "change Project Preferences on the project's web site"
+
+#: 
+msgctxt "BOX_DELETE_COMPUTER"
+msgid "BX_DELETE_COMPUTER_TITLE"
+msgstr "Delete the selected computers"
+
+#: 
+msgctxt "BOX_DELETE_COMPUTER"
+msgid "BX_DELETE_COMPUTER_MESSAGE"
+msgstr "Press YES to delete the selected computers."
+
+#: 
+msgctxt "BOX_DELETE_COMPUTER"
+msgid "BX_DELETE_COMPUTER_DETAIL"
+msgstr "The selected computers will all be deletes as soon as YES is selected."
+
+#: 
+msgctxt "DIALOG_BOINC_SETTINGS"
+msgid "DBO_LOADING_SETTINGS"
+msgstr "Retrieving the settings...."
+
+#: 
+msgctxt "MENU"
+msgid "MN_STATISTICS_TRANSFER"
+msgstr "Data transfer graph"
+
+#: 
+msgctxt "DIALOG_BOINC_STATISTICS_TRANSFER"
+msgid "DBS_COMPUTERS"
+msgstr "Show these computers"
+
+#: 
+msgctxt "DIALOG_BOINC_STATISTICS_TRANSFER"
+msgid "DBS_BUTTON_HIDE"
+msgstr "Hide"
+
+#: 
+msgctxt "DIALOG_BOINC_STATISTICS_TRANSFER"
+msgid "DBS_STAT_TITLE"
+msgstr "Data transfer graph [ ⇧ upload, ⇓ download]"
+
+#: 
+msgctxt "DIALOG_BOINC_STATISTICS_TRANSFER"
+msgid "DBS_STAT_TRANSFER"
+msgstr "Transferred data"
+
+#: 
+msgctxt "DIALOG_BOINC_STATISTICS_TRANSFER"
+msgid "DBS_TITLE"
+msgstr "Data transfer graph"
+
+#: 
+msgctxt "TAB"
+msgid "T_PROJECTS_VENUE"
+msgstr "Venue"
+
+#: 
+msgctxt "DIALOG_SETTINGS_BT"
+msgid "DS_BT_REGION"
+msgstr "Region"
+
+#: 
+msgctxt "DIALOG_SETTINGS_BT"
+msgid "DS_BT_LOCALE"
+msgstr "Locale (default = empty, en-US, nl-NL)"
+
+#: 
+msgctxt "DIALOG_ABOUT"
+msgid "DAB_REGION"
+msgstr "Region:"
+
+#: 
+msgctxt "BOX_CONFIG"
+msgid "BX_CC_CONFIG_TITLE"
+msgstr "cc_config.xml"
+
+#: 
+msgctxt "BOX_CONFIG"
+msgid "BX_CC_CONFIG_INVALID_TAG_MESSAGE"
+msgstr "Invalid start and stop tag"
+
+#: 
+msgctxt "BOX_CONFIG"
+msgid "BX_CC_CONFIG_INVALID_TAG_TITLE"
+msgstr "Invalid cc_config read, missing expected <boinc_gui_rpc_reply> tag"
+
+#: 
+msgctxt "BOX_CONFIG"
+msgid "BX_CC_CONFIG_INVALID_XML"
+msgstr "The XML is invalid"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_CC_CONFIG"
+msgstr "Edit cc_config.xml"
+
+#: 
+msgctxt "DIALOG_EDIT_CC_CONFIG"
+msgid "DEC_TITLE"
+msgstr "Edit: cc_config.xml"
+
+#: 
+msgctxt "BOX_CONFIG"
+msgid "BX_APP_CONFIG_TITLE"
+msgstr "app_config.xml"
+
+#: 
+msgctxt "BOX_CONFIG"
+msgid "BX_APP_CONFIG_INVALID_TAG_MESSAGE"
+msgstr "Invalid start and stop tag"
+
+#: 
+msgctxt "BOX_CONFIG"
+msgid "BX_APP_CONFIG_INVALID_TAG_TITLE"
+msgstr "Invalid app_config read, missing expected <boinc_gui_rpc_reply> tag"
+
+#: 
+msgctxt "DIALOG_EDIT_APP_CONFIG"
+msgid "DEA_TITLE"
+msgstr "Edit: app_config.xml"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_APP_CONFIG"
+msgstr "Edit: app_config.xml"
+
+#: 
+msgctxt "DIALOG_SETTINGS_BT"
+msgid "DS_BT_RESTART"
+msgstr "Restart at"
+
+#: 
+msgctxt "FOOTER"
+msgid "FTR_SUSPEND_CHECK"
+msgstr "At checkpoint"
+
+#: 
+msgctxt "SUSPEND_REASON"
+msgid "SR_PAUSE_CHECKPOINT"
+msgstr "Checkpoint ⏸ Don't close or leave window"
+
+#: 
+msgctxt "MENU"
+msgid "MN_SHOW_CPU"
+msgstr "Show CPU tasks"
+
+#: 
+msgctxt "MENU"
+msgid "MN_SHOW_NONCPUI"
+msgstr "Show non CPU intensive tasks"
+
+#: 
+msgctxt "MENU"
+msgid "MN_SHOW_GPU"
+msgstr "Show GPU tasks"
+
+#: 
+msgctxt "DIALOG_SETTINGS_BT"
+msgid "DS_BT_DEADLINED"
+msgstr "Show deadline as day month year"
+
+#: 
+msgctxt "DIALOG_BOINC_STATISTICS_TASKS"
+msgid "DBS_TITLE"
+msgstr "Boinc Tasks Statistics"
+
+#: 
+msgctxt "DIALOG_BOINC_STATISTICS_TASKS"
+msgid "DBS_STAT_TASKS"
+msgstr "Tasks"
+
+#: 
+msgctxt "MENU"
+msgid "MN_STATISTICS_TASKS"
+msgstr "Tasks graph"
+
+#: 
+msgctxt "DIALOG_SETTINGS_BT"
+msgid "DS_BT_TASKS"
+msgstr "Tasks"
+
+#: 
+msgctxt "DIALOG_SETTINGS_BT"
+msgid "DS_BT_SHORT_TIME_CPU_PERC"
+msgstr "Short-time CPU percentage"
+
+#: 
+msgctxt "TAB"
+msgid "T_PROJECTS_TASKS"
+msgstr "Tasks"
+
