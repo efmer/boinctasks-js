@@ -26,7 +26,7 @@ npm run make
 cd /home/fred/sb/boinctasks-js/out/make/deb/x64
 snap remove boinctasks-js
 sudo dpkg --remove boinctasks-js
-sudo dpkg -i ./boinctasks-js_2.8.3_amd64.deb
+sudo dpkg -i ./boinctasks-js_2.8.6_amd64.deb
 boinctasks-js
 sudo dpkg --remove boinctasks-js
 
@@ -51,6 +51,7 @@ sudo snap install review-tools
 sudo apt install yamllint
 
 //electron-builder
+!!! For now use  "electron": "^28.1.3" for snap
 cd /home/fred/sb/boinctasks-js/
 npm run snapI64
 npm run snapA32
@@ -60,8 +61,8 @@ snapcraft login
 
 cd /home/fred/sb/boinctasks-js/dist/
 
-snapcraft upload --release=candidate boinctasks-js_2.8.3_amd64.snap
-snapcraft upload --release=candidate boinctasks-js_2.8.3_armhf.snap
+snapcraft upload --release=candidate boinctasks-js_2.8.6_amd64.snap
+snapcraft upload --release=candidate boinctasks-js_2.8.6_armhf.snap
 
 // testing
 cd /home/fred/sb/boinctasks-js/dist/
@@ -70,7 +71,7 @@ cd /home/fred/sb/boinctasks-js/dist/
 // make sure the deb is NOT installed
 sudo dpkg --remove boinctasks-js
 cd /home/fred/sb/boinctasks-js/dist
-sudo snap install boinctasks-js_2.4.4_amd64.snap --dangerous
+sudo snap install boinctasks-js_2.8.6_amd64.snap --dangerous
 snap run boinctasks-js
 snap remove boinctasks-js
 

@@ -1,2 +1,8 @@
 Electron
 npm install electron@latest
+
+npm install electron-builder@latest
+
+npm install electron-packager@latest
+
+

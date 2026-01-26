@@ -144,6 +144,10 @@ class ResultItems
                     if (nrCpuResources.length > 0)
                     {
                         nrOfCpu = nrCpuResources[0];
+                        if (nrOfCpu < 1)
+                        {
+                            nrOfCpu = 1;
+                        }
                     }
                 }
                 resultItem.resources = resources;
@@ -249,10 +253,10 @@ class ResultItems
                                     else
                                     {
                                         cpuTotal /= item.count;                                        
-                                        //if (cpuTotal > 100)
-                                        //{ 
-                                        //    cpuTotal = 100;
-                                        // }
+                                        if (cpuTotal > 120)
+                                        { 
+                                            cpuTotal = 120;
+                                         }
                                     }
 
                                     if (item.count > MOVING_AVERAGE)
@@ -295,10 +299,10 @@ class ResultItems
                     {             
                         cpu = (cpuTime/elapsedTime) * 100;
                         cpu /= nrOfCpu;
-                //        if (cpu > 100)
-                //        {
-                //            cpu = 100;
-                //        }
+                        if (cpu > 120)
+                        {
+                            cpu = 120;
+                        }
                         resultItem.cpu = cpu;                  
                     }
                 }

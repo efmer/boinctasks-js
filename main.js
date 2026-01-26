@@ -489,7 +489,7 @@ function initMenu()
             }
           },
           {
-            label: "Tasks graph", //btC.TL.MENU.MN_STATISTICS_TASKS,
+            label: btC.TL.MENU.MN_STATISTICS_TASKS,
             click(e) { 
               connections.boincStatisticsTasks("menu");
             }
@@ -1009,6 +1009,9 @@ function getTranslation()
             if (gSettings.language === void 0) gSettings.language = btC.LANG_ENGLISH;            
             switch (gSettings.language)
             {
+                case btC.LANG_CHINESE_S:
+                    translation = readWrite.readResource(__dirname,"translations/BoincTasks_JS_Chinese_simplified.json");
+                break;              
                 case btC.LANG_DUTCH:
                     translation = readWrite.readResource(__dirname,"translations/BoincTasks_JS_Dutch.json");
                 break;
@@ -1253,28 +1256,38 @@ function rendererRequests()
   })
 
   ipcMain.on("table_click_context", (renderer, id, ex,ey) => {
-    let menu;
-    let selected = connections.getSelected()
-    if (selected.length <= 1)
-    {
-      connections.click(id,false,false,false) 
-    }
+    try{
+      let menu;
+      let selected = connections.getSelected()
+      if (selected == void 0)
+      {
+        return;
+      }
+      if (selected.length <= 1)
+      {
+        connections.click(id,false,false,false) 
+      }
 
-    switch (connections.getTab())
-    {
-      case btC.TAB_TASKS:
-        menu = initTasksContextMenu();
-        menu.popup({ gMainWindow, x: ex, y: ey } );   
-      break
-      case btC.TAB_PROJECTS:
-        menu = initProjectContextMenu();
-        menu.popup({ gMainWindow, x: ex, y: ey } );         
-      break;
-      case btC.TAB_HISTORY:
-        menu = initHistoryContextMenu();
-        menu.popup({ gMainWindow, x: ex, y: ey } );
+      switch (connections.getTab())
+      {
+        case btC.TAB_TASKS:
+          menu = initTasksContextMenu();
+          menu.popup({ gMainWindow, x: ex, y: ey } );   
+        break
+        case btC.TAB_PROJECTS:
+          menu = initProjectContextMenu();
+          menu.popup({ gMainWindow, x: ex, y: ey } );         
+        break;
+        case btC.TAB_HISTORY:
+          menu = initHistoryContextMenu();
+          menu.popup({ gMainWindow, x: ex, y: ey } );
+        break;
+        default:          
+      }
+    } catch (error) {
+      logging.logError('Main,table_click_context', error);        
     }
-  })
+  })    
 
   ipcMain.on("header_width", (renderer, type, id, data, total) => {
     connections.headerWidth(type, id, data, total);

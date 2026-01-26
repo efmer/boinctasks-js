@@ -34,7 +34,8 @@ module.exports = {
     TAB_HISTORY                 : "history",
     TAB_NOTICES                 : "notices",
 
-    LANG_NUMBER                 : '6',
+    LANG_NUMBER                 : '7',
+    LANG_CHINESE_S              : "lang_chinese_s",
     LANG_ENGLISH                : "lang_english",
     LANG_DUTCH                  : "lang_dutch",
     LANG_FRENCH                 : "lang_french",
