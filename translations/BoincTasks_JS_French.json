@@ -152,7 +152,7 @@
         "MN_EXTRA": "Extra",
         "MN_BT_SET": "Réglages Boinc Tasks",
         "MN_BT_COLOR": "Couleurs Boinc Tasks",
-        "MN_BOINC_SET": "Réglages BOINC",
+        "MN_BOINC_SET": "Préférences BOINC",
         "MN_BOINC_ALLOW": "Autoriser le calcul",
         "MN_BOINC_BENCH": "Test de puissance en cours",
         "MN_BOINC_READ_CF": "Lecture des fichiers de configuration",
@@ -387,7 +387,7 @@
         "MSG_READ_STATE": "Lire l'état"
     },
     "DIALOG_BOINC_SETTINGS": {
-        "DBO_TITLE": "Réglages BOINC",
+        "DBO_TITLE": "Préférences BOINC",
         "DBO_PROCESSOR_TITLE": "Processeur",
         "DBO_PROCESSOR_COMPUTERING_ALLOWED": "Calculs autorisés",
         "DBO_PROCESSOR_WHILE_BATTERIES": "Quand l'ordinateur est sur batteries",
@@ -436,7 +436,14 @@
         "DBO_BOX_SELECTED_MORE_ONE": "Vous avez sélectionné plus d'un ordinateur",
         "DBO_BOX_UNABLE_SHOW": "Impossible d'afficher",
         "DBO_BOX_INVALID": "Sélection non valide",
-        "DBO_LOADING_SETTINGS": "Récupération des paramètres...."
+        "DBO_LOADING_SETTINGS": "Récupération des paramètres....",
+        "DBO_STATUS_NOW_USING_WEB_PREF": "Utilisation actuelle des préférences Web de %s, les modifications sont désactivées. Cliquez sur le bouton ci-dessous pour utiliser les préférences locales.",
+        "DBO_BUTTON_LOCAL_PREF": "Cliquez ici, puis sur « Appliquer les modifications » pour utiliser les préférences locales à la place",
+        "DBO_STATUS_NOW_USING_LOCAL_PREF": "Les préférences locales sont désormais utilisées.",
+        "DBO_BUTTON_WEB_PREF": "Cliquez ici pour utiliser les préférences Web à la place",
+        "DBO_BOX_SWITCHING_WARNING_TITLE": "Avertissement",
+        "DBO_BOX_SWITCHING_LOCAL_WARNING": "Modifier pour utiliser les préférences locales définies sur cette page. Cela remplacera vos préférences définies sur le site web, même si vous y apportez des modifications par la suite. Souhaitez-vous continuer ?",
+        "DBO_BOX_SWITCHING_WEB_WARNING": "Souhaitez-vous ignorer les préférences locales définies sur cette page et utiliser les préférences du site Web ? Vous perdrez alors vos préférences locales. Voulez-vous continuer ?"
     },
     "DIALOG_BOINC_ALLOW": {
         "DSA_TITLE": "Autoriser le calcul",

@@ -19,8 +19,8 @@
 const Logging = require('../functions/logging');
 const logging = new Logging();
 const btC = require('../functions/btconstants');
-const ConnectionsShadow = require('../misc/connections_shadow');
-const connectionsShadow = new ConnectionsShadow();
+const ConnectionsSend = require('../misc/connections_send_command');
+const connectionsSend = new ConnectionsSend();
 
 let parseString = require('xml2js').parseString;
 
@@ -29,6 +29,9 @@ let CPU_CHECK_INTERVAL_TIME = 4000;
 
 let gCpuPercCheck = CPU_CHECK_INTERVAL;
 let gCpuPerc = [];
+
+//let TEST_USE_FILTER = true;
+//let gTestUseFilter = 0;
 
 class Results{
     init() // Tasks tab selected
@@ -136,7 +139,23 @@ class ResultItems
                 resultItem.wuName = wuName;
                 let nrOfCpu = 1;
                 let resources = item.resources;
-                if (resources === void 0) resources = "";
+
+                /*
+                if (TEST_USE_FILTER)
+                {
+                    if (gTestUseFilter++ > 2)
+                    {
+                        resources = ["0.99 cpu"];
+                        gTestUseFilter = 0;
+                    }
+                }
+                    */
+
+                resultItem.cuda = false;   
+                if (resources === void 0)
+                {
+                    resources = "";                 
+                } 
                 else
                 {
                     let cpuResources = resources[0].toLowerCase();
@@ -149,7 +168,15 @@ class ResultItems
                             nrOfCpu = 1;
                         }
                     }
+                    let use = "";           // added use
+                    let cpuGpu = Object;
+                    use = resources[0];
+                    //      use = "0.001 CPU + 1 Apple M1"  // testing GPU
+                    use = getCpuGpu(use, cpuGpu);
+                    resources = use;
+                    resultItem.cuda = cpuGpu.cuda;
                 }
+
                 resultItem.resources = resources;
 
                 let iState = item.state[0];
@@ -343,8 +370,12 @@ class ResultItems
                 }
 
                 if (!bActive)
-                {                    
-                    let pos = this.filterAS.indexOf(computer+versionApp+resultItem.statusS)
+                {         
+                    
+                    
+ //     use = getCpuGpu(use, cpuGpu);
+
+                    let pos = this.filterAS.indexOf(computer+versionApp+resultItem.statusS+resources+projectUrl); // added use
                     if (pos >= 0)
                     {
                         let fItem  = this.filter[pos];  
@@ -382,12 +413,15 @@ class ResultItems
                         filterItem.wu = wu;
                         filterItem.wuName = wuName;
                         filterItem.cpu = cpu;
+
                         filterItem.resources = resources;
+                        filterItem.cuda = resultItem.cuda;
+                       
                         filterItem.hp = resultItem.hp;
                         filterItem.statusI = resultItem.statusI;
                         filterItem.statusN = resultItem.statusN;
                         this.filter.push(filterItem);
-                        this.filterAS.push(computer+versionApp+resultItem.statusS)
+                        this.filterAS.push(computer+versionApp+resultItem.statusS+resources+projectUrl) // added use
                         continue;
                     }
                     continue
@@ -424,6 +458,41 @@ class ResultItems
     {
         return this.resultTable;
     }  
+}
+
+function getCpuGpu(res, cpuGpu)
+{
+  cpuGpu.cuda = false;
+  var i = res.indexOf("GPU");
+
+  if ((res.indexOf("GPU") >= 0) || (res.indexOf("CUDA") >=0))
+  {
+    cpuGpu.cuda = true;
+    res = res.replace(" CPUs","C");
+    res = res.replace(" CPU", "C");
+    res = res.replace(" NVIDIA GPUs","NV");
+    res = res.replace(" NVIDIA GPU","NV");
+    res = res.replace(" Nvidia GPU", "NV");
+    res = res.replace(" ATI GPUs","AMD");
+    res = res.replace(" AMD/ATI GPU", "AMD");
+    res = res.replace(" AMD / ATI GPU", "AMD");
+  
+    res = res.replace(" intel GPU", "INT");
+    res = res.replace(" intel_gpu GPU","INT");
+    res = res.replace(" Intel GPU", "INT");
+    res = res.replace("device ","d");
+    res = res.replace("Device ", "d");
+  }
+  else
+  {
+    if (res.indexOf("Apple") >=0)
+    {
+      cpuGpu.cuda = true;
+      res = res.replace("Apple ", "A ");
+    }
+  }
+
+  return res;
 }
 
 function resultData()
@@ -769,6 +838,6 @@ function CheckpointSuspendPresent(con)
 function sendCommand(con,request, url, wu)
 {
     let req = "<" + request + ">\n<project_url>" + url + "</project_url>\n<name>"+ wu + "</name>\n</" + request + ">";
-    connectionsShadow.addSendArray(con,req);
+    connectionsSend.addSendArray(con,req);
     // flush in connections.js
 }

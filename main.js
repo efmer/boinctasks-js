@@ -1259,6 +1259,10 @@ function rendererRequests()
     try{
       let menu;
       let selected = connections.getSelected()
+      if (selected == null)
+      {
+        return;
+      }
       if (selected == void 0)
       {
         return;

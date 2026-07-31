@@ -88,7 +88,7 @@ class State{
             if (urlS.length === 2)
             {
                 let url2 = urlS[1];
-                const ismatch = (element) => element.includes(url2);
+                const ismatch = (urlMatch) => urlMatch.includes(url2);
                 pos = con.cacheProjectUrl.findIndex(ismatch)
                 if (pos >= 0)
                 {
@@ -275,8 +275,12 @@ class ProcessState
                         else
                         {
                             logging.logDebug('buildCache poject name short: ' + con.computerName + " URL: " + url + " -> " + pName); 
-                        }                      
+                        }
                     }
+                      else
+                    {
+                        con.cacheProjectShare[pos] = projectShare;
+                    }                    
                 }
   
                 // update app cache

@@ -159,15 +159,21 @@ function picker(element)
         color: setcolor,
         alpha: false,
         onDone: function(color){
-            let rgb = color.rgbString;
-            el.style.backgroundColor = rgb;
-            gSettingsColor[element] = rgb;
-            ipcRenderer.send('settings_color', "element", element, rgb);         
+            UpdateColor(el, element, color);       
         },
         onChange: function(color){
             el.style.backgroundColor =color.rgbString;
+            UpdateColor(el, element, color);
         },        
     });
+}
+
+function UpdateColor(el, element, color)
+{
+    let rgb = color.rgbString;
+    el.style.backgroundColor = rgb;
+    gSettingsColor[element] = rgb;
+    ipcRenderer.send('settings_color', "element", element, rgb);     
 }
 
 function SetHtml(tag,data)

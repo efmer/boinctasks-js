@@ -436,7 +436,14 @@
         "DBO_BOX_SELECTED_MORE_ONE": "Du hast mehr als einen Computer gewählt",
         "DBO_BOX_UNABLE_SHOW": "Nicht möglich anzuzeigen",
         "DBO_BOX_INVALID": "Ungültige Auswahl",
-        "DBO_LOADING_SETTINGS": "Empfange die Einstellungen...."
+        "DBO_LOADING_SETTINGS": "Empfange die Einstellungen....",
+        "DBO_STATUS_NOW_USING_WEB_PREF": "Now using Web preferences from %s, changes are disabled. Use the button below to use local preferences.",
+        "DBO_BUTTON_LOCAL_PREF": "Click here and press \"Apply changes\" to use local preferences instead.",
+        "DBO_STATUS_NOW_USING_LOCAL_PREF": "Now using local preferences.",
+        "DBO_BUTTON_WEB_PREF": "Click here to use Web preferences instead.",
+        "DBO_BOX_SWITCHING_WARNING_TITLE": "Warning",
+        "DBO_BOX_SWITCHING_LOCAL_WARNING": "Switching to use the local preferences defined on this page. This will override your web-based preferences, even if you subsequently make changes there. Do you want to proceed?",
+        "DBO_BOX_SWITCHING_WEB_WARNING": "Would you like to discard the local preferences defined on this page and use web-based preferences instead? You will lose your local preferences. Do you want to proceed?"
     },
     "DIALOG_BOINC_ALLOW": {
         "DSA_TITLE": "Ausführung erlauben",

@@ -216,7 +216,7 @@ function clickShiftResults(gb,id)
             // Handle filter table
             for (var f=0;f<filter.length;f++)
             {
-                let app = result.computerName+result.app+result.statusS;
+                let app = result.computerName+result.app+result.statusS+result.resources+result.projectUrl; // added use
                 if (app === filter[f])
                 {
                     bFound = true;
@@ -252,8 +252,13 @@ function clickShiftResults(gb,id)
                         }
                     }
                 }
-            }            
-            selId += result.app + btConstants.SEPERATOR_FILTER + result.computerName;
+            } 
+            let use = "";
+            if (result.resources.length > 0)
+            {
+                use = result.resources[0];
+            }
+            selId += result.app + btConstants.SEPERATOR_FILTER + result.computerName + btConstants.SEPERATOR_FILTER + use + btConstants.SEPERATOR_FILTER + result.projectUrl; // added use
         }
         if (selId === sel.lastSel)
         {

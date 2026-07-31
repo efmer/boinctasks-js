@@ -50,9 +50,9 @@ sudo snap install snapcraft --classic
 sudo snap install review-tools
 sudo apt install yamllint
 
-//electron-builder
-!!! For now use  "electron": "^28.1.3" for snap
+https://www.electron.build/docs/snap/
 cd /home/fred/sb/boinctasks-js/
+
 npm run snapI64
 npm run snapA32
 
@@ -60,6 +60,8 @@ snapcraft logout
 snapcraft login
 
 cd /home/fred/sb/boinctasks-js/dist/
+
+// NOTE Snap V3.0.0 isn't working (bug in electron-builder?)
 
 snapcraft upload --release=candidate boinctasks-js_2.8.6_amd64.snap
 snapcraft upload --release=candidate boinctasks-js_2.8.6_armhf.snap

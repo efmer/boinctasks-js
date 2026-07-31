@@ -1,5 +1,19 @@
-Install git
+https://github.com/efmer/boinctasks-js.git
 
-https://code.visualstudio.com/docs/editor/github
+$ git config --global user.name "John Doe" efmer
+$ git config --global user.email johndoe@example.com
 
-https://code.visualstudio.com/docs/editor/versioncontrol
+// first time only
+git init
+git add README.md
+git commit -m "version 1.11"
+git branch -M main
+git remote add origin https://github.com/efmer/boinctasks-js.git
+git push -u origin main
+
+// after that
+
+Pull
+Stage changes
+Commit
+Push

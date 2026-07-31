@@ -12,7 +12,14 @@
   <body>
     <span id = "header_status">Please wait...</span>
 
-    <span id="all_settings" class="hidden">
+    <span id = "header_status_global_pref"></span>
+    <button id="button_global_pref"></button>
+    <br>
+    <br>
+
+    <fieldset id="settings_fieldset">
+
+    <div id="all_settings" class="hidden">
     <h2><b><span id="trans_processor">Processor</span></b></h2>
     <b><span id="trans_allowed">Computing allowed:</span></b><br>
     <input type="checkbox" id="processor_onbatteries"> <span id="trans_while_on_batteries">While computer is on batteries</span><br>
@@ -89,10 +96,12 @@
     <input type="checkbox" id="memory_leave"><span id="trans_leave_mem">Leave applications in memory when suspended</span>
     <br><br><div style="color:red" id="error_msg3"></div><div style="color:rgb(115, 255, 0)" id="ok_msg3"></div><br>
     <button id="apply3">Apply changes</button>
-    <br><br><br><br>    <br><br><br><br>
-    <button id="default">Reset to Default</button>
-
+    <br><br>
+    <br><br>
     </span>
+    </fieldset>
+    <br>
+
     <script type="text/javascript" src ='../render/renderer_settings_boinc.js'></script>
   </body>
 </html>

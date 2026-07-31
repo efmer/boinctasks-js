@@ -24,8 +24,8 @@ const constants = require('./rules_constants');
 const State = require('../misc/state');
 const conState = new State();
 
-const ConnectionsShadow = require('../misc/connections_shadow');
-const connectionsShadow = new ConnectionsShadow();
+const ConnectionsSend = require('../misc/connections_send_command');
+const connectionsSend = new ConnectionsSend();
 
 /*
 con rules compiled
@@ -528,13 +528,13 @@ function ruleTask(con,item,request,what)
 function ruleSendCommand(con,request, url, wu)
 {
     let req = "<" + request + ">\n<project_url>" + url + "</project_url>\n<name>"+ wu + "</name>\n</" + request + ">";
-    connectionsShadow.addSendArray(con,req);
+    connectionsSend.addSendArray(con,req);
 }
 
 function ruleSendCommandProject(con,request, url)
 {
     let req = "<" + request + ">\n<project_url>" + url + "</project_url>\n</" + request + ">";
-    connectionsShadow.addSendArray(con,req);
+    connectionsSend.addSendArray(con,req);
 }
 
 function triggerEmail(rules, reason, name)

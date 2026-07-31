@@ -200,7 +200,7 @@ function isValid()
 
     // restart at a certain time of day
     let restartTime = gSettingsBt.restartTime;
-    if (restartTime == '')
+    if (restartTime == '' || restartTime == void (0) )
     {
       gSettingsBt.restartTimeCheck = false;
     }

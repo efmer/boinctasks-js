@@ -5,7 +5,7 @@
   "author": "eFMer <boinc@efmer.com>",
   "url": "https://efmer.com/",
   "license": "GPL-3.0-or-later",
-  "version": "2.8.6",
+  "version": "3.0.0",
   "description": "BoincTasks Js the best way to view BOINC",
   "copyright": "Copyright © 2026 ${author}",
   "main": "main.js",
@@ -14,6 +14,7 @@
     "package-win32": "electron-packager  . boinctasksjs  --executableName=boinctasksjs  --ignore=^/private --ignore=^/out --ignore=^/dist --ignore=^/download --ignore=how-to --ignore=^/snap --ignore=^/.vscode --icon=./appicons/icons/win/icon.ico  --overwrite --asar --platform=win32 --arch=ia32   --prune=true --out=out/win32  --appCopyright=\"(c) 2021-2026 eFMer\" --version-string.CompanyName=eFMer --version-string.ProductName=BoincTasks Js",
     "package-win64": "electron-packager  . boinctasksjs  --executableName=boinctasksjs  --ignore=^/private --ignore=^/out --ignore=^/dist --ignore=^/download --ignore=how-to --ignore=^/snap --ignore=^/.vscode --icon=./appicons/icons/win/icon.ico  --overwrite --asar --platform=win32 --arch=x64    --prune=true --out=out/win64  --appCopyright=\"(c) 2021-2026 eFMer\" --version-string.CompanyName=eFMer --version-string.ProductName=BoincTasks Js",
     "package-linux": "electron-packager  . boinctasks-js --executableName=boinctasks-js --ignore=^/private --ignore=^/out --ignore=^/dist --ignore=^/download --ignore=how-to --ignore=^/snap --ignore=^/.vscode --icon=appicons/icons/png/512x512.png --overwrite --asar --platform=linux --arch=x64    --prune=true --out=out/linux  --appCopyright=\"(c) 2021-2026 eFMer\" --version-string.CompanyName=eFMer --version-string.ProductName=BoincTasks Js",
+    "package-linuxarm": "electron-packager  . boinctasks-js --executableName=boinctasks-js --ignore=^/private --ignore=^/out --ignore=^/dist --ignore=^/download --ignore=how-to --ignore=^/snap --ignore=^/.vscode --icon=appicons/icons/png/512x512.png --overwrite --asar --platform=linux --arch=arm64    --prune=true --out=out/linux  --appCopyright=\"(c) 2021-2026 eFMer\" --version-string.CompanyName=eFMer --version-string.ProductName=BoincTasks Js",
     "start": "electron-forge start",
     "package": "electron-forge package",
     "makeU": "electron-forge make --arch=universal ",
@@ -35,9 +36,10 @@
     "linux": {
       "executableName": "boinctasks-js",
       "icon": "appicons/icons/mac/icon.icns",
-      "target": [
-        "deb"
-      ]
+      "target": ["snap", "deb"]
+    },
+    "snap": {
+      "base": "core22"
     },
     "deb": {},
     "mac": {
@@ -70,7 +72,7 @@
       "!download",
       "!how-to",
       "!snap",
-      "!private"  
+      "!private"
     ]
   },
   "repository": {
@@ -95,7 +97,7 @@
   },
   "dependencies": {
     "highcharts": "^11.1.0",
-    "nodemailer": "^6.9.4",
+    "nodemailer": "^9.0.3",
     "sortablejs": "^1.15.0",
     "xml2js": "^0.6.2"
   },

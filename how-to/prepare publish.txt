@@ -1,6 +1,0 @@
-Set version in 
-
-functions/btconstans.js
-packages.json
-
-remove all files from output and release.

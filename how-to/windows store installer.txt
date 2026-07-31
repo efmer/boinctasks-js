@@ -48,7 +48,7 @@ go to the root folder of the app (package.json) cd D:\Programma\BoincTasks\Boinc
 
 2 Win 32 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 npm run package-win32
-electron-windows-store --input-directory D:\Programma\BoincTasks\BoincTasks-Js\out\win32\boinctasksjs-win32-ia32  --output-directory D:\Programma\BoincTasks\BoincTasks-Js\out\winstore --package-version 2.8.6.0 --package-display-name 'BoincTasks Js' --package-name 'BoincTasksJs' --publisher-display-name 'eFMer' --identity-name '64273eFmer.BoincTasksJs' --package-background-color '#0e6ac7' -a D:\Programma\BoincTasks\BoincTasks-Js\appicons\icons\winstore
+electron-windows-store --input-directory D:\Programma\BoincTasks\BoincTasks-Js\out\win32\boinctasksjs-win32-ia32  --output-directory D:\Programma\BoincTasks\BoincTasks-Js\out\winstore --package-version 3.0.0.0 --package-display-name 'BoincTasks Js' --package-name 'BoincTasksJs' --publisher-display-name 'eFMer' --identity-name '64273eFmer.BoincTasksJs' --package-background-color '#0e6ac7' -a D:\Programma\BoincTasks\BoincTasks-Js\appicons\icons\winstore
 
 >>>>>>>>>>>>>>>>>>>>>Add both win32 and arm versions at the same time!
 3 Arm NOT Working

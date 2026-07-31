@@ -152,7 +152,7 @@
         "MN_EXTRA": "Extra",
         "MN_BT_SET": "BoincTasks instellingen",
         "MN_BT_COLOR": "BoincTasks kleuren",
-        "MN_BOINC_SET": "Boinc instellingen",
+        "MN_BOINC_SET": "Boinc voorkeuren",
         "MN_BOINC_ALLOW": "Boinc toestaan",
         "MN_BOINC_BENCH": "Boinc benchmark uitvoeren",
         "MN_BOINC_READ_CF": "Boinc lees configuratiebestanden",
@@ -387,7 +387,7 @@
         "MSG_READ_STATE": "Lees state:"
     },
     "DIALOG_BOINC_SETTINGS": {
-        "DBO_TITLE": "Boinc instellingen:",
+        "DBO_TITLE": "Boinc voorkeuren:",
         "DBO_PROCESSOR_TITLE": "Processor",
         "DBO_PROCESSOR_COMPUTERING_ALLOWED": "Verwerking toegestaan:",
         "DBO_PROCESSOR_WHILE_BATTERIES": "Terwijl de computer op batterijen werkt",
@@ -436,7 +436,14 @@
         "DBO_BOX_SELECTED_MORE_ONE": "U heeft meer dan één computer geselecteerd",
         "DBO_BOX_UNABLE_SHOW": "Kan niet worden weergegeven",
         "DBO_BOX_INVALID": "Ongeldige selectie",
-        "DBO_LOADING_SETTINGS": "De instellingen ophalen...."
+        "DBO_LOADING_SETTINGS": "De instellingen ophalen....",
+        "DBO_STATUS_NOW_USING_WEB_PREF": "Nu worden de Web voorkeuren gebruikt van %s; wijzigingen zijn uitgeschakeld. Gebruik de knop hieronder om lokale voorkeuren te gebruiken.",
+        "DBO_BUTTON_LOCAL_PREF": "Druk hier en druk daarna op \"Pas wijzigingen toe\" om de lokale voorkeuren te gebruiken.",
+        "DBO_STATUS_NOW_USING_LOCAL_PREF": "Nu worden de lokale voorkeuren gebruikt.",
+        "DBO_BUTTON_WEB_PREF": "Druk hier om de Web voorkeuren te gebruiken.",
+        "DBO_BOX_SWITCHING_WARNING_TITLE": "Waarschuwing",
+        "DBO_BOX_SWITCHING_LOCAL_WARNING": "Omschakelen naar lokale voorkeuren zoals op deze pagina zijn weergegeven. Dit vervangt de Web voorkeuren, zelfs als later de Web voorkeuren veranderd worden. Doorgaan met omschakelen?",
+        "DBO_BOX_SWITCHING_WEB_WARNING": "Wilt u de lokale voorkeuren die op deze pagina zijn ingesteld weggooien en Web gebaseerde voorkeuren gebruiken? Dan gaan uw lokale voorkeuren verloren. Wilt u doorgaan?"
     },
     "DIALOG_BOINC_ALLOW": {
         "DSA_TITLE": "Toestaan",

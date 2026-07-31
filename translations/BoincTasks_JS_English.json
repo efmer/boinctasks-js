@@ -152,7 +152,7 @@
         "MN_EXTRA": "Extra",
         "MN_BT_SET": "BoincTasks settings",
         "MN_BT_COLOR": "BoincTasks color settings",
-        "MN_BOINC_SET": "Boinc settings",
+        "MN_BOINC_SET": "Boinc preferences",
         "MN_BOINC_ALLOW": "Boinc allow",
         "MN_BOINC_BENCH": "Boinc run benchmark",
         "MN_BOINC_READ_CF": "Boinc read config files",
@@ -387,7 +387,7 @@
         "MSG_READ_STATE": "Read state:"
     },
     "DIALOG_BOINC_SETTINGS": {
-        "DBO_TITLE": "Boinc Settings:",
+        "DBO_TITLE": "Boinc preferences:",
         "DBO_PROCESSOR_TITLE": "Processor",
         "DBO_PROCESSOR_COMPUTERING_ALLOWED": "Computing allowed:",
         "DBO_PROCESSOR_WHILE_BATTERIES": "While computer is on batteries",
@@ -436,7 +436,14 @@
         "DBO_BOX_SELECTED_MORE_ONE": "You selected more than one computer",
         "DBO_BOX_UNABLE_SHOW": "Unable to show",
         "DBO_BOX_INVALID": "Invalid selection",
-        "DBO_LOADING_SETTINGS": "Retrieving the settings...."
+        "DBO_LOADING_SETTINGS": "Retrieving the settings....",
+        "DBO_STATUS_NOW_USING_WEB_PREF": "Now using Web preferences from %s, changes are disabled. Use the button below to use local preferences.",
+        "DBO_BUTTON_LOCAL_PREF": "Click here and press \"Apply changes\" to use local preferences instead.",
+        "DBO_STATUS_NOW_USING_LOCAL_PREF": "Now using local preferences.",
+        "DBO_BUTTON_WEB_PREF": "Click here to use Web preferences instead.",
+        "DBO_BOX_SWITCHING_WARNING_TITLE": "Warning",
+        "DBO_BOX_SWITCHING_LOCAL_WARNING": "Switching to use the local preferences defined on this page. This will override your web-based preferences, even if you subsequently make changes there. Do you want to proceed?",
+        "DBO_BOX_SWITCHING_WEB_WARNING": "Would you like to discard the local preferences defined on this page and use web-based preferences instead? You will lose your local preferences. Do you want to proceed?"
     },
     "DIALOG_BOINC_ALLOW": {
         "DSA_TITLE": "Allow to run",

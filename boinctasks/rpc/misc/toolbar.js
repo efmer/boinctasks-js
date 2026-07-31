@@ -21,8 +21,8 @@ const functions = new Functions();
 const Logging = require('../functions/logging');
 const logging = new Logging();
 
-const ConnectionsShadow = require('./connections_shadow');
-const connectionsShadow = new ConnectionsShadow();
+const ConnectionsSend = require('./connections_send_command');
+const connectionsSend = new ConnectionsSend();
 
 const btC = require('../functions/btconstants');
 
@@ -525,7 +525,7 @@ function resetDetachProjectYes(selected,connections,detach)
                 {
                     if (detach) req = "<project_detach>\n<project_url>" + url + "</project_url>\n</project_detach>"
                     else req = "<project_reset>\n<project_url>" + url + "</project_url>\n</project_reset>"
-                    connectionsShadow.addSendArray(con,req);
+                    connectionsSend.addSendArray(con,req);
                 }
             }
         }
@@ -568,7 +568,7 @@ function wwwShow(gb, bProject)
                     {
                         if (con.auth === true)
                         {
-                            let poject = void 0;
+                            let project = void 0;
                             if (bProject)
                             {
                                 project = con.projects.project;
@@ -676,23 +676,44 @@ function findFilter(selected)
 
 function sendCommand(con,request, url, wu)
 {
+    if (isFilter(url))
+    {
+        return;
+    }    
     let req = "<" + request + ">\n<project_url>" + url + "</project_url>\n<name>"+ wu + "</name>\n</" + request + ">";
-    connectionsShadow.addSendArray(con,req);
+    connectionsSend.addSendArray(con,req);
     // flush in connections.js
 }
 
 function sendCommandTransfer(con,request, url, wu)
 {
+    if (isFilter(url))
+    {
+        return;
+    }    
     let req = "<" + request + ">\n<project_url>" + url + "</project_url>\n<filename>"+ wu + "</filename>\n</" + request + ">";
-    connectionsShadow.addSendArray(con,req); 
+    connectionsSend.addSendArray(con,req); 
     // flush in connections.js    
 }
 
 function sendCommandProject(con,request, url)
 {
+    if (isFilter(url))
+    {
+        return;
+    }
     let req = "<" + request + ">\n<project_url>" + url + "</project_url>\n</" + request + ">";
-    connectionsShadow.addSendArray(con,req);
+    connectionsSend.addSendArray(con,req);
     // flush in connections.js    
+}
+
+function isFilter(url)
+{
+    if (url.indexOf(btC.SEPERATOR_FILTER) >=0)
+    {
+        return true;
+    }
+    return false;
 }
 
 function reportCompleted(gb)

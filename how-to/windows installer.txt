@@ -8,7 +8,13 @@ npm run package-win64
 npm run package-winarm
 // temp remove --asar to check what's in the package
 
+Sign 3x exe private sign -> 
+1) sign_exe.bat
 Double click on boinc_tasks_js.iss
 Change the source folder and version
+Build installer
+2) sign_setup_sign_exe_first.bar
+
+
 
 result: out\wininstaller

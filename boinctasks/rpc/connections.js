@@ -80,8 +80,8 @@ const btNotices = new BtNotices();
 const BtSocket  = require('./misc/socket');
 const Authenticate = require('./misc/authenticate');
 
-const ConnectionsShadow = require('./misc/connections_shadow');
-const connectionsShadow = new ConnectionsShadow();
+const ConnectionsSend = require('./misc/connections_send_command');
+const connectionsSend = new ConnectionsSend();
 
 const btC = require('./functions/btconstants');
 const btconstants = require('./functions/btconstants');
@@ -676,28 +676,33 @@ class Connections{
 
     getSelected()
     {
-        switch(gB.selectedTab)
-        {
-            case btC.TAB_COMPUTERS:
-                return gB.rowSelect.computers.rowSelected;
-            break;        
-            case btC.TAB_PROJECTS:
-                return gB.rowSelect.projects.rowSelected;
-            break;        
-            case btC.TAB_TASKS:
-                return gB.rowSelect.results.rowSelected;
-            break;
-            case btC.TAB_TRANSFERS:
-                return gB.rowSelect.transfers.rowSelected;
-            break;        
-            case btC.TAB_MESSAGES:
-                return gB.rowSelect.messages.rowSelected;
-            break; 
-            case btC.TAB_HISTORY:
-                return gB.rowSelect.history.rowSelected;
-            break;             
-        }
+        try{
+            switch(gB.selectedTab)
+            {
+                case btC.TAB_COMPUTERS:
+                    return gB.rowSelect.computers.rowSelected;
+                break;        
+                case btC.TAB_PROJECTS:
+                    return gB.rowSelect.projects.rowSelected;
+                break;        
+                case btC.TAB_TASKS:
+                    return gB.rowSelect.results.rowSelected;
+                break;
+                case btC.TAB_TRANSFERS:
+                    return gB.rowSelect.transfers.rowSelected;
+                break;        
+                case btC.TAB_MESSAGES:
+                    return gB.rowSelect.messages.rowSelected;
+                break; 
+                case btC.TAB_HISTORY:
+                    return gB.rowSelect.history.rowSelected;
+                break;             
+            }
 
+            return null;
+        } catch (error) {
+            logging.logError('Connections,getSelected', error);        
+        }        
         return null;
     }
 
@@ -992,7 +997,6 @@ function startConnections()
     }
     logging.log(txt);
     sidebarComputers.build(gB)
-    connectionsShadow.cloneConnection(gB);
     connectAll();
 }
 
@@ -1576,7 +1580,6 @@ function getConnections(computers)
     return connections;
 }
 
-// make changes in connections_shadow as well.
 function newCon()
 {
     let con = new Object();
@@ -1592,7 +1595,6 @@ function newCon()
     con.authRetry = 0;
     con.authTimeout = 0;
     con.lostConnection = false;
-    con.isShadow = false;
     con.error = '';
     con.boinc = ''; 
     con.platform = '';
@@ -1618,7 +1620,6 @@ function newCon()
     con.history = null;
 
     con.rules = null;
-    con.shadow = null;
 
     con.temp = new Object;
     con.temp.port = -1;
@@ -2198,6 +2199,14 @@ function updateSideBar()
 // 0.2 sec timer
 function btTimer() { 
     try {
+        // commands to be send
+        connectionsSend.SendArray();
+        if (connectionsSend.busy())
+        {
+            gBusyCnt = 0;
+            return;
+        }
+
         let status = "";
         if (gBusy)
         {          
@@ -2215,7 +2224,6 @@ function btTimer() {
 
             if (gB.fetchMode === MODE_RULES)
             {
-                connectionsShadow.flushSendArray();
                 gClassRulesProcess.connectionsCheck(gB)
             }
 
@@ -2257,6 +2265,8 @@ function btTimer() {
                 }
             }
         }
+
+
 
         gB.fetchMode = MODE_NORMAL;
 
@@ -2316,8 +2326,6 @@ function btTimer() {
                 }                
             }
         }
-
-        connectionsShadow.flushSendArray();
 
         let currentDate = null;
         let restartTime = false

@@ -436,7 +436,14 @@
         "DBO_BOX_SELECTED_MORE_ONE": "Has seleccionado mas de un ordenador",
         "DBO_BOX_UNABLE_SHOW": "No se puede mostrar",
         "DBO_BOX_INVALID": "Selección no válida",
-        "DBO_LOADING_SETTINGS": "Recuperando la configuración...."
+        "DBO_LOADING_SETTINGS": "Recuperando la configuración....",
+        "DBO_STATUS_NOW_USING_WEB_PREF": "Usando preferencias Web desde %s, los cambios están deshabilitados. Use el botón inferior para preferencias locales.",
+        "DBO_BUTTON_LOCAL_PREF": "Clic aquí y pulsa \"Aplicar cambios\" para usar las preferencias locales.",
+        "DBO_STATUS_NOW_USING_LOCAL_PREF": "Usando ahora preferencias locales",
+        "DBO_BUTTON_WEB_PREF": "Clic aquí para usar preferencias Web.",
+        "DBO_BOX_SWITCHING_WARNING_TITLE": "Atención",
+        "DBO_BOX_SWITCHING_LOCAL_WARNING": "Cambiando a preferencias locales definidas en esta página. Esto anulará sus preferencias web, incluso si posteriormente realiza cambios allí. ¿Desea continuar?",
+        "DBO_BOX_SWITCHING_WEB_WARNING": "¿Descartar las preferencias locales definidas en esta página y usar las preferencias web? Perderá las preferencias locales. ¿Desea continuar?"
     },
     "DIALOG_BOINC_ALLOW": {
         "DSA_TITLE": "Permiso ejecución",

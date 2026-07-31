@@ -107,7 +107,7 @@ function tableResultsArray(gb, resultTable, color)
       selRows.present[s] = false;
     }
 
-    let filter = resultTable[0]
+    let filter = resultTable[0];
 
     let bProject = gb.projectSelected !== btC.TL.SIDEBAR_COMPUTERS.SBC_PROJECTS;
 
@@ -124,7 +124,7 @@ function tableResultsArray(gb, resultTable, color)
       let bFoundF = false;
       if (rt.filtered)
       {
-        let app = rt.computerName+rt.app+rt.statusS;
+        let app = rt.computerName+rt.app+rt.statusS+rt.resources+rt.projectUrl; // added use
         for (let f=0;f<filter.length;f++)
         {
           if (app === filter[f])
@@ -250,16 +250,22 @@ function tableResultItem(selRows, i, order, result, filter, colorObj, show)
       } 
     }
 
+    let isCuda = result.cuda;
+
     let computer =  result.computerName;
     let projectUrl = result.projectUrl;
     let wu = result.wu;
     let wuName = result.wuName;
     let app = result.app;
     let status = result.statusS;
-    let selId = wuName + btC.SEPERATOR_SELECT + computer + btC.SEPERATOR_SELECT + projectUrl;
+    let url = result.projectUrl;    
+    let resources = result.resources;
+    let selId = wuName + btC.SEPERATOR_SELECT + computer + btC.SEPERATOR_SELECT + url;
+
+    let use = result.resources;
     if (result.filtered)
     {
-      selId += btC.SEPERATOR_FILTER + app + btC.SEPERATOR_FILTER + computer;
+      selId += btC.SEPERATOR_FILTER + app + btC.SEPERATOR_FILTER + computer + btC.SEPERATOR_FILTER + use + btC.SEPERATOR_FILTER + url;// added use
     }
     let iSel = selRows.rowSelected.indexOf(selId)
     if (iSel >= 0)
@@ -267,18 +273,8 @@ function tableResultItem(selRows, i, order, result, filter, colorObj, show)
       selRows.present[iSel] = true;
       sel = ' class ="bt_table_selected" ';
     }
-
-    let cpuGpu = Object;
-    cpuGpu.cuda = false;
-    if (result.resources.length > 0)
-    {
-      use = result.resources[0];
-//      use = "0.001 CPU + 1 Apple M1"  // testing GPU
-      use = getCpuGpu(use, cpuGpu);
-    }
-    else use = "";
     
-    if (cpuGpu.cuda)
+    if (isCuda)
     {
       if (!show.SHOW_GPU)
       {
@@ -303,7 +299,7 @@ function tableResultItem(selRows, i, order, result, filter, colorObj, show)
       }      
     }
 
-    color = getColor(i, colorObj, result, cpuGpu);
+    color = getColor(i, colorObj, result, isCuda);
     table = "<tr " + sel + color + ">";
 
     items[order.order[0]] = addRow(order.check[0],selId, 0, result.computerName);
@@ -323,7 +319,7 @@ function tableResultItem(selRows, i, order, result, filter, colorObj, show)
       {
         wu = "▶ " + wu;        
       }
-      item = '<div id="filter' + btC.SEPERATOR_ITEM + computer+app+status + '" class="' + sclass + '">'+ wu + '</div>'  
+      item = '<div id="filter' + btC.SEPERATOR_ITEM + computer+app+status+use+url + '" class="' + sclass + '">'+ wu + '</div>'  // added use
       items[order.order[3]] = addRow(order.check[3],selId,3,item);   
     }
     else  items[order.order[3]] = addRow(order.check[3],selId, 3, wuName);  
@@ -573,48 +569,13 @@ function getHeaderArrow(dir)
   return hclass;
 }
 
-function getCpuGpu(res, cpuGpu)
-{
-  cpuGpu.cuda = false;
-  var i = res.indexOf("GPU");
-
-  if ((res.indexOf("GPU") >= 0) || (res.indexOf("CUDA") >=0))
-  {
-    cpuGpu.cuda = true;
-    res = res.replace(" CPUs","C");
-    res = res.replace(" CPU", "C");
-    res = res.replace(" NVIDIA GPUs","NV");
-    res = res.replace(" NVIDIA GPU","NV");
-    res = res.replace(" Nvidia GPU", "NV");
-    res = res.replace(" ATI GPUs","AMD");
-    res = res.replace(" AMD/ATI GPU", "AMD");
-    res = res.replace(" AMD / ATI GPU", "AMD");
-  
-    res = res.replace(" intel GPU", "INT");
-    res = res.replace(" intel_gpu GPU","INT");
-    res = res.replace(" Intel GPU", "INT");
-    res = res.replace("device ","d");
-    res = res.replace("Device ", "d");
-  }
-  else
-  {
-    if (res.indexOf("Apple") >=0)
-    {
-      cpuGpu.cuda = true;
-      res = res.replace("Apple ", "A ");
-    }
-  }
-
-  return res;
-}
-
-function getColor(i, color, result, cpuGpu)
+function getColor(i, color, result, isCuda)
 {
   var style = "";
   try{
     var statusN = result.statusN;
     let hp = result.hp; 
-    if (cpuGpu.cuda)
+    if (isCuda)
     {
       switch(statusN) // GPU
       {

@@ -22,19 +22,37 @@ const {ipcRenderer } = require('electron');
 
 let gLocale = "";
 let gError = false;
+let gSettingsDlg = null;
+//let gUseGlobalPref = true;
 
 document.addEventListener("DOMContentLoaded", () => {
     gLocale =  navigator.language,
+    ipcRenderer.on('global_pref', (event,pref) => {
+        if (pref)
+        {
+            document.getElementById('settings_fieldset').disabled = true;
+        }
+    });
+
+    ipcRenderer.on('enable_apply', (event) => {
+        document.getElementById('settings_fieldset').disabled = false;
+    });
+    
     ipcRenderer.on('settings', (event,obj) => {
         gError = false;
         updateOk("")
         updateError("");
-        process(obj);
-        document.getElementById('all_settings').classList.remove("hidden");  
+        process(obj);  
+        document.getElementById('all_settings').classList.remove("hidden");
+
     });
     ipcRenderer.on('header_status', (event,status) => {
         SetHtml("header_status",status);
-    });    
+    });
+    ipcRenderer.on('header_status_pref', (event,status,button) => {
+        SetHtml("header_status_global_pref",status);
+        SetHtml("button_global_pref",button);        
+    });       
     ipcRenderer.on('settings_ok', (event) => {
         ok();
     });
@@ -49,11 +67,14 @@ document.addEventListener("DOMContentLoaded", () => {
         apply()
     });         
 
-    document.getElementById('default').addEventListener("click", function(event){   
-        defaultSettings()
+    document.getElementById('button_global_pref').addEventListener("click", function(event){
+        ipcRenderer.send('settings_boinc',"button_pref");
+
     });  
 
     ipcRenderer.on('translations', (event, dlg) => {
+        gSettingsDlg = dlg;
+
         SetHtml("trans_processor",dlg.DBO_PROCESSOR_TITLE);
         SetHtml("trans_allowed",dlg.DBO_PROCESSOR_COMPUTERING_ALLOWED);
         SetHtml("trans_while_on_batteries",dlg.DBO_PROCESSOR_WHILE_BATTERIES);
@@ -120,8 +141,6 @@ document.addEventListener("DOMContentLoaded", () => {
         SetHtml("trans_perc_idle",dlg.DBO_WHEN_IDLE);
         SetHtml("trans_leave_mem",dlg.DBO_MEMORY_LEAVE);
         SetHtml("apply3",dlg.DBO_BUTTON_APPLY);
-        SetHtml("default",dlg.DBO_BUTTON_RESET);
-
     });
 
 });
@@ -144,15 +163,20 @@ function disableApply(enable)
 
 function apply()
 {       
-    let settings = fetch();
-    if (!gError)
-    {
-        disableApply(true);
-        updateError("");
-        updateOk ("");
-        ipcRenderer.send('settings_boinc',"settings",settings);
-    }
-    gError = false;
+    try {  
+        let settings = fetch();
+        if (!gError)
+        {
+            disableApply(true);
+            updateError("");
+            updateOk ("");
+            ipcRenderer.send('settings_boinc',"settings",settings);
+        }
+        gError = false;
+    } catch (error) {
+        updateError("apply: " + error);
+        gError = true;
+    }        
 }
 
 function process(obj)
@@ -501,67 +525,6 @@ function updateOk(msg)
     SetHtml("ok_msg1",msg);     
     SetHtml("ok_msg2",msg); 
     SetHtml("ok_msg3",msg);     
-}
-
-function abort(dashboardWindows, selected, connections)
-{
-    dialog.showMessageBox(dashboardWindows,
-    {
-      title: 'Abort?',
-      message: 'You are about to abort/delete tasks' ,
-      detail: 'Do you want to delete the selected tasks?',
-      buttons: ['Cancel', 'Yes delete'],
-      defaultId: 0, // bound to buttons array
-      cancelId: 1 // bound to buttons array
-    })
-    .then(result => {
-      if (result.response === 0) {
-        // cancel
-      } else if (result.response === 1) {
-        // yes
-        task(selected,connections,"abort_result",false);
-      }
-    }
-    );
-}
-
-
-function defaultSettings()
-{
-    SetCheck("processor_onbatteries", false);
-    SetCheck("processor_inuse", true);    
-    SetCheck("processor_usegpu", false);
-
-    SetValue("processor_idle",5);
-    SetValue("processor_usage",25);        
-
-    SetValue("processor_everydayb","00:00");
-    SetValue("processor_everydaye","00:00");        
-
-    SetValue("processor_switch",120);
-    SetValue("processor_usemost",50);
-    SetValue("processor_usemostcpu",60);
-
-    SetValue("network_dlrate",0);
-    SetValue("network_uprate",0);
-    SetValue("network_transfer",0);
-    SetValue("network_transfer_day",0);
-    SetValue("network_buffermin",0);
-    SetValue("network_bufferadd",0);
-
-    SetValue("network_everydayb","00:00");
-    SetValue("network_everydaye","00:00");
-    
-    SetValue('disk_usemost',10);
-    SetValue('disk_least',1);
-    SetValue('disk_mostp',50);
-    SetValue('disk_every',60);
-    SetValue('disk_swap',30);
-
-    SetValue('memory_usebusy',40);
-    SetValue('memory_useidle',100);
-
-    SetCheck("memory_leave",false);
 }
 
 function SetHtml(tag,data)

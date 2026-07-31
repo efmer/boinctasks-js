@@ -26,10 +26,12 @@ const SendArray = require('../misc/send_array');
 
 const {BrowserWindow, dialog} = require('electron');
 const btC = require('../functions/btconstants');
+const { getTestMessageUrl } = require('nodemailer');
 
 let gSettingsBoincCon = null;
 let gChildSettingsBoinc = null;
 let gCssDarkBoinc = null;
+let gSettingsUseGlobalPref = false;
 
 class SettingsBoinc{
     settingsBoinc(type,gb,settings)
@@ -41,6 +43,18 @@ class SettingsBoinc{
         break;
         case "settings":
           sendSettings(settings);
+          sendLocalPref();
+        break;
+        case "button_pref":
+          if (!gSettingsUseGlobalPref)
+          {
+            dialogYesNo(btC.TL.DIALOG_BOINC_SETTINGS.DBO_BOX_SWITCHING_WEB_WARNING, btC.TL.DIALOG_BOINC_SETTINGS.DBO_BOX_SWITCHING_WEB_WARNING , 'global');            
+          }
+          else
+          {
+            dialogYesNo(btC.TL.DIALOG_BOINC_SETTINGS.DBO_BOX_SWITCHING_WEB_WARNING, btC.TL.DIALOG_BOINC_SETTINGS.DBO_BOX_SWITCHING_LOCAL_WARNING , 'local');             
+          }
+        break;
       }
     }
 
@@ -51,14 +65,40 @@ class SettingsBoinc{
   }
   module.exports = SettingsBoinc;
 
-function settingsOk(gb)
+function dialogYesNo(title, msg, todoYesNo)
 {
-  try {
-  let authCount = 0;
+  dialog.showMessageBox(gChildSettingsBoinc,
+  {
+      title: btC.TL.DIALOG_BOINC_SETTINGS.DBO_BOX_SWITCHING_WARNING_TITLE,
+      message: msg,
+      buttons: [btC.TL.BOX_GENERAL.BX_YES, btC.TL.BOX_GENERAL.BX_CANCEL],
+      defaultId: 0, // bound to buttons array
+      cancelId: 1 // bound to buttons array
+  })
+  .then(result => {
+      if (result.response === 0) {
+        if (todoYesNo == 'global')
+        {
+          sendGlobalPref();
+        }
+        if (todoYesNo == 'local')
+        {
+            gChildSettingsBoinc.webContents.send("enable_apply");             
+        }
+      }
+  });
+}
+
+function getSelected(gb)
+{
+  try{    
+    let ret = Object;
+    let authCount = 0;
     let selCount = 0;  
     let selected = null;
     let len = gb.connections.length;
     let localhost = "127.0.0.1";
+
     for (let i=0; i<len;i++ )
     {
       let con = gb.connections[i];
@@ -74,14 +114,30 @@ function settingsOk(gb)
         {
           localhost = con;
         }
-      }
-    }
-    let one =  btC.TL.DIALOG_BOINC_SETTINGS.DBO_BOX_SELECT_ONE;
+      } 
+    }       
+    ret.selected = selected;
+    ret.authCount = authCount;
+    ret.selCount = selCount;
+    return ret;
+  } catch (error) {
+    logging.logError('SettingsBoinc,getSelected', error);
+  }  
+}
+
+function settingsOk(gb)
+{
+  try {
+    let ret= getSelected(gb);
+    let selected = ret.selected;
+    let selCount = ret.selCount;
+    let authCount = ret.authCount;
     if (selected === null)
     {
       if (authCount === 1) selected = localhost;
       else
       {
+        let one =  btC.TL.DIALOG_BOINC_SETTINGS.DBO_BOX_SELECT_ONE;        
         showDialog(gb.mainWindow,one);
         return;
       }
@@ -96,6 +152,12 @@ function settingsOk(gb)
   } catch (error) {
     logging.logError('SettingsBoinc,settingsOk', error);        
   }  
+}
+
+function useGlobalPref()
+{
+              useGlobalPref();
+  dialogYesNo(btC.TL.DIALOG_BOINC_SETTINGS.DBO_BOX_SWITCHING_WEB_WARNING, btC.TL.DIALOG_BOINC_SETTINGS.DBO_BOX_SWITCHING_LOCAL_WARNING , 'web');
 }
 
 function showDialog(mainWindow,msg)
@@ -141,6 +203,7 @@ function settingsStart(gb,selected)
           gChildSettingsBoinc.setTitle(title);              
           getData(selected);
         })
+      
         gChildSettingsBoinc.webContents.on('did-finish-load', () => {
           insertCssDark(gb.theme);
           gChildSettingsBoinc.webContents.send("translations",btC.TL.DIALOG_BOINC_SETTINGS);              
@@ -187,6 +250,17 @@ async function insertCssDark(darkCss)
   }
 }
 
+function sendGlobalPref()
+{
+  try {
+    let send = "<set_global_prefs_override>\n\n</set_global_prefs_override>\n";
+    const sendArray = new SendArray();
+    sendArray.send(gSettingsBoincCon,send, dataReady);
+  } catch (error) {
+    logging.logError('SettingsBoinc,getData', error);  
+  }
+}
+
 function getData(con)
 {
   try {
@@ -201,23 +275,59 @@ function getData(con)
 function dataReady(data)
 {
   try {
+    // add a time out because the window or javascript is not always ready at this point.
+    setTimeout(() => {
     let result = parse(this,this.client_completeData);
-    if (result !== null)
-    {
-      result = validate(result);
-      let title = "BoincTasks Js - " + btC.TL.DIALOG_BOINC_SETTINGS.DBO_TITLE + " " +  this.computerName
-      gChildSettingsBoinc.setTitle(title);
-      gChildSettingsBoinc.webContents.send('settings', result);
-      gChildSettingsBoinc.show();
-      gChildSettingsBoinc.webContents.send("header_status","");  
-    }
-    else
-    {
-      gChildSettingsBoinc.hide();
-    }    
+      if (result !== null)
+      {
+        result = validate(result);
+        let title = "BoincTasks Js - " + btC.TL.DIALOG_BOINC_SETTINGS.DBO_TITLE + " " +  this.computerName
+        gChildSettingsBoinc.setTitle(title);
+        gChildSettingsBoinc.webContents.send('settings', result);
+        gChildSettingsBoinc.show();
+        gChildSettingsBoinc.webContents.send("header_status","");  
+
+        gChildSettingsBoinc.webContents.send('global_pref', gSettingsUseGlobalPref);
+        let buttonText = "";
+        if (gSettingsUseGlobalPref)
+        {
+          let project = "??";
+          if (result.source_project != void 0)
+          {
+            project = result.source_project;
+          }
+          sendWebPref(project);
+        }
+        else
+        {
+          sendLocalPref();
+        }     
+      }
+      else
+      {
+    //    gChildSettingsBoinc.hide();
+      }    
+    }, 500);
+    
   } catch (error) {
     logging.logError('SettingsBoinc,dataReady', error);      
   }
+}
+
+function sendLocalPref()
+{
+  let status = '';
+  buttonText =  btC.TL.DIALOG_BOINC_SETTINGS.DBO_BUTTON_WEB_PREF;
+  status+= "<h3><b>" + btC.TL.DIALOG_BOINC_SETTINGS.DBO_STATUS_NOW_USING_LOCAL_PREF + "</b></h3>";  
+  gChildSettingsBoinc.webContents.send("header_status_pref",status, buttonText);            
+}
+
+function sendWebPref(project)
+{
+  let status = "<h3><b>" + btC.TL.DIALOG_BOINC_SETTINGS.DBO_STATUS_NOW_USING_WEB_PREF + "</b></h3>";  
+  buttonText = btC.TL.DIALOG_BOINC_SETTINGS.DBO_BUTTON_LOCAL_PREF;       
+  status = status.replace("%s",project);
+  gChildSettingsBoinc.webContents.send("header_status_pref",status, buttonText);            
 }
 
 function parse(con,xml)
@@ -230,26 +340,41 @@ function parse(con,xml)
         {
           let reply = result.boinc_gui_rpc_reply;
           let error = reply.error;
+          let success = reply.success;
+          bNoPrefsOverrideFile = false;
+          if (functions.isDefined(success))
+          {
+              bNoPrefsOverrideFile = true;
+          } 
           if (functions.isDefined(error))
           {
             let errorTxt = error[0];
             if (errorTxt === "no prefs override file")
             {
-              logging.logDebug(con.computer + ": no prefs override file");  
-              const sendArray = new SendArray();                
-              sendArray.send(con,"<get_global_prefs_working/>", dataReady); 
-              return;
+              bNoPrefsOverrideFile = true;
             }
             else
             {
               loggging.logError('SettingsBoinc,parse',errorTxt)
-              return;
-            }
+              return statusReturn;
+            }            
           }
-          var statusArray = result['boinc_gui_rpc_reply']['global_preferences'];
-          if (functions.isDefined(statusArray))
+          if (bNoPrefsOverrideFile)
           {
-              statusReturn = statusArray[0];
+            gSettingsUseGlobalPref = true;
+            gChildSettingsBoinc.webContents.send("using_global_pref",btC.TL.DIALOG_BOINC_SETTINGS);     
+            logging.logDebug(con.computer + ": no prefs override file");  
+            const sendArray = new SendArray();                
+            sendArray.send(con,"<get_global_prefs_working/>", dataReady); 
+            return statusReturn;
+          }
+          else
+          {
+            var statusArray = result['boinc_gui_rpc_reply']['global_preferences'];
+            if (functions.isDefined(statusArray))
+            {
+                statusReturn = statusArray[0];
+            }
           }
         }
       });
@@ -353,6 +478,7 @@ function sendSettings(settings)
 
     const sendArray = new SendArray();      
     sendArray.send(gSettingsBoincCon,send, dataSendReady);
+    gSettingsUseGlobalPref = false;
 
   } catch (error) {
     logging.logError('SettingsBoinc,gotSettings', error);     
